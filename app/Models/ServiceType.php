@@ -5,7 +5,7 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 
-class Role extends Model
+class ServiceType extends Model
 {
     use CrudTrait;
 
@@ -15,10 +15,9 @@ class Role extends Model
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'roles';
+    protected $table = 'service_types';
     protected $fillable = [
-        'name',
-        'guard_name',
+        'entities_type',
     ];
     // protected $primaryKey = 'id';
     // public $timestamps = false;

@@ -18,4 +18,13 @@ Route::group([
     Route::crud('permission', 'PermissionCrudController');
     Route::crud('user', 'UserCrudController');
     Route::crud('accountstatus', 'AccountstatusCrudController');
+    Route::crud('rcdpwlist', 'RcDpwListCrudController');
+    Route::crud('churchentitytype', 'ChurchEntityTypeCrudController');
+    Route::crud('servicetype', 'ServiceTypeCrudController');
+    Route::crud('titlelist', 'TitleListCrudController');
+    Route::crud('ministryrole', 'MinistryRoleCrudController');
+    Route::crud('specialrole', 'SpecialRoleCrudController');
+    Route::crud('licensetype', 'LicenseTypeCrudController');
+    Route::crud('legaldocument', 'LegalDocumentCrudController');
+    Route::crud('countrylist', 'CountryListCrudController');
 }); // this should be the absolute last line of this file

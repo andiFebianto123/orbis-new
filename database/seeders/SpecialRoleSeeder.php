@@ -1,8 +1,8 @@
 <?php
 
-use App\Models\SpecialRole;
 namespace Database\Seeders;
 
+use App\Models\SpecialRole;
 use Illuminate\Database\Seeder;
 
 class SpecialRoleSeeder extends Seeder

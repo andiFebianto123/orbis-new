@@ -1,8 +1,8 @@
 <?php
 
-use App\Models\ServiceType;
 namespace Database\Seeders;
 
+use App\Models\ServiceType;
 use Illuminate\Database\Seeder;
 
 class ServiceTypeSeeder extends Seeder

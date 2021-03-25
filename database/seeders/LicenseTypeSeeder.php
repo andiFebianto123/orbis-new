@@ -1,8 +1,8 @@
 <?php
 
-use App\Models\LicenseType;
 namespace Database\Seeders;
 
+use App\Models\LicenseType;
 use Illuminate\Database\Seeder;
 
 class LicenseTypeSeeder extends Seeder

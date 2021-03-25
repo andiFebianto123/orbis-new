@@ -1,9 +1,9 @@
 <?php
 
-use App\Models\RcDpwList;
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\RcDpwList;
 
 class RcDpwListSeeder extends Seeder
 {

@@ -14,21 +14,21 @@ class CountryListSeeder extends Seeder
      */
     public function run()
     {
-        RolePermissions::updateOrCreate([
+        CountryList::updateOrCreate([
             'iso_two' => 'AF'
         ], 
         ['iso_two' => 'AF', 
         'iso_three' => 'AFG',
         'country_name' => 'Afghanistan']
         );
-        RolePermissions::updateOrCreate([
+        CountryList::updateOrCreate([
             'iso_two' => 'AL'
         ], 
         ['iso_two' => 'AL', 
         'iso_three' => 'ALB',
         'country_name' => 'Albania']
         );
-        RolePermissions::updateOrCreate([
+        CountryList::updateOrCreate([
             'iso_two' => 'DZ'
         ], 
         ['iso_two' => 'DZ', 

@@ -5,7 +5,7 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 
-class Role extends Model
+class CountryList extends Model
 {
     use CrudTrait;
 
@@ -15,10 +15,11 @@ class Role extends Model
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'roles';
+    protected $table = 'country_lists';
     protected $fillable = [
-        'name',
-        'guard_name',
+        'iso_two',
+        'iso_three',
+        'country_name',
     ];
     // protected $primaryKey = 'id';
     // public $timestamps = false;

@@ -1,11 +1,11 @@
 <?php
 
-use App\Models\AccountStatus;
 namespace Database\Seeders;
 
+use App\Models\Accountstatus;
 use Illuminate\Database\Seeder;
 
-class AccountStatusSeeder extends Seeder
+class AccountstatusSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,12 +14,12 @@ class AccountStatusSeeder extends Seeder
      */
     public function run()
     {
-        AccountStatus::updateOrCreate([
+        Accountstatus::updateOrCreate([
             'acc_status' => 'Active'
         ], 
         ['acc_status' => 'Active']
         );
-        AccountStatus::updateOrCreate([
+        Accountstatus::updateOrCreate([
         'acc_status' => 'Non Active'
         ], 
             ['acc_status' => 'Non Active']
