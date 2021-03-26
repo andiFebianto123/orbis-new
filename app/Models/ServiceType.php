@@ -17,7 +17,7 @@ class ServiceType extends Model
 
     protected $table = 'service_types';
     protected $fillable = [
-        'entities_type',
+        'church_service',
     ];
     // protected $primaryKey = 'id';
     // public $timestamps = false;

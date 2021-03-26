@@ -122,9 +122,8 @@
             ],
             "authors": [
                 {
-                    "name": "Cristian Tabacitu",
-                    "email": "hello@tabacitu.ro",
-                    "homepage": "http://www.tabacitu.ro",
+                    "name": "Rectmedia",
+                    "homepage": "https://rectmedia.com/",
                     "role": "Creator & Maintainer"
                 }
             ],
@@ -205,9 +204,8 @@
                     "role": "Lead Developer"
                 },
                 {
-                    "name": "Cristian Tabacitu",
-                    "email": "hello@tabacitu.ro",
-                    "homepage": "http://www.tabacitu.ro",
+                    "name": "Rectmedia",
+                    "homepage": "https://rectmedia.com/",
                     "role": "Chief Architect"
                 }
             ],
@@ -2423,9 +2421,8 @@
                     "role": "Creator"
                 },
                 {
-                    "name": "Cristian Tabacitu",
-                    "email": "hello@tabacitu.ro",
-                    "homepage": "http://tabacitu.ro",
+                    "name": "Rectmedia",
+                    "homepage": "https://rectmedia.com/",
                     "role": "Maintainer"
                 }
             ],
@@ -5669,9 +5666,8 @@
             ],
             "authors": [
                 {
-                    "name": "Cristian Tone",
-                    "email": "cristitone@outlook.com",
-                    "homepage": "http://updivision.com",
+                    "name": "Rectmedia",
+                    "homepage": "https://rectmedia.com/",
                     "role": "Developer"
                 }
             ],
@@ -6171,8 +6167,7 @@
                     "email": "jeffrey@laracasts.com"
                 },
                 {
-                    "name": "Cristian Tabacitu",
-                    "email": "hello@tabaciu.ro"
+                    "name": "Rectmedia"
                 }
             ],
             "description": "Advanced Laravel generators, that include schema information.",

@@ -14,9 +14,6 @@ Route::group([
     ),
     'namespace'  => 'App\Http\Controllers\Admin',
 ], function () { // custom admin routes
-    Route::crud('roles', 'RoleCrudController');
-    Route::crud('permissions', 'PermissionCrudController');
-    Route::crud('users', 'UserCrudController');
     Route::crud('accountstatus', 'AccountstatusCrudController');
     Route::crud('rcdpwlist', 'RcDpwListCrudController');
     Route::crud('churchentitytype', 'ChurchEntityTypeCrudController');

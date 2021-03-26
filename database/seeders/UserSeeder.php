@@ -19,7 +19,6 @@ class UserSeeder extends Seeder
             'email' => 'yemima@gmail.com',
             'password' => '$2y$12$r3ueyelLv4O3RhRrpqEDt.raFs8sAh7GoJzMJ5ZGE5EHqps2JNILW', // qwerty
             'privilege' => 'Power User', 
-            'role' => 'Power User',
             'status_user' => 'Active']
         );
 
@@ -30,7 +29,6 @@ class UserSeeder extends Seeder
             'email' => 'sontiara@gmail.com',
             'password' => '$2y$12$r3ueyelLv4O3RhRrpqEDt.raFs8sAh7GoJzMJ5ZGE5EHqps2JNILW', // qwerty
             'privilege' => 'Administrator', 
-            'role' => 'Administrator',
             'status_user' => 'Active']
         );
 
