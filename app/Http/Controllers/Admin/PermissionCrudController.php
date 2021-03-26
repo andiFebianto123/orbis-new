@@ -28,7 +28,7 @@ class PermissionCrudController extends CrudController
     {
         CRUD::setModel(\App\Models\Permission::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/permission');
-        CRUD::setEntityNameStrings('permission', 'permissions');
+        CRUD::setEntityNameStrings('Permission', 'Permissions');
     }
 
     /**
@@ -39,13 +39,23 @@ class PermissionCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        CRUD::setFromDb(); // columns
+        $this->crud->addColumn([
+            'name' => 'id', // The db column name
+            'label' => "ID", // Table column heading
+            'type' => 'number'
+        ]);
 
-        /**
-         * Columns can be defined using the fluent syntax or array syntax:
-         * - CRUD::column('price')->type('number');
-         * - CRUD::addColumn(['name' => 'price', 'type' => 'number']); 
-         */
+        $this->crud->addColumn([
+            'name' => 'name', // The db column name
+            'label' => "Name", // Table column heading
+            'type' => 'text'
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'guard_name', // The db column name
+            'label' => "Guard Name", // Table column heading
+            'type' => 'text'
+        ]);
     }
 
     /**
@@ -58,13 +68,17 @@ class PermissionCrudController extends CrudController
     {
         CRUD::setValidation(PermissionRequest::class);
 
-        CRUD::setFromDb(); // fields
+        $this->crud->addField([
+            'name' => 'name',
+            'type' => 'text',
+            'label' => "Name"
+        ]);
 
-        /**
-         * Fields can be defined using the fluent syntax or array syntax:
-         * - CRUD::field('price')->type('number');
-         * - CRUD::addField(['name' => 'price', 'type' => 'number'])); 
-         */
+        $this->crud->addField([
+            'name' => 'guard_name',
+            'type' => 'text',
+            'label' => "Guard Name"
+        ]);
     }
 
     /**

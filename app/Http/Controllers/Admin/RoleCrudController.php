@@ -29,7 +29,7 @@ class RoleCrudController extends CrudController
     {
         CRUD::setModel(\App\Models\Role::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/role');
-        CRUD::setEntityNameStrings('role', 'roles');
+        CRUD::setEntityNameStrings('Role', 'Roles');
     }
 
     /**
@@ -40,7 +40,25 @@ class RoleCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        $this->crud->setColumns(['id','name','guard_name']);
+        // $this->crud->setColumns(['id','name','guard_name']);
+        
+        $this->crud->addColumn([
+            'name' => 'id', // The db column name
+            'label' => "ID", // Table column heading
+            'type' => 'number'
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'name', // The db column name
+            'label' => "Name", // Table column heading
+            'type' => 'text'
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'guard_name', // The db column name
+            'label' => "Guard Name", // Table column heading
+            'type' => 'text'
+        ]);
     }
 
     /**

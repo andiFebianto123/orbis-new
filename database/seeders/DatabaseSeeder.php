@@ -25,6 +25,6 @@ class DatabaseSeeder extends Seeder
         // $this->call(SpecialRoleSeeder::class);
         // $this->call(LicenseTypeSeeder::class);
         // $this->call(LegalDocumentSeeder::class);
-        $this->call(CountryListSeeder::class);
+        // $this->call(CountryListSeeder::class);
     }
 }

@@ -29,7 +29,7 @@ class UserCrudController extends CrudController
     {
         CRUD::setModel(\App\Models\User::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/user');
-        CRUD::setEntityNameStrings('user', 'users');
+        CRUD::setEntityNameStrings('User', 'Users');
     }
 
     /**
@@ -40,7 +40,43 @@ class UserCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        $this->crud->setColumns(['id','name', 'email', 'privilege', 'role', 'status_user']);
+        // $this->crud->setColumns(['id','name', 'email', 'privilege', 'role', 'status_user']);
+
+        $this->crud->addColumn([
+            'name' => 'id', // The db column name
+            'label' => "ID", // Table column heading
+            'type' => 'number'
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'name', // The db column name
+            'label' => "Name", // Table column heading
+            'type' => 'text'
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'email', // The db column name
+            'label' => "Email", // Table column heading
+            'type' => 'text'
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'privilege', // The db column name
+            'label' => "Privilege", // Table column heading
+            'type' => 'text'
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'role', // The db column name
+            'label' => "Role", // Table column heading
+            'type' => 'text'
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'status_user', // The db column name
+            'label' => "Status User", // Table column heading
+            'type' => 'text'
+        ]);
     }
 
     /**

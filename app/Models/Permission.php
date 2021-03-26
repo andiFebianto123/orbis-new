@@ -16,6 +16,10 @@ class Permission extends Model
     */
 
     protected $table = 'permissions';
+    protected $fillable = [
+        'name',
+        'guard_name',
+    ];
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
