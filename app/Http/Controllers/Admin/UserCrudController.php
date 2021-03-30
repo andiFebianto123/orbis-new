@@ -204,16 +204,10 @@ class UserCrudController extends CrudController
         $request = $this->crud->getRequest();
 
         // Encrypt password if specified.
-        // if ($request->update('password')) {
-        //     $request->request->set('password', Hash::make($request->update('password')));
-        // } else {
-        //     $request->request->removeField('password_confirmation');
-        // }
-
-        if (!empty($request->password)) {
-            $request->offsetSet('password', Hash::make($request->password));
-        }else{
-             $request->remove('password');
+        if ($request->input('password')) {
+            $request->request->set('password', Hash::make($request->input('password')));
+        } else {
+            $request->request->remove('password');
         }
 
         $this->crud->setRequest($request);

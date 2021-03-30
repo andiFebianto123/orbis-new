@@ -4,6 +4,8 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
 use Illuminate\Foundation\Http\FormRequest;
+// use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class UserRequest extends FormRequest
 {
@@ -30,7 +32,7 @@ class UserRequest extends FormRequest
             'name' => 'required',
             'email' => 'required|email|unique:users,email,'.$this->id.',id',
             'privilege' => 'required',
-            'password' => 'required',
+            'password' => Rule::requiredIf($this->method() == 'POST'),
             'status_user' => 'required',
         ];
     }
