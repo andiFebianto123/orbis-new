@@ -27,6 +27,7 @@ class LegalDocumentRequest extends FormRequest
     {
         return [
             // 'name' => 'required|min:5|max:255'
+            'documents' => 'required|unique:legal_documents,documents,'.$this->id.',id',
         ];
     }
 

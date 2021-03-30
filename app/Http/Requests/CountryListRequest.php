@@ -27,6 +27,9 @@ class CountryListRequest extends FormRequest
     {
         return [
             // 'name' => 'required|min:5|max:255'
+            'iso_two' => 'required|unique:country_lists,iso_two,'.$this->id.',id',
+            'iso_three' => 'required|unique:country_lists,iso_three,'.$this->id.',id',
+            'country_name' => 'required|unique:country_lists,country_name,'.$this->id.',id',
         ];
     }
 

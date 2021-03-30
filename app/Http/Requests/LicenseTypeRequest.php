@@ -27,6 +27,7 @@ class LicenseTypeRequest extends FormRequest
     {
         return [
             // 'name' => 'required|min:5|max:255'
+            'pastors_license_type' => 'required|unique:license_types,pastors_license_type,'.$this->id.',id',
         ];
     }
 

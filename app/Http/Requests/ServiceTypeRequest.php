@@ -27,6 +27,7 @@ class ServiceTypeRequest extends FormRequest
     {
         return [
             // 'name' => 'required|min:5|max:255'
+            'church_service' => 'required|unique:service_types,church_service,'.$this->id.',id',
         ];
     }
 

@@ -27,6 +27,7 @@ class SpecialRoleRequest extends FormRequest
     {
         return [
             // 'name' => 'required|min:5|max:255'
+            'special_role' => 'required|unique:special_roles,special_role,'.$this->id.',id',
         ];
     }
 

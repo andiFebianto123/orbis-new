@@ -26,7 +26,7 @@ class ChurchEntityTypeRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'name' => 'required|min:5|max:255'
+            'entities_type' => 'required|unique:church_types,entities_type,'.$this->id.',id',
         ];
     }
 

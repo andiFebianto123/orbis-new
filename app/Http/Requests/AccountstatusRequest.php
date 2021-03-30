@@ -26,7 +26,7 @@ class AccountstatusRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'name' => 'required|min:5|max:255'
+            'acc_status' => 'required|unique:account_status,acc_status,'.$this->id.',id',
         ];
     }
 

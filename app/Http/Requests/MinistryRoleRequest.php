@@ -27,6 +27,7 @@ class MinistryRoleRequest extends FormRequest
     {
         return [
             // 'name' => 'required|min:5|max:255'
+            'ministry_role' => 'required|unique:ministry_roles,ministry_role,'.$this->id.',id',
         ];
     }
 

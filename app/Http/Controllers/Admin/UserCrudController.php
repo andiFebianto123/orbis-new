@@ -16,7 +16,7 @@ class UserCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation { store as traitStore; }
-    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation { update as traitUpdate; }
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 
@@ -57,7 +57,7 @@ class UserCrudController extends CrudController
         $this->crud->addColumn([
             'name' => 'email', // The db column name
             'label' => "Email", // Table column heading
-            'type' => 'text'
+            'type' => 'email'
         ]);
 
         $this->crud->addColumn([
@@ -65,12 +65,6 @@ class UserCrudController extends CrudController
             'label' => "Privilege", // Table column heading
             'type' => 'text'
         ]);
-
-        // $this->crud->addColumn([
-        //     'name' => 'role', // The db column name
-        //     'label' => "Role", // Table column heading
-        //     'type' => 'text'
-        // ]);
 
         $this->crud->addColumn([
             'name' => 'status_user', // The db column name
@@ -116,12 +110,6 @@ class UserCrudController extends CrudController
             'type' => 'Password'
         ]);
 
-        // $this->crud->addField([
-        //     'name' => 'role',
-        //     'type' => 'text',
-        //     'label' => "Role"
-        // ]);
-
         $this->crud->addField([
             'name' => 'status_user',
             'type' => 'select2_from_array',
@@ -163,8 +151,75 @@ class UserCrudController extends CrudController
      * @see https://backpackforlaravel.com/docs/crud-operation-update
      * @return void
      */
+
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+
+    //     CRUD::setValidation(UserRequest::class);
+        
+    //     $this->crud->addField([
+    //         'name' => 'name',
+    //         'type' => 'text',
+    //         'label' => "Name"
+    //     ]);
+
+    //     $this->crud->addField([
+    //         'name' => 'email',
+    //         'type' => 'text',
+    //         'label' => "Email"
+    //     ]);
+    //     $this->crud->addField([
+    //         'name' => 'privilege',
+    //         'type' => 'select2_from_array',
+    //         'label' => "Privilege",
+    //         'options' => ['Power User' => "Power User", 'Management' => "Management",
+    //         'Pastor/Church Level User' => "Pastor/Church Level User",
+    //         'Administrator' => "Administrator"
+    //         ],
+    //     ]);
+
+    //     $this->crud->addField([
+    //         'name' => 'password', // The db column name
+    //         'label' => "Password", // Table column heading
+    //         'type' => 'Password'
+    //     ]);
+
+    //     $this->crud->addField([
+    //         'name' => 'status_user',
+    //         'type' => 'select2_from_array',
+    //         'label' => "Status User",
+    //         'options' => ['Active' => "Active", 'Non Active' => "Non Active"],
+    //         // 'allows_null' => false,
+    //     ]);
     }
+
+    public function update()
+    {
+        $this->crud->setRequest($this->crud->validateRequest());
+
+        // $this->crud->removeField('password_confirmation');
+
+        /** @var \Illuminate\Http\Request $request */
+        $request = $this->crud->getRequest();
+
+        // Encrypt password if specified.
+        // if ($request->update('password')) {
+        //     $request->request->set('password', Hash::make($request->update('password')));
+        // } else {
+        //     $request->request->removeField('password_confirmation');
+        // }
+
+        if (!empty($request->password)) {
+            $request->offsetSet('password', Hash::make($request->password));
+        }else{
+             $request->remove('password');
+        }
+
+        $this->crud->setRequest($request);
+        $this->crud->unsetValidation(); // Validation has already been run
+
+        return $this->traitUpdate();
+    }
+
 }

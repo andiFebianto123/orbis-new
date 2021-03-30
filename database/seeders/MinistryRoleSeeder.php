@@ -35,9 +35,9 @@ class MinistryRoleSeeder extends Seeder
         ['ministry_role' => 'Secretary']
         );
         MinistryRole::updateOrCreate([
-            'ministry_role' => 'Treasure'
+            'ministry_role' => 'Treasurer'
         ], 
-        ['ministry_role' => 'Treasure']
+        ['ministry_role' => 'Treasurer']
         );
     }
 }

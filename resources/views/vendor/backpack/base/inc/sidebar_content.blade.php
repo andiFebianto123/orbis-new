@@ -6,7 +6,7 @@
         <li class='nav-item'><a class='nav-link' href='{{ backpack_url('user') }}'><i class='nav-icon la la-user'></i> Users</a></li>
         <li class='nav-item'><a class='nav-link' href='{{ backpack_url('accountstatus') }}'><i class='nav-icon la la-id-badge'></i> Account Status</a></li>
         <li class='nav-item'><a class='nav-link' href='{{ backpack_url('role') }}'><i class='nav-icon la la-id-badge'></i> Roles</a></li>
-        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('permission') }}'><i class='nav-icon la la-list'></i> Permissions</a></li>
+        <!-- <li class='nav-item'><a class='nav-link' href='{{ backpack_url('permission') }}'><i class='nav-icon la la-list'></i> Permissions</a></li> -->
         <li class='nav-item'><a class='nav-link' href='{{ backpack_url('rcdpwlist') }}'><i class='nav-icon la la-list'></i> Rc / Dpw Lists</a></li>
         <li class='nav-item'><a class='nav-link' href='{{ backpack_url('churchentitytype') }}'><i class='nav-icon la la-church'></i> Church Type</a></li>
         <li class='nav-item'><a class='nav-link' href='{{ backpack_url('servicetype') }}'><i class='nav-icon la la-church'></i> Service Type</a></li>

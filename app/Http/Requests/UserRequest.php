@@ -27,6 +27,11 @@ class UserRequest extends FormRequest
     {
         return [
             // 'name' => 'required|min:5|max:255'
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email,'.$this->id.',id',
+            'privilege' => 'required',
+            'password' => 'required',
+            'status_user' => 'required',
         ];
     }
 

@@ -27,6 +27,8 @@ class RoleRequest extends FormRequest
     {
         return [
             // 'name' => 'required|min:5|max:255'
+            'name' => 'required|unique:roles,name,'.$this->id.',id',
+            'guard_name' => 'required',
         ];
     }
 

@@ -26,7 +26,7 @@ class RcDpwListRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'name' => 'required|min:5|max:255'
+            'rc_dpw_name' => 'required|unique:rc_dpwlists,rc_dpw_name,'.$this->id.',id',
         ];
     }
 
