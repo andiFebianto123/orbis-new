@@ -28,6 +28,11 @@ class CountryList extends Model
     // protected $hidden = [];
     // protected $dates = [];
 
+    public function personel()
+    {
+        return $this->hasMany('App\Models\Personel', 'country_id', 'id');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | FUNCTIONS

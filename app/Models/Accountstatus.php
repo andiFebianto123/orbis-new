@@ -26,6 +26,11 @@ class Accountstatus extends Model
     // protected $hidden = [];
     // protected $dates = [];
 
+    public function personel()
+    {
+        return $this->hasMany('App\Models\Personel', 'acc_status_id', 'id');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | FUNCTIONS

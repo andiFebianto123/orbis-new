@@ -24,4 +24,5 @@ Route::group([
     Route::crud('licensetype', 'LicenseTypeCrudController');
     Route::crud('legaldocument', 'LegalDocumentCrudController');
     Route::crud('countrylist', 'CountryListCrudController');
+    Route::crud('personel', 'PersonelCrudController');
 }); // this should be the absolute last line of this file

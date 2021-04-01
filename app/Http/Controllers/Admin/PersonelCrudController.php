@@ -1,0 +1,458 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Requests\PersonelRequest;
+use Backpack\CRUD\app\Http\Controllers\CrudController;
+use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+
+/**
+ * Class PersonelCrudController
+ * @package App\Http\Controllers\Admin
+ * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
+ */
+class PersonelCrudController extends CrudController
+{
+    use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+
+    /**
+     * Configure the CrudPanel object. Apply settings to all operations.
+     * 
+     * @return void
+     */
+    public function setup()
+    {
+        CRUD::setModel(\App\Models\Personel::class);
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/personel');
+        CRUD::setEntityNameStrings('Personel', 'Personels');
+    }
+
+    /**
+     * Define what happens when the List operation is loaded.
+     * 
+     * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
+     * @return void
+     */
+    protected function setupListOperation()
+    {        
+        $this->crud->addColumn([
+            'name' => 'id', // The db column name
+            'label' => "ID", // Table column heading
+            'type' => 'number'
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'title', // The db column name
+            'label' => "Title", // Table column heading
+            'type' => 'relationship',
+            'attribute' => 'short_desc',
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'first_name', // The db column name
+            'label' => "First Name", // Table column heading
+            'type' => 'text'
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'last_name', // The db column name
+            'label' => "Last Name", // Table column heading
+            'type' => 'text'
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'accountstatus', // The db column name
+            'label' => "Status", // Table column heading
+            'type' => 'relationship',
+            'attribute' => 'acc_status',
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'rc_dwp', // The db column name
+            'label' => "RC / DPW", // Table column heading
+            'type' => 'relationship',
+            'attribute' => 'rc_dpw_name',
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'first_email', // The db column name
+            'label' => "Email 1", // Table column heading
+            'type' => 'text'
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'Second_email', // The db column name
+            'label' => "Email 2", // Table column heading
+            'type' => 'text'
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'phone', // The db column name
+            'label' => "Phone", // Table column heading
+            'type' => 'number'
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'street_address', // The db column name
+            'label' => "Street Address", // Table column heading
+            'type' => 'text'
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'city', // The db column name
+            'label' => "City", // Table column heading
+            'type' => 'text'
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'province', // The db column name
+            'label' => "Province", // Table column heading
+            'type' => 'text'
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'postal_code', // The db column name
+            'label' => "Postal Code", // Table column heading
+            'type' => 'text'
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'country', // The db column name
+            'label' => "Country", // Table column heading
+            'type' => 'relationship',
+            'attribute' => 'country_name',
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'image', // The db column name
+            'label' => "Image", // Table column heading
+            'type' => 'image'
+        ]);
+
+    }
+
+    /**
+     * Define what happens when the Create operation is loaded.
+     * 
+     * @see https://backpackforlaravel.com/docs/crud-operation-create
+     * @return void
+     */
+    protected function setupCreateOperation()
+    {
+        CRUD::setValidation(PersonelRequest::class);
+
+        //tab biodata
+        $this->crud->addField([
+            'label'     => 'Status', // Table column heading
+            'type'      => 'select2',
+            'name'      => 'acc_status_id', // the column that contains the ID of that connected entity;
+            'entity'    => 'accountstatus', // the method that defines the relationship in your Model
+            'attribute' => 'acc_status', // foreign key attribute that is shown to user
+            'model'     => "App\Models\Accountstatus",
+            'tab'       => 'Biodata',
+        ]);
+
+        $this->crud->addField([
+            'label'     => 'Regional Council', // Table column heading
+            'type'      => 'select2',
+            'name'      => 'rc_dpw_id', // the column that contains the ID of that connected entity;
+            'entity'    => 'rc_dwp', // the method that defines the relationship in your Model
+            'attribute' => 'rc_dpw_name', // foreign key attribute that is shown to user
+            'model'     => "App\Models\RcDpwList",
+            'tab'       => 'Biodata',
+        ]);
+
+        $this->crud->addField([
+            'label'     => 'Title', // Table column heading
+            'type'      => 'select2',
+            'name'      => 'title_id', // the column that contains the ID of that connected entity;
+            'entity'    => 'title', // the method that defines the relationship in your Model
+            'attribute' => 'short_desc', // foreign key attribute that is shown to user
+            'model'     => "App\Models\TitleList",
+            'tab'       => 'Biodata',
+        ]);
+
+        $this->crud->addField([
+            'name'            => 'first_name',
+            'label'           => "First Name",
+            'type'            => 'text',
+            'tab'             => 'Biodata',
+        ]);
+
+        $this->crud->addField([
+            'name'            => 'last_name',
+            'label'           => "Last Name",
+            'type'            => 'text',
+            'tab'             => 'Biodata',
+        ]);
+
+        $this->crud->addField([
+            'name'            => 'gender',
+            'label'           => "Gender",
+            'type'            => 'select2_from_array',
+            'options'         => ["Male" => "Male", "Female" => "Female",],
+            'tab'             => 'Biodata',
+        ]);
+
+        $this->crud->addField([
+            'name'  => 'date_of_birth',
+            'type'  => 'date_picker',
+            'label' => 'Date of Birth',
+            'tab'   => 'Biodata',
+
+            // optional:
+            'date_picker_options' => [
+                'todayBtn' => 'linked',
+                'format'   => 'dd-mm-yyyy',
+                'language' => 'en'
+            ],
+        ]);
+
+        $this->crud->addField([
+            'name'            => 'marital_status',
+            'label'           => "Marital Status",
+            'type'            => 'select2_from_array',
+            'options'         => ["Single" => "Single", "Married" => "Married",
+                                "Divorce" => "Divorce", "Widower" => "Widower",],
+            'tab'             => 'Biodata',
+        ]);
+
+        $this->crud->addField([
+            'name'            => 'ministry_background',
+            'label'           => "Ministry Background",
+            'type'            => 'text',
+            'tab'             => 'Biodata',
+        ]);
+
+        $this->crud->addField([
+            'name'            => 'career_background',
+            'label'           => "Career Bacground",
+            'type'            => 'text',
+            'tab'             => 'Biodata',
+        ]);
+
+        $this->crud->addField([
+            'label' => "Upload Image",
+            'name' => "image",
+            'type' => 'image',
+            'crop' => true, // set to true to allow cropping, false to disable
+            'aspect_ratio' => 1, // omit or set to 0 to allow any aspect ratio
+            'tab'  => 'Biodata',
+        ]);
+
+        //tab contact
+        $this->crud->addField([
+            'name'            => 'street_address',
+            'label'           => "Street Address",
+            'type'            => 'text',
+            'tab'             => 'Contact Information',
+        ]);
+
+        $this->crud->addField([
+            'name'            => 'city',
+            'label'           => "City",
+            'type'            => 'text',
+            'tab'             => 'Contact Information',
+        ]);
+
+        $this->crud->addField([
+            'name'            => 'province',
+            'label'           => "Province",
+            'type'            => 'text',
+            'tab'             => 'Contact Information',
+        ]);
+
+        $this->crud->addField([
+            'name'            => 'postal_code',
+            'label'           => "Postal Code",
+            'type'            => 'text',
+            'tab'             => 'Contact Information',
+        ]);
+
+        $this->crud->addField([
+            'label'     => 'Country', // Table column heading
+            'type'      => 'select2',
+            'name'      => 'country_id', // the column that contains the ID of that connected entity;
+            'entity'    => 'country', // the method that defines the relationship in your Model
+            'attribute' => 'country_name', // foreign key attribute that is shown to user
+            'model'     => "App\Models\CountryList",
+            'tab'       => 'Contact Information',
+        ]);
+
+        $this->crud->addField([
+            'name'            => 'first_email',
+            'label'           => "Email 1",
+            'type'            => 'email',
+            'tab'             => 'Contact Information',
+        ]);
+
+        $this->crud->addField([
+            'name'            => 'second_email',
+            'label'           => "Email 2",
+            'type'            => 'email',
+            'tab'             => 'Contact Information',
+        ]);
+
+        $this->crud->addField([
+            'name'            => 'phone',
+            'label'           => "Phone",
+            'type'            => 'number',
+            'tab'             => 'Contact Information',
+        ]);
+
+        $this->crud->addField([
+            'name'            => 'fax',
+            'label'           => "Fax",
+            'type'            => 'number',
+            'tab'             => 'Contact Information',
+        ]);
+        
+        //tab licensing information
+        $this->crud->addField([
+            'name'  => 'first_lisenced_on',
+            'type'  => 'date_picker',
+            'label' => 'First Licensed On',
+            'tab'   => 'Licensing Information',
+
+            // optional:
+            'date_picker_options' => [
+                'todayBtn' => 'linked',
+                'format'   => 'dd-mm-yyyy',
+                'language' => 'en'
+            ],
+        ]);
+
+        $this->crud->addField([
+            'name'            => 'card',
+            'label'           => "Card",
+            'type'            => 'text',
+            'tab'             => 'Licensing Information',
+        ]);
+
+        $this->crud->addField([
+            'name'  => 'valid_card_start',
+            'type'  => 'date_picker',
+            'label' => 'Valid Card Start',
+            'tab'   => 'Licensing Information',
+
+            // optional:
+            'date_picker_options' => [
+                'todayBtn' => 'linked',
+                'format'   => 'dd-mm-yyyy',
+                'language' => 'en'
+            ],
+        ]);
+
+        $this->crud->addField([
+            'name'  => 'valid_card_end',
+            'type'  => 'date_picker',
+            'label' => 'Valid Card End',
+            'tab'   => 'Licensing Information',
+
+            // optional:
+            'date_picker_options' => [
+                'todayBtn' => 'linked',
+                'format'   => 'dd-mm-yyyy',
+                'language' => 'en'
+            ],
+        ]);
+    }
+
+    /**
+     * Define what happens when the Update operation is loaded.
+     * 
+     * @see https://backpackforlaravel.com/docs/crud-operation-update
+     * @return void
+     */
+    protected function setupUpdateOperation()
+    {
+        $this->setupCreateOperation();
+    }
+
+    protected function setupShowOperation()
+    {
+        // by default the Show operation will try to show all columns in the db table,
+        // but we can easily take over, and have full control of what columns are shown,
+        // by changing this config for the Show operation 
+        $this->crud->set('show.setFromDb', false);
+
+        $this->crud->addColumn([
+            'name' => 'title', // The db column name
+            'label' => "Title", // Table column heading
+            'type' => 'relationship',
+            'attribute' => 'short_desc',
+            'tab'   => 'Information',
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'first_name', // The db column name
+            'label' => "First Name", // Table column heading
+            'type' => 'text',
+            'tab'   => 'Information',
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'last_name', // The db column name
+            'label' => "Last Name", // Table column heading
+            'type' => 'text',
+            'tab'   => 'Information',
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'accountstatus', // The db column name
+            'label' => "Status", // Table column heading
+            'type' => 'relationship',
+            'attribute' => 'acc_status',
+            'tab'   => 'Information',
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'rc_dwp', // The db column name
+            'label' => "RC / DPW", // Table column heading
+            'type' => 'relationship',
+            'attribute' => 'rc_dpw_name',
+            'tab'   => 'Information',
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'first_email', // The db column name
+            'label' => "Email 1", // Table column heading
+            'type' => 'text',
+            'tab'   => 'Information',
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'Second_email', // The db column name
+            'label' => "Email 2", // Table column heading
+            'type' => 'text',
+            'tab'   => 'Information',
+        ]);
+
+        // example logic
+    //     $this->crud->addColumn([
+    //         'name' => 'table',
+    //         'label' => 'Table',
+    //         'type' => 'table',
+    //         'columns' => [
+    //             'name'  => 'Name',
+    //             'desc'  => 'Description',
+    //             'price' => 'Price',
+    //         ]
+    //     ]);
+    //     $this->crud->addColumn([
+    //         'name' => 'fake_table',
+    //         'label' => 'Fake Table',
+    //         'type' => 'table',
+    //         'columns' => [
+    //             'name'  => 'Name',
+    //             'desc'  => 'Description',
+    //             'price' => 'Price',
+    //         ],
+    //     ]);
+    //     $this->crud->addColumn('text');
+    }
+}

@@ -26,6 +26,11 @@ class RcDpwList extends Model
     // protected $hidden = [];
     // protected $dates = [];
 
+    public function personel()
+    {
+        return $this->hasMany('App\Models\Personel', 'rc_dpw_id', 'id');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | FUNCTIONS

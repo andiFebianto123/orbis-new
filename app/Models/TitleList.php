@@ -27,6 +27,11 @@ class TitleList extends Model
     // protected $hidden = [];
     // protected $dates = [];
 
+    public function personel()
+    {
+        return $this->hasMany('App\Models\Personel', 'title_id', 'id');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | FUNCTIONS
