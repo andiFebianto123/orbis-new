@@ -25,14 +25,14 @@ class CreatePersonelsTable extends Migration
             $table->text('marital_status');
             $table->text('ministry_background');
             $table->text('career_background');
-            $table->string('image');
+            $table->string('image')->nullable();
             $table->text('street_address');
             $table->text('city');
             $table->text('province');
             $table->text('postal_code');
             $table->integer('country_id');
             $table->string('first_email');
-            $table->string('second_email');
+            $table->string('second_email')->nullable();
             $table->integer('phone');
             $table->integer('fax');
             $table->date('first_lisenced_on');

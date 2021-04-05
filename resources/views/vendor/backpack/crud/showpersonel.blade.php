@@ -27,11 +27,10 @@
 @section('content')
 <div class="row">
 	<!-- <div class="{{ $crud->getShowContentClass() }}"> -->
-    <!-- <div class="col-md-8">
-		<div class="container col-md-8 mt-4">
-			<h1>Information</h1>
-		</div> -->
+    
 	<div class="card text-left" style="width: 30rem;">
+		<div class="col-md-12">
+		</div>
 		<div class="card-header text-center ">
 			<div class="col-md-12"> 
 			Information
