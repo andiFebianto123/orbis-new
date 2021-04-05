@@ -58,14 +58,14 @@ class Personel extends Model
         return $this->belongsTo('App\Models\Accountstatus', 'acc_status_id', 'id');
     }
 
-    public function rc_dwp()
+    public function rc_dpw()
     {
-        return $this->belongsTo('App\Models\RcDpwList', 'title_id', 'id');
+        return $this->belongsTo('App\Models\RcDpwList', 'rc_dpw_id', 'id');
     }
 
     public function title()
     {
-        return $this->belongsTo('App\Models\TitleList', 'rc_dpw_id', 'id');
+        return $this->belongsTo('App\Models\TitleList', 'title_id', 'id');
     }
 
     public function country()

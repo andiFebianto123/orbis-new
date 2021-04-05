@@ -18,6 +18,7 @@ class PersonelCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    // use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation { show as traitShow; }
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
@@ -72,7 +73,7 @@ class PersonelCrudController extends CrudController
         ]);
 
         $this->crud->addColumn([
-            'name' => 'rc_dwp', // The db column name
+            'name' => 'rc_dpw', // The db column name
             'label' => "RC / DPW", // Table column heading
             'type' => 'relationship',
             'attribute' => 'rc_dpw_name',
@@ -160,7 +161,7 @@ class PersonelCrudController extends CrudController
             'label'     => 'Regional Council', // Table column heading
             'type'      => 'select2',
             'name'      => 'rc_dpw_id', // the column that contains the ID of that connected entity;
-            'entity'    => 'rc_dwp', // the method that defines the relationship in your Model
+            'entity'    => 'rc_dpw', // the method that defines the relationship in your Model
             'attribute' => 'rc_dpw_name', // foreign key attribute that is shown to user
             'model'     => "App\Models\RcDpwList",
             'tab'       => 'Biodata',
@@ -373,86 +374,112 @@ class PersonelCrudController extends CrudController
         $this->setupCreateOperation();
     }
 
-    protected function setupShowOperation()
-    {
-        // by default the Show operation will try to show all columns in the db table,
-        // but we can easily take over, and have full control of what columns are shown,
-        // by changing this config for the Show operation 
-        $this->crud->set('show.setFromDb', false);
 
-        $this->crud->addColumn([
-            'name' => 'title', // The db column name
-            'label' => "Title", // Table column heading
-            'type' => 'relationship',
-            'attribute' => 'short_desc',
-            'tab'   => 'Information',
-        ]);
+    // protected function setupShowOperation()
+    // {
+    //     // by default the Show operation will try to show all columns in the db table,
+    //     // but we can easily take over, and have full control of what columns are shown,
+    //     // by changing this config for the Show operation 
+    //     $this->crud->set('show.setFromDb', false);
 
-        $this->crud->addColumn([
-            'name' => 'first_name', // The db column name
-            'label' => "First Name", // Table column heading
-            'type' => 'text',
-            'tab'   => 'Information',
-        ]);
-
-        $this->crud->addColumn([
-            'name' => 'last_name', // The db column name
-            'label' => "Last Name", // Table column heading
-            'type' => 'text',
-            'tab'   => 'Information',
-        ]);
-
-        $this->crud->addColumn([
-            'name' => 'accountstatus', // The db column name
-            'label' => "Status", // Table column heading
-            'type' => 'relationship',
-            'attribute' => 'acc_status',
-            'tab'   => 'Information',
-        ]);
-
-        $this->crud->addColumn([
-            'name' => 'rc_dwp', // The db column name
-            'label' => "RC / DPW", // Table column heading
-            'type' => 'relationship',
-            'attribute' => 'rc_dpw_name',
-            'tab'   => 'Information',
-        ]);
-
-        $this->crud->addColumn([
-            'name' => 'first_email', // The db column name
-            'label' => "Email 1", // Table column heading
-            'type' => 'text',
-            'tab'   => 'Information',
-        ]);
-
-        $this->crud->addColumn([
-            'name' => 'Second_email', // The db column name
-            'label' => "Email 2", // Table column heading
-            'type' => 'text',
-            'tab'   => 'Information',
-        ]);
-
-        // example logic
     //     $this->crud->addColumn([
-    //         'name' => 'table',
-    //         'label' => 'Table',
-    //         'type' => 'table',
-    //         'columns' => [
-    //             'name'  => 'Name',
-    //             'desc'  => 'Description',
-    //             'price' => 'Price',
-    //         ]
+    //         'name' => 'title', // The db column name
+    //         'label' => "Title", // Table column heading
+    //         'type' => 'relationship',
+    //         'attribute' => 'short_desc',
     //     ]);
+
     //     $this->crud->addColumn([
-    //         'name' => 'fake_table',
-    //         'label' => 'Fake Table',
-    //         'type' => 'table',
-    //         'columns' => [
-    //             'name'  => 'Name',
-    //             'desc'  => 'Description',
-    //             'price' => 'Price',
-    //         ],
+    //         'name' => 'first_name', // The db column name
+    //         'label' => "First Name", // Table column heading
+    //         'type' => 'text',
     //     ]);
-    //     $this->crud->addColumn('text');
-    }
+
+    //     $this->crud->addColumn([
+    //         'name' => 'last_name', // The db column name
+    //         'label' => "Last Name", // Table column heading
+    //         'type' => 'text',
+    //     ]);
+
+    //     $this->crud->addColumn([
+    //         'name' => 'accountstatus', // The db column name
+    //         'label' => "Status", // Table column heading
+    //         'type' => 'relationship',
+    //         'attribute' => 'acc_status',
+    //     ]);
+
+    //     $this->crud->addColumn([
+    //         'name' => 'rc_dpw', // The db column name
+    //         'label' => "RC / DPW", // Table column heading
+    //         'type' => 'relationship',
+    //         'attribute' => 'rc_dpw_name',
+    //     ]);
+
+    //     $this->crud->addColumn([
+    //         'name' => 'first_email', // The db column name
+    //         'label' => "Email 1", // Table column heading
+    //         'type' => 'text',
+    //     ]);
+
+    //     $this->crud->addColumn([
+    //         'name' => 'Second_email', // The db column name
+    //         'label' => "Email 2", // Table column heading
+    //         'type' => 'text',
+    //     ]);
+
+    //     $this->crud->addColumn([
+    //         'name' => 'phone', // The db column name
+    //         'label' => "Phone", // Table column heading
+    //         'type' => 'text'
+    //     ]);
+
+    //     $this->crud->addColumn([
+    //         'name' => 'street_address', // The db column name
+    //         'label' => "Street Address", // Table column heading
+    //         'type' => 'text'
+    //     ]);
+
+    //     $this->crud->addColumn([
+    //         'name' => 'city', // The db column name
+    //         'label' => "City", // Table column heading
+    //         'type' => 'text'
+    //     ]);
+
+    //     $this->crud->addColumn([
+    //         'name' => 'province', // The db column name
+    //         'label' => "Province", // Table column heading
+    //         'type' => 'text'
+    //     ]);
+
+    //     $this->crud->addColumn([
+    //         'name' => 'postal_code', // The db column name
+    //         'label' => "Postal Code", // Table column heading
+    //         'type' => 'text'
+    //     ]);
+
+    //     $this->crud->addColumn([
+    //         'name' => 'country', // The db column name
+    //         'label' => "Country", // Table column heading
+    //         'type' => 'relationship',
+    //         'attribute' => 'country_name',
+    //     ]);
+
+    //     $this->crud->addColumn([
+    //         'name' => 'image', // The db column name
+    //         'label' => "Image", // Table column heading
+    //         'type' => 'image'
+    //     ]);
+        
+    // }
+
+    public function show($id)
+        {
+            // custom logic before
+        $personels = \App\Models\Personel::find($id);
+
+        $data = ['personels'=> $personels];
+        $data['crud'] = $this->crud;
+        $data['entry'] = $this->crud->getCurrentEntry();
+        return view('vendor.backpack.crud.showpersonel',$data);
+        }
 }
