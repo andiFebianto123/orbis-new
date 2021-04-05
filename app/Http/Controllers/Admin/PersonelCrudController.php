@@ -474,12 +474,8 @@ class PersonelCrudController extends CrudController
 
     public function show($id)
         {
-            // custom logic before
-        $personels = \App\Models\Personel::find($id);
-
-        $data = ['personels'=> $personels];
-        $data['crud'] = $this->crud;
-        $data['entry'] = $this->crud->getCurrentEntry();
-        return view('vendor.backpack.crud.showpersonel',$data);
+            $this->crud->getCurrentEntry();
+            $data['crud'] = $this->crud;
+            return view('vendor.backpack.crud.showpersonel',$data);
         }
 }

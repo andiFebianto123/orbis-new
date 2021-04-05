@@ -1,6 +1,7 @@
 @extends(backpack_view('blank'))
 
 @php
+	$entry = $crud->getCurrentEntry();
   $defaultBreadcrumbs = [
     trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dashboard'),
     $crud->entity_name_plural => url($crud->route),
@@ -25,82 +26,78 @@
 @endsection
 
 @section('content')
-<div class="row">
+<!-- <div class="row"> -->
 	<!-- <div class="{{ $crud->getShowContentClass() }}"> -->
-    
-	<div class="card text-left" style="width: 30rem;">
+
+	<div class ="row">
 		<div class="col-md-12">
-		</div>
-		<div class="card-header text-center ">
-			<div class="col-md-12"> 
-			Information
+  			<div class="card">
+				<div class="card-header" style="background: #b5c7e0">
+			  		Biodata
+  				</div>
+				<div class="card-body">
+					<div class = "row">
+						<div class="col-md-6">
+							<table class = "table">
+								<tr>
+									<td>Title</td>
+									<td> {{ $entry->title->short_desc }}</td>
+								</tr>
+								<tr>
+									<td>Title</td>
+									<td> {{ $entry->title->short_desc }}</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
 			</div>
-  		</div>
-		<div class="card-body">
-			<div class="row">
-                <div class="col-md-12"> 
-                    <div class="form-group">
-                    	<label for="title">Title</label>
-                    	<input id="title" type="relationship" attribute="short_desc" value="{{ $personels['title']['short_desc'] }}" class="form-control" disabled />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="first_name">First Name</label>
-                        <input id="first_name" type="text" value="{{ $personels['first_name'] }}" class="form-control" disabled />
-                    </div>
-			 
-					<div class="form-group">
-                        <label for="last_name">Last Name</label>
-                        <input id="last_name" type="text" value="{{ $personels['last_name'] }}" class="form-control" disabled />
-                    </div>
-
-					<div class="form-group">
-                    	<label for="accountstatus">Status</label>
-                    	<input id="accountstatus" type="relationship" attribute="acc_status" value="{{ $personels['accountstatus'] ['acc_status']  }}" class="form-control" disabled />
-                    </div>
-					<div class="form-group">
-                    	<label for="rc_dpw">RC / DPW</label>
-                    	<input id="rc_dpw" type="relationship" attribute="rc_dpw_name" value="{{ $personels['rc_dpw'] ['rc_dpw_name'] }}" class="form-control" disabled />
-                    </div>
-					<div class="form-group">
-                        <label for="first_email">Email 1</label>
-                        <input id="first_email" type="email" value="{{ $personels['first_email'] }}" class="form-control" disabled />
-                    </div>
-					<div class="form-group">
-                        <label for="second_email">Email 2</label>
-                        <input id="second_email" type="email" value="{{ $personels['second_email'] }}" class="form-control" disabled />
-                    </div>
-				
-					<div class="form-group">
-                        <label for="phone">Phone</label>
-                        <input id="phone" type="text" value="{{ $personels['phone'] }}" class="form-control" disabled />
-                    </div>
-					<div class="form-group">
-                        <label for="street_address">Street Address</label>
-                        <input id="street_address" type="text" value="{{ $personels['street_address'] }}" class="form-control" disabled />
-                    </div>
-					<div class="form-group">
-                        <label for="city">City</label>
-                        <input id="city" type="text" value="{{ $personels['city'] }}" class="form-control" disabled />
-                    </div>
-					<div class="form-group">
-                        <label for="province">Province</label>
-                        <input id="province" type="text" value="{{ $personels['province'] }}" class="form-control" disabled />
-                    </div>
-					<div class="form-group">
-                        <label for="postal_code">Postal Code</label>
-                        <input id="postal_code" type="text" value="{{ $personels['postal_code'] }}" class="form-control" disabled />
-                    </div>
-					<div class="form-group">
-                        <label for="country">Country</label>
-                        <input id="country" type="relationship" attribute="country_name" value="{{ $personels['country'] ['country_name'] }}" class="form-control" disabled />
-                    </div>
-					<div class="form-group">
-                        <label for="image">Image</label>
-                        <input id="image" type="image" value="{{ $personels['image'] }}" class="form-control" disabled />
-                    </div>
- 				</div>
-    		</div>
+		</div>
+    	<div class="col-md-6">
+  			<div class="card">
+				<div class="card-header" style="background: #b5c7e0">
+			  		Contact Information
+  				</div>
+				<div class="card-body">
+					<div class = "row">
+						<div class="col-md-12">
+							<table class = "table">
+								<tr>
+									<td>Title</td>
+									<td> {{ $entry->title->short_desc }}</td>
+								</tr>
+								<tr>
+									<td>Title</td>
+									<td> {{ $entry->title->short_desc }}</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+  			<div class="card">
+				<div class="card-header" style="background: #b5c7e0">
+			  		Licensing Information
+  				</div>
+				<div class="card-body">
+					<div class = "row">
+						<div class="col-md-12">
+							<table class = "table">
+								<tr>
+									<td>Title</td>
+									<td> {{ $entry->title->short_desc }}</td>
+								</tr>
+								<tr>
+									<td>Title</td>
+									<td> {{ $entry->title->short_desc }}</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 
