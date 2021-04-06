@@ -35,21 +35,60 @@
 				<div class="card-header" style="background: #b5c7e0">
 			  		Biodata
   				</div>
+				<div class="img-center">
+					<img width="150px" src="{{str_replace('public', '', URL::to('/'))}}{{ str_replace('storage', 'storage/app/public', $entry->image) }}" alt="">
+				</div>
 				<div class="card-body">
-					<div class = "row">
+					<div class="row">
 						<div class="col-md-6">
 							<table class = "table">
 								<tr>
-									<td>Title</td>
-									<td> {{ $entry->title->short_desc }}</td>
+									<td>Status</td>
+									<td> {{ $entry->accountstatus->acc_status }}</td>
+								</tr>
+								<tr>
+									<td>Regional Council</td>
+									<td> {{ $entry->rc_dpw->rc_dpw_name }}</td>
 								</tr>
 								<tr>
 									<td>Title</td>
 									<td> {{ $entry->title->short_desc }}</td>
 								</tr>
+								<tr>
+									<td>First Name</td>
+									<td> {{ $entry->first_name }}</td>
+								</tr>
+								<tr>
+									<td>Last Name</td>
+									<td> {{ $entry->last_name }}</td>
+								</tr>
 							</table>
 						</div>
-					</div>
+						<div class="col-md-6">
+							<table class = "table">
+								<tr>
+									<td>Gender</td>
+									<td> {{ $entry->gender }}</td>
+								</tr>
+								<tr>
+									<td>Date of Birth</td>
+									<td> {{ $entry->date_of_birth }}</td>
+								</tr>
+								<tr>
+									<td>Marital Status</td>
+									<td> {{ $entry->marital_status }}</td>
+								</tr>
+								<tr>
+									<td>Ministry Background</td>
+									<td> {{ $entry->ministry_background }}</td>
+								</tr>
+								<tr>
+									<td>Career Background</td>
+									<td> {{ $entry->career_background }}</td>
+								</tr>
+							</table>
+						</div>
+					</div>	
 				</div>
 			</div>
 		</div>
@@ -63,12 +102,40 @@
 						<div class="col-md-12">
 							<table class = "table">
 								<tr>
-									<td>Title</td>
-									<td> {{ $entry->title->short_desc }}</td>
+									<td>Street Address</td>
+									<td> {{ $entry->street_address }}</td>
 								</tr>
 								<tr>
-									<td>Title</td>
-									<td> {{ $entry->title->short_desc }}</td>
+									<td>City</td>
+									<td> {{ $entry->city }}</td>
+								</tr>
+								<tr>
+									<td>Province</td>
+									<td> {{ $entry->province }}</td>
+								</tr>
+								<tr>
+									<td>Postal Code</td>
+									<td> {{ $entry->postal_code }}</td>
+								</tr>
+								<tr>
+									<td>Country</td>
+									<td> {{ $entry->country->country_name }}</td>
+								</tr>
+								<tr>
+									<td>Email</td>
+									<td> {{ $entry->first_email }}</td>
+								</tr>
+								<tr>
+									<td>Email 2</td>
+									<td> {{ $entry->second_email }}</td>
+								</tr>
+								<tr>
+									<td>Phone</td>
+									<td> {{ $entry->phone }}</td>
+								</tr>
+								<tr>
+									<td>Fax</td>
+									<td> {{ $entry->fax }}</td>
 								</tr>
 							</table>
 						</div>
@@ -86,12 +153,153 @@
 						<div class="col-md-12">
 							<table class = "table">
 								<tr>
-									<td>Title</td>
-									<td> {{ $entry->title->short_desc }}</td>
+									<td>First Licensed On</td>
+									<td> {{ $entry->first_lisenced_on }}</td>
 								</tr>
 								<tr>
+									<td>Card</td>
+									<td> {{ $entry->card }}</td>
+								</tr>
+								<tr>
+									<td>Valid Card Start</td>
+									<td> {{ $entry->valid_card_start }}</td>
+								</tr>
+								<tr>
+									<td>Valid Card End</td>
+									<td> {{ $entry->valid_card_end }}</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+  			<div class="card">
+				<div class="card-header" style="background: #b5c7e0">
+			  		Appointment History
+  				</div>
+				<div class="card-body">
+					<div class = "row">
+						<div class="col-md-12">
+							<table class = "table">
+								<tr>
 									<td>Title</td>
-									<td> {{ $entry->title->short_desc }}</td>
+								</tr>
+								<tr>
+									<td>Date</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+  			<div class="card">
+				<div class="card-header" style="background: #b5c7e0">
+			  		Special Role
+  				</div>
+				<div class="card-body">
+					<div class = "row">
+						<div class="col-md-12">
+							<table class = "table">
+								<tr>
+									<td>No</td>
+								</tr>
+								<tr>
+									<td>Role</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-12">
+  			<div class="card">
+				<div class="card-header" style="background: #b5c7e0">
+			  		Related Entity
+  				</div>
+				<div class="card-body">
+					<div class = "row">
+						<div class="col-md-6">
+							<table class = "table">
+								<tr>
+									<td>No</td>
+								</tr>
+								<tr>
+									<td>Entity</td>
+								</tr>
+								<tr>
+									<td>Address</td>
+								</tr>
+							</table>
+						</div>
+						<div class="col-md-6">
+							<table class = "table">
+								<tr>
+									<td>Office Address</td>
+								</tr>
+								<tr>
+									<td>Phone</td>
+								</tr>
+								<tr>
+									<td>Role</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+  			<div class="card">
+				<div class="card-header" style="background: #b5c7e0">
+			  		Education Backgorund
+  				</div>
+				<div class="card-body">
+					<div class = "row">
+						<div class="col-md-12">
+							<table class = "table">
+								<tr>
+									<td>Degree</td>
+								</tr>
+								<tr>
+									<td>Type</td>
+								</tr>
+								<tr>
+									<td>Concentration</td>
+								</tr>
+								<tr>
+									<td>School</td>
+								</tr>
+								<tr>
+									<td>Year</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+  			<div class="card">
+				<div class="card-header" style="background: #b5c7e0">
+			  		Status History
+  				</div>
+				<div class="card-body">
+					<div class = "row">
+						<div class="col-md-12">
+							<table class = "table">
+								<tr>
+									<td>status</td>
+								</tr>
+								<tr>
+									<td>Reason</td>
+								</tr>
+								<tr>
+									<td>Date</td>
 								</tr>
 							</table>
 						</div>
