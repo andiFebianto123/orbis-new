@@ -42,65 +42,65 @@
 					<div class="row">
 						<div class="col-md-6">
 							<table class = "table table-striped">
-								<tr>
+							<tr>
 									<td>Status</td>
-									<td> {{ $entry->accountstatus->acc_status }}</td>
+									<td> : {{ $entry->accountstatus->acc_status }}</td>
 								</tr>
 								<tr>
 									<td>Regional Council</td>
-									<td> {{ $entry->rc_dpw->rc_dpw_name }}</td>
+									<td> :  {{ $entry->rc_dpw->rc_dpw_name }}</td>
 								</tr>
 								<tr>
 									<td>Title</td>
-									<td> {{ $entry->title->short_desc }}</td>
+									<td> :  {{ $entry->title->short_desc }}</td>
 								</tr>
 								<tr>
 									<td>First Name</td>
-									<td> {{ $entry->first_name }}</td>
+									<td> :  {{ $entry->first_name }}</td>
 								</tr>
 								<tr>
 									<td>Last Name</td>
-									<td> {{ $entry->last_name }}</td>
+									<td> :  {{ $entry->last_name }}</td>
 								</tr>
 								<tr>
 									<td>Gender</td>
-									<td> {{ $entry->gender }}</td>
+									<td> :  {{ $entry->gender }}</td>
 								</tr>
 								<tr>
 									<td>Date of Birth</td>
-									<td> {{ $entry->date_of_birth }}</td>
+									<td> :  {{ $entry->date_of_birth }}</td>
 								</tr>
 							</table>
 						</div>
 						<div class="col-md-6">
 							<table class = "table table-striped">
-								<tr>
+							<tr>
 									<td>Marital Status</td>
-									<td> {{ $entry->marital_status }}</td>
+									<td> :  {{ $entry->marital_status }}</td>
 								</tr>
 								<tr>
 									<td>Spouse Name</td>
-									<td> {{ $entry->spouse_name }}</td>
+									<td> :  {{ $entry->spouse_name }}</td>
 								</tr>
 								<tr>
 									<td>Spouse Date of Birth</td>
-									<td> {{ $entry->spouse_date_of_birth }}</td>
+									<td> :  {{ $entry->spouse_date_of_birth }}</td>
 								</tr>
 								<tr>
 									<td>Anniversary</td>
-									<td> {{ $entry->anniversary }}</td>
+									<td> :  {{ $entry->anniversary }}</td>
 								</tr>
 								<tr>
 									<td>Children's Name</td>
-									<td> {{ $entry->child_name }}</td>
+									<td> :  {{ $entry->child_name }}</td>
 								</tr>
 								<tr>
 									<td>Ministry Background</td>
-									<td> {{ $entry->ministry_background }}</td>
+									<td> :  {{ $entry->ministry_background }}</td>
 								</tr>
 								<tr>
 									<td>Career Background</td>
-									<td> {{ $entry->career_background }}</td>
+									<td> :  {{ $entry->career_background }}</td>
 								</tr>
 							</table>
 						</div>
@@ -117,41 +117,41 @@
 					<div class = "row">
 						<div class="col-md-12">
 							<table class = "table table-striped">
-								<tr>
+							<tr>
 									<td>Street Address</td>
-									<td> {{ $entry->street_address }}</td>
+									<td> :  {{ $entry->street_address }}</td>
 								</tr>
 								<tr>
 									<td>City</td>
-									<td> {{ $entry->city }}</td>
+									<td> :  {{ $entry->city }}</td>
 								</tr>
 								<tr>
 									<td>Province</td>
-									<td> {{ $entry->province }}</td>
+									<td> :  {{ $entry->province }}</td>
 								</tr>
 								<tr>
 									<td>Postal Code</td>
-									<td> {{ $entry->postal_code }}</td>
+									<td> :  {{ $entry->postal_code }}</td>
 								</tr>
 								<tr>
 									<td>Country</td>
-									<td> {{ $entry->country->country_name }}</td>
+									<td> :  {{ $entry->country->country_name }}</td>
 								</tr>
 								<tr>
 									<td>Email</td>
-									<td> {{ $entry->first_email }}</td>
+									<td> :  {{ $entry->first_email }}</td>
 								</tr>
 								<tr>
 									<td>Email 2</td>
-									<td> {{ $entry->second_email }}</td>
+									<td> :  {{ $entry->second_email }}</td>
 								</tr>
 								<tr>
 									<td>Phone</td>
-									<td> {{ $entry->phone }}</td>
+									<td> :  {{ $entry->phone }}</td>
 								</tr>
 								<tr>
 									<td>Fax</td>
-									<td> {{ $entry->fax }}</td>
+									<td> :  {{ $entry->fax }}</td>
 								</tr>
 							</table>
 						</div>
@@ -170,19 +170,19 @@
 							<table class = "table table-striped">
 								<tr>
 									<td>First Licensed On</td>
-									<td> {{ $entry->first_lisenced_on }}</td>
+									<td> :  {{ $entry->first_lisenced_on }}</td>
 								</tr>
 								<tr>
 									<td>Card</td>
-									<td> {{ $entry->card }}</td>
+									<td> :  {{ $entry->card }}</td>
 								</tr>
 								<tr>
 									<td>Valid Card Start</td>
-									<td> {{ $entry->valid_card_start }}</td>
+									<td> :  {{ $entry->valid_card_start }}</td>
 								</tr>
 								<tr>
 									<td>Valid Card End</td>
-									<td> {{ $entry->valid_card_end }}</td>
+									<td> :  {{ $entry->valid_card_end }}</td>
 								</tr>
 							</table>
 						</div>

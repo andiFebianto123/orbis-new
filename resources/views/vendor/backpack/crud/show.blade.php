@@ -30,8 +30,7 @@
 
 	<!-- Default box -->
 	  <div class="">
-
-	  jijijojjppkp
+	  
 	  	@if ($crud->model->translationEnabled())
 			<div class="row">
 				<div class="col-md-12 mb-2">

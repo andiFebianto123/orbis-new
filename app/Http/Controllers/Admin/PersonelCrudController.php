@@ -93,7 +93,7 @@ class PersonelCrudController extends CrudController
         $this->crud->addColumn([
             'name' => 'phone', // The db column name
             'label' => "Phone", // Table column heading
-            'type' => 'number'
+            'type' => 'text'
         ]);
 
         $this->crud->addColumn([

@@ -73,6 +73,11 @@ class Personel extends Model
         return $this->belongsTo('App\Models\CountryList', 'country_id', 'id');
     }
 
+    public function appointment_history()
+    {
+        return $this->hasMany('App\Models\Appointment_history', 'personel_id', 'id');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | FUNCTIONS

@@ -19,3 +19,4 @@
         <li class='nav-item'><a class='nav-link' href='{{ backpack_url('countrylist') }}'><i class='nav-icon la la-list'></i> Country List</a></li>
 	</ul>
 </li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('appointment_history') }}'><i class='nav-icon la la-question'></i> Appointment History</a></li>
