@@ -23,6 +23,10 @@ class CreatePersonelsTable extends Migration
             $table->text('gender');
             $table->date('date_of_birth');
             $table->text('marital_status');
+            $table->text('spouse_name')->nullable();
+            $table->date('spouse_date_of_birth')->nullable();
+            $table->date('anniversary')->nullable();
+            $table->text('child_name')->nullable();
             $table->text('ministry_background');
             $table->text('career_background');
             $table->string('image')->nullable();

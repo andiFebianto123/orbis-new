@@ -35,13 +35,13 @@
 				<div class="card-header" style="background: #b5c7e0">
 			  		Biodata
   				</div>
-				<div class="img-center">
-					<img width="150px" src="{{str_replace('public', '', URL::to('/'))}}{{ str_replace('storage', 'storage/app/public', $entry->image) }}" alt="">
+				<div class="text-center">
+					<img width="150px" style="margin:15px ; border-radius: 50%" src="{{str_replace('public', '', URL::to('/'))}}{{ str_replace('storage', 'storage/app/public', $entry->image) }}" alt="">
 				</div>
 				<div class="card-body">
 					<div class="row">
 						<div class="col-md-6">
-							<table class = "table">
+							<table class = "table table-striped">
 								<tr>
 									<td>Status</td>
 									<td> {{ $entry->accountstatus->acc_status }}</td>
@@ -62,10 +62,6 @@
 									<td>Last Name</td>
 									<td> {{ $entry->last_name }}</td>
 								</tr>
-							</table>
-						</div>
-						<div class="col-md-6">
-							<table class = "table">
 								<tr>
 									<td>Gender</td>
 									<td> {{ $entry->gender }}</td>
@@ -74,9 +70,29 @@
 									<td>Date of Birth</td>
 									<td> {{ $entry->date_of_birth }}</td>
 								</tr>
+							</table>
+						</div>
+						<div class="col-md-6">
+							<table class = "table table-striped">
 								<tr>
 									<td>Marital Status</td>
 									<td> {{ $entry->marital_status }}</td>
+								</tr>
+								<tr>
+									<td>Spouse Name</td>
+									<td> {{ $entry->spouse_name }}</td>
+								</tr>
+								<tr>
+									<td>Spouse Date of Birth</td>
+									<td> {{ $entry->spouse_date_of_birth }}</td>
+								</tr>
+								<tr>
+									<td>Anniversary</td>
+									<td> {{ $entry->anniversary }}</td>
+								</tr>
+								<tr>
+									<td>Children's Name</td>
+									<td> {{ $entry->child_name }}</td>
 								</tr>
 								<tr>
 									<td>Ministry Background</td>
@@ -100,7 +116,7 @@
 				<div class="card-body">
 					<div class = "row">
 						<div class="col-md-12">
-							<table class = "table">
+							<table class = "table table-striped">
 								<tr>
 									<td>Street Address</td>
 									<td> {{ $entry->street_address }}</td>
@@ -151,7 +167,7 @@
 				<div class="card-body">
 					<div class = "row">
 						<div class="col-md-12">
-							<table class = "table">
+							<table class = "table table-striped">
 								<tr>
 									<td>First Licensed On</td>
 									<td> {{ $entry->first_lisenced_on }}</td>
@@ -182,7 +198,7 @@
 				<div class="card-body">
 					<div class = "row">
 						<div class="col-md-12">
-							<table class = "table">
+							<table class = "table table-striped">
 								<tr>
 									<td>Title</td>
 								</tr>
@@ -203,7 +219,7 @@
 				<div class="card-body">
 					<div class = "row">
 						<div class="col-md-12">
-							<table class = "table">
+							<table class = "table table-striped">
 								<tr>
 									<td>No</td>
 								</tr>
@@ -224,7 +240,7 @@
 				<div class="card-body">
 					<div class = "row">
 						<div class="col-md-6">
-							<table class = "table">
+							<table class = "table table-striped">
 								<tr>
 									<td>No</td>
 								</tr>
@@ -237,7 +253,7 @@
 							</table>
 						</div>
 						<div class="col-md-6">
-							<table class = "table">
+							<table class = "table table-striped">
 								<tr>
 									<td>Office Address</td>
 								</tr>
@@ -256,12 +272,12 @@
 		<div class="col-md-6">
   			<div class="card">
 				<div class="card-header" style="background: #b5c7e0">
-			  		Education Backgorund
+			  		Education Background
   				</div>
 				<div class="card-body">
 					<div class = "row">
 						<div class="col-md-12">
-							<table class = "table">
+							<table class = "table table-striped">
 								<tr>
 									<td>Degree</td>
 								</tr>
@@ -291,9 +307,9 @@
 				<div class="card-body">
 					<div class = "row">
 						<div class="col-md-12">
-							<table class = "table">
+							<table class = "table table-striped">
 								<tr>
-									<td>status</td>
+									<td>Status</td>
 								</tr>
 								<tr>
 									<td>Reason</td>

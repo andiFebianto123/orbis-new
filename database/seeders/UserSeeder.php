@@ -17,7 +17,7 @@ class UserSeeder extends Seeder
         $power_user = User::updateOrCreate([
             'name' => 'yemima',
             'email' => 'yemima@gmail.com',
-            'password' => '$2y$12$r3ueyelLv4O3RhRrpqEDt.raFs8sAh7GoJzMJ5ZGE5EHqps2JNILW', // qwerty
+            'password' => 'qwerty', // qwerty
             'privilege' => 'Power User', 
             'status_user' => 'Active']
         );
@@ -27,7 +27,7 @@ class UserSeeder extends Seeder
         $administrator = User::updateOrCreate([
             'name' => 'sontiara',
             'email' => 'sontiara@gmail.com',
-            'password' => '$2y$12$r3ueyelLv4O3RhRrpqEDt.raFs8sAh7GoJzMJ5ZGE5EHqps2JNILW', // qwerty
+            'password' => 'qwerty', // qwerty
             'privilege' => 'Administrator', 
             'status_user' => 'Active']
         );
