@@ -62,7 +62,7 @@ class Appointment_historyCrudController extends CrudController
             'name' => 'personel', // The db column name
             'label' => "Personel", // Table column heading
             'type' => 'relationship',
-            'attribute' => 'fisrt_name',
+            'attribute' => 'first_name',
         ]);
     }
 
@@ -97,11 +97,9 @@ class Appointment_historyCrudController extends CrudController
 
         $this->crud->addField([
             'label'     => 'Personel', // Table column heading
-            'type'      => 'select2',
+            'type'      => 'hidden',
             'name'      => 'personel_id', // the column that contains the ID of that connected entity;
-            'entity'    => 'personel', // the method that defines the relationship in your Model
-            'attribute' => 'first_name', // foreign key attribute that is shown to user
-            'model'     => "App\Models\Personel",
+            'default'   => request('personel_id')
         ]);
 
         

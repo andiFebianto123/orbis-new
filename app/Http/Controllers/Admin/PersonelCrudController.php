@@ -422,7 +422,7 @@ class PersonelCrudController extends CrudController
         $this->setupCreateOperation();
     }
 
-    public function show($id)
+    public function show()
         {
             $this->crud->getCurrentEntry();
             $data['crud'] = $this->crud;
