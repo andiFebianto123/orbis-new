@@ -15,7 +15,7 @@ class CreateStatusHistoriesTable extends Migration
     {
         Schema::create('status_histories', function (Blueprint $table) {
             $table->id();
-            $table->integer('status_id')->nullable();
+            $table->text('status')->nullable();
             $table->text('reason')->nullable();
             $table->date('date_status')->nullable();
             $table->integer('personel_id')->nullable();

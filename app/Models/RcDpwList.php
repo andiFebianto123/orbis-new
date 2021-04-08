@@ -31,6 +31,11 @@ class RcDpwList extends Model
         return $this->hasMany('App\Models\Personel', 'rc_dpw_id', 'id');
     }
 
+    public function church()
+    {
+        return $this->hasMany('App\Models\Church', 'rc_dpw_id', 'id');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | FUNCTIONS

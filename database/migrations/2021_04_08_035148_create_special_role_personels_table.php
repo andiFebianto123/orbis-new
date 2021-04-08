@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRelatedEntitiesTable extends Migration
+class CreateSpecialRolePersonelsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,9 @@ class CreateRelatedEntitiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('related_entities', function (Blueprint $table) {
+        Schema::create('special_role_personels', function (Blueprint $table) {
             $table->id();
-            $table->text('entity')->nullable();
-            $table->text('address_entity')->nullable();
-            $table->text('office_address_entity')->nullable();
-            $table->integer('phone')->nullable();
-            $table->text('role')->nullable();
+            $table->integer('special_role_id')->nullable();
             $table->integer('personel_id')->nullable();
             $table->timestamps();
         });
@@ -32,6 +28,6 @@ class CreateRelatedEntitiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('related_entities');
+        Schema::dropIfExists('special_role_personels');
     }
 }

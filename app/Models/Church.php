@@ -5,7 +5,7 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 
-class SpecialRole extends Model
+class Church extends Model
 {
     use CrudTrait;
 
@@ -15,9 +15,28 @@ class SpecialRole extends Model
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'special_roles';
+    protected $table = 'churches';
     protected $fillable = [
-        'special_role',
+        'church_status',
+        'founded_on',
+        'church_id',
+        'church_type_id',
+        'rc_dpw_id',
+        'church_name',
+        'contact_person',
+        'building_name',
+        'church_address',
+        'office_address',
+        'city',
+        'province',
+        'postal_code',
+        'country_id',
+        'first_email',
+        'second_email',
+        'phone',
+        'fax',
+        'website',
+        'map_url',
     ];
     // protected $primaryKey = 'id';
     // public $timestamps = false;
@@ -26,11 +45,20 @@ class SpecialRole extends Model
     // protected $hidden = [];
     // protected $dates = [];
 
-    public function personel()
+    public function church_type()
     {
-        return $this->hasMany('App\Models\SpecialRolePersonel', 'special_role_id', 'id');
+        return $this->belongsTo('App\Models\ChurchEntityType', 'church_type_id', 'id');
     }
 
+    public function rc_dpw()
+    {
+        return $this->belongsTo('App\Models\RcDpwList', 'rc_dpw_id', 'id');
+    }
+
+    public function country()
+    {
+        return $this->belongsTo('App\Models\CountryList', 'country_id', 'id');
+    }
     /*
     |--------------------------------------------------------------------------
     | FUNCTIONS

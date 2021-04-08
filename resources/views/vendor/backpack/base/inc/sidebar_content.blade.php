@@ -1,5 +1,6 @@
 <!-- This file is used to store sidebar items, starting with Backpack\Base 0.9.0 -->
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('dashboard') }}"><i class="la la-home nav-icon"></i> {{ trans('backpack::base.dashboard') }}</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('church') }}'><i class='nav-icon la la-church'></i> Church</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('personel') }}'><i class='nav-icon la la-id-badge'></i> Personels</a></li>
 <li class="nav-item nav-dropdown">
 	<a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-users"></i> Admin</a>
@@ -19,4 +20,8 @@
         <li class='nav-item'><a class='nav-link' href='{{ backpack_url('countrylist') }}'><i class='nav-icon la la-list'></i> Country List</a></li>
 	</ul>
 </li>
-<li class='nav-item'><a class='nav-link' href='{{ backpack_url('appointment_history') }}'><i class='nav-icon la la-question'></i> Appointment History</a></li>
+<!-- <li class='nav-item'><a class='nav-link' href='{{ backpack_url('appointment_history') }}'><i class='nav-icon la la-question'></i> Appointment History</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('relatedentity') }}'><i class='nav-icon la la-question'></i> Related Eentities</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('educationbackground') }}'><i class='nav-icon la la-question'></i> Education Backgrounds</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('statushistory') }}'><i class='nav-icon la la-question'></i> Status Histories</a></li> -->
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('specialrolepersonel') }}'><i class='nav-icon la la-question'></i> SpecialRolePersonels</a></li>

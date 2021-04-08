@@ -26,6 +26,11 @@ class ChurchEntityType extends Model
     // protected $hidden = [];
     // protected $dates = [];
 
+    public function church()
+    {
+        return $this->hasMany('App\Models\Church', 'church_type_id', 'id');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | FUNCTIONS

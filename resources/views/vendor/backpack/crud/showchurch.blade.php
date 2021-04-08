@@ -2,7 +2,7 @@
 
 @php
 	$entry = $crud->getCurrentEntry();
-  $defaultBreadcrumbs = [
+  	$defaultBreadcrumbs = [
     trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dashboard'),
     $crud->entity_name_plural => url($crud->route),
     trans('backpack::crud.preview') => false,
@@ -33,7 +33,7 @@
 		<div class="col-md-12">
   			<div class="card">
 				<div class="card-header" style="background: #b5c7e0">
-			  		Biodata
+			  		Information
   				</div>
 				<div class="text-center">
 					<img width="150px" style="margin:15px ; border-radius: 50%" src="{{str_replace('public', '', URL::to('/'))}}{{ str_replace('storage', 'storage/app/public', $entry->image) }}" alt="">
@@ -42,85 +42,50 @@
 					<div class="row">
 						<div class="col-md-6">
 							<table class = "table table-striped">
-							<tr>
+								<tr>
 									<td>Status</td>
-									<td> : {{ $entry->accountstatus->acc_status }}</td>
+									<td> : {{ $entry->status }}</td>
 								</tr>
 								<tr>
-									<td>Regional Council</td>
+									<td>Founded On</td>
+									<td> : {{ $entry->founded_on }}</td>
+								</tr>
+								<tr>
+									<td>Church ID</td>
+									<td> : {{ $entry->church_id }}</td>
+								</tr>
+								<tr>
+									<td>Type</td>
+									<td> :  {{ $entry->church_type->entities_type }}</td>
+								</tr>
+								<tr>
+									<td>RC / DPW</td>
 									<td> :  {{ $entry->rc_dpw->rc_dpw_name }}</td>
 								</tr>
 								<tr>
-									<td>Title</td>
-									<td> :  {{ $entry->title->short_desc }}</td>
+									<td>Church Name</td>
+									<td> :  {{ $entry->church_name }}</td>
 								</tr>
 								<tr>
-									<td>First Name</td>
-									<td> :  {{ $entry->first_name }}</td>
+									<td>Contact Person</td>
+									<td> :  {{ $entry->contact_person }}</td>
 								</tr>
 								<tr>
-									<td>Last Name</td>
-									<td> :  {{ $entry->last_name }}</td>
+									<td>Building Name</td>
+									<td> :  {{ $entry->building_name }}</td>
 								</tr>
 								<tr>
-									<td>Gender</td>
-									<td> :  {{ $entry->gender }}</td>
+									<td>Church Address</td>
+									<td> :  {{ $entry->church_address }}</td>
 								</tr>
 								<tr>
-									<td>Date of Birth</td>
-									<td> :  {{ $entry->date_of_birth }}</td>
+									<td>Office Address</td>
+									<td> :  {{ $entry->office_address }}</td>
 								</tr>
 							</table>
 						</div>
 						<div class="col-md-6">
 							<table class = "table table-striped">
-							<tr>
-									<td>Marital Status</td>
-									<td> :  {{ $entry->marital_status }}</td>
-								</tr>
-								<tr>
-									<td>Spouse Name</td>
-									<td> :  {{ $entry->spouse_name }}</td>
-								</tr>
-								<tr>
-									<td>Spouse Date of Birth</td>
-									<td> :  {{ $entry->spouse_date_of_birth }}</td>
-								</tr>
-								<tr>
-									<td>Anniversary</td>
-									<td> :  {{ $entry->anniversary }}</td>
-								</tr>
-								<tr>
-									<td>Children's Name</td>
-									<td> :  {{ $entry->child_name }}</td>
-								</tr>
-								<tr>
-									<td>Ministry Background</td>
-									<td> :  {{ $entry->ministry_background }}</td>
-								</tr>
-								<tr>
-									<td>Career Background</td>
-									<td> :  {{ $entry->career_background }}</td>
-								</tr>
-							</table>
-						</div>
-					</div>	
-				</div>
-			</div>
-		</div>
-    	<div class="col-md-6">
-  			<div class="card">
-				<div class="card-header" style="background: #b5c7e0">
-			  		Contact Information
-  				</div>
-				<div class="card-body">
-					<div class = "row">
-						<div class="col-md-12">
-							<table class = "table table-striped">
-							<tr>
-									<td>Street Address</td>
-									<td> :  {{ $entry->street_address }}</td>
-								</tr>
 								<tr>
 									<td>City</td>
 									<td> :  {{ $entry->city }}</td>
@@ -153,6 +118,40 @@
 									<td>Fax</td>
 									<td> :  {{ $entry->fax }}</td>
 								</tr>
+								<tr>
+									<td>Website</td>
+									<td> :  {{ $entry->website }}</td>
+								</tr>
+								<tr>
+									<td>Map Url</td>
+									<td> :  {{ $entry->map_url }}</td>
+								</tr>
+							</table>
+						</div>
+					</div>	
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+  			<div class="card">
+				<div class="card-header" style="background: #b5c7e0">
+			  		Legal Document For Church
+  				</div>
+				<div class="card-body">
+					<div class = "row">
+						<div class="col-md-12">
+  							<a href ="##" class = 'btn btn-primary btn-sm'>Add Document</a>
+							<table id ="tableLegalDocument" class = "table table-striped">
+								<thead>
+									<tr >
+										<th>Document</th>
+										<th>Number</th>
+										<th>Issue Data</th>
+										<th>Exp Date</th>
+										<th>Status</th>
+										<th>Action</th>
+									</tr>
+								</thead>
 							</table>
 						</div>
 					</div>
@@ -162,186 +161,21 @@
 		<div class="col-md-6">
   			<div class="card">
 				<div class="card-header" style="background: #b5c7e0">
-			  		Licensing Information
+			  		Service Time
   				</div>
 				<div class="card-body">
 					<div class = "row">
 						<div class="col-md-12">
-							<table class = "table table-striped">
-								<tr>
-									<td>First Licensed On</td>
-									<td> :  {{ $entry->first_lisenced_on }}</td>
-								</tr>
-								<tr>
-									<td>Card</td>
-									<td> :  {{ $entry->card }}</td>
-								</tr>
-								<tr>
-									<td>Valid Card Start</td>
-									<td> :  {{ $entry->valid_card_start }}</td>
-								</tr>
-								<tr>
-									<td>Valid Card End</td>
-									<td> :  {{ $entry->valid_card_end }}</td>
-								</tr>
-							</table>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="col-md-6">
-  			<div class="card">
-				<div class="card-header" style="background: #b5c7e0">
-			  		Appointment History
-  				</div>
-				<div class="card-body">
-					<div class = "row">
-						<div class="col-md-12">
-  							<a href ="{{url('admin/appointment_history/create?personel_id='.$entry->id)}}" class = 'btn btn-primary btn-sm'>Add Appointment</a>
-							<table id ="tableAppointmentHistory" class = "table table-striped">
+						<a href ="##" class = 'btn btn-primary btn-sm'>Add Service Time</a>
+							<table id ="tableServiceTime" class = "table table-striped">
 								<thead>
 									<tr >
-										<th>Title</th>
-										<th>Date</th>
+										<th>Service</th>
+										<th>Time</th>
+										<th>Room</th>
 										<th>Action</th>
 									</tr>
 								</thead>
-								<tbody>
-									@foreach($entry->appointment_history as $key => $ah)
-										<tr>
-											<td>{{$ah->title_appointment}}</td>
-											<td>{{$ah->date_appointment}}</td> 
-											<td>
-											<a href="{{url('admin/appointment_history/'.$ah->id.'/edit')}}">Edit</a>
-											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
-											data-route="{{ url('admin/appointment_history/'.$ah->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i> {{ trans('backpack::crud.delete') }}</a>
-											</td>
-										</tr>
-									@endforeach
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="col-md-6">
-  			<div class="card">
-				<div class="card-header" style="background: #b5c7e0">
-			  		Special Role
-  				</div>
-				<div class="card-body">
-					<div class = "row">
-						<div class="col-md-12">
-						<a href ="{{url('admin/specialrolepersonel/create?personel_id='.$entry->id)}}" class = 'btn btn-primary btn-sm'>Add Special Role</a>
-							<table id ="tableSpecialRolePersonel" class = "table table-striped">
-								<thead>
-									<tr >
-										<th>No</th>
-										<th>Special Role</th>
-										<th>Action</th>
-									</tr>
-								</thead>
-								<tbody>
-									@foreach($entry->special_role_personel as $key => $srp)
-										<tr>
-											<td>{{$srp->id}}</td>
-											<td>{{$srp->special_role}}</td>
-											<td>
-											<a href="{{url('admin/specialrolepersonel/'.$srp->id.'/edit')}}">Edit</a>
-											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
-											data-route="{{ url('admin/specialrolepersonel/'.$srp->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i> {{ trans('backpack::crud.delete') }}</a>
-											</td>
-										</tr>
-									@endforeach
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="col-md-12">
-  			<div class="card">
-				<div class="card-header" style="background: #b5c7e0">
-			  		Related Entity
-  				</div>
-				<div class="card-body">
-					<div class = "row">
-						<div class="col-md-12">
-						<a href ="{{url('admin/relatedentity/create?personel_id='.$entry->id)}}" class = 'btn btn-primary btn-sm'>Add Related Entity</a>
-							<table id ="tableRelatedEntity" class = "table table-striped">
-								<thead>
-									<tr >
-										<th>No</th>
-										<th>Entity</th>
-										<th>Address</th>
-										<th>Office Address</th>
-										<th>Phone</th>
-										<th>Role</th>
-										<th>Action</th>
-									</tr>
-								</thead>
-								<tbody>
-									@foreach($entry->related_entity as $key => $re)
-										<tr>
-											<td>{{$re->id}}</td>
-											<td>{{$re->entity}}</td>
-											<td>{{$re->address_entity}}</td>
-											<td>{{$re->office_address_entity}}</td>
-											<td>{{$re->phone}}</td>
-											<td>{{$re->role}}</td>
-											<td>
-											<a href="{{url('admin/relatedentity/'.$re->id.'/edit')}}">Edit</a>
-											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
-											data-route="{{ url('admin/relatedentity/'.$re->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i> {{ trans('backpack::crud.delete') }}</a>
-											</td>
-										</tr>
-									@endforeach
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="col-md-6">
-  			<div class="card">
-				<div class="card-header" style="background: #b5c7e0">
-			  		Education Background
-  				</div>
-				<div class="card-body">
-					<div class = "row">
-						<div class="col-md-12">
-						<a href ="{{url('admin/educationbackground/create?personel_id='.$entry->id)}}" class = 'btn btn-primary btn-sm'>Add Education</a>
-							<table id ="tableEducationBackground" class = "table table-striped">
-								<thead>
-									<tr >
-										<th>Degree</th>
-										<th>Type</th>
-										<th>Concentration</th>
-										<th>School</th>
-										<th>Year</th>
-										<th>Action</th>
-									</tr>
-								</thead>
-								<tbody>
-									@foreach($entry->education_background as $key => $eb)
-										<tr>
-											<td>{{$eb->degree}}</td>
-											<td>{{$eb->type_education}}</td>
-											<td>{{$eb->concentration_education}}</td>
-											<td>{{$eb->school}}</td>
-											<td>{{$eb->year}}</td>
-											<td>
-											<a href="{{url('admin/educationbackground/'.$eb->id.'/edit')}}">Edit</a>
-											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
-											data-route="{{ url('admin/educationbackground/'.$eb->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i> {{ trans('backpack::crud.delete') }}</a>
-											</td>
-										</tr>
-									@endforeach
-								</tbody>
 							</table>
 						</div>
 					</div>
@@ -356,7 +190,7 @@
 				<div class="card-body">
 					<div class = "row">
 						<div class="col-md-12">
-						<a href ="{{url('admin/statushistory/create?personel_id='.$entry->id)}}" class = 'btn btn-primary btn-sm'>Add Status</a>
+						<a href ="##" class = 'btn btn-primary btn-sm'>Add Status</a>
 							<table id ="tableStatusHistory" class = "table table-striped">
 								<thead>
 									<tr >
@@ -366,20 +200,54 @@
 										<th>Action</th>
 									</tr>
 								</thead>
-								<tbody>
-									@foreach($entry->status_history as $key => $sh)
-										<tr>
-											<td>{{$sh->status}}</td>
-											<td>{{$sh->reason}}</td>
-											<td>{{$sh->date_status}}</td>
-											<td>
-											<a href="{{url('admin/statushistory/'.$sh->id.'/edit')}}">Edit</a>
-											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
-											data-route="{{ url('admin/statushistory/'.$sh->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i> {{ trans('backpack::crud.delete') }}</a>
-											</td>
-										</tr>
-									@endforeach
-								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+  			<div class="card">
+				<div class="card-header" style="background: #b5c7e0">
+			  		Related Entity
+  				</div>
+				<div class="card-body">
+					<div class = "row">
+						<div class="col-md-12">
+						<a href ="##" class = 'btn btn-primary btn-sm'>Add Related Entity</a>
+							<table id ="tableRelatedEntity" class = "table table-striped">
+								<thead>
+									<tr >
+										<th>No</th>
+										<th>Entity</th>
+										<th>Type</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-12">
+  			<div class="card">
+				<div class="card-header" style="background: #b5c7e0">
+			  		Structure
+  				</div>
+				<div class="card-body">
+					<div class = "row">
+						<div class="col-md-12">
+						<a href ="##" class = 'btn btn-primary btn-sm'>Add Structure</a>
+							<table id ="tableStructure" class = "table table-striped">
+								<thead>
+									<tr >
+										<th>No</th>
+										<th>Personal Name</th>
+										<th>Title</th>
+										<th>Action</th>
+									</tr>
+								</thead>
 							</table>
 						</div>
 					</div>
@@ -469,19 +337,13 @@
 	
 	<script>
 		$(document).ready(function() {
-		$('#tableAppointmentHistory').DataTable();
+		$('#tableLegalDocument').DataTable();
 		} );
 	</script>
 
 	<script>
 		$(document).ready(function() {
-		$('#tableRelatedEntity').DataTable();
-		} );
-	</script>
-
-	<script>
-		$(document).ready(function() {
-		$('#tableEducationBackground').DataTable();
+		$('#tableServiceTime').DataTable();
 		} );
 	</script>
 
@@ -493,7 +355,13 @@
 
 	<script>
 		$(document).ready(function() {
-		$('#tableSpecialRolePersonel').DataTable();
+		$('#tableStructure').DataTable();
+		} );
+	</script>
+
+	<script>
+		$(document).ready(function() {
+		$('#tableRelatedEntity').DataTable();
 		} );
 	</script>
 

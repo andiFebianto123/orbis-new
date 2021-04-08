@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\Appointment_historyRequest;
+use App\Http\Requests\EducationBackgroundRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
- * Class Appointment_historyCrudController
+ * Class EducationBackgroundCrudController
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class Appointment_historyCrudController extends CrudController
+class EducationBackgroundCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
@@ -26,14 +26,9 @@ class Appointment_historyCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\Appointment_history::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/appointment_history');
-        CRUD::setEntityNameStrings('Appointment History', 'Appointment Histories');
-    }
-
-    public function index()
-    {
-        //
+        CRUD::setModel(\App\Models\EducationBackground::class);
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/educationbackground');
+        CRUD::setEntityNameStrings('Education Background', 'Education Backgrounds');
     }
 
     /**
@@ -44,7 +39,6 @@ class Appointment_historyCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        
         $this->crud->addColumn([
             'name' => 'id', // The db column name
             'label' => "ID", // Table column heading
@@ -52,15 +46,33 @@ class Appointment_historyCrudController extends CrudController
         ]);
 
         $this->crud->addColumn([
-            'name' => 'title_appointment', // The db column name
-            'label' => "Title", // Table column heading
+            'name' => 'degree', // The db column name
+            'label' => "Degree", // Table column heading
             'type' => 'text'
         ]);
 
         $this->crud->addColumn([
-            'name' => 'date_appointment', // The db column name
-            'label' => "Date", // Table column heading
-            'type' => 'date'
+            'name' => 'type_education', // The db column name
+            'label' => "Type", // Table column heading
+            'type' => 'text'
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'concentration_education', // The db column name
+            'label' => "Concentration", // Table column heading
+            'type' => 'text'
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'school', // The db column name
+            'label' => "School", // Table column heading
+            'type' => 'text'
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'year', // The db column name
+            'label' => "Year", // Table column heading
+            'type' => 'number'
         ]);
 
         $this->crud->addColumn([
@@ -79,25 +91,36 @@ class Appointment_historyCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(Appointment_historyRequest::class);
+        CRUD::setValidation(EducationBackgroundRequest::class);
 
         $this->crud->addField([
-            'name'            => 'title_appointment',
-            'label'           => "Title",
+            'name'            => 'degree',
+            'label'           => "Degree",
             'type'            => 'text',
         ]);
 
         $this->crud->addField([
-            'name'  => 'date_appointment',
-            'type'  => 'date_picker',
-            'label' => 'Date Appointment',
+            'name'            => 'type_education',
+            'label'           => "Type",
+            'type'            => 'text',
+        ]);
 
-            // optional:
-            'date_picker_options' => [
-                'todayBtn' => 'linked',
-                'format'   => 'dd-mm-yyyy',
-                'language' => 'en'
-            ],
+        $this->crud->addField([
+            'name'            => 'concentration_education',
+            'label'           => "Concentration",
+            'type'            => 'text',
+        ]);
+
+        $this->crud->addField([
+            'name'            => 'school',
+            'label'           => "School",
+            'type'            => 'text',
+        ]);
+
+        $this->crud->addField([
+            'name'            => 'year',
+            'label'           => "Year",
+            'type'            => 'text',
         ]);
 
         $this->crud->addField([

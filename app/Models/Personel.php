@@ -78,6 +78,26 @@ class Personel extends Model
         return $this->hasMany('App\Models\Appointment_history', 'personel_id', 'id');
     }
 
+    public function related_entity()
+    {
+        return $this->hasMany('App\Models\Relatedentity', 'personel_id', 'id');
+    }
+
+    public function education_background()
+    {
+        return $this->hasMany('App\Models\EducationBackground', 'personel_id', 'id');
+    }
+
+    public function status_history()
+    {
+        return $this->hasMany('App\Models\StatusHistory', 'personel_id', 'id');
+    }
+
+    public function special_role_personel()
+    {
+        return $this->hasMany('App\Models\StatusHistory', 'personel_id', 'id');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | FUNCTIONS

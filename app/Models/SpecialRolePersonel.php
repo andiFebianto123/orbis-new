@@ -5,7 +5,7 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 
-class SpecialRole extends Model
+class SpecialRolePersonel extends Model
 {
     use CrudTrait;
 
@@ -15,9 +15,10 @@ class SpecialRole extends Model
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'special_roles';
+    protected $table = 'special_role_personels';
     protected $fillable = [
-        'special_role',
+        'special_role_id',
+        'personel_id',
     ];
     // protected $primaryKey = 'id';
     // public $timestamps = false;
@@ -26,9 +27,14 @@ class SpecialRole extends Model
     // protected $hidden = [];
     // protected $dates = [];
 
+    public function special_role_personel()
+    {
+        return $this->belongsTo('App\Models\SpecialRole', 'special_role_id', 'id');
+    }
+
     public function personel()
     {
-        return $this->hasMany('App\Models\SpecialRolePersonel', 'special_role_id', 'id');
+        return $this->belongsTo('App\Models\Personel', 'personel_id', 'id');
     }
 
     /*

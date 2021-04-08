@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\Appointment_historyRequest;
+use App\Http\Requests\RelatedentityRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
- * Class Appointment_historyCrudController
+ * Class RelatedentityCrudController
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class Appointment_historyCrudController extends CrudController
+class RelatedentityCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
@@ -26,14 +26,9 @@ class Appointment_historyCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\Appointment_history::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/appointment_history');
-        CRUD::setEntityNameStrings('Appointment History', 'Appointment Histories');
-    }
-
-    public function index()
-    {
-        //
+        CRUD::setModel(\App\Models\Relatedentity::class);
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/relatedentity');
+        CRUD::setEntityNameStrings('Related Entity', 'Related Entities');
     }
 
     /**
@@ -44,7 +39,6 @@ class Appointment_historyCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        
         $this->crud->addColumn([
             'name' => 'id', // The db column name
             'label' => "ID", // Table column heading
@@ -52,15 +46,33 @@ class Appointment_historyCrudController extends CrudController
         ]);
 
         $this->crud->addColumn([
-            'name' => 'title_appointment', // The db column name
-            'label' => "Title", // Table column heading
+            'name' => 'entity', // The db column name
+            'label' => "Entity", // Table column heading
             'type' => 'text'
         ]);
 
         $this->crud->addColumn([
-            'name' => 'date_appointment', // The db column name
-            'label' => "Date", // Table column heading
-            'type' => 'date'
+            'name' => 'address_entity', // The db column name
+            'label' => "Address", // Table column heading
+            'type' => 'text'
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'office_address_entity', // The db column name
+            'label' => "Office Address", // Table column heading
+            'type' => 'text'
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'phone', // The db column name
+            'label' => "Phone", // Table column heading
+            'type' => 'text'
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'role', // The db column name
+            'label' => "Phone", // Table column heading
+            'type' => 'text'
         ]);
 
         $this->crud->addColumn([
@@ -79,25 +91,36 @@ class Appointment_historyCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(Appointment_historyRequest::class);
+        CRUD::setValidation(RelatedentityRequest::class);
 
         $this->crud->addField([
-            'name'            => 'title_appointment',
-            'label'           => "Title",
+            'name'            => 'entity',
+            'label'           => "Entity",
             'type'            => 'text',
         ]);
 
         $this->crud->addField([
-            'name'  => 'date_appointment',
-            'type'  => 'date_picker',
-            'label' => 'Date Appointment',
+            'name'            => 'address_entity',
+            'label'           => "Address",
+            'type'            => 'text',
+        ]);
 
-            // optional:
-            'date_picker_options' => [
-                'todayBtn' => 'linked',
-                'format'   => 'dd-mm-yyyy',
-                'language' => 'en'
-            ],
+        $this->crud->addField([
+            'name'            => 'office_address_entity',
+            'label'           => "Office Address",
+            'type'            => 'text',
+        ]);
+
+        $this->crud->addField([
+            'name'            => 'phone',
+            'label'           => "Phone",
+            'type'            => 'text',
+        ]);
+
+        $this->crud->addField([
+            'name'            => 'role',
+            'label'           => "Role",
+            'type'            => 'text',
         ]);
 
         $this->crud->addField([
@@ -106,7 +129,6 @@ class Appointment_historyCrudController extends CrudController
             'name'      => 'personel_id', // the column that contains the ID of that connected entity;
             'default'   => request('personel_id')
         ]);
-
     }
 
     /**

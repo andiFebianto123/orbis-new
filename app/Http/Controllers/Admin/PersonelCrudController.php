@@ -423,9 +423,9 @@ class PersonelCrudController extends CrudController
     }
 
     public function show()
-        {
-            $this->crud->getCurrentEntry();
-            $data['crud'] = $this->crud;
-            return view('vendor.backpack.crud.showpersonel',$data);
-        }
+    {
+        $this->crud->getCurrentEntry();
+        $data['crud'] = $this->crud;
+        return view('vendor.backpack.crud.showpersonel',$data);
+    }
 }

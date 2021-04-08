@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\Appointment_historyRequest;
+use App\Http\Requests\SpecialRolePersonelRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
- * Class Appointment_historyCrudController
+ * Class SpecialRolePersonelCrudController
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class Appointment_historyCrudController extends CrudController
+class SpecialRolePersonelCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
@@ -26,14 +26,9 @@ class Appointment_historyCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\Appointment_history::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/appointment_history');
-        CRUD::setEntityNameStrings('Appointment History', 'Appointment Histories');
-    }
-
-    public function index()
-    {
-        //
+        CRUD::setModel(\App\Models\SpecialRolePersonel::class);
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/specialrolepersonel');
+        CRUD::setEntityNameStrings('Special Role', 'Special Role');
     }
 
     /**
@@ -44,7 +39,6 @@ class Appointment_historyCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        
         $this->crud->addColumn([
             'name' => 'id', // The db column name
             'label' => "ID", // Table column heading
@@ -52,15 +46,10 @@ class Appointment_historyCrudController extends CrudController
         ]);
 
         $this->crud->addColumn([
-            'name' => 'title_appointment', // The db column name
-            'label' => "Title", // Table column heading
-            'type' => 'text'
-        ]);
-
-        $this->crud->addColumn([
-            'name' => 'date_appointment', // The db column name
-            'label' => "Date", // Table column heading
-            'type' => 'date'
+            'name' => 'special_role_personel', // The db column name
+            'label' => "Special Role Personel", // Table column heading
+            'type' => 'relationship',
+            'attribute' => 'special_role',
         ]);
 
         $this->crud->addColumn([
@@ -79,25 +68,15 @@ class Appointment_historyCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(Appointment_historyRequest::class);
+        CRUD::setValidation(SpecialRolePersonelRequest::class);
 
         $this->crud->addField([
-            'name'            => 'title_appointment',
-            'label'           => "Title",
-            'type'            => 'text',
-        ]);
-
-        $this->crud->addField([
-            'name'  => 'date_appointment',
-            'type'  => 'date_picker',
-            'label' => 'Date Appointment',
-
-            // optional:
-            'date_picker_options' => [
-                'todayBtn' => 'linked',
-                'format'   => 'dd-mm-yyyy',
-                'language' => 'en'
-            ],
+            'label'     => 'Special Role Personel', // Table column heading
+            'type'      => 'select2',
+            'name'      => 'special_role_id', // the column that contains the ID of that connected entity;
+            'entity'    => 'special_role_personel', // the method that defines the relationship in your Model
+            'attribute' => 'special_role', // foreign key attribute that is shown to user
+            'model'     => "App\Models\SpecialRole",
         ]);
 
         $this->crud->addField([
@@ -106,7 +85,6 @@ class Appointment_historyCrudController extends CrudController
             'name'      => 'personel_id', // the column that contains the ID of that connected entity;
             'default'   => request('personel_id')
         ]);
-
     }
 
     /**
