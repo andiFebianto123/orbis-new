@@ -59,6 +59,32 @@ class Church extends Model
     {
         return $this->belongsTo('App\Models\CountryList', 'country_id', 'id');
     }
+
+    public function legal_document_church()
+    {
+        return $this->hasMany('App\Models\LegalDocumentChurch', 'churches_id', 'id');
+    }
+
+    public function service_type_church()
+    {
+        return $this->hasMany('App\Models\ServiceTimeChurch', 'churches_id', 'id');
+    }
+
+    public function status_history_church()
+    {
+        return $this->hasMany('App\Models\StatusHistoryChurch', 'churches_id', 'id');
+    }
+
+    public function related_entity_church()
+    {
+        return $this->hasMany('App\Models\RelatedEntityChurch', 'churches_id', 'id');
+    }
+
+    public function ministry_role_church()
+    {
+        return $this->hasMany('App\Models\StructureChurch', 'churches_id', 'id');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | FUNCTIONS

@@ -213,7 +213,7 @@
 											<td>{{$ah->title_appointment}}</td>
 											<td>{{$ah->date_appointment}}</td> 
 											<td>
-											<a href="{{url('admin/appointment_history/'.$ah->id.'/edit')}}">Edit</a>
+											<a href="{{url('admin/appointment_history/'.$ah->id.'/edit')}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
 											data-route="{{ url('admin/appointment_history/'.$ah->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i> {{ trans('backpack::crud.delete') }}</a>
 											</td>
@@ -247,9 +247,9 @@
 									@foreach($entry->special_role_personel as $key => $srp)
 										<tr>
 											<td>{{$srp->id}}</td>
-											<td>{{$srp->special_role}}</td>
+											<td>{{$srp->special_role_name}}</td>
 											<td>
-											<a href="{{url('admin/specialrolepersonel/'.$srp->id.'/edit')}}">Edit</a>
+											<a href="{{url('admin/specialrolepersonel/'.$srp->id.'/edit')}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
 											data-route="{{ url('admin/specialrolepersonel/'.$srp->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i> {{ trans('backpack::crud.delete') }}</a>
 											</td>
@@ -293,7 +293,7 @@
 											<td>{{$re->phone}}</td>
 											<td>{{$re->role}}</td>
 											<td>
-											<a href="{{url('admin/relatedentity/'.$re->id.'/edit')}}">Edit</a>
+											<a href="{{url('admin/relatedentity/'.$re->id.'/edit')}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
 											data-route="{{ url('admin/relatedentity/'.$re->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i> {{ trans('backpack::crud.delete') }}</a>
 											</td>
@@ -335,7 +335,7 @@
 											<td>{{$eb->school}}</td>
 											<td>{{$eb->year}}</td>
 											<td>
-											<a href="{{url('admin/educationbackground/'.$eb->id.'/edit')}}">Edit</a>
+											<a href="{{url('admin/educationbackground/'.$eb->id.'/edit')}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
 											data-route="{{ url('admin/educationbackground/'.$eb->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i> {{ trans('backpack::crud.delete') }}</a>
 											</td>
@@ -373,7 +373,7 @@
 											<td>{{$sh->reason}}</td>
 											<td>{{$sh->date_status}}</td>
 											<td>
-											<a href="{{url('admin/statushistory/'.$sh->id.'/edit')}}">Edit</a>
+											<a href="{{url('admin/statushistory/'.$sh->id.'/edit')}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
 											data-route="{{ url('admin/statushistory/'.$sh->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i> {{ trans('backpack::crud.delete') }}</a>
 											</td>

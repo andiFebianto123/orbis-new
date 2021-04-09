@@ -5,7 +5,7 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 
-class LegalDocument extends Model
+class ServiceTimeChurch extends Model
 {
     use CrudTrait;
 
@@ -15,9 +15,12 @@ class LegalDocument extends Model
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'legal_documents';
+    protected $table = 'service_time_churches';
     protected $fillable = [
-        'documents',
+        'service_type_id',
+        'service_time',
+        'service_room',
+        'churches_id',
     ];
     // protected $primaryKey = 'id';
     // public $timestamps = false;
@@ -26,11 +29,20 @@ class LegalDocument extends Model
     // protected $hidden = [];
     // protected $dates = [];
 
-    public function church()
+    public function service_type_church()
     {
-        return $this->hasMany('App\Models\LegalDocumentChurch', 'legal_document_id', 'id');
+        return $this->belongsTo('App\Models\ServiceType', 'service_type_id', 'id');
     }
 
+    public function church()
+    {
+        return $this->belongsTo('App\Models\Church', 'churches_id', 'id');
+    }
+
+    public function setDatetimeAttribute($value) {
+        $this->attributes['datetime'] = \Carbon\Carbon::parse($value);
+    }
+    
     /*
     |--------------------------------------------------------------------------
     | FUNCTIONS

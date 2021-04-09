@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\Appointment_historyRequest;
+use App\Http\Requests\StatusHistoryChurchRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
- * Class Appointment_historyCrudController
+ * Class StatusHistoryChurchCrudController
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class Appointment_historyCrudController extends CrudController
+class StatusHistoryChurchCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
@@ -26,16 +26,16 @@ class Appointment_historyCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\Appointment_history::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/appointment_history');
-        CRUD::setEntityNameStrings('Appointment History', 'Appointment Histories');
+        CRUD::setModel(\App\Models\StatusHistoryChurch::class);
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/statushistorychurch');
+        CRUD::setEntityNameStrings('Status History Church', 'Status History Church');
     }
 
     public function index()
     {
         abort(404);
     }
-
+    
     /**
      * Define what happens when the List operation is loaded.
      * 
@@ -44,7 +44,6 @@ class Appointment_historyCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        
         $this->crud->addColumn([
             'name' => 'id', // The db column name
             'label' => "ID", // Table column heading
@@ -52,22 +51,28 @@ class Appointment_historyCrudController extends CrudController
         ]);
 
         $this->crud->addColumn([
-            'name' => 'title_appointment', // The db column name
-            'label' => "Title", // Table column heading
+            'name' => 'status', // The db column name
+            'label' => "Status", // Table column heading
             'type' => 'text'
         ]);
 
         $this->crud->addColumn([
-            'name' => 'date_appointment', // The db column name
+            'name' => 'reason', // The db column name
+            'label' => "Reason", // Table column heading
+            'type' => 'text'
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'date_status', // The db column name
             'label' => "Date", // Table column heading
             'type' => 'date'
         ]);
 
         $this->crud->addColumn([
-            'name' => 'personel', // The db column name
-            'label' => "Personel", // Table column heading
+            'name' => 'churches_id', // The db column name
+            'label' => "Church", // Table column heading
             'type' => 'relationship',
-            'attribute' => 'first_name',
+            'attribute' => 'church_name',
         ]);
     }
 
@@ -79,18 +84,25 @@ class Appointment_historyCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(Appointment_historyRequest::class);
+        CRUD::setValidation(StatusHistoryChurchRequest::class);
 
         $this->crud->addField([
-            'name'            => 'title_appointment',
-            'label'           => "Title",
+            'name'            => 'status',
+            'label'           => "Status",
+            'options'         => ['Active' => "Active", 'Non Active' => "Non Active"],
+            'type'            => 'select2_from_array',
+        ]);
+
+        $this->crud->addField([
+            'name'            => 'reason',
+            'label'           => "Reason",
             'type'            => 'text',
         ]);
 
         $this->crud->addField([
-            'name'  => 'date_appointment',
+            'name'  => 'date_status',
             'type'  => 'date_picker',
-            'label' => 'Date Appointment',
+            'label' => 'Date Status',
 
             // optional:
             'date_picker_options' => [
@@ -101,10 +113,10 @@ class Appointment_historyCrudController extends CrudController
         ]);
 
         $this->crud->addField([
-            'label'     => 'Personel', // Table column heading
+            'label'     => 'Church', // Table column heading
             'type'      => 'hidden',
-            'name'      => 'personel_id', // the column that contains the ID of that connected entity;
-            'default'   => request('personel_id')
+            'name'      => 'churches_id', // the column that contains the ID of that connected entity;
+            'default'   => request('churches_id')
         ]);
     }
 

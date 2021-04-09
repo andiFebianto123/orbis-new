@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\Appointment_historyRequest;
+use App\Http\Requests\RelatedEntityChurchRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
- * Class Appointment_historyCrudController
+ * Class RelatedEntityChurchCrudController
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class Appointment_historyCrudController extends CrudController
+class RelatedEntityChurchCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
@@ -26,9 +26,9 @@ class Appointment_historyCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\Appointment_history::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/appointment_history');
-        CRUD::setEntityNameStrings('Appointment History', 'Appointment Histories');
+        CRUD::setModel(\App\Models\RelatedEntityChurch::class);
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/relatedentitychurch');
+        CRUD::setEntityNameStrings('Related Entity Church', 'Related Entity Church');
     }
 
     public function index()
@@ -44,7 +44,6 @@ class Appointment_historyCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        
         $this->crud->addColumn([
             'name' => 'id', // The db column name
             'label' => "ID", // Table column heading
@@ -52,22 +51,22 @@ class Appointment_historyCrudController extends CrudController
         ]);
 
         $this->crud->addColumn([
-            'name' => 'title_appointment', // The db column name
-            'label' => "Title", // Table column heading
+            'name' => 'entity_church', // The db column name
+            'label' => "Entity", // Table column heading
             'type' => 'text'
         ]);
 
         $this->crud->addColumn([
-            'name' => 'date_appointment', // The db column name
-            'label' => "Date", // Table column heading
-            'type' => 'date'
+            'name' => 'type_entity', // The db column name
+            'label' => "Type", // Table column heading
+            'type' => 'text'
         ]);
 
         $this->crud->addColumn([
-            'name' => 'personel', // The db column name
-            'label' => "Personel", // Table column heading
+            'name' => 'churches_id', // The db column name
+            'label' => "Church", // Table column heading
             'type' => 'relationship',
-            'attribute' => 'first_name',
+            'attribute' => 'church_name',
         ]);
     }
 
@@ -79,32 +78,25 @@ class Appointment_historyCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(Appointment_historyRequest::class);
+        CRUD::setValidation(RelatedEntityChurchRequest::class);
 
         $this->crud->addField([
-            'name'            => 'title_appointment',
-            'label'           => "Title",
+            'name'            => 'entity_church',
+            'label'           => "Entity",
             'type'            => 'text',
         ]);
 
         $this->crud->addField([
-            'name'  => 'date_appointment',
-            'type'  => 'date_picker',
-            'label' => 'Date Appointment',
-
-            // optional:
-            'date_picker_options' => [
-                'todayBtn' => 'linked',
-                'format'   => 'dd-mm-yyyy',
-                'language' => 'en'
-            ],
+            'name'            => 'type_entity',
+            'label'           => "Type",
+            'type'            => 'text',
         ]);
 
         $this->crud->addField([
-            'label'     => 'Personel', // Table column heading
+            'label'     => 'Church', // Table column heading
             'type'      => 'hidden',
-            'name'      => 'personel_id', // the column that contains the ID of that connected entity;
-            'default'   => request('personel_id')
+            'name'      => 'churches_id', // the column that contains the ID of that connected entity;
+            'default'   => request('churches_id')
         ]);
     }
 

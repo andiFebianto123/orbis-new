@@ -95,7 +95,7 @@ class Personel extends Model
 
     public function special_role_personel()
     {
-        return $this->hasMany('App\Models\StatusHistory', 'personel_id', 'id');
+        return $this->hasMany('App\Models\SpecialRolePersonel', 'personel_id', 'id');
     }
 
     /*

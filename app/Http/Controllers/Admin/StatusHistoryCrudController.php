@@ -31,6 +31,11 @@ class StatusHistoryCrudController extends CrudController
         CRUD::setEntityNameStrings('Status History', 'Status Histories');
     }
 
+    public function index()
+    {
+        abort(404);
+    }
+
     /**
      * Define what happens when the List operation is loaded.
      * 
@@ -39,6 +44,12 @@ class StatusHistoryCrudController extends CrudController
      */
     protected function setupListOperation()
     {
+        $this->crud->addColumn([
+            'name' => 'id', // The db column name
+            'label' => "ID", // Table column heading
+            'type' => 'number'
+        ]);
+
         $this->crud->addColumn([
             'name' => 'status', // The db column name
             'label' => "Status", // Table column heading
@@ -79,7 +90,7 @@ class StatusHistoryCrudController extends CrudController
             'name'            => 'status',
             'label'           => "Status",
             'options'         => ['Active' => "Active", 'Non Active' => "Non Active"],
-            'type'            => 'text',
+            'type'            => 'select2_from_array',
         ]);
 
         $this->crud->addField([

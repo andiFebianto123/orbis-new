@@ -31,6 +31,11 @@ class SpecialRolePersonelCrudController extends CrudController
         CRUD::setEntityNameStrings('Special Role', 'Special Role');
     }
 
+    public function index()
+    {
+        abort(404);
+    }
+
     /**
      * Define what happens when the List operation is loaded.
      * 
@@ -49,7 +54,7 @@ class SpecialRolePersonelCrudController extends CrudController
             'name' => 'special_role_personel', // The db column name
             'label' => "Special Role Personel", // Table column heading
             'type' => 'relationship',
-            'attribute' => 'special_role',
+            'attribute' => 'special_role_name',
         ]);
 
         $this->crud->addColumn([
@@ -75,7 +80,7 @@ class SpecialRolePersonelCrudController extends CrudController
             'type'      => 'select2',
             'name'      => 'special_role_id', // the column that contains the ID of that connected entity;
             'entity'    => 'special_role_personel', // the method that defines the relationship in your Model
-            'attribute' => 'special_role', // foreign key attribute that is shown to user
+            'attribute' => 'special_role_name', // foreign key attribute that is shown to user
             'model'     => "App\Models\SpecialRole",
         ]);
 

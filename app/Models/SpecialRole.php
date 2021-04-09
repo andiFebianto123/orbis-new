@@ -17,7 +17,7 @@ class SpecialRole extends Model
 
     protected $table = 'special_roles';
     protected $fillable = [
-        'special_role',
+        'special_role_name',
     ];
     // protected $primaryKey = 'id';
     // public $timestamps = false;

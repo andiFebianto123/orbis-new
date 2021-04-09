@@ -26,6 +26,11 @@ class MinistryRole extends Model
     // protected $hidden = [];
     // protected $dates = [];
 
+    public function church()
+    {
+        return $this->hasMany('App\Models\StructureChurch', 'title_structure_id', 'id');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | FUNCTIONS

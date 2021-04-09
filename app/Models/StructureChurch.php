@@ -5,7 +5,7 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 
-class LegalDocument extends Model
+class StructureChurch extends Model
 {
     use CrudTrait;
 
@@ -15,9 +15,11 @@ class LegalDocument extends Model
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'legal_documents';
+    protected $table = 'structure_churches';
     protected $fillable = [
-        'documents',
+        'personel_name',
+        'title_structure_id',
+        'churches_id',
     ];
     // protected $primaryKey = 'id';
     // public $timestamps = false;
@@ -26,9 +28,14 @@ class LegalDocument extends Model
     // protected $hidden = [];
     // protected $dates = [];
 
+    public function ministry_role_church()
+    {
+        return $this->belongsTo('App\Models\MinistryRole', 'title_structure_id', 'id');
+    }
+
     public function church()
     {
-        return $this->hasMany('App\Models\LegalDocumentChurch', 'legal_document_id', 'id');
+        return $this->belongsTo('App\Models\Church', 'churches_id', 'id');
     }
 
     /*

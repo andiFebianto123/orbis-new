@@ -31,6 +31,11 @@ class RelatedentityCrudController extends CrudController
         CRUD::setEntityNameStrings('Related Entity', 'Related Entities');
     }
 
+    public function index()
+    {
+        abort(404);
+    }
+
     /**
      * Define what happens when the List operation is loaded.
      * 

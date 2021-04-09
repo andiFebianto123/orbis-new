@@ -26,6 +26,11 @@ class ServiceType extends Model
     // protected $hidden = [];
     // protected $dates = [];
 
+    public function church()
+    {
+        return $this->hasMany('App\Models\ServiceTimeChurch', 'service_type_id', 'id');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | FUNCTIONS

@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\EducationBackgroundRequest;
+use App\Http\Requests\ServiceTimeChurchRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
- * Class EducationBackgroundCrudController
+ * Class ServiceTimeChurchCrudController
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class EducationBackgroundCrudController extends CrudController
+class ServiceTimeChurchCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
@@ -26,9 +26,9 @@ class EducationBackgroundCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\EducationBackground::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/educationbackground');
-        CRUD::setEntityNameStrings('Education Background', 'Education Backgrounds');
+        CRUD::setModel(\App\Models\ServiceTimeChurch::class);
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/servicetimechurch');
+        CRUD::setEntityNameStrings('Service Time', 'Service Time');
     }
 
     public function index()
@@ -51,40 +51,29 @@ class EducationBackgroundCrudController extends CrudController
         ]);
 
         $this->crud->addColumn([
-            'name' => 'degree', // The db column name
-            'label' => "Degree", // Table column heading
-            'type' => 'text'
-        ]);
-
-        $this->crud->addColumn([
-            'name' => 'type_education', // The db column name
-            'label' => "Type", // Table column heading
-            'type' => 'text'
-        ]);
-
-        $this->crud->addColumn([
-            'name' => 'concentration_education', // The db column name
-            'label' => "Concentration", // Table column heading
-            'type' => 'text'
-        ]);
-
-        $this->crud->addColumn([
-            'name' => 'school', // The db column name
-            'label' => "School", // Table column heading
-            'type' => 'text'
-        ]);
-
-        $this->crud->addColumn([
-            'name' => 'year', // The db column name
-            'label' => "Year", // Table column heading
-            'type' => 'number'
-        ]);
-
-        $this->crud->addColumn([
-            'name' => 'personel', // The db column name
-            'label' => "Personel", // Table column heading
+            'name' => 'service_type_id', // The db column name
+            'label' => "Service", // Table column heading
             'type' => 'relationship',
-            'attribute' => 'first_name',
+            'attribute' => 'church_service',
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'service_time', // The db column name
+            'label' => "Time", // Table column heading
+            'type' => 'text'
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'service_room', // The db column name
+            'label' => "Room", // Table column heading
+            'type' => 'text'
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'churches_id', // The db column name
+            'label' => "Church", // Table column heading
+            'type' => 'relationship',
+            'attribute' => 'church_name',
         ]);
     }
 
@@ -96,45 +85,43 @@ class EducationBackgroundCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(EducationBackgroundRequest::class);
+        CRUD::setValidation(ServiceTimeChurchRequest::class);
 
         $this->crud->addField([
-            'name'            => 'degree',
-            'label'           => "Degree",
+            'label'     => 'Service', // Table column heading
+            'type'      => 'select2',
+            'name'      => 'service_type_id', // the column that contains the ID of that connected entity;
+            'entity'    => 'service_type_church', // the method that defines the relationship in your Model
+            'attribute' => 'church_service', // foreign key attribute that is shown to user
+            'model'     => "App\Models\ServiceType",
+        ]);
+
+        $this->crud->addField([
+            'name'            => 'service_time',
+            'label'           => "Time",
+            'type'            => 'datetime_picker',
+    
+            // optional:
+            'datetime_picker_options' => [
+                'format' => 'DD/MM/YYYY HH:mm',
+                'language' => 'en'
+            ],
+            'allows_null' => true,
+            // 'default' => '2017-05-12 11:59:59',
+        ]);
+
+        $this->crud->addField([
+            'name'            => 'service_room',
+            'label'           => "Room",
             'type'            => 'text',
         ]);
 
         $this->crud->addField([
-            'name'            => 'type_education',
-            'label'           => "Type",
-            'type'            => 'text',
-        ]);
-
-        $this->crud->addField([
-            'name'            => 'concentration_education',
-            'label'           => "Concentration",
-            'type'            => 'text',
-        ]);
-
-        $this->crud->addField([
-            'name'            => 'school',
-            'label'           => "School",
-            'type'            => 'text',
-        ]);
-
-        $this->crud->addField([
-            'name'            => 'year',
-            'label'           => "Year",
-            'type'            => 'text',
-        ]);
-
-        $this->crud->addField([
-            'label'     => 'Personel', // Table column heading
+            'label'     => 'Church', // Table column heading
             'type'      => 'hidden',
-            'name'      => 'personel_id', // the column that contains the ID of that connected entity;
-            'default'   => request('personel_id')
+            'name'      => 'churches_id', // the column that contains the ID of that connected entity;
+            'default'   => request('churches_id')
         ]);
-
     }
 
     /**

@@ -424,8 +424,11 @@ class PersonelCrudController extends CrudController
 
     public function show()
     {
-        $this->crud->getCurrentEntry();
+        $this->crud->getCurrentEntry()->special_role_personel;
         $data['crud'] = $this->crud;
+        // $data['special_roles'] = $this->crud->special_role_personel;
         return view('vendor.backpack.crud.showpersonel',$data);
+
+
     }
 }

@@ -24,4 +24,9 @@
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('relatedentity') }}'><i class='nav-icon la la-question'></i> Related Eentities</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('educationbackground') }}'><i class='nav-icon la la-question'></i> Education Backgrounds</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('statushistory') }}'><i class='nav-icon la la-question'></i> Status Histories</a></li> -->
-<li class='nav-item'><a class='nav-link' href='{{ backpack_url('specialrolepersonel') }}'><i class='nav-icon la la-question'></i> SpecialRolePersonels</a></li>
+<!-- <li class='nav-item'><a class='nav-link' href='{{ backpack_url('specialrolepersonel') }}'><i class='nav-icon la la-question'></i> Special Role Personels</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('legaldocumentchurch') }}'><i class='nav-icon la la-question'></i> LegalDocumentChurches</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('servicetimechurch') }}'><i class='nav-icon la la-question'></i> ServiceTimeChurches</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('statushistorychurch') }}'><i class='nav-icon la la-question'></i> StatusHistoryChurches</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('relatedentitychurch') }}'><i class='nav-icon la la-question'></i> RelatedEntityChurches</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('structurechurch') }}'><i class='nav-icon la la-question'></i> StructureChurches</a></li> -->

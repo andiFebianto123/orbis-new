@@ -31,4 +31,9 @@ Route::group([
     Route::crud('statushistory', 'StatusHistoryCrudController');
     Route::crud('specialrolepersonel', 'SpecialRolePersonelCrudController');
     Route::crud('church', 'ChurchCrudController');
+    Route::crud('legaldocumentchurch', 'LegalDocumentChurchCrudController');
+    Route::crud('servicetimechurch', 'ServiceTimeChurchCrudController');
+    Route::crud('statushistorychurch', 'StatusHistoryChurchCrudController');
+    Route::crud('relatedentitychurch', 'RelatedEntityChurchCrudController');
+    Route::crud('structurechurch', 'StructureChurchCrudController');
 }); // this should be the absolute last line of this file
