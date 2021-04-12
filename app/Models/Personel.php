@@ -3,16 +3,16 @@
 namespace App\Models;
 
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
-use Illuminate\Database\Eloquent\Model;
-
+use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Personel extends Model
+class Personel extends Authenticatable
 {
-    use CrudTrait;
+    use CrudTrait, HasApiTokens;
 
     /*
     |--------------------------------------------------------------------------
@@ -42,7 +42,7 @@ class Personel extends Model
         'province',
         'postal_code',
         'country_id',
-        'first_email',
+        'email',
         'second_email',
         'phone',
         'fax',
