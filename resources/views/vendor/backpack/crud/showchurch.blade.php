@@ -155,7 +155,7 @@
 								<tbody>
 									@foreach($entry->legal_document_church as $key => $ldc)
 										<tr>
-											<td>{{$ldc->legal_document_id}}</td>
+											<td>{{$ldc->legal_document_church->documents}}</td>
 											<td>{{$ldc->number_document}}</td>
 											<td>{{$ldc->issue_date}}</td>
 											<td>{{$ldc->exp_date}}</td>
@@ -163,7 +163,7 @@
 											<td>
 											<a href="{{url('admin/legaldocumentchurch/'.$ldc->id.'/edit')}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
-											data-route="{{ url('admin/legaldocumentchurch/'.$ldc->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i> {{ trans('backpack::crud.delete') }}</a>
+											data-route="{{ url('admin/legaldocumentchurch/'.$ldc->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
 										</tr>
 									@endforeach
@@ -195,13 +195,13 @@
 								<tbody>
 									@foreach($entry->service_type_church as $key => $stc)
 										<tr>
-											<td>{{$stc->service_type_id}}</td>
+											<td>{{$stc->service_type_church->church_service}}</td>
 											<td>{{$stc->service_time}}</td>
 											<td>{{$stc->service_room}}</td>
 											<td>
 											<a href="{{url('admin/servicetimechurch/'.$stc->id.'/edit')}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
-											data-route="{{ url('admin/servicetimechurch/'.$stc->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i> {{ trans('backpack::crud.delete') }}</a>
+											data-route="{{ url('admin/servicetimechurch/'.$stc->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
 										</tr>
 									@endforeach
@@ -239,7 +239,7 @@
 											<td>
 											<a href="{{url('admin/statushistorychurch/'.$shc->id.'/edit')}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
-											data-route="{{ url('admin/statushistorychurch/'.$shc->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i> {{ trans('backpack::crud.delete') }}</a>
+											data-route="{{ url('admin/statushistorychurch/'.$shc->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
 										</tr>
 									@endforeach
@@ -311,11 +311,11 @@
 										<tr>
 											<td>{{$mrc->id}}</td>
 											<td>{{$mrc->personel_name}}</td>
-											<td>{{$mrc->title_structure_id}}</td>
+											<td>{{$mrc->ministry_role_church->ministry_role}}</td>
 											<td>
 											<a href="{{url('admin/structurechurch/'.$mrc->id.'/edit')}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
-											data-route="{{ url('admin/structurechurch/'.$mrc->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i> {{ trans('backpack::crud.delete') }}</a>
+											data-route="{{ url('admin/structurechurch/'.$mrc->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
 										</tr>
 									@endforeach

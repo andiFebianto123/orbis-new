@@ -215,7 +215,7 @@
 											<td>
 											<a href="{{url('admin/appointment_history/'.$ah->id.'/edit')}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
-											data-route="{{ url('admin/appointment_history/'.$ah->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i> {{ trans('backpack::crud.delete') }}</a>
+											data-route="{{ url('admin/appointment_history/'.$ah->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
 										</tr>
 									@endforeach
@@ -247,11 +247,11 @@
 									@foreach($entry->special_role_personel as $key => $srp)
 										<tr>
 											<td>{{$srp->id}}</td>
-											<td>{{$srp->special_role_name}}</td>
+											<td>{{$srp->special_role_personel->special_role_name}}</td>
 											<td>
 											<a href="{{url('admin/specialrolepersonel/'.$srp->id.'/edit')}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
-											data-route="{{ url('admin/specialrolepersonel/'.$srp->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i> {{ trans('backpack::crud.delete') }}</a>
+											data-route="{{ url('admin/specialrolepersonel/'.$srp->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
 										</tr>
 									@endforeach
@@ -295,7 +295,7 @@
 											<td>
 											<a href="{{url('admin/relatedentity/'.$re->id.'/edit')}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
-											data-route="{{ url('admin/relatedentity/'.$re->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i> {{ trans('backpack::crud.delete') }}</a>
+											data-route="{{ url('admin/relatedentity/'.$re->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
 										</tr>
 									@endforeach
@@ -337,7 +337,7 @@
 											<td>
 											<a href="{{url('admin/educationbackground/'.$eb->id.'/edit')}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
-											data-route="{{ url('admin/educationbackground/'.$eb->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i> {{ trans('backpack::crud.delete') }}</a>
+											data-route="{{ url('admin/educationbackground/'.$eb->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
 										</tr>
 									@endforeach
@@ -375,7 +375,7 @@
 											<td>
 											<a href="{{url('admin/statushistory/'.$sh->id.'/edit')}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
-											data-route="{{ url('admin/statushistory/'.$sh->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i> {{ trans('backpack::crud.delete') }}</a>
+											data-route="{{ url('admin/statushistory/'.$sh->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
 										</tr>
 									@endforeach
