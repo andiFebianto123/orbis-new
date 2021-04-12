@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\PersonelRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use App\Models\SpecialRole;
 
 /**
  * Class PersonelCrudController
@@ -424,11 +425,12 @@ class PersonelCrudController extends CrudController
 
     public function show()
     {
-        $this->crud->getCurrentEntry()->special_role_personel;
+        $this->crud->getCurrentEntry();
         $data['crud'] = $this->crud;
-        // $data['special_roles'] = $this->crud->special_role_personel;
+        // $data['special_role'] = SpecialRole::
+        //     join('special_roles', 'special_roles.id', 'special_role_personels.special_role_id')
+        //     ->get(['special_roles.special_role_name']);
+        // return $data;
         return view('vendor.backpack.crud.showpersonel',$data);
-
-
     }
 }

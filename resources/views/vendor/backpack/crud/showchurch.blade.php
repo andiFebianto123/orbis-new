@@ -277,7 +277,7 @@
 											<td>
 											<a href="{{url('admin/relatedentitychurch/'.$rec->id.'/edit')}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
-											data-route="{{ url('admin/relatedentitychurch/'.$rec->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i> {{ trans('backpack::crud.delete') }}</a>
+											data-route="{{ url('admin/relatedentitychurch/'.$rec->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
 										</tr>
 									@endforeach

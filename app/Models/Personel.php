@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash;
 
 class Personel extends Model
 {
@@ -29,6 +30,10 @@ class Personel extends Model
         'gender',
         'date_of_birth',
         'marital_status',
+        'spouse_name',
+        'spouse_date_of_birth',
+        'anniversary',
+        'child_name',
         'ministry_background',
         'career_background',
         'image',
@@ -45,13 +50,22 @@ class Personel extends Model
         'card',
         'valid_card_start',
         'valid_card_end',
+        'password',
     ];
+
+    public function setPasswordAttribute($value) {
+        $this->attributes['password'] = Hash::make($value);
+    }
+
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
     // protected $fillable = [];
-    // protected $hidden = [];
     // protected $dates = [];
+
+    protected $hidden = [
+        'password',
+    ];
 
     public function accountstatus()
     {

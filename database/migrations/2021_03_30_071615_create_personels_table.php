@@ -43,6 +43,7 @@ class CreatePersonelsTable extends Migration
             $table->text('card');
             $table->date('valid_card_start');
             $table->date('valid_card_end');
+            $table->string('password');
             $table->timestamps();
         });
     }
