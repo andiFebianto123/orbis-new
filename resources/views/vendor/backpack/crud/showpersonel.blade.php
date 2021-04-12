@@ -139,7 +139,7 @@
 								</tr>
 								<tr>
 									<td>Email</td>
-									<td> :  {{ $entry->first_email }}</td>
+									<td> :  {{ $entry->email }}</td>
 								</tr>
 								<tr>
 									<td>Email 2</td>

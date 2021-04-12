@@ -42,7 +42,7 @@ class PersonelRequest extends FormRequest
         'province' => 'required',
         'postal_code' => 'required',
         'country_id' => 'required',
-        'first_email' => 'required' ,
+        'email' => 'required|email',
         'phone' => 'required',
         'fax' => 'required',
         'first_lisenced_on' => 'required',

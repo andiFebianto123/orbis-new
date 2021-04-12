@@ -41,7 +41,7 @@ class ChurchRequest extends FormRequest
         'province' => 'required',
         'postal_code' => 'required',
         'country_id' => 'required',
-        'first_email' => 'required' ,
+        'first_email' => 'required|email' ,
         'phone' => 'required',
         'fax' => 'required',
         ];
