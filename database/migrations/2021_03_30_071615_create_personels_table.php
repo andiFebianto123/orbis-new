@@ -35,7 +35,7 @@ class CreatePersonelsTable extends Migration
             $table->text('province');
             $table->text('postal_code');
             $table->integer('country_id');
-            $table->string('first_email');
+            $table->string('email')->unique();
             $table->string('second_email')->nullable();
             $table->integer('phone');
             $table->integer('fax');

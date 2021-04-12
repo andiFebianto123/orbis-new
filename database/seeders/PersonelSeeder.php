@@ -32,7 +32,7 @@ class PersonelSeeder extends Seeder
         'province' => 'Jawa Tengah',
         'postal_code' => '1234',
         'country_id' => '1',
-        'first_email' => 'test@gmail.com',
+        'email' => 'test@gmail.com',
         'phone' => '12345',
         'fax' => '12345',
         'first_lisenced_on'=> '2021-04-14',
