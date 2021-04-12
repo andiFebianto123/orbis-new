@@ -15,8 +15,8 @@ use App\Models\SpecialRole;
 class PersonelCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation { store as traitStore; }
+    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation { update as traitUpdate; }
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 
@@ -258,13 +258,6 @@ class PersonelCrudController extends CrudController
         ]);
 
         $this->crud->addField([
-            'name'            => 'spouse_date_of_birth',
-            'label'           => "Spouse Date of Birth",
-            'type'            => 'text',
-            'tab'             => 'Biodata',
-        ]);
-
-        $this->crud->addField([
             'name'            => 'child_name',
             'label'           => "Child Name",
             'type'            => 'text',
@@ -291,6 +284,13 @@ class PersonelCrudController extends CrudController
             'type' => 'image',
             'crop' => true, // set to true to allow cropping, false to disable
             'aspect_ratio' => 1, // omit or set to 0 to allow any aspect ratio
+            'tab'  => 'Biodata',
+        ]);
+
+        $this->crud->addField([
+            'name' => 'password', // The db column name
+            'label' => "Password", // Table column heading
+            'type' => 'Password',
             'tab'  => 'Biodata',
         ]);
 
@@ -412,6 +412,26 @@ class PersonelCrudController extends CrudController
         ]);
     }
 
+    public function store()
+    {
+        $this->crud->setRequest($this->crud->validateRequest());
+
+        /** @var \Illuminate\Http\Request $request */
+        $request = $this->crud->getRequest();
+
+        // Encrypt password if specified.
+        if ($request->input('password')) {
+            $request->request->set('password', Hash::make($request->input('password')));
+        } else {
+            $request->request->remove('password');
+        }
+
+        $this->crud->setRequest($request);
+        $this->crud->unsetValidation(); // Validation has already been run
+
+        return $this->traitStore();
+    }
+
     /**
      * Define what happens when the Update operation is loaded.
      * 
@@ -421,6 +441,28 @@ class PersonelCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    public function update()
+    {
+        $this->crud->setRequest($this->crud->validateRequest());
+
+        // $this->crud->removeField('password_confirmation');
+
+        /** @var \Illuminate\Http\Request $request */
+        $request = $this->crud->getRequest();
+
+        // Encrypt password if specified.
+        if ($request->input('password')) {
+            $request->request->set('password', Hash::make($request->input('password')));
+        } else {
+            $request->request->remove('password');
+        }
+
+        $this->crud->setRequest($request);
+        $this->crud->unsetValidation(); // Validation has already been run
+
+        return $this->traitUpdate();
     }
 
     public function show()

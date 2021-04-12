@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class PersonelRequest extends FormRequest
 {
@@ -37,6 +38,7 @@ class PersonelRequest extends FormRequest
         'marital_status' => 'required',
         'ministry_background' => 'required',
         'career_background' => 'required',
+        'password' => Rule::requiredIf($this->method() == 'POST'),
         'street_address' => 'required',
         'city' => 'required',
         'province' => 'required',
