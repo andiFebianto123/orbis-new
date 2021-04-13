@@ -290,7 +290,7 @@ class PersonelCrudController extends CrudController
         $this->crud->addField([
             'name' => 'password', // The db column name
             'label' => "Password", // Table column heading
-            'type' => 'Password',
+            'type' => 'password',
             'tab'  => 'Biodata',
         ]);
 
