@@ -71,7 +71,7 @@
             <div class="col-7 col-md-8">
               <div class="numbers">
                 <h5 class="card-category">Today's Birthday</h5>
-                <h3 class="card-title">{{$today_birthday}}</h3>
+                <h3 class="card-title"></h3>
               </div>
             </div>
           </div>
@@ -212,7 +212,7 @@
 								<tbody>
 									@foreach($personel_vip_tables as $key => $personel_vip_table)
 										<tr>
-											<td>{{$personel_vip_table->special_role_name}}</td>
+											<td>{{$personel_vip_table->special_role}}</td>
 											<td>{{$personel_vip_table->total}}</td>
 										</tr>
 									@endforeach

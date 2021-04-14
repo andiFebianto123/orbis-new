@@ -247,7 +247,7 @@
 									@foreach($entry->special_role_personel as $key => $srp)
 										<tr>
 											<td>{{$srp->id}}</td>
-											<td>{{$srp->special_role_personel->special_role_name}}</td>
+											<td>{{$srp->special_role_personel->special_role}}</td>
 											<td>
 											<a href="{{url('admin/specialrolepersonel/'.$srp->id.'/edit')}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 

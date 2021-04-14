@@ -10,7 +10,6 @@ use App\Models\Personel;
 use App\Models\SpecialRolePersonel;
 use App\Models\StructureChurch;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
 /**
  * Class DashboardCrudController
@@ -40,7 +39,7 @@ class DashboardCrudController extends CrudController
     public function index()
     {
         $church_count = Church::count();
-        $today_birthday = Personel::whereDate('created_at', Carbon::today())->get();
+        // $today_birthday->where('created_at', '=', date('Y-m-d').' 00:00:00');
         $country_tables = Church::join('country_lists','churches.country_id','country_lists.id')
                  ->select('country_name', DB::raw('count(country_name) as total'))
                  ->groupBy('country_name')
@@ -58,8 +57,8 @@ class DashboardCrudController extends CrudController
                  ->groupBy('rc_dpw_name')
                  ->get();
         $personel_vip_tables = SpecialRolePersonel::join('special_roles','special_role_personels.special_role_id','special_roles.id')
-                 ->select('special_role_name', DB::raw('count(special_role_name) as total'))
-                 ->groupBy('special_role_name')
+                 ->select('special_role', DB::raw('count(special_role) as total'))
+                 ->groupBy('special_role')
                  ->get();
         $ministry_role_tables = StructureChurch::join('ministry_roles','structure_churches.title_structure_id','ministry_roles.id')
                  ->select('ministry_role', DB::raw('count(ministry_role) as total'))
@@ -72,7 +71,7 @@ class DashboardCrudController extends CrudController
         $data['church_count'] = $church_count;
         $data['country_count'] = $country_tables->count();
         $data['personel_count'] = $personel_tables->count();
-        $data['today_birthday'] = $today_birthday;
+        // $data['today_birthday'] = $today_birthday;
 
         $data['type_tables'] = $type_tables;
         $data['country_tables'] = $country_tables;
