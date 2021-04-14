@@ -32,7 +32,7 @@
 	<div class ="row">
 		<div class="col-md-12">
   			<div class="card">
-				<div class="card-header" style="background: #b5c7e0">
+				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
 			  		Information
   				</div>
 				<div class="text-center">
@@ -132,9 +132,9 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-md-6">
+		<div class="col-md-12">
   			<div class="card">
-				<div class="card-header" style="background: #b5c7e0">
+				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
 			  		Legal Document For Church
   				</div>
 				<div class="card-body">
@@ -174,9 +174,9 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-md-6">
+		<div class="col-md-12">
   			<div class="card">
-				<div class="card-header" style="background: #b5c7e0">
+				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
 			  		Service Time
   				</div>
 				<div class="card-body">
@@ -212,9 +212,9 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-md-6">
+		<div class="col-md-12">
   			<div class="card">
-				<div class="card-header" style="background: #b5c7e0">
+				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
 			  		Status History
   				</div>
 				<div class="card-body">
@@ -250,9 +250,9 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-md-6">
+		<div class="col-md-12">
   			<div class="card">
-				<div class="card-header" style="background: #b5c7e0">
+				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
 			  		Related Entity
   				</div>
 				<div class="card-body">
@@ -290,7 +290,7 @@
 		</div>
 		<div class="col-md-12">
   			<div class="card">
-				<div class="card-header" style="background: #b5c7e0">
+				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
 			  		Structure
   				</div>
 				<div class="card-body">

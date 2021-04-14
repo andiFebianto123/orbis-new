@@ -9,7 +9,9 @@ use App\Models\Church;
 use App\Models\Personel;
 use App\Models\SpecialRolePersonel;
 use App\Models\StructureChurch;
+use App\Models\LegalDocumentChurch;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 /**
  * Class DashboardCrudController
@@ -39,7 +41,10 @@ class DashboardCrudController extends CrudController
     public function index()
     {
         $church_count = Church::count();
-        // $today_birthday->where('created_at', '=', date('Y-m-d').' 00:00:00');
+        $today_birthday = Personel::whereDay('date_of_birth', Carbon::now()->day)
+                    ->select('first_name', DB::raw('count(first_name) as total'))
+                    ->groupBy('first_name')
+                    ->get();
         $country_tables = Church::join('country_lists','churches.country_id','country_lists.id')
                  ->select('country_name', DB::raw('count(country_name) as total'))
                  ->groupBy('country_name')
@@ -64,14 +69,30 @@ class DashboardCrudController extends CrudController
                  ->select('ministry_role', DB::raw('count(ministry_role) as total'))
                  ->groupBy('ministry_role')
                  ->get();
-        $pastors_birthday_tables = Personel::get();
-        $pastors_anniversary_tables = Personel::get();
-        
+        $pastors_birthday_tables = Personel::whereMonth('date_of_birth', Carbon::now()->month)
+                    ->get();
+        $pastors_anniversary_tables = Personel::whereMonth('anniversary', Carbon::now()->month)
+                    ->where('marital_status', 'married')
+                    ->get();
+        $id_card_expiration_tables = Personel::whereMonth('valid_card_end', Carbon::now()->month)
+                    ->get();
+        $license_expiration_tables = LegalDocumentChurch::whereMonth('exp_date', Carbon::now()->month)
+                    ->join('legal_documents','legal_document_churches.legal_document_id','legal_documents.id')
+                    ->select('documents','exp_date')
+                    ->get();
+        $inactive_church_tables = Church::where('church_status', 'Non Active')
+                    ->get();
+        $inactive_pastor_tables = Personel::where('acc_status_id', '2')
+                    ->get();
+        $new_pastor_tables = Personel::whereMonth('valid_card_start', Carbon::now()->month)
+                    ->get();
+        $new_church_tables = Church::whereMonth('founded_on', Carbon::now()->month)
+                    ->get();
 
         $data['church_count'] = $church_count;
         $data['country_count'] = $country_tables->count();
         $data['personel_count'] = $personel_tables->count();
-        // $data['today_birthday'] = $today_birthday;
+        $data['today_birthday'] = $today_birthday->count();
 
         $data['type_tables'] = $type_tables;
         $data['country_tables'] = $country_tables;
@@ -81,6 +102,12 @@ class DashboardCrudController extends CrudController
         $data['ministry_role_tables'] = $ministry_role_tables;
         $data['pastors_birthday_tables'] = $pastors_birthday_tables;
         $data['pastors_anniversary_tables'] = $pastors_anniversary_tables;
+        $data['id_card_expiration_tables'] = $id_card_expiration_tables;
+        $data['license_expiration_tables'] = $license_expiration_tables;
+        $data['inactive_church_tables'] = $inactive_church_tables;
+        $data['inactive_pastor_tables'] = $inactive_pastor_tables;
+        $data['new_pastor_tables'] = $new_pastor_tables;
+        $data['new_church_tables'] = $new_church_tables;
 
         // foreach ($country_tables as $key => $country_table) {
         //     # code...
