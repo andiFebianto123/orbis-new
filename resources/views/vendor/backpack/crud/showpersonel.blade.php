@@ -32,7 +32,7 @@
 	<div class ="row">
 		<div class="col-md-12">
   			<div class="card">
-				<div class="card-header" style="background: #b5c7e0">
+				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
 			  		Biodata
   				</div>
 				<div class="text-center">
@@ -110,7 +110,7 @@
 		</div>
     	<div class="col-md-6">
   			<div class="card">
-				<div class="card-header" style="background: #b5c7e0">
+				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
 			  		Contact Information
   				</div>
 				<div class="card-body">
@@ -161,7 +161,7 @@
 		</div>
 		<div class="col-md-6">
   			<div class="card">
-				<div class="card-header" style="background: #b5c7e0">
+				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
 			  		Licensing Information
   				</div>
 				<div class="card-body">
@@ -190,9 +190,9 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-md-6">
+		<div class="col-md-12">
   			<div class="card">
-				<div class="card-header" style="background: #b5c7e0">
+				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
 			  		Appointment History
   				</div>
 				<div class="card-body">
@@ -226,9 +226,9 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-md-6">
+		<div class="col-md-12">
   			<div class="card">
-				<div class="card-header" style="background: #b5c7e0">
+				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
 			  		Special Role
   				</div>
 				<div class="card-body">
@@ -247,7 +247,7 @@
 									@foreach($entry->special_role_personel as $key => $srp)
 										<tr>
 											<td>{{$srp->id}}</td>
-											<td>{{$srp->special_role_personel->special_role_name}}</td>
+											<td>{{$srp->special_role_personel->special_role}}</td>
 											<td>
 											<a href="{{url('admin/specialrolepersonel/'.$srp->id.'/edit')}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
@@ -264,7 +264,7 @@
 		</div>
 		<div class="col-md-12">
   			<div class="card">
-				<div class="card-header" style="background: #b5c7e0">
+				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
 			  		Related Entity
   				</div>
 				<div class="card-body">
@@ -306,9 +306,9 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-md-6">
+		<div class="col-md-12">
   			<div class="card">
-				<div class="card-header" style="background: #b5c7e0">
+				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
 			  		Education Background
   				</div>
 				<div class="card-body">
@@ -348,9 +348,9 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-md-6">
+		<div class="col-md-12">
   			<div class="card">
-				<div class="card-header" style="background: #b5c7e0">
+				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
 			  		Status History
   				</div>
 				<div class="card-body">

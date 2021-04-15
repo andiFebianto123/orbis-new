@@ -36,4 +36,5 @@ Route::group([
     Route::crud('statushistorychurch', 'StatusHistoryChurchCrudController');
     Route::crud('relatedentitychurch', 'RelatedEntityChurchCrudController');
     Route::crud('structurechurch', 'StructureChurchCrudController');
+    Route::crud('dashboard', 'DashboardCrudController');
 }); // this should be the absolute last line of this file

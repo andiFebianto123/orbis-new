@@ -39,7 +39,7 @@ class SpecialRoleCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        // $this->crud->setColumns(['id','special_role']);
+        // $this->crud->setColumns(['id','specisl_role_name']);
 
         $this->crud->addColumn([
             'name' => 'id', // The db column name

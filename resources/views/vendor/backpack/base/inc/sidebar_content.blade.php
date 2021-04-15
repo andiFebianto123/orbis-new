@@ -1,5 +1,6 @@
 <!-- This file is used to store sidebar items, starting with Backpack\Base 0.9.0 -->
-<li class="nav-item"><a class="nav-link" href="{{ backpack_url('dashboard') }}"><i class="la la-home nav-icon"></i> {{ trans('backpack::base.dashboard') }}</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('dashboard') }}'><i class='la la-home nav-icon'></i> Dashboards</a></li>
+<!-- <li class="nav-item"><a class="nav-link" href="{{ backpack_url('dashboard') }}"><i class="la la-home nav-icon"></i> {{ trans('backpack::base.dashboard') }}</a></li> -->
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('church') }}'><i class='nav-icon la la-church'></i> Church</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('personel') }}'><i class='nav-icon la la-id-badge'></i> Personels</a></li>
 <li class="nav-item nav-dropdown">
@@ -30,3 +31,4 @@
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('statushistorychurch') }}'><i class='nav-icon la la-question'></i> StatusHistoryChurches</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('relatedentitychurch') }}'><i class='nav-icon la la-question'></i> RelatedEntityChurches</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('structurechurch') }}'><i class='nav-icon la la-question'></i> StructureChurches</a></li> -->
+<!-- <li class='nav-item'><a class='nav-link' href='{{ backpack_url('dashboard') }}'><i class='nav-icon la la-question'></i> Dashboards</a></li> -->

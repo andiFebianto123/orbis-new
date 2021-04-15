@@ -5,7 +5,7 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 
-class SpecialRole extends Model
+class Dashboard extends Model
 {
     use CrudTrait;
 
@@ -15,21 +15,13 @@ class SpecialRole extends Model
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'special_roles';
-    protected $fillable = [
-        'special_role',
-    ];
+    protected $table = 'dashboards';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
     // protected $fillable = [];
     // protected $hidden = [];
     // protected $dates = [];
-
-    public function personel()
-    {
-        return $this->hasMany('App\Models\SpecialRolePersonel', 'special_role_id', 'id');
-    }
 
     /*
     |--------------------------------------------------------------------------
