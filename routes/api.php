@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Route;
 Route::post('login', 'Api\AuthApiController@login');
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
-   // Route::get('profile/{id}', 'Api\AuthController@profile');
+   Route::get('profile/{id}', 'Api\AuthApiController@profile');
+   Route::post('logout', 'Api\AuthApiController@logout');
+   Route::post('logout-all', 'Api\AuthApiController@logoutAll');
 });
 

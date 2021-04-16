@@ -21,12 +21,47 @@ class AuthApiController extends Controller
         $personel = Personel::where('email', $request->email)->firstOrFail();
         $token = $personel->createToken('auth_token')->plainTextToken;
 
-        return response()->json([
-                'status' => true,
-                'message' => 'Success Login',
-                'access_token' => $token,
-                'data' => $personel,
-        ]);
+        $response = [
+            'status' => true,
+            'message' => 'Success Login',
+            'access_token' => $token,
+            'data' => $personel,
+        ];
+
+        return response()->json($response, 200);
+    }
+
+    public function profile($id)
+    {
+        $personel = Personel::where('id', $id)->get()->first();
+
+        $response = [
+            'status' => true,
+            'message' => 'Data Personel',
+            'data' => $personel,
+        ];
+
+        return response()->json($response, 200); 
+    }
+
+    public function logout(Request $request) {
+        $personel = $request->user();
+        $personel->currentAccessToken()->delete();
+        $response = [
+            'status' => true,
+            'message' => 'Logout successfully',
+        ];
+        return response()->json($response, 200);
+    }
+
+    public function logoutAll(Request $request) {
+        $personel = $request->user();
+        $personel->tokens()->delete();
+        $response = [
+            'status' => true,
+            'message' => 'Logout All successfully',
+        ];
+        return response()->json($response, 200);
     }
 
 }
