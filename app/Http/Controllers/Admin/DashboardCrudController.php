@@ -75,8 +75,10 @@ class DashboardCrudController extends CrudController
                     ->where('marital_status', 'married')
                     ->get();
         $id_card_expiration_tables = Personel::whereMonth('valid_card_end', Carbon::now()->month)
+                    ->whereYear('valid_card_end', Carbon::now()->year)
                     ->get();
         $license_expiration_tables = LegalDocumentChurch::whereMonth('exp_date', Carbon::now()->month)
+                    ->whereYear('exp_date', Carbon::now()->year)
                     ->join('legal_documents','legal_document_churches.legal_document_id','legal_documents.id')
                     ->select('documents','exp_date')
                     ->get();
@@ -85,8 +87,10 @@ class DashboardCrudController extends CrudController
         $inactive_pastor_tables = Personel::where('acc_status_id', '2')
                     ->get();
         $new_pastor_tables = Personel::whereMonth('valid_card_start', Carbon::now()->month)
+                    ->whereYear('valid_card_start', Carbon::now()->year)
                     ->get();
         $new_church_tables = Church::whereMonth('founded_on', Carbon::now()->month)
+                    ->whereYear('founded_on', Carbon::now()->year)
                     ->get();
 
         $data['church_count'] = $church_count;
@@ -108,10 +112,6 @@ class DashboardCrudController extends CrudController
         $data['inactive_pastor_tables'] = $inactive_pastor_tables;
         $data['new_pastor_tables'] = $new_pastor_tables;
         $data['new_church_tables'] = $new_church_tables;
-
-        // foreach ($country_tables as $key => $country_table) {
-        //     # code...
-        // }
 
         return view('vendor.backpack.base.dashboard',$data);
     }

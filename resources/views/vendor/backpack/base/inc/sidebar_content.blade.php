@@ -4,6 +4,14 @@
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('church') }}'><i class='nav-icon la la-church'></i> Church</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('personel') }}'><i class='nav-icon la la-id-badge'></i> Personels</a></li>
 <li class="nav-item nav-dropdown">
+	<a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-file"></i>Report</a>
+	<ul class="nav-dropdown-items">
+        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('churchreport') }}'><i class='nav-icon la la-church'></i> Church Reports</a></li>
+        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('pastorreport') }}'><i class='nav-icon la la-users'></i> Pastor Reports</a></li>
+        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('quickreport') }}'><i class='nav-icon la la-list'></i> Quick Reports</a></li>
+	</ul>
+</li>
+<li class="nav-item nav-dropdown">
 	<a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-users"></i> Admin</a>
 	<ul class="nav-dropdown-items">
         <li class='nav-item'><a class='nav-link' href='{{ backpack_url('user') }}'><i class='nav-icon la la-user'></i> Users</a></li>
@@ -32,3 +40,4 @@
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('relatedentitychurch') }}'><i class='nav-icon la la-question'></i> RelatedEntityChurches</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('structurechurch') }}'><i class='nav-icon la la-question'></i> StructureChurches</a></li> -->
 <!-- <li class='nav-item'><a class='nav-link' href='{{ backpack_url('dashboard') }}'><i class='nav-icon la la-question'></i> Dashboards</a></li> -->
+<!-- <li class='nav-item'><a class='nav-link' href='{{ backpack_url('churchannualreportdetail') }}'><i class='nav-icon la la-question'></i> ChurchAnnualReportDetails</a></li> -->

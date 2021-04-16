@@ -6,6 +6,7 @@ use App\Http\Requests\PersonelRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use App\Models\SpecialRole;
+use Illuminate\Support\Facades\Hash;
 
 /**
  * Class PersonelCrudController
@@ -266,14 +267,14 @@ class PersonelCrudController extends CrudController
 
         $this->crud->addField([
             'name'            => 'ministry_background',
-            'label'           => "Ministry Bacground",
+            'label'           => "Ministry Background",
             'type'            => 'text',
             'tab'             => 'Biodata',
         ]);
 
         $this->crud->addField([
             'name'            => 'career_background',
-            'label'           => "Career Bacground",
+            'label'           => "Career Background",
             'type'            => 'text',
             'tab'             => 'Biodata',
         ]);
