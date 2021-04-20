@@ -38,9 +38,10 @@ Route::group([
     Route::crud('structurechurch', 'StructureChurchCrudController');
     Route::crud('dashboard', 'DashboardCrudController');
     Route::crud('quickreport', 'QuickReportCrudController');
-    // Route::get('churchreport', 'ChurchAnnualReportController@home');
     Route::get('churchreport', 'ChurchAnnualReportController@index');
     Route::get('churchannualreportdetail/{year}', 'ChurchAnnualReportController@detail');
+    Route::get('churchreportdesigner', 'ChurchAnnualReportController@reportdesigner');
     Route::get('pastorreport', 'PastorAnnualReportController@index');
     Route::get('pastorannualreportdetail/{year}', 'PastorAnnualReportController@detail');
+    Route::get('pastorreportdesigner', 'PastorAnnualReportController@reportdesigner');
 }); // this should be the absolute last line of this file

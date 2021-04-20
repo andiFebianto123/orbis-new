@@ -31,6 +31,11 @@ class QuickReportCrudController extends CrudController
         CRUD::setEntityNameStrings('quickreport', 'quick_reports');
     }
 
+    public function index()
+    {
+        return view('vendor.backpack.base.quickreport');
+    }
+
     /**
      * Define what happens when the List operation is loaded.
      * 

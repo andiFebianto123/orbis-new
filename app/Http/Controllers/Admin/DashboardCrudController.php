@@ -41,6 +41,10 @@ class DashboardCrudController extends CrudController
     public function index()
     {
         $church_count = Church::count();
+        $personel_count = Personel::where('acc_status_id', '2')
+                    ->select('first_name', DB::raw('count(first_name) as total'))
+                    ->groupBy('first_name')
+                    ->get();
         $today_birthday = Personel::whereDay('date_of_birth', Carbon::now()->day)
                     ->select('first_name', DB::raw('count(first_name) as total'))
                     ->groupBy('first_name')
@@ -95,7 +99,7 @@ class DashboardCrudController extends CrudController
 
         $data['church_count'] = $church_count;
         $data['country_count'] = $country_tables->count();
-        $data['personel_count'] = $personel_tables->count();
+        $data['personel_count'] = $personel_count->count();
         $data['today_birthday'] = $today_birthday->count();
 
         $data['type_tables'] = $type_tables;

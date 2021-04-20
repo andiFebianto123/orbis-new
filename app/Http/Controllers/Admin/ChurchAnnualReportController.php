@@ -11,11 +11,6 @@ use App\Http\Controllers\Controller;
 
 class ChurchAnnualReportController extends Controller
 {
-    public function home()
-    {
-        return view('vendor.backpack.base.menutabchurchreport');
-    }
-
     public function index()
     {
         $church_report_tables = Church::select(DB::raw("(COUNT(founded_on)) as total"),DB::raw("YEAR(founded_on) as year"))
@@ -41,6 +36,9 @@ class ChurchAnnualReportController extends Controller
         return view('vendor.backpack.base.churchreportdetail',$data);
     }
 
-    
+    public function reportdesigner()
+    {
+        return view('vendor.backpack.base.churchreportdesigner');
+    }
 
 }

@@ -54,5 +54,10 @@ class PastorAnnualReportController extends Controller
 
         return view('vendor.backpack.base.pastorreportdetail',$data);
     }
+
+    public function reportdesigner()
+    {
+        return view('vendor.backpack.base.pastorreportdesigner');
+    }
     
 }
