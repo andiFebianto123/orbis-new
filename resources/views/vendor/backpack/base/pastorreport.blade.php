@@ -3,7 +3,7 @@
 
 <ul class="nav nav-tabs">
   <li class="nav-item">
-    <a class="nav-link active" aria-current="page" href="{{url('admin/pastorreport/')}}">Church Annual Report</a>
+    <a class="nav-link active" aria-current="page" href="{{url('admin/pastorreport/')}}">Pastor Annual Report</a>
   </li>
   <li class="nav-item">
   	<a class="nav-link" href="{{url('admin/pastorreportdesigner/')}}">Report Designer</a>
