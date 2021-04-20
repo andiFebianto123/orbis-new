@@ -50,6 +50,7 @@ class PastorAnnualReportController extends Controller
                         ->select('first_name','rc_dpw_name','country_name','acc_status','first_lisenced_on')
                         ->get();
 
+        $data['year'] = $year;
         $data['pastor_report_detail_tables'] = $pastor_report_detail_tables;
 
         return view('vendor.backpack.base.pastorreportdetail',$data);
@@ -57,7 +58,15 @@ class PastorAnnualReportController extends Controller
 
     public function reportdesigner()
     {
-        return view('vendor.backpack.base.pastorreportdesigner');
+        $pastor_report_designs = Personel::leftJoin('rc_dpwlists','personels.rc_dpw_id','rc_dpwlists.id')
+                        ->leftJoin('account_status','personels.acc_status_id','account_status.id')
+                        ->select('rc_dpw_name', 'first_name','street_address','phone','fax','email','card',
+                        'date_of_birth','spouse_name','spouse_date_of_birth','anniversary','acc_status')
+                        ->get();
+
+        $data['pastor_report_designs'] = $pastor_report_designs;
+
+        return view('vendor.backpack.base.pastorreportdesigner', $data);
     }
     
 }

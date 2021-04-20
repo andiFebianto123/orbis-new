@@ -1,88 +1,64 @@
 @extends(backpack_view('blank'))
 @section('content')
 
-<nav class="navbar navbar-expand-sm bg-light" style="background-color: #e3f2fd;">
-	<ul class="nav navbar-nav">
-		<li class="nav-item">
-			<a class="nav-link" href="{{url('admin/churchreport/')}}">Church Annual Report</a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link" href="{{url('admin/churchreportdesigner/')}}">Report Designer</a>
-		</li>
-  	</ul>
-</nav>
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link" href="{{url('admin/churchreport/')}}">Church Annual Report</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link active" aria-current="page" href="{{url('admin/churchreportdesigner/')}}">Report Designer</a>
+  </li>
+</ul>
 
-<div class="form-check">
-  <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-  <label class="form-check-label" for="flexCheckDefault">
-    RC/ DPW
-  </label>
-</div>
-<div class="form-check">
-  <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-  <label class="form-check-label" for="flexCheckDefault">
-    Church Name
-  </label>
-</div>
-<div class="form-check">
-  <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-  <label class="form-check-label" for="flexCheckDefault">
-    Lead Pastor
-  </label>
-</div>
-<div class="form-check">
-  <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-  <label class="form-check-label" for="flexCheckDefault">
-    Contact Person
-  </label>
-</div>
-<div class="form-check">
-  <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-  <label class="form-check-label" for="flexCheckDefault">
-    Church Address
-  </label>
-</div>
-<div class="form-check">
-  <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-  <label class="form-check-label" for="flexCheckDefault">
-    Office Address
-  </label>
-</div>
-<div class="form-check">
-  <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-  <label class="form-check-label" for="flexCheckDefault">
-    Phone
-  </label>
-</div>
-<div class="form-check">
-  <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-  <label class="form-check-label" for="flexCheckDefault">
-    Fax
-  </label>
-</div>
-<div class="form-check">
-  <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-  <label class="form-check-label" for="flexCheckDefault">
-    E-mail
-  </label>
-</div>
-<div class="form-check">
-  <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-  <label class="form-check-label" for="flexCheckDefault">
-    Status
-  </label>
-</div>
-<div class="form-check">
-  <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-  <label class="form-check-label" for="flexCheckDefault">
-	Founded On
-  </label>
-</div>
-<div class="form-check">
-  <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-  <label class="form-check-label" for="flexCheckDefault">
-    Service Time
-  </label>
+<div class="row">
+    <div class="col-md-12">
+  		<div class="card">
+				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
+			  	Report Designer
+  			</div>
+				<div class="card-body">
+					<div class = "row">
+						<div class="col-md-12">
+							<table id ="tableChurchReportDesigner" class = "table table-striped">
+								<thead>
+									<tr>
+										<th>RC / DPW</th>
+										<th>Church Name</th>
+										<th>Contact Person</th>
+                    <th>Church Address</th>
+                    <th>Office Addresss</th>
+                    <th>Phone</th>
+                    <th>Fax</th>
+                    <th>E-mail</th>
+                    <th>Status</th>
+                    <th>Founded On</th>
+                    <th>Service Time</th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach($church_report_designs as $key => $church_report_design)
+										<tr>
+											<td>{{$church_report_design->rc_dpw_name}}</td>
+											<td>{{$church_report_design->church_name}}</td>
+                      <td>{{$church_report_design->contact_person}}</td>
+											<td>{{$church_report_design->church_address}}</td>
+                      <td>{{$church_report_design->office_address}}</td>
+											<td>{{$church_report_design->phone}}</td>
+                      <td>{{$church_report_design->fax}}</td>
+                      <td>{{$church_report_design->first_email}}</td>
+											<td>{{$church_report_design->church_status}}</td>
+                      <td>{{$church_report_design->founded_on}}</td>
+                      <td>{{$church_report_design->service_time}}</td>
+										</tr>
+									@endforeach
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 @endsection
@@ -91,7 +67,11 @@
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
 	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
-	
+	<style>
+    .active{
+      background:darkblue;
+  }
+  </style>
 @endsection
 
 @section('after_scripts')
@@ -99,11 +79,35 @@
 	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 	<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 	<script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+
+  <script src ="https://code.jquery.com/jquery-3.5.1.js"></script>
+	<script src ="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+	<script src ="https://cdn.datatables.net/buttons/1.7.0/js/dataTables.buttons.min.js"></script>
+	<script src ="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+	<script src ="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+	<script src ="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+	<script src ="https://cdn.datatables.net/buttons/1.7.0/js/buttons.html5.min.js"></script>
+	<script src ="https://cdn.datatables.net/buttons/1.7.0/js/buttons.print.min.js"></script>
+  <script src ="https://cdn.datatables.net/buttons/1.7.0/js/buttons.colVis.min.js"></script>
 	
- 	<script>
+  <script>
 		$(document).ready(function() {
-		$('#tableChurchAnnual').DataTable();
+		$('#tableChurchReportDesigner').DataTable( {
+			dom: 'Bfrtip',
+			buttons: [
+				{ extend: 'excel',
+          text: 'Export to Excel',
+          title: 'Church Report',
+          exportOptions: {
+            columns: ':visible'
+          }
+				},
+        'columnsToggle'
+			]
 		} );
-	</script>
+    $( "<hr>" ).insertAfter( ".buttons-excel" );
+    $(".dt-button").addClass("btn btn-sm btn btn-outline-primary");
+		} );
+  </script>
 
 @endsection

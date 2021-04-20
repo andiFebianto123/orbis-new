@@ -31,6 +31,7 @@ class ChurchAnnualReportController extends Controller
                         ->select('entities_type','rc_dpw_name','country_name','church_name','founded_on')
                         ->get();
 
+        $data['year'] = $year;
         $data['church_report_detail_tables'] = $church_report_detail_tables;
 
         return view('vendor.backpack.base.churchreportdetail',$data);
@@ -38,7 +39,15 @@ class ChurchAnnualReportController extends Controller
 
     public function reportdesigner()
     {
-        return view('vendor.backpack.base.churchreportdesigner');
+        $church_report_designs = Church::leftJoin('rc_dpwlists','churches.rc_dpw_id','rc_dpwlists.id')
+                        ->leftJoin('service_time_churches','service_time_churches.churches_id','churches.id')
+                        ->select('rc_dpw_name', 'church_name','contact_person','church_address','office_address','phone','fax',
+                        'first_email','church_status','founded_on','service_time')
+                        ->get();
+
+        $data['church_report_designs'] = $church_report_designs;
+
+        return view('vendor.backpack.base.churchreportdesigner', $data);
     }
 
 }

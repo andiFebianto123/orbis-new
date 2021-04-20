@@ -1,22 +1,20 @@
 @extends(backpack_view('blank'))
 @section('content')
 
-<nav class="navbar navbar-expand-sm bg-light" style="background-color: #e3f2fd;">
-	<ul class="nav navbar-nav">
-		<li class="nav-item">
-			<a class="nav-link" href="{{url('admin/churchreport/')}}">Church Annual Report</a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link" href="{{url('admin/churchreportdesigner/')}}">Report Designer</a>
-		</li>
-  	</ul>
-</nav>
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link active" aria-current="page" href="{{url('admin/churchreport/')}}">Church Annual Report</a>
+  </li>
+  <li class="nav-item">
+  	<a class="nav-link" href="{{url('admin/churchreportdesigner/')}}">Report Designer</a>
+  </li>
+</ul>
 
 <div class="row">
     <div class="col-md-12">
   		<div class="card">
 				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
-			  	Church List
+			  	Church List {{$year}}
   			</div>
 				<div class="card-body">
 					<div class = "row">
@@ -58,7 +56,12 @@
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
 	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
-    </style>
+
+    <style>
+    .active{
+      background:aliceblue;
+	}
+	</style>
 @endsection
 
 @section('after_scripts')
@@ -75,12 +78,6 @@
 	<script src ="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 	<script src ="https://cdn.datatables.net/buttons/1.7.0/js/buttons.html5.min.js"></script>
 	<script src ="https://cdn.datatables.net/buttons/1.7.0/js/buttons.print.min.js"></script>
-	
-	<!-- <script>
-		$(document).ready(function() {
-		$('#tableChurchAnnual').DataTable();
-	} );
-	</script> -->
 
 	<script>
 		$(document).ready(function() {
@@ -89,9 +86,12 @@
 			buttons: [
 				{extend: 'excel', 
 				text: 'Export to Excel', 
-				title: 'Church List'},
+				title: 'Church List {{$year}}',
+				},
 			]
 		} );
+		$( "<hr>" ).insertAfter( ".buttons-excel" );
+    	$(".dt-button").addClass("btn btn-sm btn btn-outline-primary");
 		} );
   	</script>
 

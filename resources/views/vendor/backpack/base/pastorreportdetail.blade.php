@@ -1,18 +1,20 @@
 @extends(backpack_view('blank'))
 @section('content')
 
-<nav class="navbar navbar-expand-sm bg-light">
-	<ul class="navbar-nav">	
-    	<button class="btn btn-outline-primary" type="button"><a href="{{url('admin/pastorreport/')}}">Pastor Annual Report</a></button>
-    	<button class="btn btn-outline-primary" type="button"><a href="{{url('admin/pastorreportdesigner/')}}">Report Designer</a></button>
-  	</ul>
-</nav>
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link active" aria-current="page" href="{{url('admin/pastorreport/')}}">Pastor Annual Report</a>
+  </li>
+  <li class="nav-item">
+  	<a class="nav-link" href="{{url('admin/pastorreportdesigner/')}}">Report Designer</a>
+  </li>
+</ul>
 
 <div class="row">
     <div class="col-md-12">
   		<div class="card">
 				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
-			  	Pastor List
+			  	Pastor List {{$year}}
   			</div>
 				<div class="card-body">
 					<div class = "row">
@@ -54,6 +56,13 @@
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
 	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
+
+	<style>
+    .active{
+      background:aliceblue;
+	}
+	</style>
+
 @endsection
 
 @section('after_scripts')
@@ -78,9 +87,12 @@
 			buttons: [
 				{extend: 'excel', 
 				text: 'Export to Excel', 
-				title: 'Pastor List'},
+				title: 'Pastor List {{$year}}',
+				},
 			]
 		} );
+		$( "<hr>" ).insertAfter( ".buttons-excel" );
+    	$(".dt-button").addClass("btn btn-sm btn btn-outline-primary");
 		} );
   	</script>
 
