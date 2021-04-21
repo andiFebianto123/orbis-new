@@ -44,4 +44,10 @@ Route::group([
     Route::get('pastorreport', 'PastorAnnualReportController@index');
     Route::get('pastorannualreportdetail/{year}', 'PastorAnnualReportController@detail');
     Route::get('pastorreportdesigner', 'PastorAnnualReportController@reportdesigner');
+    Route::get('newchurchreport', 'QuickReportController@newchurch');
+    Route::get('newpastorreport', 'QuickReportController@newpastor');
+    Route::get('inactivechurch', 'QuickReportController@inactivechurch');
+    Route::get('inactivepastor', 'QuickReportController@inactivepastor');
+    Route::get('allchurchreport', 'QuickReportController@allchurch');
+    Route::get('allpastorreport', 'QuickReportController@allpastor');
 }); // this should be the absolute last line of this file

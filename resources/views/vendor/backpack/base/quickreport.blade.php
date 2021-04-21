@@ -8,22 +8,20 @@
 			  	Quick Report
   			</div>
 				<div class="card-body">
-          Select Option
-					<div class = "row">
-						<div class="col-md-12">
-              <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Quick Report
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <li><a class="dropdown-item" href="#">New Church This Year</a></li>
-                  <li><a class="dropdown-item" href="#">New Pastor This Year</a></li>
-                  <li><a class="dropdown-item" href="#">Recently Inactive Church</a></li>
-                  <li><a class="dropdown-item" href="#">Recently Inactive Pastor</a></li>
-                  <li><a class="dropdown-item" href="#">All Church</a></li>
-                  <li><a class="dropdown-item" href="#">All Personel</a></li>
-                </ul>
-              </div>
+          		Select Option
+					<div class="col-md-12">
+						<div class="dropdown">
+							<button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							Quick Report
+							</button>
+							<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+							<li><a class="dropdown-item" href="{{url('admin/newchurchreport/')}}">New Church This Year</a></li>
+							<li><a class="dropdown-item" href="{{url('admin/newpastorreport/')}}">New Pastor This Year</a></li>
+							<li><a class="dropdown-item" href="{{url('admin/inactivechurch/')}}">Recently Inactive Church</a></li>
+							<li><a class="dropdown-item" href="{{url('admin/inactivepastor/')}}">Recently Inactive Pastor</a></li>
+							<li><a class="dropdown-item" href="{{url('admin/allchurchreport/')}}">All Church</a></li>
+							<li><a class="dropdown-item" href="{{url('admin/allpastorreport/')}}">All Personel</a></li>
+							</ul>
 						</div>
 					</div>
 				</div>
