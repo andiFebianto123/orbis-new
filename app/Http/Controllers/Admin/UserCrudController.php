@@ -107,7 +107,7 @@ class UserCrudController extends CrudController
         $this->crud->addField([
             'name' => 'password', // The db column name
             'label' => "Password", // Table column heading
-            'type' => 'Password'
+            'type' => 'password'
         ]);
 
         $this->crud->addField([
