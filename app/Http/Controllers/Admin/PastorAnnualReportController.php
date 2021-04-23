@@ -44,9 +44,9 @@ class PastorAnnualReportController extends Controller
     public function detail($year)
     {
         $pastor_report_detail_tables = Personel::whereYear('first_lisenced_on', $year)
-                        ->join('account_status','personels.acc_status_id','account_status.id')
-                        ->join('rc_dpwlists','personels.rc_dpw_id','rc_dpwlists.id')
-                        ->join('country_lists','personels.country_id','country_lists.id')
+                        ->leftJoin('account_status','personels.acc_status_id','account_status.id')
+                        ->leftJoin('rc_dpwlists','personels.rc_dpw_id','rc_dpwlists.id')
+                        ->leftJoin('country_lists','personels.country_id','country_lists.id')
                         ->select('first_name','rc_dpw_name','country_name','acc_status','first_lisenced_on')
                         ->get();
 

@@ -44,7 +44,7 @@ class DashboardCrudController extends CrudController
     public function index()
     {
         $church_count = Church::count();
-        $personel_count = Personel::where('acc_status_id', '2')
+        $personel_count = Personel::where('acc_status_id', '1')
                     ->select('first_name', DB::raw('count(first_name) as total'))
                     ->groupBy('first_name')
                     ->get();

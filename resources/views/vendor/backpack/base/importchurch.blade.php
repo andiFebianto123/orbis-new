@@ -1,6 +1,10 @@
 @extends(backpack_view('blank'))
 @section('content')
 
+@if(session()->has('status'))
+	<p class="alert alert-success">{{session('status')}}</p>
+@endif
+
 <div class="row">
 	<div class="col-md-12">
   		<div class="card">
@@ -21,6 +25,8 @@
 		</div>
 	</div>
 </div>
+
+
 @endsection
 
 @section('after_styles')

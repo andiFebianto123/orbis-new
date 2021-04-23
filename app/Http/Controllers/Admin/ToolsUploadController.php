@@ -28,6 +28,9 @@ class ToolsUploadController extends Controller
     public function uploadchurch(Request $request)
     {
         Excel::import(new ChurchImport, request()->file('fileToUpload'));
+        $status = 'Successfully Done';
+
+        return back()->with(['status' => $status]);
     }
 
     public function importpersonel()
@@ -38,6 +41,9 @@ class ToolsUploadController extends Controller
     public function uploadpersonel(Request $request)
     {
         Excel::import(new PersonelImport, request()->file('fileToUpload'));
+        $status = 'Successfully Done';
+        
+        return back()->with(['status' => $status]);
     }
 
 }

@@ -25,9 +25,9 @@ class ChurchAnnualReportController extends Controller
     public function detail($year)
     {
         $church_report_detail_tables = Church::whereYear('founded_on', $year)
-                        ->join('church_types','churches.church_type_id','church_types.id')
-                        ->join('rc_dpwlists','churches.rc_dpw_id','rc_dpwlists.id')
-                        ->join('country_lists','churches.country_id','country_lists.id')
+                        ->leftJoin('church_types','churches.church_type_id','church_types.id')
+                        ->leftJoin('rc_dpwlists','churches.rc_dpw_id','rc_dpwlists.id')
+                        ->leftJoin('country_lists','churches.country_id','country_lists.id')
                         ->select('entities_type','rc_dpw_name','country_name','church_name','founded_on')
                         ->get();
 
