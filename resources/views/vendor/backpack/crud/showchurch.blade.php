@@ -56,7 +56,13 @@
 								</tr>
 								<tr>
 									<td>Type</td>
-									<td> :  {{ $entry->church_type->entities_type }}</td>
+									<td> :  
+									@if(isset($entry->church_type->entities_type))
+									{{ $entry->church_type->entities_type }}
+									@else
+									-
+									@endif
+									</td>
 								</tr>
 								<tr>
 									<td>RC / DPW</td>
@@ -65,6 +71,10 @@
 								<tr>
 									<td>Church Name</td>
 									<td> :  {{ $entry->church_name }}</td>
+								</tr>
+								<tr>
+									<td>Lead Pastor</td>
+									<td> :  {{ $entry->lead_pastor_name }}</td>
 								</tr>
 								<tr>
 									<td>Contact Person</td>
@@ -125,6 +135,10 @@
 								<tr>
 									<td>Map Url</td>
 									<td> :  {{ $entry->map_url }}</td>
+								</tr>
+								<tr>
+									<td>Service Time</td>
+									<td> :  {{ $entry->service_time }}</td>
 								</tr>
 							</table>
 						</div>

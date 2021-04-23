@@ -72,6 +72,18 @@ class ChurchCrudController extends CrudController
         ]);
 
         $this->crud->addColumn([
+            'name' => 'church_name', // The db column name
+            'label' => "Church Name", // Table column heading
+            'type' => 'text'
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'lead_pastor_name', // The db column name
+            'label' => "Lead Pastor", // Table column heading
+            'type' => 'text'
+        ]);
+
+        $this->crud->addColumn([
             'name' => 'contact_person', // The db column name
             'label' => "Contact Person", // Table column heading
             'type' => 'text'
@@ -201,6 +213,13 @@ class ChurchCrudController extends CrudController
         ]);
 
         $this->crud->addField([
+            'name'            => 'lead-pastor_name',
+            'label'           => "Lead Pastor",
+            'type'            => 'text',
+            'tab'             => 'Church / Office Information',
+        ]);
+
+        $this->crud->addField([
             'name'            => 'contact_person',
             'label'           => "Contact Person",
             'type'            => 'text',
@@ -297,6 +316,13 @@ class ChurchCrudController extends CrudController
         $this->crud->addField([
             'name'            => 'map_url',
             'label'           => "Map Url",
+            'type'            => 'text',
+            'tab'             => 'Church / Office Information',
+        ]);
+
+        $this->crud->addField([
+            'name'            => 'service_time',
+            'label'           => "Service Time",
             'type'            => 'text',
             'tab'             => 'Church / Office Information',
         ]);

@@ -472,6 +472,13 @@
 								</tbody>
 							</table>
 						</div>
+						<div class="col-md-12">
+							<form method= 'POST' action="{{url('admin/dashboard-upload/')}}" enctype="multipart/form-data">
+							@csrf
+							<input type="file" name="fileToUpload" id="fileToUpload">
+							<button Type='submit'>Upload</button>
+							</form>
+						</div>
 					</div>
 				</div>
 			</div>

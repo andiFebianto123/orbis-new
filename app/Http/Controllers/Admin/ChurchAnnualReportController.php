@@ -43,7 +43,7 @@ class ChurchAnnualReportController extends Controller
                         ->leftJoin('service_time_churches','service_time_churches.churches_id','churches.id')
                         ->leftJoin('church_types','churches.church_type_id','church_types.id')
                         ->leftJoin('country_lists','churches.country_id','country_lists.id')
-                        ->select('rc_dpw_name', 'church_name','entities_type','contact_person','church_address','office_address',
+                        ->select('rc_dpw_name', 'church_name','lead_pastor_name','entities_type','contact_person','church_address','office_address',
                         'country_name','phone','fax','first_email','church_status','founded_on','service_time')
                         ->get();
 

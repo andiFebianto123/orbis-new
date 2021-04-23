@@ -80,6 +80,12 @@ class PersonelCrudController extends CrudController
         ]);
 
         $this->crud->addColumn([
+            'name' => 'church_name', // The db column name
+            'label' => "Church Name", // Table column heading
+            'type' => 'text'
+        ]);
+
+        $this->crud->addColumn([
             'name' => 'email', // The db column name
             'label' => "Email 1", // Table column heading
             'type' => 'text'
@@ -187,6 +193,13 @@ class PersonelCrudController extends CrudController
         $this->crud->addField([
             'name'            => 'last_name',
             'label'           => "Last Name",
+            'type'            => 'text',
+            'tab'             => 'Biodata',
+        ]);
+
+        $this->crud->addField([
+            'name'            => 'church_name',
+            'label'           => "Church Name",
             'type'            => 'text',
             'tab'             => 'Biodata',
         ]);

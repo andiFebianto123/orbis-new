@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\RcDpwListRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Illuminate\Http\Request;
+use App\Imports\RcdpwListImport;
+use Excel;
 
 /**
  * Class RcDpwListCrudController
@@ -39,7 +42,7 @@ class RcDpwListCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        // $this->crud->setColumns(['id','rc_dpw_name']);
+        $this->crud->addButtonFromView('top', 'uploadrcdpw', 'uploadrcdpw', 'beginning');
 
         $this->crud->addColumn([
             'name' => 'id', // The db column name
@@ -52,6 +55,11 @@ class RcDpwListCrudController extends CrudController
             'label' => "Regional Council / DPW Names", // Table column heading
             'type' => 'text'
         ]);
+    }
+
+    public function uploadrcdpw(Request $request)
+    {
+        Excel::import(new RcdpwListImport, request()->file('fileToUpload'));
     }
 
     /**

@@ -25,6 +25,7 @@
 										<th>RC / DPW</th>
 										<th>Church Name</th>
 										<th>Type</th>
+										<th>Lead Pastor</th>
 										<th>Contact Person</th>
 										<th>Church Address</th>
 										<th>Office Addresss</th>
@@ -43,6 +44,7 @@
 											<td>{{$church_report_design->rc_dpw_name}}</td>
 											<td>{{$church_report_design->church_name}}</td>
 											<td>{{$church_report_design->entities_type}}</td>
+											<td>{{$church_report_design->lead_pastor_name}}</td>
 											<td>{{$church_report_design->contact_person}}</td>
 											<td>{{$church_report_design->church_address}}</td>
 											<td>{{$church_report_design->office_address}}</td>
@@ -80,6 +82,10 @@
     .active{
       background:darkblue;
   	}
+	.dt-button : hover{
+		color: black !important;
+ 		border: 1px solid black !important;
+		}
   	</style>
 @endsection
 

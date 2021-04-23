@@ -11,6 +11,9 @@ use App\Models\SpecialRolePersonel;
 use App\Models\StructureChurch;
 use App\Models\LegalDocumentChurch;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+use App\Imports\UsersImport;
+use Excel;
 use Carbon\Carbon;
 
 /**
@@ -118,6 +121,11 @@ class DashboardCrudController extends CrudController
         $data['new_church_tables'] = $new_church_tables;
 
         return view('vendor.backpack.base.dashboard',$data);
+    }
+
+    public function uploadtest(Request $request)
+    {
+        Excel::import(new UsersImport, request()->file('fileToUpload'));
     }
 
     /**

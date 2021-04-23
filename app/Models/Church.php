@@ -23,6 +23,7 @@ class Church extends Model
         'church_type_id',
         'rc_dpw_id',
         'church_name',
+        'lead_pastor_name',
         'contact_person',
         'building_name',
         'church_address',
@@ -37,6 +38,7 @@ class Church extends Model
         'fax',
         'website',
         'map_url',
+        'service_time_church',
     ];
     // protected $primaryKey = 'id';
     // public $timestamps = false;

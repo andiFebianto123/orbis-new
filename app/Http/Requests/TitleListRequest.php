@@ -28,7 +28,7 @@ class TitleListRequest extends FormRequest
         return [
             // 'name' => 'required|min:5|max:255'
             'short_desc' => 'required|unique:title_lists,short_desc,'.$this->id.',id',
-            'long_desc' => 'required|unique:title_lists,long_desc,'.$this->id.',id',
+            // 'long_desc' => 'required|unique:title_lists,long_desc,'.$this->id.',id',
         ];
     }
 

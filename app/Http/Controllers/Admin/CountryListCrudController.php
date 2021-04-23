@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\CountryListRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Illuminate\Http\Request;
+use App\Imports\CountryListImport;
+use Excel;
 
 /**
  * Class CountryListCrudController
@@ -39,7 +42,8 @@ class CountryListCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        // $this->crud->setColumns(['id','iso_two', 'iso_three', 'country_name']);
+
+        $this->crud->addButtonFromView('top', 'uploadcountry', 'uploadcountry', 'beginning');
 
         $this->crud->addColumn([
             'name' => 'id', // The db column name
@@ -64,6 +68,11 @@ class CountryListCrudController extends CrudController
             'label' => "Country Name", // Table column heading
             'type' => 'text'
         ]);
+    }
+
+    public function uploadcountry(Request $request)
+    {
+        Excel::import(new CountryListImport, request()->file('fileToUpload'));
     }
 
     /**

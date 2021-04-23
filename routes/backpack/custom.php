@@ -37,6 +37,7 @@ Route::group([
     Route::crud('relatedentitychurch', 'RelatedEntityChurchCrudController');
     Route::crud('structurechurch', 'StructureChurchCrudController');
     Route::crud('dashboard', 'DashboardCrudController');
+    Route::post('dashboard-upload', 'DashboardCrudController@uploadtest');
     Route::crud('quickreport', 'QuickReportCrudController');
     Route::get('churchreport', 'ChurchAnnualReportController@index');
     Route::get('churchannualreportdetail/{year}', 'ChurchAnnualReportController@detail');
@@ -50,4 +51,13 @@ Route::group([
     Route::get('inactivepastor', 'QuickReportController@inactivepastor');
     Route::get('allchurchreport', 'QuickReportController@allchurch');
     Route::get('allpastorreport', 'QuickReportController@allpastor');
+
+    Route::get('toolsupload', 'ToolsUploadController@index');
+    Route::get('import-church', 'ToolsUploadController@importchurch');
+    Route::post('church-upload', 'ToolsUploadController@uploadchurch');
+    Route::get('import-personel', 'ToolsUploadController@importpersonel');
+    Route::post('personel-upload', 'ToolsUploadController@uploadpersonel');
+
+    Route::post('rcdpw-upload', 'RcDpwListCrudController@uploadrcdpw');
+    Route::post('country-upload', 'CountryListCrudController@uploadcountry');
 }); // this should be the absolute last line of this file
