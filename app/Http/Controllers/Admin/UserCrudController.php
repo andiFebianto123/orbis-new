@@ -155,43 +155,6 @@ class UserCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
-
-    //     CRUD::setValidation(UserRequest::class);
-        
-    //     $this->crud->addField([
-    //         'name' => 'name',
-    //         'type' => 'text',
-    //         'label' => "Name"
-    //     ]);
-
-    //     $this->crud->addField([
-    //         'name' => 'email',
-    //         'type' => 'text',
-    //         'label' => "Email"
-    //     ]);
-    //     $this->crud->addField([
-    //         'name' => 'privilege',
-    //         'type' => 'select2_from_array',
-    //         'label' => "Privilege",
-    //         'options' => ['Power User' => "Power User", 'Management' => "Management",
-    //         'Pastor/Church Level User' => "Pastor/Church Level User",
-    //         'Administrator' => "Administrator"
-    //         ],
-    //     ]);
-
-    //     $this->crud->addField([
-    //         'name' => 'password', // The db column name
-    //         'label' => "Password", // Table column heading
-    //         'type' => 'Password'
-    //     ]);
-
-    //     $this->crud->addField([
-    //         'name' => 'status_user',
-    //         'type' => 'select2_from_array',
-    //         'label' => "Status User",
-    //         'options' => ['Active' => "Active", 'Non Active' => "Non Active"],
-    //         // 'allows_null' => false,
-    //     ]);
     }
 
     public function update()

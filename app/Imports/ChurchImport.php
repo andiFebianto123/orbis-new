@@ -13,11 +13,6 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 class ChurchImport implements ToModel, WithHeadingRow
 
 {
-    /**
-     * @param array $row
-     *
-     * @return User|null
-     */
     public function model(array $row)
     {
         $country  = CountryList::where('country_name', $row['country'])->first();
@@ -52,8 +47,14 @@ class ChurchImport implements ToModel, WithHeadingRow
            'fax'    => $row['fax'],
            'service_time_church' => $row['service_time_church'],
         ]);
-       }
-
-       
+       }      
     }
+
+    // public function rules(): array
+    // {
+    //     return [
+    //         'country_id' => 'required|string',
+    //         'rc_dpw_id' => 'unique:users',
+    //     ];
+    // }
 }
