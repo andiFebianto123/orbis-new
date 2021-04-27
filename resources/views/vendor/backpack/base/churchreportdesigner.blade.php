@@ -28,7 +28,7 @@
 										<th>Lead Pastor</th>
 										<th>Contact Person</th>
 										<th>Church Address</th>
-										<th>Office Addresss</th>
+										<th>Office Address</th>
 										<th>Country</th>
 										<th>Phone</th>
 										<th>Fax</th>
@@ -117,6 +117,7 @@
 					collapse: {0: 'Filter By', _: 'Filter By (%d)'}
 				}
 			},
+
 			buttons: [
 				{ extend: 'excel',
 				text: 'Export to Excel',
@@ -132,7 +133,41 @@
 					}
             	},
 				'columnsToggle'
-			]
+			],
+			
+			// searchPanes: {
+			// 	order: [0, 7],
+        	// },
+
+			// columnDefs: [
+			// 	{
+			// 		searchPanes: {
+			// 			name: 'RC / DPW'
+			// 		},
+			// 		targets: [0]
+			// 	},
+			// 	{
+			// 		searchPanes: {
+			// 			name: 'Country'
+			// 		},
+			// 		targets: [7]
+			// 	}
+        	// ]
+
+			columnDefs: [
+				{
+					searchPanes: {
+						show: true
+					},
+					targets: [0]
+				},
+				{
+					searchPanes: {
+						show: false
+					},
+					targets: [2]
+				}
+        	]
 		} );
     $( "<hr>" ).insertAfter( ".buttons-excel" );
     $(".dt-button").addClass("btn btn-sm btn btn-outline-primary");

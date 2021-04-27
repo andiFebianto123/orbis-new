@@ -38,5 +38,29 @@ class TitleListSeeder extends Seeder
         ['short_desc' => 'Pnt', 
         'long_desc' => 'Elder Pastor']
         );
+        TitleList::updateOrCreate([
+            'short_desc' => 'Pst'
+        ], 
+        ['short_desc' => 'Pst', 
+        'long_desc' => 'Adoption Pastor']
+        );
+        TitleList::updateOrCreate([
+            'short_desc' => 'Mr'
+        ], 
+        ['short_desc' => 'Mr', 
+        'long_desc' => 'Coordinator']
+        );
+        TitleList::updateOrCreate([
+            'short_desc' => 'Mrs'
+        ], 
+        ['short_desc' => 'Mrs', 
+        'long_desc' => 'Coordinator']
+        );
+        TitleList::updateOrCreate([
+            'short_desc' => 'Ms'
+        ], 
+        ['short_desc' => 'Ms', 
+        'long_desc' => 'Coordinator']
+        );
     }
 }
