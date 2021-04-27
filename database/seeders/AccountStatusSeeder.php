@@ -20,9 +20,30 @@ class AccountstatusSeeder extends Seeder
         ['acc_status' => 'Active']
         );
         Accountstatus::updateOrCreate([
-        'acc_status' => 'Non Active'
+        'acc_status' => 'Deceased'
         ], 
-            ['acc_status' => 'Non Active']
+            ['acc_status' => 'Deceased']
         );
+        Accountstatus::updateOrCreate([
+            'acc_status' => 'Pending'
+        ], 
+        ['acc_status' => 'Pending']
+        );
+        Accountstatus::updateOrCreate([
+        'acc_status' => 'Resign'
+        ], 
+            ['acc_status' => 'Resign']
+        );
+        Accountstatus::updateOrCreate([
+            'acc_status' => 'Resigned'
+        ], 
+        ['acc_status' => 'Resigned']
+        );
+        Accountstatus::updateOrCreate([
+        'acc_status' => 'Retired'
+        ], 
+            ['acc_status' => 'Retired']
+        );
+        
     }
 }
