@@ -138,7 +138,7 @@
 								</tr>
 								<tr>
 									<td>Service Time</td>
-									<td> :  {{ $entry->service_time }}</td>
+									<td> :  {{ $entry->service_time_church }}</td>
 								</tr>
 							</table>
 						</div>

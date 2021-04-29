@@ -321,7 +321,7 @@ class ChurchCrudController extends CrudController
         ]);
 
         $this->crud->addField([
-            'name'            => 'service_time',
+            'name'            => 'service_time_church',
             'label'           => "Service Time",
             'type'            => 'text',
             'tab'             => 'Church / Office Information',

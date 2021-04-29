@@ -54,7 +54,7 @@
 											<td>{{$church_report_design->first_email}}</td>
 											<td>{{$church_report_design->church_status}}</td>
 											<td>{{$church_report_design->founded_on}}</td>
-											<td>{{$church_report_design->service_time}}</td>
+											<td>{{$church_report_design->service_time_church}}</td>
 										</tr>
 									@endforeach
 								</tbody>
@@ -95,6 +95,8 @@
 	<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 	<script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
 
+  	<script src ="https://code.jquery.com/jquery-3.5.1.js"></script>
+	<script src ="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 	<script src ="https://cdn.datatables.net/buttons/1.7.0/js/dataTables.buttons.min.js"></script>
 	<script src ="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
 	<script src ="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
@@ -102,7 +104,7 @@
 	<script src ="https://cdn.datatables.net/buttons/1.7.0/js/buttons.html5.min.js"></script>
 	<script src ="https://cdn.datatables.net/buttons/1.7.0/js/buttons.print.min.js"></script>
   	<script src ="https://cdn.datatables.net/buttons/1.7.0/js/buttons.colVis.min.js"></script>
-	
+
 	<script src ="https://cdn.datatables.net/searchpanes/1.2.1/js/dataTables.searchPanes.min.js"></script>
 	<script src ="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>
 	<script src ="https://cdn.datatables.net/buttons/1.7.0/js/dataTables.buttons.min.js"></script>
@@ -110,11 +112,16 @@
   <script>
 		$(document).ready(function() {
 		$('#tableChurchReportDesigner').DataTable( {
+			"scrollY": 400,
+        	"scrollX": true,
+			
 			dom: 'Bfrtip',
+
 			language: {
 				searchPanes: {
 					clearMessage: 'Clear All',
-					collapse: {0: 'Filter By', _: 'Filter By (%d)'}
+					collapse: {0: 'Filter By', _: 'Filter By (%d)'},
+					order: ['RC / DPW', 'Country']
 				}
 			},
 
@@ -133,41 +140,8 @@
 					}
             	},
 				'columnsToggle'
-			],
-			
-			// searchPanes: {
-			// 	order: [0, 7],
-        	// },
+			]
 
-			// columnDefs: [
-			// 	{
-			// 		searchPanes: {
-			// 			name: 'RC / DPW'
-			// 		},
-			// 		targets: [0]
-			// 	},
-			// 	{
-			// 		searchPanes: {
-			// 			name: 'Country'
-			// 		},
-			// 		targets: [7]
-			// 	}
-        	// ]
-
-			columnDefs: [
-				{
-					searchPanes: {
-						show: true
-					},
-					targets: [0]
-				},
-				{
-					searchPanes: {
-						show: false
-					},
-					targets: [2]
-				}
-        	]
 		} );
     $( "<hr>" ).insertAfter( ".buttons-excel" );
     $(".dt-button").addClass("btn btn-sm btn btn-outline-primary");

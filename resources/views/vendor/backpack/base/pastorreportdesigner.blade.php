@@ -108,6 +108,8 @@
   	<script>
 		$(document).ready(function() {
 		$('#tablePastorReportDesigner').DataTable( {
+			"scrollY": 400,
+        	"scrollX": true,
 			dom: 'Bfrtip',
 			language: {
 				searchPanes: {

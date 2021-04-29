@@ -40,11 +40,11 @@ class ChurchAnnualReportController extends Controller
     public function reportdesigner()
     {
         $church_report_designs = Church::leftJoin('rc_dpwlists','churches.rc_dpw_id','rc_dpwlists.id')
-                        ->leftJoin('service_time_churches','service_time_churches.churches_id','churches.id')
+                        // ->leftJoin('service_time_churches','service_time_churches.churches_id','churches.id')
                         ->leftJoin('church_types','churches.church_type_id','church_types.id')
                         ->leftJoin('country_lists','churches.country_id','country_lists.id')
                         ->select('rc_dpw_name', 'church_name','lead_pastor_name','entities_type','contact_person','church_address','office_address',
-                        'country_name','phone','fax','first_email','church_status','founded_on','service_time')
+                        'country_name','phone','fax','first_email','church_status','founded_on','service_time_church')
                         ->get();
 
         $data['church_report_designs'] = $church_report_designs;
