@@ -376,7 +376,7 @@ class PersonelCrudController extends CrudController
         
         //tab licensing information
         $this->crud->addField([
-            'name'  => 'first_lisenced_on',
+            'name'  => 'first_licensed_on',
             'type'  => 'date_picker',
             'label' => 'First Licensed On',
             'tab'   => 'Licensing Information',

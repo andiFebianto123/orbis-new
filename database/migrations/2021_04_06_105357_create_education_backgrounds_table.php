@@ -20,8 +20,13 @@ class CreateEducationBackgroundsTable extends Migration
             $table->text('concentration_education')->nullable();
             $table->text('school')->nullable();
             $table->integer('year')->nullable();
-            $table->integer('personel_id')->nullable();
+            $table->unsignedBigInteger('personel_id')->nullable();
             $table->timestamps();
+
+            $table->foreign('personel_id')
+            ->references('id')
+            ->on('personels')
+            ->onUpdate('cascade');
         });
     }
 

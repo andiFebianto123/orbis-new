@@ -47,7 +47,7 @@ class Personel extends Authenticatable
         'second_email',
         'phone',
         'fax',
-        'first_lisenced_on',
+        'first_licensed_on',
         'card',
         'valid_card_start',
         'valid_card_end',

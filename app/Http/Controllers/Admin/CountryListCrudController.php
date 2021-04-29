@@ -73,6 +73,8 @@ class CountryListCrudController extends CrudController
     public function uploadcountry(Request $request)
     {
         Excel::import(new CountryListImport, request()->file('fileToUpload'));
+
+        return back()->with('success', 'Successfully Done');
     }
 
     /**

@@ -32,7 +32,7 @@ class PastorAnnualReportController extends Controller
 
     public function index()
     {
-        $pastor_report_tables = Personel::select(DB::raw("(COUNT(first_lisenced_on)) as total"),DB::raw("YEAR(first_lisenced_on) as year"))
+        $pastor_report_tables = Personel::select(DB::raw("(COUNT(first_licensed_on)) as total"),DB::raw("YEAR(first_licensed_on) as year"))
                         ->groupBy('year')
                         ->get();
 
@@ -43,11 +43,11 @@ class PastorAnnualReportController extends Controller
 
     public function detail($year)
     {
-        $pastor_report_detail_tables = Personel::whereYear('first_lisenced_on', $year)
+        $pastor_report_detail_tables = Personel::whereYear('first_licensed_on', $year)
                         ->leftJoin('account_status','personels.acc_status_id','account_status.id')
                         ->leftJoin('rc_dpwlists','personels.rc_dpw_id','rc_dpwlists.id')
                         ->leftJoin('country_lists','personels.country_id','country_lists.id')
-                        ->select('first_name','rc_dpw_name','country_name','acc_status','first_lisenced_on')
+                        ->select('first_name','rc_dpw_name','country_name','acc_status','first_licensed_on')
                         ->get();
 
         $data['year'] = $year;

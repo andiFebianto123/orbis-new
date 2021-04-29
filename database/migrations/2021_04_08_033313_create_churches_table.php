@@ -18,8 +18,8 @@ class CreateChurchesTable extends Migration
             $table->text('church_status');
             $table->date('founded_on')->nullable();
             $table->integer('church_id')->nullable();
-            $table->integer('church_type_id')->nullable();
-            $table->integer('rc_dpw_id');
+            $table->unsignedBigInteger('church_type_id')->nullable();
+            $table->unsignedBigInteger('rc_dpw_id');
             $table->text('church_name');
             $table->text('lead_pastor_name');
             $table->text('contact_person');
@@ -29,8 +29,8 @@ class CreateChurchesTable extends Migration
             $table->text('city');
             $table->text('province');
             $table->text('postal_code');
-            $table->integer('country_id')->nullable();
-            $table->string('first_email');
+            $table->unsignedBigInteger('country_id')->nullable();
+            $table->string('first_email')->unique();
             $table->string('second_email')->nullable();
             $table->text('phone');
             $table->text('fax');
@@ -38,6 +38,21 @@ class CreateChurchesTable extends Migration
             $table->text('map_url')->nullable();
             $table->text('service_time_church');
             $table->timestamps();
+
+            $table->foreign('church_type_id')
+            ->references('id')
+            ->on('church_types')
+            ->onUpdate('cascade');
+
+            $table->foreign('rc_dpw_id')
+            ->references('id')
+            ->on('rc_dpwlists')
+            ->onUpdate('cascade');
+   
+            $table->foreign('country_id')
+            ->references('id')
+            ->on('country_lists')
+            ->onUpdate('cascade');
         });
     }
 

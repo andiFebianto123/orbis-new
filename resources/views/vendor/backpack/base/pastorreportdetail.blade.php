@@ -36,7 +36,7 @@
 											<td>{{$pastor_report_detail_table->rc_dpw_name}}</td>
 											<td>{{$pastor_report_detail_table->country_name}}</td>
 											<td>{{$pastor_report_detail_table->acc_status}}</td>
-											<td>{{$pastor_report_detail_table->first_lisenced_on}}</td>
+											<td>{{$pastor_report_detail_table->first_licensed_on}}</td>
 										</tr>
 									@endforeach
 								</tbody>

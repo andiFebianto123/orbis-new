@@ -170,7 +170,7 @@
 							<table class = "table table-striped">
 								<tr>
 									<td>First Licensed On</td>
-									<td> :  {{ $entry->first_lisenced_on }}</td>
+									<td> :  {{ $entry->first_licensed_on }}</td>
 								</tr>
 								<tr>
 									<td>Card</td>

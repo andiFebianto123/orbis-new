@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
         $this->call(RoleSeeder::class);
         $this->call(UserSeeder::class);
         $this->call(AccountStatusSeeder::class);
-        $this->call(RcDpwListSeeder::class);
+        // $this->call(RcDpwListSeeder::class);
         $this->call(ChurchEntityTypeSeeder::class);
         $this->call(ServiceTypeSeeder::class);
         $this->call(TitleListSeeder::class);
@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
         $this->call(SpecialRoleSeeder::class);
         $this->call(LicenseTypeSeeder::class);
         $this->call(LegalDocumentSeeder::class);
-        $this->call(CountryListSeeder::class);
-        $this->call(PersonelSeeder::class);
+        // $this->call(CountryListSeeder::class);
+        // $this->call(PersonelSeeder::class);
     }
 }

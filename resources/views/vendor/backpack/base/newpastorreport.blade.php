@@ -29,7 +29,7 @@
 											<td>{{$new_pastor_table->street_address}}</td>
 											<td>{{$new_pastor_table->country_name}}</td>
 											<td>{{$new_pastor_table->email}}</td>
-											<td>{{$new_pastor_table->first_lisenced_on}}</td>
+											<td>{{$new_pastor_table->first_licensed_on}}</td>
 										</tr>
 									@endforeach
 								</tbody>

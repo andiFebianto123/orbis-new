@@ -17,8 +17,13 @@ class CreateAppointmentHistoriesTable extends Migration
             $table->id();
             $table->text('title_appointment')->nullable();
             $table->date('date_appointment')->nullable();
-            $table->integer('personel_id')->nullable();
+            $table->unsignedBigInteger('personel_id')->nullable();
             $table->timestamps();
+
+            $table->foreign('personel_id')
+            ->references('id')
+            ->on('personels')
+            ->onUpdate('cascade');
         });
     }
 

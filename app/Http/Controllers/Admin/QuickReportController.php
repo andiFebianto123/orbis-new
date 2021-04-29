@@ -29,10 +29,10 @@ class QuickReportController extends Controller
 
     public function newpastor()
     {
-        $new_pastor_tables = Personel::whereYear('first_lisenced_on', Carbon::now()->year)
+        $new_pastor_tables = Personel::whereYear('first_licensed_on', Carbon::now()->year)
                         ->leftJoin('rc_dpwlists','personels.rc_dpw_id','rc_dpwlists.id')
                         ->leftJoin('country_lists','personels.country_id','country_lists.id')
-                        ->select('first_name','rc_dpw_name','street_address','country_name','email','first_lisenced_on')
+                        ->select('first_name','rc_dpw_name','street_address','country_name','email','first_licensed_on')
                         ->get();
 
         $data['new_pastor_tables'] = $new_pastor_tables;

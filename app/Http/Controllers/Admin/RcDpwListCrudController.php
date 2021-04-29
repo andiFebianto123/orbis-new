@@ -60,6 +60,8 @@ class RcDpwListCrudController extends CrudController
     public function uploadrcdpw(Request $request)
     {
         Excel::import(new RcdpwListImport, request()->file('fileToUpload'));
+
+        return back()->with('success', 'Successfully Done');
     }
 
     /**

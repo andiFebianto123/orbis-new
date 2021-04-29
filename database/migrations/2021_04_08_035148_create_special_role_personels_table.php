@@ -16,11 +16,16 @@ class CreateSpecialRolePersonelsTable extends Migration
         Schema::create('special_role_personels', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('special_role_id')->nullable();
-            $table->integer('personel_id')->nullable();
+            $table->unsignedBigInteger('personel_id')->nullable();
             $table->timestamps();
             $table->foreign('special_role_id')
             ->references('id')
             ->on('special_roles')
+            ->onUpdate('cascade');
+
+            $table->foreign('personel_id')
+            ->references('id')
+            ->on('personels')
             ->onUpdate('cascade');
         });
     }

@@ -112,7 +112,7 @@
 			language: {
 				searchPanes: {
 					clearMessage: 'Clear All',
-					collapse: {0: 'Filter By', _: 'Filter By (%d)'}
+					collapse: {0: 'Filter By', _: 'Filter By (%d)'},
 				}
 			},
 			buttons: [
@@ -126,7 +126,7 @@
 				{
 					extend: 'searchPanes',
 					config: {
-						cascadePanes: true
+						cascadePanes: false
 					}
 				},
 				'columnsToggle'

@@ -18,8 +18,13 @@ class CreateStatusHistoriesTable extends Migration
             $table->text('status')->nullable();
             $table->text('reason')->nullable();
             $table->date('date_status')->nullable();
-            $table->integer('personel_id')->nullable();
+            $table->unsignedBigInteger('personel_id')->nullable();
             $table->timestamps();
+
+            $table->foreign('personel_id')
+            ->references('id')
+            ->on('personels')
+            ->onUpdate('cascade');
         });
     }
 

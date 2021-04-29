@@ -17,8 +17,13 @@ class CreateRelatedEntityChurchesTable extends Migration
             $table->id();
             $table->text('entity_church')->nullable();
             $table->text('type_entity')->nullable();
-            $table->integer('churches_id')->nullable();
+            $table->unsignedBigInteger('churches_id')->nullable();
             $table->timestamps();
+
+            $table->foreign('churches_id')
+            ->references('id')
+            ->on('churches')
+            ->onUpdate('cascade');
         });
     }
 

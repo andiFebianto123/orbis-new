@@ -20,8 +20,13 @@ class CreateRelatedEntitiesTable extends Migration
             $table->text('office_address_entity')->nullable();
             $table->integer('phone')->nullable();
             $table->text('role')->nullable();
-            $table->integer('personel_id')->nullable();
+            $table->unsignedBigInteger('personel_id')->nullable();
             $table->timestamps();
+
+            $table->foreign('personel_id')
+            ->references('id')
+            ->on('personels')
+            ->onUpdate('cascade');
         });
     }
 

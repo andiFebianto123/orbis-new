@@ -18,8 +18,13 @@ class CreateStatusHistoryChurchesTable extends Migration
             $table->text('status')->nullable();
             $table->text('reason')->nullable();
             $table->date('date_status')->nullable();
-            $table->integer('churches_id')->nullable();
+            $table->unsignedBigInteger('churches_id')->nullable();
             $table->timestamps();
+
+            $table->foreign('churches_id')
+            ->references('id')
+            ->on('churches')
+            ->onUpdate('cascade');
         });
     }
 

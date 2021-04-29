@@ -35,7 +35,7 @@ class PersonelSeeder extends Seeder
         'email' => 'test@gmail.com',
         'phone' => '12345',
         'fax' => '12345',
-        'first_lisenced_on'=> '2021-04-14',
+        'first_licensed_on'=> '2021-04-14',
         'card' => 'abcd',
         'valid_card_start' => '2021-04-14',
         'valid_card_end' => '2021-04-14',

@@ -15,9 +15,9 @@ class CreatePersonelsTable extends Migration
     {
         Schema::create('personels', function (Blueprint $table) {
             $table->id();
-            $table->integer('acc_status_id');
-            $table->integer('rc_dpw_id');
-            $table->integer('title_id');
+            $table->unsignedBigInteger('acc_status_id');
+            $table->unsignedBigInteger('rc_dpw_id');
+            $table->unsignedBigInteger('title_id');
             $table->text('first_name');
             $table->text('last_name');
             $table->text('church_name')->nullable();
@@ -35,7 +35,7 @@ class CreatePersonelsTable extends Migration
             $table->text('city');
             $table->text('province');
             $table->text('postal_code');
-            $table->integer('country_id');
+            $table->unsignedBigInteger('country_id');
             $table->string('email')->nullable();
             $table->string('second_email')->nullable();
             $table->text('phone')->nullable();
@@ -46,6 +46,28 @@ class CreatePersonelsTable extends Migration
             $table->date('valid_card_end')->nullable();
             $table->string('password')->nullable();
             $table->timestamps();
+
+            $table->foreign('acc_status_id')
+            ->references('id')
+            ->on('account_status')
+            ->onUpdate('cascade');
+
+            $table->foreign('rc_dpw_id')
+            ->references('id')
+            ->on('rc_dpwlists')
+            ->onUpdate('cascade');
+
+            $table->foreign('title_id')
+            ->references('id')
+            ->on('title_lists')
+            ->onUpdate('cascade');
+
+            $table->foreign('country_id')
+            ->references('id')
+            ->on('country_lists')
+            ->onUpdate('cascade');
+
+            $table->unique(['email']);
         });
     }
 
