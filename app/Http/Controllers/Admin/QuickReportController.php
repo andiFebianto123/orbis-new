@@ -56,7 +56,7 @@ class QuickReportController extends Controller
     
     public function inactivepastor()
     {
-        $inactive_pastor_reports = Personel::where('acc_status_id', '2')
+        $inactive_pastor_reports = Personel::whereNotIn('acc_status_id', [1])
                         ->leftJoin('rc_dpwlists','personels.rc_dpw_id','rc_dpwlists.id')
                         ->leftJoin('country_lists','personels.country_id','country_lists.id')
                         ->leftJoin('account_status','personels.acc_status_id','account_status.id')

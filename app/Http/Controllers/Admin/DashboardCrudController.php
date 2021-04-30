@@ -89,7 +89,7 @@ class DashboardCrudController extends CrudController
                     ->get();
         $inactive_church_tables = Church::where('church_status', 'Non Active')
                     ->get();
-        $inactive_pastor_tables = Personel::where('acc_status_id', '2')
+        $inactive_pastor_tables = Personel::whereNotIn('acc_status_id', [1])
                     ->get();
         $new_pastor_tables = Personel::whereMonth('valid_card_start', Carbon::now()->month)
                     ->whereYear('valid_card_start', Carbon::now()->year)

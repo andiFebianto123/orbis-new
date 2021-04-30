@@ -108,7 +108,7 @@
 	<script src ="https://cdn.datatables.net/searchpanes/1.2.1/js/dataTables.searchPanes.min.js"></script>
 	<script src ="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>
 	<script src ="https://cdn.datatables.net/buttons/1.7.0/js/dataTables.buttons.min.js"></script>
-	
+
   <script>
 		$(document).ready(function() {
 		$('#tableChurchReportDesigner').DataTable( {
@@ -121,7 +121,8 @@
 				searchPanes: {
 					clearMessage: 'Clear All',
 					collapse: {0: 'Filter By', _: 'Filter By (%d)'},
-					order: ['RC / DPW', 'Country']
+					count: '{total} found',
+                	countFiltered: '{shown} / {total}'
 				}
 			},
 

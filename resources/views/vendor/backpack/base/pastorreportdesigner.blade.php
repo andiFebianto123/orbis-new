@@ -115,6 +115,8 @@
 				searchPanes: {
 					clearMessage: 'Clear All',
 					collapse: {0: 'Filter By', _: 'Filter By (%d)'},
+					count: '{total} found',
+                	countFiltered: '{shown} / {total}'
 				}
 			},
 			buttons: [
