@@ -51,9 +51,10 @@ class StatusHistoryCrudController extends CrudController
         ]);
 
         $this->crud->addColumn([
-            'name' => 'status', // The db column name
+            'name' => 'accountstatushistories', // The db column name
             'label' => "Status", // Table column heading
-            'type' => 'text'
+            'type' => 'relationship',
+            'attribute' => 'acc_status',
         ]);
 
         $this->crud->addColumn([
@@ -87,10 +88,12 @@ class StatusHistoryCrudController extends CrudController
         CRUD::setValidation(StatusHistoryRequest::class);
 
         $this->crud->addField([
-            'name'            => 'status',
-            'label'           => "Status",
-            'options'         => ['Active' => "Active", 'Non Active' => "Non Active"],
-            'type'            => 'select2_from_array',
+            'label'     => 'Status', // Table column heading
+            'type'      => 'select2',
+            'name'      => 'status_histories_id', // the column that contains the ID of that connected entity;
+            'entity'    => 'accountstatushistories', // the method that defines the relationship in your Model
+            'attribute' => 'acc_status', // foreign key attribute that is shown to user
+            'model'     => "App\Models\Accountstatus",
         ]);
 
         $this->crud->addField([

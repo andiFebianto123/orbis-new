@@ -369,7 +369,7 @@
 								<tbody>
 									@foreach($entry->status_history as $key => $sh)
 										<tr>
-											<td>{{$sh->status}}</td>
+											<td>{{$sh->accountstatushistories->acc_status}}</td>
 											<td>{{$sh->reason}}</td>
 											<td>{{$sh->date_status}}</td>
 											<td>

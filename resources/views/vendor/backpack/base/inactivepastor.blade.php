@@ -19,6 +19,7 @@
 										<th>Country</th>
 										<th>Email</th>
 										<th>Status</th>
+										<th>Inactive Date</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -30,6 +31,7 @@
 											<td>{{$inactive_pastor_report->country_name}}</td>
 											<td>{{$inactive_pastor_report->email}}</td>
 											<td>{{$inactive_pastor_report->acc_status}}</td>
+											<td>{{$inactive_pastor_report->date_status}}</td>
 										</tr>
 									@endforeach
 								</tbody>

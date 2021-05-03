@@ -31,6 +31,11 @@ class Accountstatus extends Model
         return $this->hasMany('App\Models\Personel', 'acc_status_id', 'id');
     }
 
+    public function status_history_personel()
+    {
+        return $this->hasMany('App\Models\StatusHistory', 'status_histories_id', 'id');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | FUNCTIONS

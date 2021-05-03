@@ -47,6 +47,7 @@ class DashboardCrudController extends CrudController
                     ->groupBy('first_name')
                     ->get();
         $today_birthday = Personel::whereDay('date_of_birth', Carbon::now()->day)
+                    ->whereMonth('date_of_birth', Carbon::now()->month)
                     ->select('first_name', DB::raw('count(first_name) as total'))
                     ->groupBy('first_name')
                     ->get();
@@ -118,6 +119,7 @@ class DashboardCrudController extends CrudController
         $data['new_pastor_tables'] = $new_pastor_tables;
         $data['new_church_tables'] = $new_church_tables;
 
+        // return dd($data);
         return view('vendor.backpack.base.dashboard',$data);
     }
 

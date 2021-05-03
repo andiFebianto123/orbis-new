@@ -28,13 +28,13 @@ class ChurchRequest extends FormRequest
         return [
             // 'name' => 'required|min:5|max:255'
         'church_status' => 'required',
-        'founded_on' => 'required',
-        'church_id' => 'required',
-        'church_type_id'=> 'required',
+        // 'founded_on' => 'required',
+        // 'church_id' => 'required',
+        // 'church_type_id'=> 'required',
         'rc_dpw_id' => 'required',
         'church_name'=> 'required',
         'contact_person' => 'required',
-        'building_name' => 'required',
+        // 'building_name' => 'required',
         'church_address' => 'required',
         'office_address' => 'required',
         'city' => 'required',

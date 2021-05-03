@@ -15,11 +15,16 @@ class CreateStatusHistoriesTable extends Migration
     {
         Schema::create('status_histories', function (Blueprint $table) {
             $table->id();
-            $table->text('status')->nullable();
+            $table->unsignedBigInteger('status_histories_id')->nullable();
             $table->text('reason')->nullable();
             $table->date('date_status')->nullable();
             $table->unsignedBigInteger('personel_id')->nullable();
             $table->timestamps();
+
+            $table->foreign('status_histories_id')
+            ->references('id')
+            ->on('account_status')
+            ->onUpdate('cascade');
 
             $table->foreign('personel_id')
             ->references('id')

@@ -6,6 +6,8 @@ use App\Http\Requests\ChurchAnnualReportDetailRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use App\Models\Church;
+use App\Models\StatusHistoryChurch;
+use App\Models\StatusHistory;
 use App\Models\Personel;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -42,11 +44,13 @@ class QuickReportController extends Controller
 
     public function inactivechurch()
     {
-        $inactive_church_reports = Church::where('church_status', 'Non Active')
+        $inactive_church_reports = StatusHistoryChurch::where('status', 'Non Active')
+                    ->whereYear('date_status', Carbon::now()->year)
+                    ->leftJoin('churches','status_history_churches.churches_id','churches.id')
                     ->leftJoin('church_types','churches.church_type_id','church_types.id')
                     ->leftJoin('rc_dpwlists','churches.rc_dpw_id','rc_dpwlists.id')
                     ->leftJoin('country_lists','churches.country_id','country_lists.id')
-                    ->select('entities_type','rc_dpw_name','country_name','church_name','church_status','first_email')
+                    ->select('entities_type','rc_dpw_name','country_name','church_name','status','first_email', 'date_status')
                     ->get();
         
         $data['inactive_church_reports'] = $inactive_church_reports;
@@ -56,11 +60,13 @@ class QuickReportController extends Controller
     
     public function inactivepastor()
     {
-        $inactive_pastor_reports = Personel::whereNotIn('acc_status_id', [1])
+        $inactive_pastor_reports = StatusHistory::whereNotIn('status_histories_id', [1])
+                        ->whereYear('date_status', Carbon::now()->year)
+                        ->leftJoin('personels','status_histories.personel_id','personels.id')
                         ->leftJoin('rc_dpwlists','personels.rc_dpw_id','rc_dpwlists.id')
                         ->leftJoin('country_lists','personels.country_id','country_lists.id')
-                        ->leftJoin('account_status','personels.acc_status_id','account_status.id')
-                        ->select('first_name','rc_dpw_name','street_address','country_name','email','acc_status')
+                        ->leftJoin('account_status','status_histories.status_histories_id','account_status.id')
+                        ->select('first_name','rc_dpw_name','street_address','country_name','email','acc_status', 'date_status')
                         ->get();
 
         $data['inactive_pastor_reports'] = $inactive_pastor_reports;

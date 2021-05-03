@@ -19,6 +19,7 @@
 										<th>Country</th>
 										<th>Email</th>
 										<th>Status</th>
+										<th>Inactive Date</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -29,7 +30,8 @@
 											<td>{{$inactive_church_report->rc_dpw_name}}</td>
 											<td>{{$inactive_church_report->country_name}}</td>
 											<td>{{$inactive_church_report->first_email}}</td>
-											<td>{{$inactive_church_report->church_status}}</td>
+											<td>{{$inactive_church_report->status}}</td>
+											<td>{{$inactive_church_report->date_status}}</td>
 										</tr>
 									@endforeach
 								</tbody>

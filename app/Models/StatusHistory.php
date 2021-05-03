@@ -17,7 +17,7 @@ class StatusHistory extends Model
 
     protected $table = 'status_histories';
     protected $fillable = [
-        'status',
+        'status_histories_id',
         'reason',
         'date_status',
         'personel_id',
@@ -32,6 +32,11 @@ class StatusHistory extends Model
     public function personel()
     {
         return $this->belongsTo('App\Models\Personel', 'personel_id', 'id');
+    }
+
+    public function accountstatushistories()
+    {
+        return $this->belongsTo('App\Models\Accountstatus', 'status_histories_id', 'id');
     }
 
     /*
