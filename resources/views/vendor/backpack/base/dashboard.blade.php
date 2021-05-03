@@ -434,12 +434,14 @@
 								<thead>
 									<tr>
 										<th>Church's Name</th>
+										<th>Inactive Date</th>
 									</tr>
 								</thead>
 								<tbody>
 									@foreach($inactive_church_tables as $key => $inactive_church_table)
 										<tr>
 											<td>{{$inactive_church_table->church_name}}</td>
+											<td>{{$inactive_church_table->date_status}}</td>
 										</tr>
 									@endforeach
 								</tbody>
@@ -461,12 +463,14 @@
 								<thead>
 									<tr>
 										<th>Pastor's Name</th>
+										<th>Inactive Date</th>
 									</tr>
 								</thead>
 								<tbody>
 									@foreach($inactive_pastor_tables as $key => $inactive_pastor_table)
 										<tr>
 											<td>{{$inactive_pastor_table->first_name}}</td>
+											<td>{{$inactive_pastor_table->date_status}}</td>
 										</tr>
 									@endforeach
 								</tbody>
@@ -523,7 +527,7 @@
 			"bInfo": false});
 		} );
 	</script>
-  <script>
+  	<script>
 		$(document).ready(function() {
 		$('#tableRCDPW').DataTable({
 			"bLengthChange": false,
@@ -531,7 +535,7 @@
 			"bInfo": false});
 		} );
 	</script>
-  <script>
+  	<script>
 		$(document).ready(function() {
 		$('#tablePersonelVip').DataTable({
 			"bLengthChange": false,

@@ -6,6 +6,8 @@ use App\Http\Requests\DashboardRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use App\Models\Church;
+use App\Models\StatusHistoryChurch;
+use App\Models\StatusHistory;
 use App\Models\Personel;
 use App\Models\SpecialRolePersonel;
 use App\Models\StructureChurch;
@@ -88,9 +90,15 @@ class DashboardCrudController extends CrudController
                     ->join('legal_documents','legal_document_churches.legal_document_id','legal_documents.id')
                     ->select('documents','exp_date')
                     ->get();
-        $inactive_church_tables = Church::where('church_status', 'Non Active')
+        $inactive_church_tables = StatusHistoryChurch::where('status', 'Non Active')
+                    ->whereYear('date_status', Carbon::now()->year)
+                    ->leftJoin('churches','status_history_churches.churches_id','churches.id')
+                    ->select('church_name', 'date_status')
                     ->get();
-        $inactive_pastor_tables = Personel::whereNotIn('acc_status_id', [1])
+        $inactive_pastor_tables = StatusHistory::whereNotIn('status_histories_id', [1])
+                        ->whereYear('date_status', Carbon::now()->year)
+                        ->leftJoin('personels','status_histories.personel_id','personels.id')
+                        ->select('first_name','date_status')
                     ->get();
         $new_pastor_tables = Personel::whereMonth('valid_card_start', Carbon::now()->month)
                     ->whereYear('valid_card_start', Carbon::now()->year)
