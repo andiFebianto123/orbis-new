@@ -55,6 +55,11 @@
 							<input type="file" name="fileToUpload" id="fileToUpload">
 							<button Type='submit'>Upload</button>
 						</form>
+						@if ($errors->has('fileToUpload'))
+							@foreach ($errors->get('fileToUpload') as $error)
+								<p class= 'text-small text-danger'>{{ $error }}</p>
+							@endforeach
+						@endif
 					</div>
 				</div>
 			</div>

@@ -29,6 +29,7 @@ class ToolsUploadController extends Controller
     public function uploadchurch(Request $request)
     {
         $status = 'Successfully Done';
+        $request->validate(['fileToUpload'=>'required|file|mimes:xls,xlsx']);
         
         try {
             $code = date("ymdhis");
@@ -79,7 +80,7 @@ class ToolsUploadController extends Controller
     {
         
         $status = 'Successfully Done';
-        
+        $request->validate(['fileToUpload'=>'required|file|mimes:xls,xlsx']);
         try {
             $code = date("ymdhis");
             $file = request()->file('fileToUpload');

@@ -90,7 +90,7 @@ class PersonelImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
     public function rules(): array
     {
         return [
-            'email' => 'required|email|unique:personels,email',
+            'email' => 'required|unique:personels,email',
             'dpw' => 'required|exists:rc_dpwlists,rc_dpw_name',
             'country' => 'required|exists:country_lists,country_name'
         ];
@@ -100,7 +100,6 @@ class PersonelImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
     {
         return [
             'email.required'    => 'Email must not be empty!',
-            'email.email'       => 'Incorrect Personel email address!',
             'email.unique'      => 'The Personel email has already been used',
         ];
     }
