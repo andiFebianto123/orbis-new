@@ -37,12 +37,12 @@ class PersonelImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
         $country  = CountryList::where('country_name', $row['country'])->first();
         $rcdpw  =  RcDpwList::where('rc_dpw_name', $row['dpw'])->first();
         $title  =  TitleList::where('short_desc', $row['title'])->first();
-        $date_of_birth = $row['date_of_birth'] == '-' ? NULL : Carbon::parse($row['date_of_birth'])->toDateString();
-        $spouse_date_of_birth = $row['spouse_date_of_birth'] == '-' ? NULL : Carbon::parse($row['spouse_date_of_birth'])->toDateString();
-        $anniversary = $row['anniversary'] == '-' ? NULL : Carbon::parse($row['anniversary'])->toDateString();
-        $first_licensed_on = $row['first_licensed_on'] == '-' ? NULL : Carbon::parse($row['first_licensed_on'])->toDateString();
-        $valid_card_start = $row['valid_card_start'] == '-' ? NULL : Carbon::parse($row['valid_card_start'])->toDateString();
-        $valid_card_end = $row['valid_card_end'] == '-' ? NULL : Carbon::parse($row['valid_card_end'])->toDateString();
+        $date_of_birth = $row['date_of_birth'] == '-' || $row['date_of_birth'] == '' ? NULL : $this->formatDateExcel($row['date_of_birth']);
+        $spouse_date_of_birth = $row['spouse_date_of_birth'] == '-' || $row['spouse_date_of_birth'] == '' ? NULL : $this->formatDateExcel($row['spouse_date_of_birth']);
+        $anniversary = $row['anniversary'] == '-' || $row['anniversary'] == '' ? NULL : $this->formatDateExcel($row['anniversary']);
+        $first_licensed_on = $row['first_licensed_on'] == '-' || $row['first_licensed_on'] == '' ? NULL : $this->formatDateExcel($row['first_licensed_on']);
+        $valid_card_start = $row['valid_card_start'] == '-' || $row['valid_card_start'] == '' ? NULL : $this->formatDateExcel($row['valid_card_start']);
+        $valid_card_end = $row['valid_card_end'] == '-' || $row['valid_card_end'] == '' ? NULL : $this->formatDateExcel($row['valid_card_end']);
 
         // if ($rcdpw == NULL) {
         //     dd($row['rc_dpw']);
@@ -90,18 +90,25 @@ class PersonelImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
     public function rules(): array
     {
         return [
-            'email' => 'required|unique:personels,email',
+            'email' => 'unique:personels,email',
             'dpw' => 'required|exists:rc_dpwlists,rc_dpw_name',
             'country' => 'required|exists:country_lists,country_name'
         ];
     }
 
-    public function customValidationMessages()
-    {
-        return [
-            'email.required'    => 'Email must not be empty!',
-            'email.unique'      => 'The Personel email has already been used',
-        ];
+    // public function customValidationMessages()
+    // {
+    //     return [
+    //         'email.required'    => 'Email must not be empty!',
+    //         'email.unique'      => 'The Personel email has already been used',
+    //     ];
+    // }
+
+    function formatDateExcel($dateExcel){
+        if (ctype_digit($dateExcel)) {
+            return Carbon::createFromTimestamp(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToTimestamp($dateExcel))->toDateString();
+        }
+        return Carbon::parse($dateExcel)->toDateString();
     }
 
     public function onFailure(Failure ...$failures)
