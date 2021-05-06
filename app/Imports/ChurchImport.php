@@ -33,7 +33,18 @@ class ChurchImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFa
     {
         $country  = CountryList::where('country_name', $row['country'])->first();
         $rcdpw  =  RcDpwList::where('rc_dpw_name', $row['rc_dpw'])->first();
-        $date =  $row['founded_on'] == '-' ? NULL : Carbon::parse($row['founded_on'])->toDateString();
+        $date =  $row['founded_on'] == '-' || $row['founded_on'] == '' ? NULL : Carbon::parse($row['founded_on'])->toDateString();
+        $lead_pastor_name = $row['lead_pastor_name'] == '. ' ? NULL : $row['lead_pastor_name'];
+        $contact_person = $row['contact_person'] == '-' || $row['contact_person'] == '' ? NULL : $row['contact_person'];
+        $church_address = $row['church_address'] == '-' || $row['church_address'] == '' ? NULL : $row['church_address'];
+        $office_address = $row['office_address'] == '-' || $row['office_address'] == '' ? NULL : $row['office_address'];
+        $city = $row['city'] == '-' || $row['city'] == '' ? NULL : $row['city'];
+        $province = $row['province'] == '-' || $row['province'] == '' ? NULL : $row['province'];
+        $phone = $row['phone'] == '-' || $row['phone'] == '' ? NULL : $row['phone'];
+        $fax = $row['fax'] == '-' || $row['fax'] == '' ? NULL : $row['fax'];
+        $postal_code = $row['postal_code'] == '-' || $row['postal_code'] == '' ? NULL : $row['postal_code'];
+        $first_email = $row['first_email'] == '-' || $row['first_email'] == '' ? NULL : $row['first_email'];
+        $service_time_church = $row['service_time_church'] == ',' ? NULL : $row['service_time_church'];
 
         // if ($rcdpw == NULL) {
         //     dd($row['rc_dpw']);
@@ -50,18 +61,18 @@ class ChurchImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFa
            'founded_on'     => $date,
            'rc_dpw_id'      => ($rcdpw['id'] ?? null),
            'church_name'    => $row['church_name'],
-           'lead_pastor_name' => $row['lead_pastor_name'],
-           'contact_person'   => $row['contact_person'],
-           'church_address'   => $row['church_address'],
-           'office_address' => $row['office_address'],
-           'city'           => $row['city'],
-           'province'    => $row['province'],
-           'postal_code' => $row['postal_code'],
+           'lead_pastor_name' => $lead_pastor_name,
+           'contact_person'   => $contact_person,
+           'church_address'   => $church_address,
+           'office_address' => $office_address,
+           'city'           => $city,
+           'province'    => $province,
+           'postal_code' => $postal_code,
            'country_id'  => ($country['id'] ?? null),
-           'first_email'    => $row['first_email'],
-           'phone' => $row['phone'],
-           'fax'    => $row['fax'],
-           'service_time_church' => $row['service_time_church'],
+           'first_email'    => $first_email,
+           'phone' => $phone,
+           'fax'    => $fax,
+           'service_time_church' => $service_time_church,
         ]);
        }      
     }
