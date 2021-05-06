@@ -67,7 +67,6 @@ class CreatePersonelsTable extends Migration
             ->on('country_lists')
             ->onUpdate('cascade');
 
-            $table->unique(['email']);
         });
     }
 

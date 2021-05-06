@@ -373,6 +373,13 @@ class PersonelCrudController extends CrudController
             'type'            => 'number',
             'tab'             => 'Contact Information',
         ]);
+
+        $this->crud->addField([
+            'name'  => 'is_lifetime',
+            'label' => 'Lifetime',
+            'type'  => 'checkbox',
+            'tab'   => 'Licensing Information',
+        ]);
         
         //tab licensing information
         $this->crud->addField([

@@ -44,11 +44,11 @@
 							<table class = "table table-striped">
 							<tr>
 									<td>Status</td>
-									<td> : {{ $entry->accountstatus->acc_status }}</td>
+									<td> : {{ $entry->accountstatus->acc_status ?? '-' }}</td>
 								</tr>
 								<tr>
 									<td>Regional Council</td>
-									<td> :  {{ $entry->rc_dpw->rc_dpw_name }}</td>
+									<td> :  {{ $entry->rc_dpw->rc_dpw_name ?? '-' }}</td>
 								</tr>
 								<tr>
 									<td>Title</td>
@@ -119,7 +119,7 @@
 							<table class = "table table-striped">
 							<tr>
 									<td>Street Address</td>
-									<td> :  {{ $entry->street_address }}</td>
+									<td style="white-space: pre-line;" > :  {{ $entry->street_address }} </td>
 								</tr>
 								<tr>
 									<td>City</td>
@@ -135,7 +135,7 @@
 								</tr>
 								<tr>
 									<td>Country</td>
-									<td> :  {{ $entry->country->country_name }}</td>
+									<td> :  {{ $entry->country->country_name ?? '-' }}</td>
 								</tr>
 								<tr>
 									<td>Email</td>
@@ -147,7 +147,7 @@
 								</tr>
 								<tr>
 									<td>Phone</td>
-									<td> :  {{ $entry->phone }}</td>
+									<td style="white-space: pre-line;"> :  {{ $entry->phone }}</td>
 								</tr>
 								<tr>
 									<td>Fax</td>

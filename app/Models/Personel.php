@@ -51,6 +51,7 @@ class Personel extends Authenticatable
         'card',
         'valid_card_start',
         'valid_card_end',
+        'is_lifetime',
         'password',
     ];
 

@@ -20,6 +20,11 @@ class AccountstatusSeeder extends Seeder
         ['acc_status' => 'Active']
         );
         Accountstatus::updateOrCreate([
+            'acc_status' => 'inActive'
+        ], 
+        ['acc_status' => 'inActive']
+        );
+        Accountstatus::updateOrCreate([
         'acc_status' => 'Deceased'
         ], 
             ['acc_status' => 'Deceased']
@@ -44,6 +49,26 @@ class AccountstatusSeeder extends Seeder
         ], 
             ['acc_status' => 'Retired']
         );
-        
+        Accountstatus::updateOrCreate([
+            'acc_status' => 'Revoked'
+        ], 
+        ['acc_status' => 'Revoked']
+        );
+        Accountstatus::updateOrCreate([
+            'acc_status' => 'Not Extended'
+        ], 
+        ['acc_status' => 'Not Extended']
+        );
+        Accountstatus::updateOrCreate([
+            'acc_status' => 'On Leave'
+        ], 
+        ['acc_status' => 'On Leave']
+        );
+        Accountstatus::updateOrCreate([
+            'acc_status' => 'Other Church'
+        ], 
+        ['acc_status' => 'Other Church']
+        );
+                
     }
 }
