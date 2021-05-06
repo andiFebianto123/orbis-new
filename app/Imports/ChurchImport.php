@@ -48,7 +48,7 @@ class ChurchImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFa
         return new Church([
            'church_status'  => $row['church_status'],
            'founded_on'     => $date,
-           'rc_dpw_id'      => $rcdpw['id'],
+           'rc_dpw_id'      => ($rcdpw['id'] ?? null),
            'church_name'    => $row['church_name'],
            'lead_pastor_name' => $row['lead_pastor_name'],
            'contact_person'   => $row['contact_person'],
@@ -57,7 +57,7 @@ class ChurchImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFa
            'city'           => $row['city'],
            'province'    => $row['province'],
            'postal_code' => $row['postal_code'],
-           'country_id'  => $country['id'],
+           'country_id'  => ($country['id'] ?? null),
            'first_email'    => $row['first_email'],
            'phone' => $row['phone'],
            'fax'    => $row['fax'],
@@ -69,20 +69,20 @@ class ChurchImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFa
     public function rules(): array
     {
         return [
-            'rc_dpw' => 'required|exists:rc_dpwlists,rc_dpw_name',
-            'country' => 'required|exists:country_lists,country_name',
-            'first_email' => 'required|email|unique:churches,first_email',
+            // 'rc_dpw' => 'required|exists:rc_dpwlists,rc_dpw_name',
+            // 'country' => 'required|exists:country_lists,country_name',
+            // 'first_email' => 'required|email|unique:churches,first_email',
         ];
     }
 
-    public function customValidationMessages()
-    {
-        return [
-            'first_email.required'    => 'Email must not be empty!',
-            'first_email.email'       => 'Incorrect Church Email Address!',
-            'first_email.unique'      => 'The Church email has already been used',
-        ];
-    }
+    // public function customValidationMessages()
+    // {
+    //     return [
+    //         'first_email.required'    => 'Email must not be empty!',
+    //         'first_email.email'       => 'Incorrect Church Email Address!',
+    //         'first_email.unique'      => 'The Church email has already been used',
+    //     ];
+    // }
 
     public function onFailure(Failure ...$failures)
     {

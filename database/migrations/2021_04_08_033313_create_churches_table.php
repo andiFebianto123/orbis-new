@@ -30,7 +30,7 @@ class CreateChurchesTable extends Migration
             $table->text('province');
             $table->text('postal_code');
             $table->unsignedBigInteger('country_id')->nullable();
-            $table->string('first_email')->unique();
+            $table->string('first_email')->nullable();
             $table->string('second_email')->nullable();
             $table->text('phone');
             $table->text('fax');
