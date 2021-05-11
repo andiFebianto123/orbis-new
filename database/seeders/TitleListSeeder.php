@@ -21,28 +21,10 @@ class TitleListSeeder extends Seeder
         'long_desc' => 'Assoc. Pastor']
         );
         TitleList::updateOrCreate([
-            'short_desc' => 'Pdm Pdt'
-        ], 
-        ['short_desc' => 'Pdm Pdt', 
-        'long_desc' => 'Pdm Pdt']
-        );
-        TitleList::updateOrCreate([
             'short_desc' => 'Pdp'
         ], 
         ['short_desc' => 'Pdp', 
         'long_desc' => 'Lay Pastor']
-        );
-        TitleList::updateOrCreate([
-            'short_desc' => 'Pdp (Em)'
-        ], 
-        ['short_desc' => 'Pdp (Em)', 
-        'long_desc' => 'Pdp (Em)']
-        );
-        TitleList::updateOrCreate([
-            'short_desc' => 'Pdp Pdt'
-        ], 
-        ['short_desc' => 'Pdp Pdt', 
-        'long_desc' => 'Pdp Pdt']
         );
         TitleList::updateOrCreate([
             'short_desc' => 'Pdt'
@@ -54,7 +36,7 @@ class TitleListSeeder extends Seeder
             'short_desc' => 'Pdt (Em)'
         ], 
         ['short_desc' => 'Pdt (Em)', 
-        'long_desc' => 'Pdt (Em)']
+        'long_desc' => 'Pendeta (Emeritus)']
         );
         TitleList::updateOrCreate([
             'short_desc' => 'Pnt'

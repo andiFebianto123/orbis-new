@@ -430,6 +430,20 @@ class PersonelCrudController extends CrudController
                 'language' => 'en'
             ],
         ]);
+
+        $this->crud->addField([
+            'name'            => 'current_certificate_number',
+            'label'           => "Current Certificate Number",
+            'type'            => 'text',
+            'tab'             => 'Licensing Information',
+        ]);
+
+        $this->crud->addField([
+            'name'            => 'notes',
+            'label'           => "Notes",
+            'type'            => 'text',
+            'tab'             => 'Licensing Information',
+        ]);
     }
 
     public function store()

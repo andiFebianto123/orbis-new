@@ -102,6 +102,10 @@
 									<td>Career Background</td>
 									<td> :  {{ $entry->career_background }}</td>
 								</tr>
+								<tr>
+									<td>Notes</td>
+									<td> :  {{ $entry->notes }}</td>
+								</tr>
 							</table>
 						</div>
 					</div>	
@@ -183,6 +187,10 @@
 								<tr>
 									<td>Valid Card End</td>
 									<td> :  {{ $entry->valid_card_end }}</td>
+								</tr>
+								<tr>
+									<td>Current Certificate Number </td>
+									<td> :  {{ $entry->current_certificate_number }}</td>
 								</tr>
 							</table>
 						</div>

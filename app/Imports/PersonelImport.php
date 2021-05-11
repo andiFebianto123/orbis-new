@@ -18,8 +18,9 @@ use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
 use Illuminate\Validation\Rule;
+use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
 
-class PersonelImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFailure
+class PersonelImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFailure, WithCalculatedFormulas
 
 {
     use Importable, SkipsFailures;
@@ -44,8 +45,8 @@ class PersonelImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
         $valid_card_start = $row['valid_card_start'] == '-' || $row['valid_card_start'] == '' ? NULL : $this->formatDateExcel($row['valid_card_start']);
         $valid_card_end = $row['valid_card_end'] == '-' || $row['valid_card_end'] == '' || $row['valid_card_end'] == '(expired)' || strtolower($row['valid_card_end']) == 'lifetime' ? NULL : $this->formatDateExcel($row['valid_card_end']);
         $is_lifetime = strtolower($row['valid_card_end'] ?? '') == 'lifetime' ? "1" : "0";
-        $address = trim(str_replace('_x005F_x000D_', "\n", $row['address'] ?? ''));
-        $phone = trim(str_replace('_x005F_x000D_', "\n", $row['phone'] ?? ''));
+        $address = trim(str_replace('_x000D_', "\n", $row['address'] ?? ''));
+        $phone = trim(str_replace('_x000D_', "\n", $row['phone'] ?? ''));
         $email = (!isset($row['email']) || strlen($row['email']) == 0) ? null : $row['email'];
         // $address = trim(str_replace('_x005F_x000D_', " ", $row['address'] ?? ''));
         // $address = preg_replace('/\s+/', ' ', $address);
@@ -83,12 +84,14 @@ class PersonelImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
         'marital_status' => $row['marital_status'],
         'date_of_birth'  => $date_of_birth,
         'spouse_name'    => $row['spouse_name'],
-        'spouse_date_of_birth'  => $spouse_date_of_birth,
-        'anniversary'  => $anniversary,
-        'first_licensed_on'  => $first_licensed_on,
-        'card'           => $row['card'],
-        'valid_card_start'  => $valid_card_start,
-        'valid_card_end'  => $valid_card_end,
+        'spouse_date_of_birth'          => $spouse_date_of_birth,
+        'anniversary'                   => $anniversary,
+        'first_licensed_on'             => $first_licensed_on,
+        'card'                          => $row['card'],
+        'valid_card_start'              => $valid_card_start,
+        'valid_card_end'                => $valid_card_end,
+        'current_certificate_number'    => $row['current_certificate_number'],
+        'notes'           => $row['notes'],
         'is_lifetime'     => $is_lifetime,
         ]);
     }
@@ -113,7 +116,7 @@ class PersonelImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
     // }
 
     function formatDateExcel($dateExcel){
-        if (ctype_digit($dateExcel)) {
+        if (is_numeric($dateExcel)) {
             return Carbon::createFromTimestamp(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToTimestamp($dateExcel))->toDateString();
         }
         return Carbon::parse($dateExcel)->toDateString();
