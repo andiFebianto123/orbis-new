@@ -47,7 +47,7 @@ class PastorAnnualReportController extends Controller
                         ->leftJoin('account_status','personels.acc_status_id','account_status.id')
                         ->leftJoin('rc_dpwlists','personels.rc_dpw_id','rc_dpwlists.id')
                         ->leftJoin('country_lists','personels.country_id','country_lists.id')
-                        ->select('first_name','rc_dpw_name','country_name','acc_status','first_licensed_on')
+                        ->select('first_name','last_name','rc_dpw_name','country_name','acc_status','first_licensed_on')
                         ->get();
 
         $data['year'] = $year;
@@ -61,7 +61,7 @@ class PastorAnnualReportController extends Controller
         $pastor_report_designs = Personel::leftJoin('rc_dpwlists','personels.rc_dpw_id','rc_dpwlists.id')
                         ->leftJoin('account_status','personels.acc_status_id','account_status.id')
                         ->leftJoin('title_lists','personels.title_id','title_lists.id')
-                        ->select('rc_dpw_name','short_desc','first_name','street_address','phone','fax','email','card',
+                        ->select('rc_dpw_name','short_desc','first_name','last_name','street_address','phone','fax','email','card',
                         'date_of_birth','spouse_name','spouse_date_of_birth','anniversary','acc_status')
                         ->get();
 

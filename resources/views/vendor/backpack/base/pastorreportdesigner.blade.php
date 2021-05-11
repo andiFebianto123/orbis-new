@@ -24,7 +24,8 @@
 									<tr>
 										<th>Regional Council</th>
 										<th>Title</th>
-										<th>Name</th>
+										<th>First Name</th>
+										<th>Last Name</th>
 										<th>Address</th>
 										<th>Phone</th>
 										<th>Fax</th>
@@ -43,6 +44,7 @@
 											<td>{{$pastor_report_design->rc_dpw_name}}</td>
 											<td>{{$pastor_report_design->short_desc}}</td>
 											<td>{{$pastor_report_design->first_name}}</td>
+											<td>{{$pastor_report_design->last_name}}</td>
 											<td>{{$pastor_report_design->street_address}}</td>
 											<td>{{$pastor_report_design->phone}}</td>
 											<td>{{$pastor_report_design->fax}}</td>

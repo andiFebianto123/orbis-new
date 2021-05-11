@@ -22,7 +22,8 @@
 							<table id ="tablePastorDetail" class = "table table-striped">
 								<thead>
 									<tr>
-										<th>Pastor</th>
+										<th>First Name</th>
+										<th>Last Name</th>
 										<th>RC / DPW</th>
 										<th>Country</th>
 										<th>Status</th>
@@ -33,6 +34,7 @@
 									@foreach($pastor_report_detail_tables as $key => $pastor_report_detail_table)
 										<tr>
 											<td>{{$pastor_report_detail_table->first_name}}</td>
+											<td>{{$pastor_report_detail_table->last_name}}</td>
 											<td>{{$pastor_report_detail_table->rc_dpw_name}}</td>
 											<td>{{$pastor_report_detail_table->country_name}}</td>
 											<td>{{$pastor_report_detail_table->acc_status}}</td>
@@ -56,6 +58,7 @@
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
 	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
 
 	<style>
     .active{
@@ -83,6 +86,7 @@
 	<script>
 		$(document).ready(function() {
 		$('#tablePastorDetail').DataTable( {
+			"pagingType": "full_numbers",
 			dom: 'Bfrtip',
 			buttons: [
 				{extend: 'excel', 

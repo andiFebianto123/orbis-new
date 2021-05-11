@@ -33,7 +33,8 @@ class ChurchImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFa
     {
         $country  = CountryList::where('country_name', $row['country'])->first();
         $rcdpw  =  RcDpwList::where('rc_dpw_name', $row['rc_dpw'])->first();
-        $date =  $row['founded_on'] == '-' || $row['founded_on'] == '' ? NULL : Carbon::parse($row['founded_on'])->toDateString();
+        $row['founded_on'] = trim($row['founded_on'] ?? '');
+        $date =  $row['founded_on'] == '-' || $row['founded_on'] == '' ? NULL : $this->formatDateExcel($row['founded_on']);
         $lead_pastor_name = $row['lead_pastor_name'] == '. ' ? NULL : $row['lead_pastor_name'];
         $contact_person = $row['contact_person'] == '-' || $row['contact_person'] == '' ? NULL : $row['contact_person'];
         $church_address = $row['church_address'] == '-' || $row['church_address'] == '' ? NULL : $row['church_address'];
@@ -94,6 +95,13 @@ class ChurchImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFa
     //         'first_email.unique'      => 'The Church email has already been used',
     //     ];
     // }
+
+    function formatDateExcel($dateExcel){
+        if (is_numeric($dateExcel)) {
+            return Carbon::createFromTimestamp(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToTimestamp($dateExcel))->toDateString();
+        }
+        return Carbon::parse($dateExcel)->toDateString();
+    }
 
     public function onFailure(Failure ...$failures)
     {

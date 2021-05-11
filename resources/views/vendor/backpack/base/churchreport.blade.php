@@ -50,6 +50,7 @@
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
 	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
 	
 	<style>
     .active{
@@ -77,6 +78,7 @@
 	<script>
 		$(document).ready(function() {
 		$('#tableChurchAnnual').DataTable( {
+			"pagingType": "full_numbers",
 			dom: 'Bfrtip',
 			buttons: [
 				{extend: 'excel', 

@@ -34,7 +34,7 @@ class QuickReportController extends Controller
         $new_pastor_tables = Personel::whereYear('first_licensed_on', Carbon::now()->year)
                         ->leftJoin('rc_dpwlists','personels.rc_dpw_id','rc_dpwlists.id')
                         ->leftJoin('country_lists','personels.country_id','country_lists.id')
-                        ->select('first_name','rc_dpw_name','street_address','country_name','email','first_licensed_on')
+                        ->select('first_name','last_name','rc_dpw_name','street_address','country_name','email','first_licensed_on')
                         ->get();
 
         $data['new_pastor_tables'] = $new_pastor_tables;
@@ -93,7 +93,7 @@ class QuickReportController extends Controller
         $all_pastor_tables = Personel::leftJoin('rc_dpwlists','personels.rc_dpw_id','rc_dpwlists.id')
                         ->leftJoin('country_lists','personels.country_id','country_lists.id')
                         ->leftJoin('account_status','personels.acc_status_id','account_status.id')
-                        ->select('first_name','rc_dpw_name','street_address','country_name','email',
+                        ->select('first_name','last_name','rc_dpw_name','street_address','country_name','email',
                         'city','province','acc_status','phone','postal_code')
                         ->get();
 
