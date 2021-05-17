@@ -92,7 +92,7 @@
 		$('#tableAllChurch').DataTable( {
 			"scrollY": 400,
         	"scrollX": true,
-			"pagingType": "full_numbers",
+			"pagingType": "simple_numbers",
 			dom: 'Bfrtip',
 			buttons: [
 				{extend: 'excel', 

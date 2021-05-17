@@ -78,12 +78,18 @@ class DashboardCrudController extends CrudController
                  ->groupBy('ministry_role')
                  ->get();
         $pastors_birthday_tables = Personel::whereMonth('date_of_birth', Carbon::now()->month)
+                    ->join('title_lists','personels.title_id','title_lists.id')
+                    ->select('first_name', 'date_of_birth', 'short_desc')
                     ->get();
         $pastors_anniversary_tables = Personel::whereMonth('anniversary', Carbon::now()->month)
                     ->where('marital_status', 'married')
+                    ->join('title_lists','personels.title_id','title_lists.id')
+                    ->select('first_name', 'anniversary', 'short_desc')
                     ->get();
         $id_card_expiration_tables = Personel::whereMonth('valid_card_end', Carbon::now()->month)
                     ->whereYear('valid_card_end', Carbon::now()->year)
+                    ->join('title_lists','personels.title_id','title_lists.id')
+                    ->select('first_name', 'valid_card_end', 'short_desc')
                     ->get();
         $license_expiration_tables = LegalDocumentChurch::whereMonth('exp_date', Carbon::now()->month)
                     ->whereYear('exp_date', Carbon::now()->year)
@@ -96,12 +102,14 @@ class DashboardCrudController extends CrudController
                     ->select('church_name', 'date_status')
                     ->get();
         $inactive_pastor_tables = StatusHistory::whereNotIn('status_histories_id', [1])
-                        ->whereYear('date_status', Carbon::now()->year)
-                        ->leftJoin('personels','status_histories.personel_id','personels.id')
-                        ->select('first_name','date_status')
+                    ->whereYear('date_status', Carbon::now()->year)
+                    ->leftJoin('personels','status_histories.personel_id','personels.id')
+                    ->select('first_name','date_status')
                     ->get();
         $new_pastor_tables = Personel::whereMonth('valid_card_start', Carbon::now()->month)
                     ->whereYear('valid_card_start', Carbon::now()->year)
+                    ->join('title_lists','personels.title_id','title_lists.id')
+                    ->select('first_name', 'valid_card_start', 'short_desc')
                     ->get();
         $new_church_tables = Church::whereMonth('founded_on', Carbon::now()->month)
                     ->whereYear('founded_on', Carbon::now()->year)

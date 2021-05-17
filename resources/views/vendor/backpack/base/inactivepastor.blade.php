@@ -80,7 +80,7 @@
 	<script>
 		$(document).ready(function() {
 		$('#tableInactivePastor').DataTable( {
-			"pagingType": "full_numbers",
+			"pagingType": "simple_numbers",
 			dom: 'Bfrtip',
 			buttons: [
 				{extend: 'excel', 

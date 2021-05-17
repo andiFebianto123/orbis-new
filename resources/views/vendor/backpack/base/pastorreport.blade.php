@@ -79,7 +79,7 @@
 	<script>
 		$(document).ready(function() {
 		$('#tablePastorAnnual').DataTable( {
-			"pagingType": "full_numbers",
+			"pagingType": "simple_numbers",
 			dom: 'Bfrtip',
 			buttons: [
 				{extend: 'excel', 

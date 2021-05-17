@@ -263,6 +263,7 @@
 							<table id ="tablePastorBirthday" class = "table table-striped">
 								<thead>
 									<tr>
+										<th>Title</th>
 										<th>Name</th>
 										<th>Date</th>
 									</tr>
@@ -270,6 +271,7 @@
 								<tbody>
 									@foreach($pastors_birthday_tables as $key => $pastors_birthday_table)
 										<tr>
+											<td>{{$pastors_birthday_table->short_desc}}</td>
 											<td>{{$pastors_birthday_table->first_name}}</td>
 											<td>{{$pastors_birthday_table->date_of_birth}}</td>
 										</tr>
@@ -292,6 +294,7 @@
 							<table id ="tablePastorAnniversary" class = "table table-striped">
 								<thead>
 									<tr>
+										<th>Title</th>
 										<th>Name</th>
 										<th>Date</th>
 									</tr>
@@ -299,6 +302,7 @@
 								<tbody>
 									@foreach($pastors_anniversary_tables as $key => $pastors_anniversary_table)
 										<tr>
+											<td>{{$pastors_anniversary_table->short_desc}}</td>
 											<td>{{$pastors_anniversary_table->first_name}}</td>
 											<td>{{$pastors_anniversary_table->anniversary}}</td>
 										</tr>
@@ -321,13 +325,17 @@
 							<table id ="tableQuickStatsNewPastor" class = "table table-striped">
 								<thead>
 									<tr>
+										<th>Title</th>
 										<th>Name</th>
+										<th>Date</th>
 									</tr>
 								</thead>
 								<tbody>
 									@foreach($new_pastor_tables as $key => $new_pastor_table)
 										<tr>
+											<td>{{$new_pastor_table->short_desc}}</td>
 											<td>{{$new_pastor_table->first_name}}</td>
+											<td>{{$new_pastor_table->valid_card_start}}</td>
 										</tr>
 									@endforeach
 								</tbody>
@@ -349,12 +357,14 @@
 								<thead>
 									<tr>
 										<th>Church Name</th>
+										<th>Date</th>
 									</tr>
 								</thead>
 								<tbody>
 									@foreach($new_church_tables as $key => $new_church_table)
 										<tr>
 											<td>{{$new_church_table->church_name}}</td>
+											<td>{{$new_church_table->founded_on}}</td>
 										</tr>
 									@endforeach
 								</tbody>
@@ -375,6 +385,7 @@
 							<table id ="tableIdCardExpired" class = "table table-striped">
 								<thead>
 									<tr>
+										<th>Title</th>
 										<th>Name</th>
 										<th>Date</th>
 									</tr>
@@ -382,6 +393,7 @@
 								<tbody>
 									@foreach($id_card_expiration_tables as $key => $id_card_expiration_tables)
 										<tr>
+											<td>{{$id_card_expiration_tables->short_desc}}</td>
 											<td>{{$id_card_expiration_tables->first_name}}</td>
 											<td>{{$id_card_expiration_tables->valid_card_end}}</td>
 										</tr>
