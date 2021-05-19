@@ -140,6 +140,10 @@
 									<td>Service Time</td>
 									<td> :  {{ $entry->service_time_church }}</td>
 								</tr>
+								<tr>
+									<td>Notes</td>
+									<td> :  {{ $entry->notes }}</td>
+								</tr>
 							</table>
 						</div>
 					</div>	

@@ -160,7 +160,7 @@ class ChurchCrudController extends CrudController
             'name'            => 'church_status',
             'label'           => "Status",
             'type'            => 'select2_from_array',
-            'options'         => ['Active' => "Active", 'Non Active' => "Non Active"],
+            'options'         => ['Active' => "Active", 'Non-active' => "Non-active"],
             'tab'             => 'Church / Office Information',
         ]);
 
@@ -323,6 +323,13 @@ class ChurchCrudController extends CrudController
         $this->crud->addField([
             'name'            => 'service_time_church',
             'label'           => "Service Time",
+            'type'            => 'text',
+            'tab'             => 'Church / Office Information',
+        ]);
+
+        $this->crud->addField([
+            'name'            => 'notes',
+            'label'           => "Notes",
             'type'            => 'text',
             'tab'             => 'Church / Office Information',
         ]);

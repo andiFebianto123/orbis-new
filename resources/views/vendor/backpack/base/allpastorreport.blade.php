@@ -13,31 +13,63 @@
 							<table id ="tableAllPastor" class = "table table-striped">
 								<thead>
 									<tr>
+										<th>RC / DPW</th>
+										<th>Title</th>
 										<th>First Name</th>
 										<th>Last Name</th>
-										<th>RC / DPW</th>
+										<th>Gender</th>
+										<th>Church Name</th>
 										<th>Address</th>
 										<th>City</th>
 										<th>Province</th>
 										<th>Postal Code</th>
-										<th>Email</th>
+										<th>Country</th>
 										<th>Phone</th>
+										<th>Fax</th>
+										<th>Email</th>
+										<th>Marital Status</th>
+										<th>Date of Birth</th>
+										<th>Spouse Name</th>
+										<th>Spouse Date of Birth</th>
+										<th>Anniversary</th>
 										<th>Status</th>
+										<th>First Licensed On</th>
+										<th>Card</th>
+										<th>Valid Card Start</th>
+										<th>Valid Card End</th>
+										<th>Current Certificate Number</th>
+										<th>Notes</th>
 									</tr>
 								</thead>
 								<tbody>
 									@foreach($all_pastor_tables as $key => $all_pastor_table)
 										<tr>
+											<td>{{$all_pastor_table->rc_dpw_name}}</td>
+											<td>{{$all_pastor_table->short_desc}}</td>
 											<td>{{$all_pastor_table->first_name}}</td>
 											<td>{{$all_pastor_table->last_name}}</td>
-											<td>{{$all_pastor_table->rc_dpw_name}}</td>
+											<td>{{$all_pastor_table->gender}}</td>
+											<td>{{$all_pastor_table->church_name}}</td>
 											<td>{{$all_pastor_table->street_address}}</td>
 											<td>{{$all_pastor_table->city}}</td>
 											<td>{{$all_pastor_table->province}}</td>
 											<td>{{$all_pastor_table->postal_code}}</td>
-											<td>{{$all_pastor_table->email}}</td>
+											<td>{{$all_pastor_table->country_name}}</td>
 											<td>{{$all_pastor_table->phone}}</td>
+											<td>{{$all_pastor_table->fax}}</td>
+											<td>{{$all_pastor_table->email}}</td>
+											<td>{{$all_pastor_table->marital_status}}</td>
+											<td>{{$all_pastor_table->date_of_birth}}</td>
+											<td>{{$all_pastor_table->spouse_name}}</td>
+											<td>{{$all_pastor_table->spouse_date_of_birth}}</td>
+											<td>{{$all_pastor_table->anniversary}}</td>
 											<td>{{$all_pastor_table->acc_status}}</td>
+											<td>{{$all_pastor_table->first_licensed_on}}</td>
+											<td>{{$all_pastor_table->card}}</td>
+											<td>{{$all_pastor_table->valid_card_start}}</td>
+											<td>{{$all_pastor_table->valid_card_end}}</td>
+											<td>{{$all_pastor_table->current_certificate_number}}</td>
+											<td>{{$all_pastor_table->notes}}</td>
 										</tr>
 									@endforeach
 								</tbody>

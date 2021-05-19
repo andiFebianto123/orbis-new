@@ -13,37 +13,47 @@
 							<table id ="tableAllChurch" class = "table table-striped">
 								<thead>
 									<tr>
-										<th>Church Name</th>
-										<th>Type</th>
 										<th>RC / DPW</th>
+										<th>Church Name</th>
+										<th>Church Type</th>
+										<th>Lead Pastor Name</th>
+										<th>Contact Person</th>
 										<th>Church Address</th>
 										<th>Office Address</th>
 										<th>City</th>
 										<th>Province</th>
 										<th>Postal Code</th>
 										<th>Country</th>
-										<th>Email</th>
 										<th>Phone</th>
+										<th>Fax</th>
+										<th>Email</th>
+										<th>Church Status</th>
 										<th>Founded On</th>
-										<th>Status</th>
+										<th>Service Time Church</th>
+										<th>Notes</th>
 									</tr>
 								</thead>
 								<tbody>
 									@foreach($all_church_tables as $key => $all_church_table)
 										<tr>
+											<td>{{$all_church_table->rc_dpw_name}}</td>
 											<td>{{$all_church_table->church_name}}</td>
 											<td>{{$all_church_table->entities_type}}</td>
-											<td>{{$all_church_table->rc_dpw_name}}</td>
+											<td>{{$all_church_table->lead_pastor_name}}</td>
+											<td>{{$all_church_table->contact_person}}</td>
 											<td>{{$all_church_table->church_address}}</td>
 											<td>{{$all_church_table->office_address}}</td>
 											<td>{{$all_church_table->city}}</td>
 											<td>{{$all_church_table->province}}</td>
 											<td>{{$all_church_table->postal_code}}</td>
 											<td>{{$all_church_table->country_name}}</td>
-											<td>{{$all_church_table->first_email}}</td>
 											<td>{{$all_church_table->phone}}</td>
-											<td>{{$all_church_table->founded_on}}</td>
+											<td>{{$all_church_table->fax}}</td>
+											<td>{{$all_church_table->first_email}}</td>
 											<td>{{$all_church_table->church_status}}</td>
+											<td>{{$all_church_table->founded_on}}</td>
+											<td>{{$all_church_table->service_time_church}}</td>
+											<td>{{$all_church_table->notes}}</td>
 										</tr>
 									@endforeach
 								</tbody>

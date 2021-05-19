@@ -39,6 +39,7 @@ class Church extends Model
         'website',
         'map_url',
         'service_time_church',
+        'notes',
     ];
     // protected $primaryKey = 'id';
     // public $timestamps = false;

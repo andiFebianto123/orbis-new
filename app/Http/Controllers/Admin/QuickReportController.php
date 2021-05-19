@@ -79,8 +79,9 @@ class QuickReportController extends Controller
         $all_church_tables = Church::leftJoin('church_types','churches.church_type_id','church_types.id')
                         ->leftJoin('rc_dpwlists','churches.rc_dpw_id','rc_dpwlists.id')
                         ->leftJoin('country_lists','churches.country_id','country_lists.id')
-                        ->select('entities_type','rc_dpw_name','country_name','church_name','founded_on','first_email',
-                        'church_address', 'office_address', 'city', 'province', 'postal_code', 'phone', 'church_status')
+                        ->select('rc_dpw_name','church_name','entities_type','lead_pastor_name','contact_person',
+                        'church_address', 'office_address','city', 'province', 'postal_code','country_name',
+                        'phone','fax','first_email','church_status','founded_on', 'service_time_church', 'notes')
                         ->get();
 
         $data['all_church_tables'] = $all_church_tables;
@@ -93,8 +94,11 @@ class QuickReportController extends Controller
         $all_pastor_tables = Personel::leftJoin('rc_dpwlists','personels.rc_dpw_id','rc_dpwlists.id')
                         ->leftJoin('country_lists','personels.country_id','country_lists.id')
                         ->leftJoin('account_status','personels.acc_status_id','account_status.id')
-                        ->select('first_name','last_name','rc_dpw_name','street_address','country_name','email',
-                        'city','province','acc_status','phone','postal_code')
+                        ->leftJoin('title_lists','personels.title_id','title_lists.id')
+                        ->select('rc_dpw_name', 'short_desc', 'first_name','last_name', 'gender', 'church_name', 'street_address',
+                        'city','province','postal_code','country_name','phone','fax','email','marital_status', 'date_of_birth',
+                        'spouse_name','spouse_date_of_birth','anniversary','acc_status', 'first_licensed_on', 'card',
+                        'valid_card_start', 'valid_card_end', 'current_certificate_number', 'notes')
                         ->get();
 
         $data['all_pastor_tables'] = $all_pastor_tables;
