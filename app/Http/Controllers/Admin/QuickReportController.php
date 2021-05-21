@@ -21,7 +21,9 @@ class QuickReportController extends Controller
                         ->leftJoin('church_types','churches.church_type_id','church_types.id')
                         ->leftJoin('rc_dpwlists','churches.rc_dpw_id','rc_dpwlists.id')
                         ->leftJoin('country_lists','churches.country_id','country_lists.id')
-                        ->select('entities_type','rc_dpw_name','country_name','church_name','founded_on','first_email')
+                        ->select('rc_dpw_name','church_name','entities_type','lead_pastor_name','contact_person',
+                        'church_address', 'office_address','city', 'province', 'postal_code','country_name',
+                        'phone','fax','first_email','church_status','founded_on', 'service_time_church', 'notes')
                         ->get();
 
         $data['new_church_tables'] = $new_church_tables;
@@ -34,7 +36,12 @@ class QuickReportController extends Controller
         $new_pastor_tables = Personel::whereYear('first_licensed_on', Carbon::now()->year)
                         ->leftJoin('rc_dpwlists','personels.rc_dpw_id','rc_dpwlists.id')
                         ->leftJoin('country_lists','personels.country_id','country_lists.id')
-                        ->select('first_name','last_name','rc_dpw_name','street_address','country_name','email','first_licensed_on')
+                        ->leftJoin('account_status','personels.acc_status_id','account_status.id')
+                        ->leftJoin('title_lists','personels.title_id','title_lists.id')
+                        ->select('rc_dpw_name', 'short_desc', 'first_name','last_name', 'gender', 'church_name', 'street_address',
+                        'city','province','postal_code','country_name','phone','fax','email','marital_status', 'date_of_birth',
+                        'spouse_name','spouse_date_of_birth','anniversary','acc_status', 'first_licensed_on', 'card',
+                        'valid_card_start', 'valid_card_end', 'current_certificate_number', 'notes')
                         ->get();
 
         $data['new_pastor_tables'] = $new_pastor_tables;
@@ -44,13 +51,15 @@ class QuickReportController extends Controller
 
     public function inactivechurch()
     {
-        $inactive_church_reports = StatusHistoryChurch::where('status', 'Non Active')
+        $inactive_church_reports = StatusHistoryChurch::where('status', 'Non-active')
                     ->whereYear('date_status', Carbon::now()->year)
                     ->leftJoin('churches','status_history_churches.churches_id','churches.id')
                     ->leftJoin('church_types','churches.church_type_id','church_types.id')
                     ->leftJoin('rc_dpwlists','churches.rc_dpw_id','rc_dpwlists.id')
                     ->leftJoin('country_lists','churches.country_id','country_lists.id')
-                    ->select('entities_type','rc_dpw_name','country_name','church_name','status','first_email', 'date_status')
+                    ->select('rc_dpw_name','church_name','entities_type','lead_pastor_name','contact_person',
+                        'church_address', 'office_address','city', 'province', 'postal_code','country_name',
+                        'phone','fax','first_email','founded_on', 'service_time_church', 'notes', 'status', 'date_status')
                     ->get();
         
         $data['inactive_church_reports'] = $inactive_church_reports;
@@ -66,7 +75,11 @@ class QuickReportController extends Controller
                         ->leftJoin('rc_dpwlists','personels.rc_dpw_id','rc_dpwlists.id')
                         ->leftJoin('country_lists','personels.country_id','country_lists.id')
                         ->leftJoin('account_status','status_histories.status_histories_id','account_status.id')
-                        ->select('first_name','rc_dpw_name','street_address','country_name','email','acc_status', 'date_status')
+                        ->leftJoin('title_lists','personels.title_id','title_lists.id')
+                        ->select('rc_dpw_name', 'short_desc', 'first_name','last_name', 'gender', 'church_name', 'street_address',
+                        'city','province','postal_code','country_name','phone','fax','email','marital_status', 'date_of_birth',
+                        'spouse_name','spouse_date_of_birth','anniversary','acc_status', 'first_licensed_on', 'card',
+                        'valid_card_start', 'valid_card_end', 'current_certificate_number', 'notes', 'date_status')
                         ->get();
 
         $data['inactive_pastor_reports'] = $inactive_pastor_reports;

@@ -28,7 +28,9 @@ class ChurchAnnualReportController extends Controller
                         ->leftJoin('church_types','churches.church_type_id','church_types.id')
                         ->leftJoin('rc_dpwlists','churches.rc_dpw_id','rc_dpwlists.id')
                         ->leftJoin('country_lists','churches.country_id','country_lists.id')
-                        ->select('entities_type','rc_dpw_name','country_name','church_name','founded_on')
+                        ->select('rc_dpw_name','church_name','entities_type','lead_pastor_name','contact_person',
+                        'church_address', 'office_address','city', 'province', 'postal_code','country_name',
+                        'phone','fax','first_email','church_status','founded_on', 'service_time_church', 'notes')
                         ->get();
 
         $data['year'] = $year;
@@ -43,8 +45,9 @@ class ChurchAnnualReportController extends Controller
                         // ->leftJoin('service_time_churches','service_time_churches.churches_id','churches.id')
                         ->leftJoin('church_types','churches.church_type_id','church_types.id')
                         ->leftJoin('country_lists','churches.country_id','country_lists.id')
-                        ->select('rc_dpw_name', 'church_name','lead_pastor_name','entities_type','contact_person','church_address','office_address',
-                        'country_name','phone','fax','first_email','church_status','founded_on','service_time_church')
+                        ->select('rc_dpw_name','church_name','entities_type','lead_pastor_name','contact_person',
+                        'church_address', 'office_address','city', 'province', 'postal_code','country_name',
+                        'phone','fax','first_email','church_status','founded_on', 'service_time_church', 'notes')
                         ->get();
 
         $data['church_report_designs'] = $church_report_designs;

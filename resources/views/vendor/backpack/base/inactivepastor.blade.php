@@ -13,12 +13,31 @@
 							<table id ="tableInactivePastor" class = "table table-striped">
 								<thead>
 									<tr>
+										<th>RC / DPW</th>
+										<th>Title</th>
 										<th>First Name</th>
 										<th>Last Name</th>
-										<th>RC / DPW</th>
+										<th>Gender</th>
+										<th>Church Name</th>
 										<th>Address</th>
+										<th>City</th>
+										<th>Province</th>
+										<th>Postal Code</th>
 										<th>Country</th>
+										<th>Phone</th>
+										<th>Fax</th>
 										<th>Email</th>
+										<th>Marital Status</th>
+										<th>Date of Birth</th>
+										<th>Spouse Name</th>
+										<th>Spouse Date of Birth</th>
+										<th>Anniversary</th>
+										<th>First Licensed On</th>
+										<th>Card</th>
+										<th>Valid Card Start</th>
+										<th>Valid Card End</th>
+										<th>Current Certificate Number</th>
+										<th>Notes</th>
 										<th>Status</th>
 										<th>Inactive Date</th>
 									</tr>
@@ -26,12 +45,31 @@
 								<tbody>
 									@foreach($inactive_pastor_reports as $key => $inactive_pastor_report)
 										<tr>
+											<td>{{$inactive_pastor_report->rc_dpw_name}}</td>
+											<td>{{$inactive_pastor_report->short_desc}}</td>
 											<td>{{$inactive_pastor_report->first_name}}</td>
 											<td>{{$inactive_pastor_report->last_name}}</td>
-											<td>{{$inactive_pastor_report->rc_dpw_name}}</td>
+											<td>{{$inactive_pastor_report->gender}}</td>
+											<td>{{$inactive_pastor_report->church_name}}</td>
 											<td>{{$inactive_pastor_report->street_address}}</td>
-											<td>{{$inactive_pastor_report->country_name}}</td>
-											<td>{{$inactive_pastor_report->email}}</td>
+                      						<td>{{$inactive_pastor_report->city}}</td>
+											<td>{{$inactive_pastor_report->province}}</td>
+											<td>{{$inactive_pastor_report->postal_code}}</td>
+                      						<td>{{$inactive_pastor_report->country_name}}</td>
+											<td>{{$inactive_pastor_report->phone}}</td>
+											<td>{{$inactive_pastor_report->fax}}</td>
+                      						<td>{{$inactive_pastor_report->email}}</td>
+											<td>{{$inactive_pastor_report->marital_status}}</td>
+											<td>{{$inactive_pastor_report->date_of_birth}}</td>
+											<td>{{$inactive_pastor_report->spouse_name}}</td>
+                      						<td>{{$inactive_pastor_report->spouse_date_of_birth}}</td>
+											<td>{{$inactive_pastor_report->anniversary}}</td>
+											<td>{{$inactive_pastor_report->first_licensed_on}}</td>
+											<td>{{$inactive_pastor_report->card}}</td>
+                      						<td>{{$inactive_pastor_report->valid_card_start}}</td>
+											<td>{{$inactive_pastor_report->valid_card_end}}</td>
+											<td>{{$inactive_pastor_report->current_certificate_number}}</td>
+											<td>{{$inactive_pastor_report->notes}}</td>
 											<td>{{$inactive_pastor_report->acc_status}}</td>
 											<td>{{$inactive_pastor_report->date_status}}</td>
 										</tr>
@@ -56,9 +94,17 @@
 	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
 
     <style>
-    .active{
-      background:aliceblue;
-	}
+		.active{
+		background:aliceblue;
+		}
+
+		.bg-light {
+			background-color: #f9fbfd !important;
+		}
+
+		body{
+			background: #f9fbfd;
+		}
 	</style>
 @endsection
 
@@ -80,6 +126,8 @@
 	<script>
 		$(document).ready(function() {
 		$('#tableInactivePastor').DataTable( {
+			"scrollY": true,
+        	"scrollX": true,
 			"pagingType": "simple_numbers",
 			dom: 'Bfrtip',
 			buttons: [

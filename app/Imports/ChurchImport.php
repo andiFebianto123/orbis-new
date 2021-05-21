@@ -100,17 +100,19 @@ class ChurchImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFa
             // 'country' => 'required|exists:country_lists,country_name',
             // 'country' => 'exists:country_lists,country_name',
             // 'first_email' => 'required|email|unique:churches,first_email',
+            // 'church_name' => 'unique:churches,church_name',
         ];
     }
 
-    // public function customValidationMessages()
-    // {
-    //     return [
-    //         'first_email.required'    => 'Email must not be empty!',
-    //         'first_email.email'       => 'Incorrect Church Email Address!',
-    //         'first_email.unique'      => 'The Church email has already been used',
-    //     ];
-    // }
+    public function customValidationMessages()
+    {
+        return [
+            // 'first_email.required'    => 'Email must not be empty!',
+            // 'first_email.email'       => 'Incorrect Church Email Address!',
+            // 'first_email.unique'      => 'The Church email has already been used',
+            // 'church_name.unique'      => 'The Church Name has already been used',
+        ];
+    }
 
     function formatDateExcel($dateExcel){
         if (is_numeric($dateExcel)) {

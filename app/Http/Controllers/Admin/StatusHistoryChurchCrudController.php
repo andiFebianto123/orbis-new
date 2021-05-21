@@ -89,7 +89,7 @@ class StatusHistoryChurchCrudController extends CrudController
         $this->crud->addField([
             'name'            => 'status',
             'label'           => "Status",
-            'options'         => ['Active' => "Active", 'Non Active' => "Non Active"],
+            'options'         => ['Active' => "Active", 'Non-active' => "Non-active"],
             'type'            => 'select2_from_array',
         ]);
 

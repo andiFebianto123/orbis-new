@@ -1,5 +1,1 @@
-<form method= 'POST' action="{{url('admin/rcdpw-upload/')}}" class="btn btn-primary" enctype="multipart/form-data">
-	@csrf
-	<input type="file" name="fileToUpload" id="fileToUpload">
-	<button type='submit'>Upload</button>
-</form>
+<a type='button' href="{{url('admin/import-rcdpw/')}}" class="btn btn-primary"><i class="la la-file"></i>Import Data RC/ DPW</a>

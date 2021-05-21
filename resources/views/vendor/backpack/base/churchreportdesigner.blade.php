@@ -24,18 +24,22 @@
 									<tr>
 										<th>RC / DPW</th>
 										<th>Church Name</th>
-										<th>Type</th>
-										<th>Lead Pastor</th>
+										<th>Church Type</th>
+										<th>Lead Pastor Name</th>
 										<th>Contact Person</th>
 										<th>Church Address</th>
 										<th>Office Address</th>
+										<th>City</th>
+										<th>Province</th>
+										<th>Postal Code</th>
 										<th>Country</th>
 										<th>Phone</th>
 										<th>Fax</th>
-										<th>E-mail</th>
-										<th>Status</th>
+										<th>Email</th>
+										<th>Church Status</th>
 										<th>Founded On</th>
-										<th>Service Time</th>
+										<th>Service Time Church</th>
+										<th>Notes</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -48,6 +52,9 @@
 											<td>{{$church_report_design->contact_person}}</td>
 											<td>{{$church_report_design->church_address}}</td>
 											<td>{{$church_report_design->office_address}}</td>
+											<td>{{$church_report_design->city}}</td>
+											<td>{{$church_report_design->province}}</td>
+											<td>{{$church_report_design->postal_code}}</td>
 											<td>{{$church_report_design->country_name}}</td>
 											<td>{{$church_report_design->phone}}</td>
 											<td>{{$church_report_design->fax}}</td>
@@ -55,6 +62,7 @@
 											<td>{{$church_report_design->church_status}}</td>
 											<td>{{$church_report_design->founded_on}}</td>
 											<td>{{$church_report_design->service_time_church}}</td>
+											<td>{{$church_report_design->notes}}</td>
 										</tr>
 									@endforeach
 								</tbody>
@@ -85,7 +93,15 @@
 	.dt-button : hover{
 		color: black !important;
  		border: 1px solid black !important;
-		}
+	}
+
+	.bg-light {
+		background-color: #f9fbfd !important;
+	}
+
+	body{
+		background: #f9fbfd;
+	}
   	</style>
 @endsection
 
@@ -148,14 +164,14 @@
 					searchPanes: {
 						show: true
 					},
-					targets: [0 , 2, 7]
+					targets: [0, 2, 10]
 				},
 
 				{
 					searchPanes: {
 						show: false
 					},
-					targets: [1 , 3, 4, 5, 6, 8, 9, 10, 11, 12, 13]
+					targets: [1, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17]
 				}
 			]
 

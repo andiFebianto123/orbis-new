@@ -22,20 +22,32 @@
 							<table id ="tablePastorReportDesigner" class = "table table-striped">
 								<thead>
 									<tr>
-										<th>Regional Council</th>
+										<th>RC / DPW</th>
 										<th>Title</th>
 										<th>First Name</th>
 										<th>Last Name</th>
+										<th>Gender</th>
+										<th>Church Name</th>
 										<th>Address</th>
+										<th>City</th>
+										<th>Province</th>
+										<th>Postal Code</th>
+										<th>Country</th>
 										<th>Phone</th>
 										<th>Fax</th>
 										<th>Email</th>
-										<th>Card</th>
+										<th>Marital Status</th>
 										<th>Date of Birth</th>
 										<th>Spouse Name</th>
 										<th>Spouse Date of Birth</th>
 										<th>Anniversary</th>
 										<th>Status</th>
+										<th>First Licensed On</th>
+										<th>Card</th>
+										<th>Valid Card Start</th>
+										<th>Valid Card End</th>
+										<th>Current Certificate Number</th>
+										<th>Notes</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -45,16 +57,28 @@
 											<td>{{$pastor_report_design->short_desc}}</td>
 											<td>{{$pastor_report_design->first_name}}</td>
 											<td>{{$pastor_report_design->last_name}}</td>
+											<td>{{$pastor_report_design->gender}}</td>
+											<td>{{$pastor_report_design->church_name}}</td>
 											<td>{{$pastor_report_design->street_address}}</td>
+                      						<td>{{$pastor_report_design->city}}</td>
+											<td>{{$pastor_report_design->province}}</td>
+											<td>{{$pastor_report_design->postal_code}}</td>
+                      						<td>{{$pastor_report_design->country_name}}</td>
 											<td>{{$pastor_report_design->phone}}</td>
 											<td>{{$pastor_report_design->fax}}</td>
                       						<td>{{$pastor_report_design->email}}</td>
-											<td>{{$pastor_report_design->card}}</td>
+											<td>{{$pastor_report_design->marital_status}}</td>
 											<td>{{$pastor_report_design->date_of_birth}}</td>
-                      						<td>{{$pastor_report_design->spouse_name}}</td>
-											<td>{{$pastor_report_design->spouse_date_of_birth}}</td>
+											<td>{{$pastor_report_design->spouse_name}}</td>
+                      						<td>{{$pastor_report_design->spouse_date_of_birth}}</td>
 											<td>{{$pastor_report_design->anniversary}}</td>
-                      						<td>{{$pastor_report_design->acc_status}}</td>
+											<td>{{$pastor_report_design->acc_status}}</td>
+											<td>{{$pastor_report_design->first_licensed_on}}</td>
+											<td>{{$pastor_report_design->card}}</td>
+                      						<td>{{$pastor_report_design->valid_card_start}}</td>
+											<td>{{$pastor_report_design->valid_card_end}}</td>
+											<td>{{$pastor_report_design->current_certificate_number}}</td>
+											<td>{{$pastor_report_design->notes}}</td>
 										</tr>
 									@endforeach
 								</tbody>
@@ -81,8 +105,16 @@
 	
 	<style>
 		.active{
-		background:darkblue;
-	}
+			background:darkblue;
+		}
+		
+		.bg-light {
+			background-color: #f9fbfd !important;
+		}
+
+		body{
+			background: #f9fbfd;
+		}
 	</style>
 	
 @endsection
@@ -143,14 +175,14 @@
 					searchPanes: {
 						show: true
 					},
-					targets: [0 , 1]
+					targets: [0 , 1, 10]
 				},
 
 				{
 					searchPanes: {
 						show: false
 					},
-					targets: [2 , 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+					targets: [2 , 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
 				}
 			]
 

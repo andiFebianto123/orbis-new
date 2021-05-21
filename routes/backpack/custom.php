@@ -58,6 +58,10 @@ Route::group([
     Route::get('import-personel', 'ToolsUploadController@importpersonel');
     Route::post('personel-upload', 'ToolsUploadController@uploadpersonel');
 
-    Route::post('rcdpw-upload', 'RcDpwListCrudController@uploadrcdpw');
+    Route::get('import-country', 'ToolsUploadController@importcountry');
     Route::post('country-upload', 'CountryListCrudController@uploadcountry');
+
+    Route::get('import-rcdpw', 'ToolsUploadController@importrcdpw');
+    Route::post('rcdpw-upload', 'RcDpwListCrudController@uploadrcdpw');
+    
 }); // this should be the absolute last line of this file

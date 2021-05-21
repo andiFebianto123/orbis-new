@@ -92,9 +92,17 @@
 	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
 
     <style>
-    .active{
-      background:aliceblue;
-	}
+		.active{
+		background:aliceblue;
+		}
+
+		.bg-light {
+			background-color: #f9fbfd !important;
+		}
+
+		body{
+			background: #f9fbfd;
+		}
 	</style>
 @endsection
 

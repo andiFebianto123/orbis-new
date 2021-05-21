@@ -59,9 +59,16 @@ class RcDpwListCrudController extends CrudController
 
     public function uploadrcdpw(Request $request)
     {
+        // $messages = array(
+        //     'same'    => 'Invalid File',
+        // );
+        // same:rc_dpw_name
+
+        $status = 'Successfully Done';
+        $request->validate(['fileToUpload'=>'required|file|mimes:xls,xlsx']);
         Excel::import(new RcdpwListImport, request()->file('fileToUpload'));
 
-        return back()->with('success', 'Successfully Done');
+        return back()->with(['status' => $status]);
     }
 
     /**

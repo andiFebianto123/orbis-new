@@ -5,52 +5,16 @@
 	<p class="alert alert-success">{{session('status')}}</p>
 @endif
 
-@if (isset($failures))
-	<div class="row">
-		<div class="col-md-12">
-			<div class="card">
-				<div class="card-header" style="background: #f8d7da; font-weight:bold;">
-					Log Errors
-				</div>
-				<div class="card-body">
-					<div class = "row">
-						<div class="col-md-12">
-							<table id ="tableLogErrorChurch" class = "table table-striped">
-								<thead>
-									<tr>
-										<th>Row</th>
-										<th>Description</th>
-									</tr>
-								</thead>
-								<tbody>
-									@foreach ($failures as $failure)
-										@foreach ($failure['errors'] as $error)
-											<tr>
-												<td>{{$failure['row']}}</td>
-												<td>{{$error}}</td>
-											</tr>
-										@endforeach
-									@endforeach
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-@endif
-
 <div class="row">
 	<div class="col-md-7">
   		<div class="card">
 			<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
-			  	Import Church
+			  	Import Country
   			</div>
 		</div>
 		<div class="center">
 			<div class="col-md-7">
-				<form action="{{url('admin/church-upload/')}}" method="POST" enctype="multipart/form-data">
+				<form action="{{url('admin/country-upload/')}}" method="POST" enctype="multipart/form-data">
 					@csrf
 					<input type="file" name="fileToUpload" id="fileToUpload">
 					<p>Drag your files here or click in this area.</p>
@@ -65,7 +29,6 @@
 		</div>
 	</div>
 </div>
-
 @endsection
 
 @section('after_styles')
@@ -81,7 +44,7 @@
 		body{
 			background: #f9fbfd;
 		}
-
+		
 		.alert-danger {
 			color: #721c24;
 			background-color: #f8d7da;
@@ -97,11 +60,12 @@
 
 		form{
 			position: absolute;
-			left: 40%;
+			left: 30%;
 			top: 150%;
-			width: 400px;
+			width: 500px;
 			height: 200px;
 			border: 4px dashed #b5c7e0;
+			background: #fff;
 		}
 
 		form p{
@@ -128,7 +92,7 @@
 			color: #fff;
 			background: #16a085;
 			border: none;
-			width: 400px;
+			width: 500px;
 			height: 35px;
 			margin-top: -20px;
 			margin-left: -4px;
@@ -159,7 +123,7 @@
 
 	<script>
 		$(document).ready(function() {
-		$('#tableLogErrorChurch').DataTable();
+		$('#tableLogError').DataTable();
 		} );
 
 		$(document).ready(function(){

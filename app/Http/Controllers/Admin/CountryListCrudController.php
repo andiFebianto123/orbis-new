@@ -71,10 +71,17 @@ class CountryListCrudController extends CrudController
     }
 
     public function uploadcountry(Request $request)
-    {
+    {   
+        // $messages = array(
+        //     'same'    => 'Invalid File',
+        // );
+        // same:iso_two,iso_three,country_name
+        
+        $status = 'Successfully Done';
+        $request->validate(['fileToUpload'=>'required|file|mimes:xls,xlsx']);
         Excel::import(new CountryListImport, request()->file('fileToUpload'));
-
-        return back()->with('success', 'Successfully Done');
+        
+        return back()->with(['status' => $status]);
     }
 
     /**

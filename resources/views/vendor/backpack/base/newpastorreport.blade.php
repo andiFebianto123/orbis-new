@@ -13,25 +13,63 @@
 							<table id ="tableNewPastor" class = "table table-striped">
 								<thead>
 									<tr>
+										<th>RC / DPW</th>
+										<th>Title</th>
 										<th>First Name</th>
 										<th>Last Name</th>
-										<th>RC / DPW</th>
+										<th>Gender</th>
+										<th>Church Name</th>
 										<th>Address</th>
+										<th>City</th>
+										<th>Province</th>
+										<th>Postal Code</th>
 										<th>Country</th>
+										<th>Phone</th>
+										<th>Fax</th>
 										<th>Email</th>
-										<th>First License On</th>
+										<th>Marital Status</th>
+										<th>Date of Birth</th>
+										<th>Spouse Name</th>
+										<th>Spouse Date of Birth</th>
+										<th>Anniversary</th>
+										<th>Status</th>
+										<th>First Licensed On</th>
+										<th>Card</th>
+										<th>Valid Card Start</th>
+										<th>Valid Card End</th>
+										<th>Current Certificate Number</th>
+										<th>Notes</th>
 									</tr>
 								</thead>
 								<tbody>
 									@foreach($new_pastor_tables as $key => $new_pastor_table)
 										<tr>
+											<td>{{$new_pastor_table->rc_dpw_name}}</td>
+											<td>{{$new_pastor_table->short_desc}}</td>
 											<td>{{$new_pastor_table->first_name}}</td>
 											<td>{{$new_pastor_table->last_name}}</td>
-											<td>{{$new_pastor_table->rc_dpw_name}}</td>
+											<td>{{$new_pastor_table->gender}}</td>
+											<td>{{$new_pastor_table->church_name}}</td>
 											<td>{{$new_pastor_table->street_address}}</td>
-											<td>{{$new_pastor_table->country_name}}</td>
-											<td>{{$new_pastor_table->email}}</td>
+                      						<td>{{$new_pastor_table->city}}</td>
+											<td>{{$new_pastor_table->province}}</td>
+											<td>{{$new_pastor_table->postal_code}}</td>
+                      						<td>{{$new_pastor_table->country_name}}</td>
+											<td>{{$new_pastor_table->phone}}</td>
+											<td>{{$new_pastor_table->fax}}</td>
+                      						<td>{{$new_pastor_table->email}}</td>
+											<td>{{$new_pastor_table->marital_status}}</td>
+											<td>{{$new_pastor_table->date_of_birth}}</td>
+											<td>{{$new_pastor_table->spouse_name}}</td>
+                      						<td>{{$new_pastor_table->spouse_date_of_birth}}</td>
+											<td>{{$new_pastor_table->anniversary}}</td>
+											<td>{{$new_pastor_table->acc_status}}</td>
 											<td>{{$new_pastor_table->first_licensed_on}}</td>
+											<td>{{$new_pastor_table->card}}</td>
+                      						<td>{{$new_pastor_table->valid_card_start}}</td>
+											<td>{{$new_pastor_table->valid_card_end}}</td>
+											<td>{{$new_pastor_table->current_certificate_number}}</td>
+											<td>{{$new_pastor_table->notes}}</td>
 										</tr>
 									@endforeach
 								</tbody>
@@ -54,9 +92,17 @@
 	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
 
     <style>
-    .active{
-      background:aliceblue;
-	}
+		.active{
+		background:aliceblue;
+		}
+
+		.bg-light {
+			background-color: #f9fbfd !important;
+		}
+
+		body{
+			background: #f9fbfd;
+		}
 	</style>
 @endsection
 
@@ -78,6 +124,8 @@
 	<script>
 		$(document).ready(function() {
 		$('#tableNewPastor').DataTable( {
+			"scrollY": 300,
+        	"scrollX": true,
 			"pagingType": "simple_numbers",
 			dom: 'Bfrtip',
 			buttons: [

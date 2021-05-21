@@ -42,24 +42,26 @@
 @endif
 
 <div class="row">
-	<div class="col-md-12">
+	<div class="col-md-7">
   		<div class="card">
 			<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
 			  	Import Pastor
   			</div>
 		</div>
 		<div class="center">
-			<form action="{{url('admin/personel-upload/')}}" method="POST" enctype="multipart/form-data">
-				@csrf
-				<input type="file" name="fileToUpload" id="fileToUpload">
-				<p>Drag your files here or click in this area.</p>
-				<button Type='submit'>Upload File</button>
-			</form>
-			@if ($errors->has('fileToUpload'))
-				@foreach ($errors->get('fileToUpload') as $error)
-					<p class= 'text-small text-danger'>{{ $error }}</p>
-				@endforeach
-			@endif
+			<div class="col-md-7">
+				<form action="{{url('admin/personel-upload/')}}" method="POST" enctype="multipart/form-data">
+					@csrf
+					<input type="file" name="fileToUpload" id="fileToUpload">
+					<p>Drag your files here or click in this area.</p>
+					<button Type='submit'>Upload File</button>
+				</form>
+				@if ($errors->has('fileToUpload'))
+					@foreach ($errors->get('fileToUpload') as $error)
+						<p class= 'alert alert-danger text-small'>{{ $error }}</p>
+					@endforeach
+				@endif
+			</div>
 		</div>
 	</div>
 </div>
@@ -71,15 +73,26 @@
 	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
 
 	<style>
+		.bg-light {
+			background-color: #f9fbfd !important;
+		}
+
 		body{
-			background: #fff;
+			background: #f9fbfd;
+		}
+
+		.alert-success {
+			color: #155724;
+			background-color: #d4edda;
+			border-color: #c3e6cb;
+			width: 200px;
 		}
 
 		form{
 			position: absolute;
-			left: 30%;
-			top: 100%;
-			width: 500px;
+			left: 40%;
+			top: 150%;
+			width: 400px;
 			height: 200px;
 			border: 4px dashed #b5c7e0;
 		}
@@ -108,7 +121,7 @@
 			color: #fff;
 			background: #16a085;
 			border: none;
-			width: 500px;
+			width: 400px;
 			height: 35px;
 			margin-top: -20px;
 			margin-left: -4px;
@@ -141,6 +154,12 @@
 		$(document).ready(function() {
 		$('#tableLogError').DataTable();
 		} );
+
+		$(document).ready(function(){
+		$('form input').change(function () {
+			$('form p').text(this.files.length + " file(s) selected");
+		});
+		});
 	</script>
 	
 @endsection

@@ -58,6 +58,14 @@
     .active{
       background:aliceblue;
 	}
+
+	.bg-light {
+		background-color: #f9fbfd !important;
+	}
+
+	body{
+		background: #f9fbfd;
+	}
 	</style>
 @endsection
 

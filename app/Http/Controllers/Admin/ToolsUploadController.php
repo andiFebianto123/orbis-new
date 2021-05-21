@@ -29,6 +29,11 @@ class ToolsUploadController extends Controller
     public function uploadchurch(Request $request)
     {
         $status = 'Successfully Done';
+        // $messages = array(
+        //     'same'    => 'Invalid File',
+        // );
+        // same:contact_person
+
         $request->validate(['fileToUpload'=>'required|file|mimes:xls,xlsx']);
         
         try {
@@ -80,6 +85,11 @@ class ToolsUploadController extends Controller
     {
         
         $status = 'Successfully Done';
+        // $messages = array(
+        //     'same'    => 'Invalid File',
+        // );
+        // same:short_desc
+        
         $request->validate(['fileToUpload'=>'required|file|mimes:xls,xlsx']);
         try {
             $code = date("ymdhis");
@@ -119,6 +129,16 @@ class ToolsUploadController extends Controller
         }
 
         return back()->with(['status' => $status]);
+    }
+
+    public function importcountry()
+    {
+        return view('vendor.backpack.base.importcountry');
+    }
+
+    public function importrcdpw()
+    {
+        return view('vendor.backpack.base.importrcdpw');
     }
 
 }

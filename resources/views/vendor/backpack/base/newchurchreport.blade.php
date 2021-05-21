@@ -13,23 +13,47 @@
 							<table id ="tableNewChurch" class = "table table-striped">
 								<thead>
 									<tr>
+										<th>RC / DPW</th>
 										<th>Church Name</th>
-										<th>Type</th>
-										<th>Regional Council</th>
+										<th>Church Type</th>
+										<th>Lead Pastor Name</th>
+										<th>Contact Person</th>
+										<th>Church Address</th>
+										<th>Office Address</th>
+										<th>City</th>
+										<th>Province</th>
+										<th>Postal Code</th>
 										<th>Country</th>
+										<th>Phone</th>
+										<th>Fax</th>
 										<th>Email</th>
+										<th>Church Status</th>
 										<th>Founded On</th>
+										<th>Service Time Church</th>
+										<th>Notes</th>
 									</tr>
 								</thead>
 								<tbody>
 									@foreach($new_church_tables as $key => $new_church_table)
 										<tr>
+											<td>{{$new_church_table->rc_dpw_name}}</td>
 											<td>{{$new_church_table->church_name}}</td>
 											<td>{{$new_church_table->entities_type}}</td>
-											<td>{{$new_church_table->rc_dpw_name}}</td>
+											<td>{{$new_church_table->lead_pastor_name}}</td>
+											<td>{{$new_church_table->contact_person}}</td>
+											<td>{{$new_church_table->church_address}}</td>
+											<td>{{$new_church_table->office_address}}</td>
+											<td>{{$new_church_table->city}}</td>
+											<td>{{$new_church_table->province}}</td>
+											<td>{{$new_church_table->postal_code}}</td>
 											<td>{{$new_church_table->country_name}}</td>
+											<td>{{$new_church_table->phone}}</td>
+											<td>{{$new_church_table->fax}}</td>
 											<td>{{$new_church_table->first_email}}</td>
+											<td>{{$new_church_table->church_status}}</td>
 											<td>{{$new_church_table->founded_on}}</td>
+											<td>{{$new_church_table->service_time_church}}</td>
+											<td>{{$new_church_table->notes}}</td>
 										</tr>
 									@endforeach
 								</tbody>
@@ -53,9 +77,16 @@
 
 
     <style>
-    .active{
-      background:aliceblue;
-	}
+		.active{
+			background:aliceblue;
+		}	
+		.bg-light {
+			background-color: #f9fbfd !important;
+		}
+
+		body{
+			background: #f9fbfd;
+		}
 	</style>
 @endsection
 
@@ -77,6 +108,8 @@
 	<script>
 		$(document).ready(function() {
 		$('#tableNewChurch').DataTable( {
+			"scrollY": true,
+        	"scrollX": true,
 			"pagingType": "simple_numbers",
 			dom: 'Bfrtip',
 			buttons: [

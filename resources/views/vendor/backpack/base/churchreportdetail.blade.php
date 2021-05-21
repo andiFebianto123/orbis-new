@@ -22,21 +22,47 @@
 							<table id ="tableChurchDetail" class = "table table-striped">
 								<thead>
 									<tr>
-										<th>Church</th>
-										<th>Type</th>
-										<th>Regional Council</th>
+										<th>RC / DPW</th>
+										<th>Church Name</th>
+										<th>Church Type</th>
+										<th>Lead Pastor Name</th>
+										<th>Contact Person</th>
+										<th>Church Address</th>
+										<th>Office Address</th>
+										<th>City</th>
+										<th>Province</th>
+										<th>Postal Code</th>
 										<th>Country</th>
+										<th>Phone</th>
+										<th>Fax</th>
+										<th>Email</th>
+										<th>Church Status</th>
 										<th>Founded On</th>
+										<th>Service Time Church</th>
+										<th>Notes</th>
 									</tr>
 								</thead>
 								<tbody>
 									@foreach($church_report_detail_tables as $key => $church_report_detail_table)
 										<tr>
+											<td>{{$church_report_detail_table->rc_dpw_name}}</td>
 											<td>{{$church_report_detail_table->church_name}}</td>
 											<td>{{$church_report_detail_table->entities_type}}</td>
-											<td>{{$church_report_detail_table->rc_dpw_name}}</td>
+											<td>{{$church_report_detail_table->lead_pastor_name}}</td>
+											<td>{{$church_report_detail_table->contact_person}}</td>
+											<td>{{$church_report_detail_table->church_address}}</td>
+											<td>{{$church_report_detail_table->office_address}}</td>
+											<td>{{$church_report_detail_table->city}}</td>
+											<td>{{$church_report_detail_table->province}}</td>
+											<td>{{$church_report_detail_table->postal_code}}</td>
 											<td>{{$church_report_detail_table->country_name}}</td>
+											<td>{{$church_report_detail_table->phone}}</td>
+											<td>{{$church_report_detail_table->fax}}</td>
+											<td>{{$church_report_detail_table->first_email}}</td>
+											<td>{{$church_report_detail_table->church_status}}</td>
 											<td>{{$church_report_detail_table->founded_on}}</td>
+											<td>{{$church_report_detail_table->service_time_church}}</td>
+											<td>{{$church_report_detail_table->notes}}</td>
 										</tr>
 									@endforeach
 								</tbody>
@@ -59,9 +85,17 @@
 	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
 
     <style>
-    .active{
-      background:aliceblue;
-	}
+		.active{
+		background:aliceblue;
+		}
+
+		.bg-light {
+			background-color: #f9fbfd !important;
+		}
+
+		body{
+			background: #f9fbfd;
+		}
 	</style>
 @endsection
 
@@ -83,6 +117,8 @@
 	<script>
 		$(document).ready(function() {
 		$('#tableChurchDetail').DataTable( {
+			"scrollY": 300,
+        	"scrollX": true,
 			"pagingType": "simple_numbers",
 			dom: 'Bfrtip',
 			buttons: [

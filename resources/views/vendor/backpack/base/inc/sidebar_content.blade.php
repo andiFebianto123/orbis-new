@@ -11,7 +11,14 @@
         <li class='nav-item'><a class='nav-link' href='{{ backpack_url('quickreport') }}'><i class='nav-icon la la-list'></i> Quick Reports</a></li>
 	</ul>
 </li>
-<li class='nav-item'><a class='nav-link' href='{{ backpack_url('toolsupload') }}'><i class='nav-icon la la-cog'></i> Tools</a></li>
+<!-- <li class='nav-item'><a class='nav-link' href='{{ backpack_url('toolsupload') }}'><i class='nav-icon la la-cog'></i> Tools</a></li> -->
+<li class="nav-item nav-dropdown">
+	<a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-cog"></i>Tools</a>
+	<ul class="nav-dropdown-items">
+        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('import-church') }}'><i class='nav-icon la la-church'></i> Import Data Church</a></li>
+        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('import-personel') }}'><i class='nav-icon la la-users'></i> Import Data Pastor</a></li>
+	</ul>
+</li>
 <li class="nav-item nav-dropdown">
 	<a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-users"></i> Admin</a>
 	<ul class="nav-dropdown-items">

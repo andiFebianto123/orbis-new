@@ -96,7 +96,7 @@ class DashboardCrudController extends CrudController
                     ->join('legal_documents','legal_document_churches.legal_document_id','legal_documents.id')
                     ->select('documents','exp_date')
                     ->get();
-        $inactive_church_tables = StatusHistoryChurch::where('status', 'Non Active')
+        $inactive_church_tables = StatusHistoryChurch::where('status', 'Non-active')
                     ->whereYear('date_status', Carbon::now()->year)
                     ->leftJoin('churches','status_history_churches.churches_id','churches.id')
                     ->select('church_name', 'date_status')
