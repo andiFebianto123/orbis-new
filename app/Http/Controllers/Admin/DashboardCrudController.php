@@ -82,7 +82,7 @@ class DashboardCrudController extends CrudController
                     ->select('first_name', 'date_of_birth', 'short_desc')
                     ->get();
         $pastors_anniversary_tables = Personel::whereMonth('anniversary', Carbon::now()->month)
-                    ->where('marital_status', 'married')
+                    // ->where('marital_status', 'married')
                     ->join('title_lists','personels.title_id','title_lists.id')
                     ->select('first_name', 'anniversary', 'short_desc')
                     ->get();

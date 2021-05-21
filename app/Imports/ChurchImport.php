@@ -17,8 +17,10 @@ use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Validators\Failure;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterSheet;
 
-class ChurchImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFailure
+class ChurchImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFailure, ShouldAutoSize, WithEvents
 
 {
     use Importable, SkipsFailures;
@@ -40,7 +42,8 @@ class ChurchImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFa
         $church_type  =  ChurchEntityType::where('entities_type', $row['church_type'])->first();
         $row['founded_on'] = trim($row['founded_on'] ?? '');
         $date =  $row['founded_on'] == '-' || $row['founded_on'] == '' ? NULL : $this->formatDateExcel($row['founded_on']);
-        $lead_pastor_name = $row['lead_pastor_name'] == '. ' ? NULL : $row['lead_pastor_name'];
+        $lead_pastor_name = str_replace('\n', "\n", $row['lead_pastor_name'] ?? '');
+        // $lead_pastor_name = $row['lead_pastor_name'] == '. ' ? NULL : $row['lead_pastor_name'];
         $contact_person = $row['contact_person'] == '-' || $row['contact_person'] == '' ? NULL : $row['contact_person'];
         // $church_address = $row['church_address'] == '-' || $row['church_address'] == '' ? NULL : $row['church_address'];
         // $office_address = $row['office_address'] == '-' || $row['office_address'] == '' ? NULL : $row['office_address'];
@@ -139,5 +142,15 @@ class ChurchImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFa
     public function failures()
     {
         return $this->failures;
+    }
+
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class    => function(AfterSheet $event) {
+                $spreadsheet->getActiveSheet()->getStyle('D1')
+                    ->getAlignment()->setWrapText(true);
+            },
+        ];
     }
 }

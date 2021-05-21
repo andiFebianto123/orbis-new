@@ -74,7 +74,7 @@
 								</tr>
 								<tr>
 									<td>Lead Pastor</td>
-									<td> :  {{ $entry->lead_pastor_name }}</td>
+									<td style="white-space: pre-line;" > :  {{ $entry->lead_pastor_name }} </td>
 								</tr>
 								<tr>
 									<td>Contact Person</td>
@@ -86,11 +86,11 @@
 								</tr>
 								<tr>
 									<td>Church Address</td>
-									<td> :  {{ $entry->church_address }}</td>
+									<td style="white-space: pre-line;" > : {{ $entry->church_address }}</td>
 								</tr>
 								<tr>
 									<td>Office Address</td>
-									<td> :  {{ $entry->office_address }}</td>
+									<td style="white-space: pre-line;" > :  {{ $entry->office_address }}</td>
 								</tr>
 							</table>
 						</div>
@@ -110,7 +110,7 @@
 								</tr>
 								<tr>
 									<td>Country</td>
-									<td> :  {{ $entry->country->country_name }}</td>
+									<td> :  {{ $entry->country->country_name ?? '-'}}</td>
 								</tr>
 								<tr>
 									<td>Email</td>
@@ -122,7 +122,7 @@
 								</tr>
 								<tr>
 									<td>Phone</td>
-									<td> :  {{ $entry->phone }}</td>
+									<td style="white-space: pre-line;" > :  {{ $entry->phone }}</td>
 								</tr>
 								<tr>
 									<td>Fax</td>

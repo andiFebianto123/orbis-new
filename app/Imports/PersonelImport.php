@@ -40,6 +40,7 @@ class PersonelImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
         $title  =  TitleList::where('short_desc', $row['title'])->first();
         $date_of_birth = $row['date_of_birth'] == '-' || $row['date_of_birth'] == '' ? NULL : $this->formatDateExcel($row['date_of_birth']);
         $spouse_date_of_birth = $row['spouse_date_of_birth'] == '-' || $row['spouse_date_of_birth'] == '' ? NULL : $this->formatDateExcel($row['spouse_date_of_birth']);
+        $row['anniversary'] = trim($row['anniversary'] ?? '');
         $anniversary = $row['anniversary'] == '-' || $row['anniversary'] == '' ? NULL : $this->formatDateExcel($row['anniversary']);
         $first_licensed_on = $row['first_licensed_on'] == '-' || $row['first_licensed_on'] == '' ? NULL : $this->formatDateExcel($row['first_licensed_on']);
         $valid_card_start = $row['valid_card_start'] == '-' || $row['valid_card_start'] == '' ? NULL : $this->formatDateExcel($row['valid_card_start']);

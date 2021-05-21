@@ -13,7 +13,7 @@
 <div class="row">
     <div class="col-md-12">
   		<div class="card">
-				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
+			<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
 			  	Report Designer
   			</div>
 				<div class="card-body">
@@ -48,7 +48,7 @@
 											<td>{{$church_report_design->rc_dpw_name}}</td>
 											<td>{{$church_report_design->church_name}}</td>
 											<td>{{$church_report_design->entities_type}}</td>
-											<td>{{$church_report_design->lead_pastor_name}}</td>
+											<td style="white-space: pre-line;" > {{$church_report_design->lead_pastor_name}} </td>
 											<td>{{$church_report_design->contact_person}}</td>
 											<td>{{$church_report_design->church_address}}</td>
 											<td>{{$church_report_design->office_address}}</td>
@@ -102,6 +102,7 @@
 	body{
 		background: #f9fbfd;
 	}
+	td {word-wrap: break-word}
   	</style>
 @endsection
 
@@ -143,11 +144,20 @@
 			},
 
 			buttons: [
-				{ extend: 'excel',
-				text: 'Export to Excel',
-				title: 'Church Report',
-				exportOptions: {
-					columns: ':visible'
+				{ 	extend: 'excel',
+					text: 'Export to Excel',
+					title: 'Church Report',
+					exportOptions: {
+						columns: ':visible',
+						format: {
+							body: function ( data, column, row ) {
+							return (column === 1 && column === 5) ? data.replace( /\n/g, '"&CHAR(10)&CHAR(13)&"' ) : data.replace(/(&nbsp;|<([^>]+)>)/ig, "");;
+							}
+						}
+					},
+					customize: function( xlsx ) {
+						var sheet = xlsx.xl.worksheets['sheet1.xml'];
+						$('row c', sheet).attr( 's', '55' );
 					}
 				},
 				{

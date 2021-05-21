@@ -113,9 +113,22 @@
 			"pagingType": "simple_numbers",
 			dom: 'Bfrtip',
 			buttons: [
-				{extend: 'excel', 
-				text: 'Export to Excel', 
-				title: 'All Church',
+				{
+					extend: 'excel', 
+					text: 'Export to Excel', 
+					title: 'All Church',
+					exportOptions: {
+						columns: ':visible',
+						format: {
+							body: function ( data, column, row ) {
+							return (column === 1 && column === 5) ? data.replace( /\n/g, '"&CHAR(10)&CHAR(13)&"' ) : data.replace(/(&nbsp;|<([^>]+)>)/ig, "");;
+							}
+						}
+					},
+					customize: function( xlsx ) {
+						var sheet = xlsx.xl.worksheets['sheet1.xml'];
+						$('row c', sheet).attr( 's', '55' );
+					}
 				},
 			]
 		} );
