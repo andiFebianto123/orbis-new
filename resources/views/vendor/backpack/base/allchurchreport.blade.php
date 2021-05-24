@@ -127,7 +127,14 @@
 					},
 					customize: function( xlsx ) {
 						var sheet = xlsx.xl.worksheets['sheet1.xml'];
-						$('row c', sheet).attr( 's', '55' );
+						// $('row c', sheet).attr( 's', '55' );
+						$('row c', sheet).each(function(index) {
+							if (index > 0) {
+								$(this).attr('ht', 60);
+								$(this).attr('customHeight', 2);
+								$(this).attr( 's', '55' );
+							}
+						});
 					}
 				},
 			]

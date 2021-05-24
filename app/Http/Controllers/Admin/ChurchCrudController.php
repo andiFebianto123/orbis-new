@@ -213,9 +213,9 @@ class ChurchCrudController extends CrudController
         ]);
 
         $this->crud->addField([
-            'name'            => 'lead-pastor_name',
+            'name'            => 'lead_pastor_name',
             'label'           => "Lead Pastor",
-            'type'            => 'text',
+            'type'            => 'textarea',
             'tab'             => 'Church / Office Information',
         ]);
 

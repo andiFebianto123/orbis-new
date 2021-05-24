@@ -148,16 +148,26 @@
 					text: 'Export to Excel',
 					title: 'Church Report',
 					exportOptions: {
+						stripHtml: false,
 						columns: ':visible',
 						format: {
 							body: function ( data, column, row ) {
-							return (column === 1 && column === 5) ? data.replace( /\n/g, '"&CHAR(10)&CHAR(13)&"' ) : data.replace(/(&nbsp;|<([^>]+)>)/ig, "");;
+								return column === 5 ?
+									data.replace( /<br\s*\/?>/ig, "\n" ) :
+									data;
 							}
 						}
 					},
 					customize: function( xlsx ) {
 						var sheet = xlsx.xl.worksheets['sheet1.xml'];
-						$('row c', sheet).attr( 's', '55' );
+						// $('row c', sheet).attr( 's', '55' );
+						$('row c', sheet).each(function(index) {
+							if (index > 0) {
+								$(this).attr('ht', 60);
+								$(this).attr('customHeight', 1);
+								$(this).attr( 's', '55' );
+							}
+						});
 					}
 				},
 				{
