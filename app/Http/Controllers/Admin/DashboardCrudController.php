@@ -43,10 +43,9 @@ class DashboardCrudController extends CrudController
 
     public function index()
     {
-        $church_count = Church::count();
+        $church_count = Church::where('church_status', 'Active')
+                    ->get();
         $personel_count = Personel::where('acc_status_id', '1')
-                    ->select('first_name', DB::raw('count(first_name) as total'))
-                    ->groupBy('first_name')
                     ->get();
         $today_birthday = Personel::whereDay('date_of_birth', Carbon::now()->day)
                     ->whereMonth('date_of_birth', Carbon::now()->month)
@@ -101,10 +100,10 @@ class DashboardCrudController extends CrudController
                     ->leftJoin('churches','status_history_churches.churches_id','churches.id')
                     ->select('church_name', 'date_status')
                     ->get();
-        $inactive_pastor_tables = StatusHistory::whereNotIn('status_histories_id', [1])
+        $inactive_pastor_tables = StatusHistory::whereNotIn('status_histories_id', [1,4])
                     ->whereYear('date_status', Carbon::now()->year)
                     ->leftJoin('personels','status_histories.personel_id','personels.id')
-                    ->select('first_name','date_status')
+                    ->select('first_name','last_name','date_status')
                     ->get();
         $new_pastor_tables = Personel::whereMonth('valid_card_start', Carbon::now()->month)
                     ->whereYear('valid_card_start', Carbon::now()->year)
@@ -115,7 +114,7 @@ class DashboardCrudController extends CrudController
                     ->whereYear('founded_on', Carbon::now()->year)
                     ->get();
 
-        $data['church_count'] = $church_count;
+        $data['church_count'] = $church_count->count();
         $data['country_count'] = $country_tables->count();
         $data['personel_count'] = $personel_count->count();
         $data['today_birthday'] = $today_birthday->count();

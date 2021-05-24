@@ -13,7 +13,7 @@
             </div>
             <div class="col-7 col-md-8">
               <div class="numbers">
-                <h4 class="card-category">Churches</h4>
+                <h4 class="card-category"> Active Churches</h4>
                 <h2 class="card-title">{{$church_count}}</h2>
               </div>
             </div>
@@ -51,7 +51,7 @@
             </div>
             <div class="col-7 col-md-8">
               <div class="numbers">
-                <h4 class="card-category">Personnels</h4>
+                <h4 class="card-category">Active Personnels</h4>
                 <h2 class="card-title">{{$personel_count}}</h2>
               </div>
             </div>
@@ -437,7 +437,7 @@
     <div class="col-md-6">
   		<div class="card">
 				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
-			  	Recently Inactive Church
+				Recently Inactive Church (Last 30 days)
   			</div>
 				<div class="card-body">
 					<div class = "row">
@@ -466,7 +466,7 @@
     <div class="col-md-6">
   		<div class="card">
 				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
-			  	Recently Inactive Pastor
+				Recently Inactive Pastor (Last 30 days)
   			</div>
 				<div class="card-body">
 					<div class = "row">
@@ -474,7 +474,8 @@
 							<table id ="tableInactivePastor" class = "table table-striped">
 								<thead>
 									<tr>
-										<th>Pastor's Name</th>
+										<th>Pastor's First Name</th>
+										<th>Last Name</th>
 										<th>Inactive Date</th>
 									</tr>
 								</thead>
@@ -482,6 +483,7 @@
 									@foreach($inactive_pastor_tables as $key => $inactive_pastor_table)
 										<tr>
 											<td>{{$inactive_pastor_table->first_name}}</td>
+											<td>{{$inactive_pastor_table->last_name}}</td>
 											<td>{{$inactive_pastor_table->date_status}}</td>
 										</tr>
 									@endforeach

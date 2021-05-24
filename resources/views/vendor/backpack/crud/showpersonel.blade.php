@@ -130,7 +130,7 @@
 									<td> :  {{ $entry->city }}</td>
 								</tr>
 								<tr>
-									<td>Province</td>
+									<td>Province / State</td>
 									<td> :  {{ $entry->province }}</td>
 								</tr>
 								<tr>
@@ -209,8 +209,8 @@
   							<a href ="{{url('admin/appointment_history/create?personel_id='.$entry->id)}}" class = 'btn btn-primary btn-sm'>Add Appointment</a>
 							<table id ="tableAppointmentHistory" class = "table table-striped">
 								<thead>
-									<tr >
-										<th>Title</th>
+									<tr>
+										<th>Subject</th>
 										<th>Date</th>
 										<th>Action</th>
 									</tr>
@@ -283,7 +283,7 @@
 								<thead>
 									<tr >
 										<th>No</th>
-										<th>Entity</th>
+										<th>Entity Name</th>
 										<th>Address</th>
 										<th>Office Address</th>
 										<th>Phone</th>

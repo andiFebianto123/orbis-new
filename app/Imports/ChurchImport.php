@@ -17,10 +17,8 @@ use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Validators\Failure;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
-use Maatwebsite\Excel\Concerns\WithEvents;
-use Maatwebsite\Excel\Events\AfterSheet;
 
-class ChurchImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFailure, ShouldAutoSize, WithEvents
+class ChurchImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFailure
 
 {
     use Importable, SkipsFailures;
@@ -59,6 +57,11 @@ class ChurchImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFa
         // $first_email = $row['first_email'] == '-' || $row['first_email'] == '' ? NULL : $row['first_email'];
         $first_email = trim(str_replace('_x000D_', "\n", $row['first_email'] ?? ''));
         $service_time_church = $row['service_time_church'] == ',' ? NULL : $row['service_time_church'];
+
+        // $church = Church::where('church_name',$row['church_name'])->exists();
+        // if ($church){
+        //     return null;
+        // }
 
         // if ($rcdpw == NULL) {
         //     dd($row['rc_dpw']);
@@ -142,15 +145,5 @@ class ChurchImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFa
     public function failures()
     {
         return $this->failures;
-    }
-
-    public function registerEvents(): array
-    {
-        return [
-            AfterSheet::class    => function(AfterSheet $event) {
-                $spreadsheet->getActiveSheet()->getStyle('D1')
-                    ->getAlignment()->setWrapText(true);
-            },
-        ];
     }
 }

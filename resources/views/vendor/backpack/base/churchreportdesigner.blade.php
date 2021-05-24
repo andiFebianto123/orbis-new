@@ -184,14 +184,14 @@
 					searchPanes: {
 						show: true
 					},
-					targets: [0, 2, 10]
+					targets: [0, 2, 10, 14]
 				},
 
 				{
 					searchPanes: {
 						show: false
 					},
-					targets: [1, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17]
+					targets: [1, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 15, 16, 17]
 				}
 			]
 

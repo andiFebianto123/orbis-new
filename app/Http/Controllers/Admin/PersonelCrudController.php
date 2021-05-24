@@ -29,7 +29,7 @@ class PersonelCrudController extends CrudController
     {
         CRUD::setModel(\App\Models\Personel::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/personel');
-        CRUD::setEntityNameStrings('Personel', 'Personels');
+        CRUD::setEntityNameStrings('Personel', 'Pastors');
     }
 
     /**
@@ -117,7 +117,7 @@ class PersonelCrudController extends CrudController
 
         $this->crud->addColumn([
             'name' => 'province', // The db column name
-            'label' => "Province", // Table column heading
+            'label' => "Province / State", // Table column heading
             'type' => 'text'
         ]);
 
@@ -324,7 +324,7 @@ class PersonelCrudController extends CrudController
 
         $this->crud->addField([
             'name'            => 'province',
-            'label'           => "Province",
+            'label'           => "Province / State",
             'type'            => 'text',
             'tab'             => 'Contact Information',
         ]);
@@ -398,7 +398,7 @@ class PersonelCrudController extends CrudController
 
         $this->crud->addField([
             'name'            => 'card',
-            'label'           => "Card",
+            'label'           => "Card ID",
             'type'            => 'text',
             'tab'             => 'Licensing Information',
         ]);

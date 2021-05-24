@@ -2,7 +2,7 @@
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('dashboard') }}'><i class='la la-home nav-icon'></i> Dashboards</a></li>
 <!-- <li class="nav-item"><a class="nav-link" href="{{ backpack_url('dashboard') }}"><i class="la la-home nav-icon"></i> {{ trans('backpack::base.dashboard') }}</a></li> -->
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('church') }}'><i class='nav-icon la la-church'></i> Church</a></li>
-<li class='nav-item'><a class='nav-link' href='{{ backpack_url('personel') }}'><i class='nav-icon la la-id-badge'></i> Personels</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('personel') }}'><i class='nav-icon la la-id-badge'></i> Pastors</a></li>
 <li class="nav-item nav-dropdown">
 	<a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-file"></i>Report</a>
 	<ul class="nav-dropdown-items">

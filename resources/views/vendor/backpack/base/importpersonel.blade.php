@@ -5,6 +5,10 @@
 	<p class="alert alert-success">{{session('status')}}</p>
 @endif
 
+@if(session()->has('status_error'))
+<p class="alert alert-danger">{{session('status_error')}}</p>
+@endif
+
 @if (isset($failures))
 	<div class="row">
 		<div class="col-md-12">
@@ -79,6 +83,13 @@
 
 		body{
 			background: #f9fbfd;
+		}
+
+		.alert-danger {
+			color: #721c24;
+			background-color: #f8d7da;
+			border-color: #f5c6cb;
+			width: 300px;
 		}
 
 		.alert-success {

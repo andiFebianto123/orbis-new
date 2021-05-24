@@ -100,7 +100,7 @@ class RelatedentityCrudController extends CrudController
 
         $this->crud->addField([
             'name'            => 'entity',
-            'label'           => "Entity",
+            'label'           => "Entity Name",
             'type'            => 'text',
         ]);
 

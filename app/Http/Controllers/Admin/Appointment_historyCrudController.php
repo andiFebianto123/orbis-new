@@ -53,7 +53,7 @@ class Appointment_historyCrudController extends CrudController
 
         $this->crud->addColumn([
             'name' => 'title_appointment', // The db column name
-            'label' => "Title", // Table column heading
+            'label' => "Subject", // Table column heading
             'type' => 'text'
         ]);
 
@@ -83,14 +83,14 @@ class Appointment_historyCrudController extends CrudController
 
         $this->crud->addField([
             'name'            => 'title_appointment',
-            'label'           => "Title",
+            'label'           => "Subject",
             'type'            => 'text',
         ]);
 
         $this->crud->addField([
             'name'  => 'date_appointment',
             'type'  => 'date_picker',
-            'label' => 'Date Appointment',
+            'label' => 'Date',
 
             // optional:
             'date_picker_options' => [
