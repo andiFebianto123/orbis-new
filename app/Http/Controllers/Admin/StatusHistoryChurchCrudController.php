@@ -28,7 +28,7 @@ class StatusHistoryChurchCrudController extends CrudController
     {
         CRUD::setModel(\App\Models\StatusHistoryChurch::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/statushistorychurch');
-        CRUD::setEntityNameStrings('Status History Church', 'Status History Church');
+        CRUD::setEntityNameStrings('Church Status Histories', 'Church Status Histories');
     }
 
     public function index()

@@ -29,7 +29,7 @@ class PersonelCrudController extends CrudController
     {
         CRUD::setModel(\App\Models\Personel::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/personel');
-        CRUD::setEntityNameStrings('Personel', 'Pastors');
+        CRUD::setEntityNameStrings('Pastor', 'Pastors');
     }
 
     /**
@@ -292,7 +292,7 @@ class PersonelCrudController extends CrudController
         ]);
 
         $this->crud->addField([
-            'label' => "Upload Image",
+            'label' => "Upload Your Photo & Family Photo (Max 3mb)",
             'name' => "image",
             'type' => 'image',
             'crop' => true, // set to true to allow cropping, false to disable

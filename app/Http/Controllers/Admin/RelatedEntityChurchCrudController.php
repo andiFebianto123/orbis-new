@@ -52,13 +52,13 @@ class RelatedEntityChurchCrudController extends CrudController
 
         $this->crud->addColumn([
             'name' => 'entity_church', // The db column name
-            'label' => "Entity", // Table column heading
+            'label' => "Entity Name", // Table column heading
             'type' => 'text'
         ]);
 
         $this->crud->addColumn([
             'name' => 'type_entity', // The db column name
-            'label' => "Type", // Table column heading
+            'label' => "Type (Foundation, Bussiness Unit, Non Profit Organization, etc)", // Table column heading
             'type' => 'text'
         ]);
 
@@ -82,13 +82,13 @@ class RelatedEntityChurchCrudController extends CrudController
 
         $this->crud->addField([
             'name'            => 'entity_church',
-            'label'           => "Entity",
+            'label'           => "Entity Name",
             'type'            => 'text',
         ]);
 
         $this->crud->addField([
             'name'            => 'type_entity',
-            'label'           => "Type",
+            'label'           => "Type (Foundation, Bussiness Unit, Non Profit Organization, etc)",
             'type'            => 'text',
         ]);
 

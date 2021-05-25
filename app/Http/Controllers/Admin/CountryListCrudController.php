@@ -7,6 +7,7 @@ use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Illuminate\Http\Request;
 use App\Imports\CountryListImport;
+use Maatwebsite\Excel\HeadingRowImport;
 use Excel;
 
 /**
@@ -72,13 +73,30 @@ class CountryListCrudController extends CrudController
 
     public function uploadcountry(Request $request)
     {   
-        // $messages = array(
-        //     'same'    => 'Invalid File',
-        // );
-        // same:iso_two,iso_three,country_name
         
         $status = 'Successfully Done';
+        $status_error = 'Invalid File';
+
         $request->validate(['fileToUpload'=>'required|file|mimes:xls,xlsx']);
+        $headings = (new HeadingRowImport)->toArray($request->fileToUpload);
+
+        $currentheading = $headings[0] ?? [];
+        $currentheading = $currentheading[0] ?? [];
+        $correctheading = [ 0 => "iso_two",
+        1 => "iso_three",
+        2 => "country_name"];
+        
+        foreach($currentheading as $current){
+            $index = array_search(strtolower($current), $correctheading);
+            if ($index !== false) {
+                unset($correctheading[$index]);
+            }
+        }
+
+        if(count($correctheading)!=0){
+            return redirect ( backpack_url ('import-country'))->with(['status_error' => $status_error]);
+        }
+
         Excel::import(new CountryListImport, request()->file('fileToUpload'));
         
         return back()->with(['status' => $status]);

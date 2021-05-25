@@ -233,7 +233,7 @@
 		<div class="col-md-12">
   			<div class="card">
 				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
-			  		Status History
+					Church Status Histories
   				</div>
 				<div class="card-body">
 					<div class = "row">
@@ -271,7 +271,7 @@
 		<div class="col-md-12">
   			<div class="card">
 				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
-			  		Related Entity
+			  		Related Entity Church
   				</div>
 				<div class="card-body">
 					<div class = "row">
@@ -281,7 +281,7 @@
 								<thead>
 									<tr >
 										<th>No</th>
-										<th>Entity</th>
+										<th>Entity Name</th>
 										<th>Type</th>
 										<th>Action</th>
 									</tr>
@@ -309,7 +309,7 @@
 		<div class="col-md-12">
   			<div class="card">
 				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
-			  		Structure
+					Leadership Structure
   				</div>
 				<div class="card-body">
 					<div class = "row">

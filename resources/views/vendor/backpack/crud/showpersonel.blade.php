@@ -177,7 +177,7 @@
 									<td> :  {{ $entry->first_licensed_on }}</td>
 								</tr>
 								<tr>
-									<td>Card</td>
+									<td>Card ID</td>
 									<td> :  {{ $entry->card }}</td>
 								</tr>
 								<tr>
@@ -212,6 +212,7 @@
 									<tr>
 										<th>Subject</th>
 										<th>Date</th>
+										<th>Notes</th>
 										<th>Action</th>
 									</tr>
 								</thead>
@@ -219,7 +220,8 @@
 									@foreach($entry->appointment_history as $key => $ah)
 										<tr>
 											<td>{{$ah->title_appointment}}</td>
-											<td>{{$ah->date_appointment}}</td> 
+											<td>{{$ah->date_appointment}}</td>
+											<td>{{$ah->notes}}</td>
 											<td>
 											<a href="{{url('admin/appointment_history/'.$ah->id.'/edit')}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 

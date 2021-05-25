@@ -64,6 +64,12 @@ class Appointment_historyCrudController extends CrudController
         ]);
 
         $this->crud->addColumn([
+            'name' => 'notes', // The db column name
+            'label' => "Notes", // Table column heading
+            'type' => 'text'
+        ]);
+
+        $this->crud->addColumn([
             'name' => 'personel', // The db column name
             'label' => "Personel", // Table column heading
             'type' => 'relationship',
@@ -98,6 +104,12 @@ class Appointment_historyCrudController extends CrudController
                 'format'   => 'dd-mm-yyyy',
                 'language' => 'en'
             ],
+        ]);
+
+        $this->crud->addField([
+            'name'            => 'notes',
+            'label'           => "Notes",
+            'type'            => 'text',
         ]);
 
         $this->crud->addField([

@@ -7,6 +7,7 @@ use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Illuminate\Http\Request;
 use App\Imports\RcdpwListImport;
+use Maatwebsite\Excel\HeadingRowImport;
 use Excel;
 
 /**
@@ -59,13 +60,27 @@ class RcDpwListCrudController extends CrudController
 
     public function uploadrcdpw(Request $request)
     {
-        // $messages = array(
-        //     'same'    => 'Invalid File',
-        // );
-        // same:rc_dpw_name
-
         $status = 'Successfully Done';
+        $status_error = 'Invalid File';
+
         $request->validate(['fileToUpload'=>'required|file|mimes:xls,xlsx']);
+        $headings = (new HeadingRowImport)->toArray($request->fileToUpload);
+
+        $currentheading = $headings[0] ?? [];
+        $currentheading = $currentheading[0] ?? [];
+        $correctheading = [0 => "dpw"];
+        
+        foreach($currentheading as $current){
+            $index = array_search(strtolower($current), $correctheading);
+            if ($index !== false) {
+                unset($correctheading[$index]);
+            }
+        }
+
+        if(count($correctheading)!=0){
+            return redirect ( backpack_url ('import-rcdpw'))->with(['status_error' => $status_error]);
+        }
+
         Excel::import(new RcdpwListImport, request()->file('fileToUpload'));
 
         return back()->with(['status' => $status]);

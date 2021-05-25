@@ -28,7 +28,7 @@ class StructureChurchCrudController extends CrudController
     {
         CRUD::setModel(\App\Models\StructureChurch::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/structurechurch');
-        CRUD::setEntityNameStrings('Structure', 'Structure');
+        CRUD::setEntityNameStrings('Leadership Structure', 'Leadership Structure');
     }
 
     public function index()
