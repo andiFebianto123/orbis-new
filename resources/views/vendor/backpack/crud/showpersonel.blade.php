@@ -248,7 +248,7 @@
 							<table id ="tableSpecialRolePersonel" class = "table table-striped">
 								<thead>
 									<tr >
-										<th>No</th>
+										<th>No.</th>
 										<th>Special Role</th>
 										<th>Action</th>
 									</tr>
@@ -256,7 +256,7 @@
 								<tbody>
 									@foreach($entry->special_role_personel as $key => $srp)
 										<tr>
-											<td>{{$srp->id}}</td>
+  											<td></td>
 											<td>{{$srp->special_role_personel->special_role}}</td>
 											<td>
 											<a href="{{url('admin/specialrolepersonel/'.$srp->id.'/edit')}}"><i class="la la-edit"></i></a>
@@ -284,7 +284,7 @@
 							<table id ="tableRelatedEntity" class = "table table-striped">
 								<thead>
 									<tr >
-										<th>No</th>
+										<th>No.</th>
 										<th>Entity Name</th>
 										<th>Address</th>
 										<th>Office Address</th>
@@ -296,7 +296,7 @@
 								<tbody>
 									@foreach($entry->related_entity as $key => $re)
 										<tr>
-											<td>{{$re->id}}</td>
+											<td></td>
 											<td>{{$re->entity}}</td>
 											<td>{{$re->address_entity}}</td>
 											<td>{{$re->office_address_entity}}</td>
@@ -485,7 +485,20 @@
 
 	<script>
 		$(document).ready(function() {
-		$('#tableRelatedEntity').DataTable();
+		var t = $('#tableRelatedEntity').DataTable( {
+        	"columnDefs": [ {
+            "searchable": false,
+            "orderable": false,
+            "targets": 0
+        	} ],
+        	"order": [[ 1, 'asc' ]]
+    	} );
+ 
+		t.on( 'order.dt search.dt', function () {
+			t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+				cell.innerHTML = i+1;
+			} );
+		} ).draw();
 		} );
 	</script>
 
@@ -503,7 +516,20 @@
 
 	<script>
 		$(document).ready(function() {
-		$('#tableSpecialRolePersonel').DataTable();
+		var t = $('#tableSpecialRolePersonel').DataTable( {
+        	"columnDefs": [ {
+            "searchable": false,
+            "orderable": false,
+            "targets": 0
+        	} ],
+        	"order": [[ 1, 'asc' ]]
+    	} );
+ 
+		t.on( 'order.dt search.dt', function () {
+			t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+				cell.innerHTML = i+1;
+			} );
+		} ).draw();
 		} );
 	</script>
 

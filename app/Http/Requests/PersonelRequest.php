@@ -33,22 +33,23 @@ class PersonelRequest extends FormRequest
         'title_id' => 'required',
         'first_name'=> 'required',
         'last_name' => 'required',
-        'gender'=> 'required',
-        'date_of_birth' => 'required',
-        'marital_status' => 'required',
-        'ministry_background' => 'required',
-        'career_background' => 'required',
+        'gender'=> 'nullable',
+        'date_of_birth' => 'nullable',
+        'marital_status' => 'nullable',
+        'ministry_background' => 'nullable',
+        'career_background' => 'nullable',
         'password' => Rule::requiredIf($this->method() == 'POST'),
-        'street_address' => 'required',
-        'city' => 'required',
-        'province' => 'required',
-        'postal_code' => 'required',
-        'country_id' => 'required',
-        'email' => 'required|email',
+        'street_address' => 'nullable',
+        'city' => 'nullable',
+        'province' => 'nullable',
+        'postal_code' => 'nullable',
+        'country_id' => 'nullable',
+        'email' => 'nullable|email',
         'first_licensed_on' => 'required',
         'card' => 'required',
         'valid_card_start' => 'required',
         'valid_card_end'=> 'required',
+        'current_certificate_number'=> 'required'
         ];
     }
 
@@ -72,7 +73,7 @@ class PersonelRequest extends FormRequest
     public function messages()
     {
         return [
-            //
+            'email.email'      => 'The email must be a valid email address.'
         ];
     }
 }

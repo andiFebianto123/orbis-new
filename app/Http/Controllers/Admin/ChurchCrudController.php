@@ -39,22 +39,23 @@ class ChurchCrudController extends CrudController
      */
     protected function setupListOperation()
     {
+        // $this->crud->addColumn([
+        //     'name' => 'id', // The db column name
+        //     'label' => "ID", // Table column heading
+        //     'type' => 'number'
+        // ]);
+
         $this->crud->addColumn([
-            'name' => 'id', // The db column name
-            'label' => "ID", // Table column heading
-            'type' => 'number'
-        ]);
+            'name'      => 'row_number',
+            'type'      => 'row_number',
+            'label'     => 'No.',
+            'orderable' => false,
+        ])->makeFirstColumn();
 
         $this->crud->addColumn([
             'name' => 'church_status', // The db column name
             'label' => "Church Status", // Table column heading
             'type' => 'text'
-        ]);
-
-        $this->crud->addColumn([
-            'name' => 'church_id', // The db column name
-            'label' => "Church ID", // Table column heading
-            'type' => 'number'
         ]);
 
         $this->crud->addColumn([
@@ -127,7 +128,7 @@ class ChurchCrudController extends CrudController
 
         $this->crud->addColumn([
             'name' => 'province', // The db column name
-            'label' => "Province", // Table column heading
+            'label' => "Province / State", // Table column heading
             'type' => 'text'
         ]);
 
@@ -176,13 +177,6 @@ class ChurchCrudController extends CrudController
                 'format'   => 'dd-mm-yyyy',
                 'language' => 'en'
             ],
-        ]);
-
-        $this->crud->addField([
-            'name'  => 'church_id',
-            'type'  => 'number',
-            'label' => 'Church ID',
-            'tab'   => 'Church / Office Information',
         ]);
 
         $this->crud->addField([
@@ -256,7 +250,7 @@ class ChurchCrudController extends CrudController
 
         $this->crud->addField([
             'name'            => 'province',
-            'label'           => "Province",
+            'label'           => "Province / State",
             'type'            => 'text',
             'tab'             => 'Church / Office Information',
         ]);

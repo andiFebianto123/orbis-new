@@ -51,10 +51,6 @@
 									<td> : {{ $entry->founded_on }}</td>
 								</tr>
 								<tr>
-									<td>Church ID</td>
-									<td> : {{ $entry->church_id }}</td>
-								</tr>
-								<tr>
 									<td>Type</td>
 									<td> :  
 									@if(isset($entry->church_type->entities_type))
@@ -92,16 +88,16 @@
 									<td>Office Address</td>
 									<td style="white-space: pre-line;" > :  {{ $entry->office_address }}</td>
 								</tr>
+								<tr>
+									<td>City</td>
+									<td> :  {{ $entry->city }}</td>
+								</tr>
 							</table>
 						</div>
 						<div class="col-md-6">
 							<table class = "table table-striped">
 								<tr>
-									<td>City</td>
-									<td> :  {{ $entry->city }}</td>
-								</tr>
-								<tr>
-									<td>Province</td>
+									<td>Province / State</td>
 									<td> :  {{ $entry->province }}</td>
 								</tr>
 								<tr>
@@ -195,44 +191,6 @@
 		<div class="col-md-12">
   			<div class="card">
 				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
-			  		Service Time
-  				</div>
-				<div class="card-body">
-					<div class = "row">
-						<div class="col-md-12">
-						<a href ="{{url('admin/servicetimechurch/create?churches_id='.$entry->id)}}" class = 'btn btn-primary btn-sm'>Add Service Time</a>
-							<table id ="tableServiceTime" class = "table table-striped">
-								<thead>
-									<tr >
-										<th>Service</th>
-										<th>Time</th>
-										<th>Room</th>
-										<th>Action</th>
-									</tr>
-								</thead>
-								<tbody>
-									@foreach($entry->service_type_church as $key => $stc)
-										<tr>
-											<td>{{$stc->service_type_church->church_service}}</td>
-											<td>{{$stc->service_time}}</td>
-											<td>{{$stc->service_room}}</td>
-											<td>
-											<a href="{{url('admin/servicetimechurch/'.$stc->id.'/edit')}}"><i class="la la-edit"></i></a>
-											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
-											data-route="{{ url('admin/servicetimechurch/'.$stc->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
-											</td>
-										</tr>
-									@endforeach
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="col-md-12">
-  			<div class="card">
-				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
 					Church Status Histories
   				</div>
 				<div class="card-body">
@@ -280,7 +238,7 @@
 							<table id ="tableRelatedEntity" class = "table table-striped">
 								<thead>
 									<tr >
-										<th>No</th>
+										<th>No.</th>
 										<th>Entity Name</th>
 										<th>Type</th>
 										<th>Action</th>
@@ -289,7 +247,7 @@
 								<tbody>
 									@foreach($entry->related_entity_church as $key => $rec)
 										<tr>
-											<td>{{$rec->id}}</td>
+											<td></td>
 											<td>{{$rec->entity_church}}</td>
 											<td>{{$rec->type_entity}}</td>
 											<td>
@@ -315,10 +273,10 @@
 					<div class = "row">
 						<div class="col-md-12">
 						<a href ="{{url('admin/structurechurch/create?churches_id='.$entry->id)}}" class = 'btn btn-primary btn-sm'>Add Structure</a>
-							<table id ="tableStructure" class = "table table-striped">
+							<table id ="tableLeadershipStructure" class = "table table-striped">
 								<thead>
 									<tr >
-										<th>No</th>
+										<th>No.</th>
 										<th>Personal Name</th>
 										<th>Title</th>
 										<th>Action</th>
@@ -327,7 +285,7 @@
 								<tbody>
 									@foreach($entry->ministry_role_church as $key => $mrc)
 										<tr>
-											<td>{{$mrc->id}}</td>
+											<td></td>
 											<td>{{$mrc->personel_name}}</td>
 											<td>{{$mrc->ministry_role_church->ministry_role}}</td>
 											<td>
@@ -433,25 +391,45 @@
 
 	<script>
 		$(document).ready(function() {
-		$('#tableServiceTime').DataTable();
-		} );
-	</script>
-
-	<script>
-		$(document).ready(function() {
 		$('#tableStatusHistory').DataTable();
 		} );
 	</script>
 
 	<script>
 		$(document).ready(function() {
-		$('#tableStructure').DataTable();
+		var t = $('#tableLeadershipStructure').DataTable( {
+        	"columnDefs": [ {
+            "searchable": false,
+            "orderable": false,
+            "targets": 0
+        	} ],
+        	"order": [[ 1, 'asc' ]]
+    	} );
+ 
+		t.on( 'order.dt search.dt', function () {
+			t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+				cell.innerHTML = i+1;
+			} );
+		} ).draw();
 		} );
 	</script>
 
 	<script>
 		$(document).ready(function() {
-		$('#tableRelatedEntity').DataTable();
+		var t = $('#tableRelatedEntity').DataTable( {
+        	"columnDefs": [ {
+            "searchable": false,
+            "orderable": false,
+            "targets": 0
+        	} ],
+        	"order": [[ 1, 'asc' ]]
+    	} );
+ 
+		t.on( 'order.dt search.dt', function () {
+			t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+				cell.innerHTML = i+1;
+			} );
+		} ).draw();
 		} );
 	</script>
 

@@ -40,11 +40,18 @@ class PersonelCrudController extends CrudController
      */
     protected function setupListOperation()
     {        
+        // $this->crud->addColumn([
+        //     'name' => 'id', // The db column name
+        //     'label' => "ID", // Table column heading
+        //     'type' => 'number'
+        // ]);
+
         $this->crud->addColumn([
-            'name' => 'id', // The db column name
-            'label' => "ID", // Table column heading
-            'type' => 'number'
-        ]);
+            'name'      => 'row_number',
+            'type'      => 'row_number',
+            'label'     => 'No.',
+            'orderable' => true,
+        ])->makeFirstColumn();
 
         $this->crud->addColumn([
             'name' => 'title', // The db column name
@@ -349,14 +356,14 @@ class PersonelCrudController extends CrudController
         $this->crud->addField([
             'name'            => 'email',
             'label'           => "Email 1",
-            'type'            => 'email',
+            'type'            => 'text',
             'tab'             => 'Contact Information',
         ]);
 
         $this->crud->addField([
             'name'            => 'second_email',
             'label'           => "Email 2",
-            'type'            => 'email',
+            'type'            => 'text',
             'tab'             => 'Contact Information',
         ]);
 

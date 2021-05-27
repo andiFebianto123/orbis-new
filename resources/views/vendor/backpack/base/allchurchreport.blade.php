@@ -13,6 +13,7 @@
 							<table id ="tableAllChurch" class = "table table-striped">
 								<thead>
 									<tr>
+										<th>No.</th>
 										<th>RC / DPW</th>
 										<th>Church Name</th>
 										<th>Church Type</th>
@@ -21,7 +22,7 @@
 										<th>Church Address</th>
 										<th>Office Address</th>
 										<th>City</th>
-										<th>Province</th>
+										<th>Province / State</th>
 										<th>Postal Code</th>
 										<th>Country</th>
 										<th>Phone</th>
@@ -36,6 +37,7 @@
 								<tbody>
 									@foreach($all_church_tables as $key => $all_church_table)
 										<tr>
+											<td></td>
 											<td>{{$all_church_table->rc_dpw_name}}</td>
 											<td>{{$all_church_table->church_name}}</td>
 											<td>{{$all_church_table->entities_type}}</td>
@@ -107,7 +109,13 @@
 
 	<script>
 		$(document).ready(function() {
-		$('#tableAllChurch').DataTable( {
+		var t = $('#tableAllChurch').DataTable( {
+        	"columnDefs": [ {
+				"searchable": false,
+				"orderable": false,
+				"targets": 0
+        	} ],
+        	"order": [[ 1, 'asc' ]],
 			"scrollY": 400,
         	"scrollX": true,
 			"pagingType": "simple_numbers",
@@ -139,6 +147,12 @@
 				},
 			]
 		} );
+		
+		t.on( 'order.dt search.dt', function () {
+			t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+				cell.innerHTML = i+1;
+			} );
+    	} ).draw();
 		$( "<hr>" ).insertAfter( ".buttons-excel" );
     	$(".dt-button").addClass("btn btn-sm btn btn-outline-primary");
 		} );

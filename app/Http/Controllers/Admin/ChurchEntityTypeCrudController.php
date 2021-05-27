@@ -41,11 +41,18 @@ class ChurchEntityTypeCrudController extends CrudController
     {
         // $this->crud->setColumns(['id','entities_type']);
 
+        // $this->crud->addColumn([
+        //     'name' => 'id', // The db column name
+        //     'label' => "ID", // Table column heading
+        //     'type' => 'number'
+        // ]);
+
         $this->crud->addColumn([
-            'name' => 'id', // The db column name
-            'label' => "ID", // Table column heading
-            'type' => 'number'
-        ]);
+            'name'      => 'row_number',
+            'type'      => 'row_number',
+            'label'     => 'No.',
+            'orderable' => false,
+        ])->makeFirstColumn();
 
         $this->crud->addColumn([
             'name' => 'entities_type', // The db column name

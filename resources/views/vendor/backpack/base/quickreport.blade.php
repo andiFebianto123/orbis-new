@@ -19,8 +19,8 @@
 							<li><a class="dropdown-item" href="{{url('admin/newpastorreport/')}}">New Pastor This Year</a></li>
 							<li><a class="dropdown-item" href="{{url('admin/inactivechurch/')}}">Recently Inactive Church</a></li>
 							<li><a class="dropdown-item" href="{{url('admin/inactivepastor/')}}">Recently Inactive Pastor</a></li>
-							<li><a class="dropdown-item" href="{{url('admin/allchurchreport/')}}">All Church</a></li>
-							<li><a class="dropdown-item" href="{{url('admin/allpastorreport/')}}">All Personel</a></li>
+							<li><a class="dropdown-item" href="{{url('admin/allchurchreport/')}}">All Churches</a></li>
+							<li><a class="dropdown-item" href="{{url('admin/allpastorreport/')}}">All Pastors</a></li>
 							</ul>
 						</div>
 					</div>

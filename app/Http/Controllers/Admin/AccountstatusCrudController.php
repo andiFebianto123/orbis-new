@@ -43,11 +43,18 @@ class AccountstatusCrudController extends CrudController
     {
         // $this->crud->setColumns(['id','acc_status']);
 
+        // $this->crud->addColumn([
+        //     'name' => 'id', // The db column name
+        //     'label' => "ID", // Table column heading
+        //     'type' => 'number'
+        // ]);
+
         $this->crud->addColumn([
-            'name' => 'id', // The db column name
-            'label' => "ID", // Table column heading
-            'type' => 'number'
-        ]);
+            'name'      => 'row_number',
+            'type'      => 'row_number',
+            'label'     => 'No.',
+            'orderable' => false,
+        ])->makeFirstColumn();
 
         $this->crud->addColumn([
             'name' => 'acc_status', // The db column name

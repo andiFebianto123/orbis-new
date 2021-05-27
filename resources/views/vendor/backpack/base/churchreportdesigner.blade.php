@@ -30,7 +30,7 @@
 										<th>Church Address</th>
 										<th>Office Address</th>
 										<th>City</th>
-										<th>Province</th>
+										<th>Province / State</th>
 										<th>Postal Code</th>
 										<th>Country</th>
 										<th>Phone</th>

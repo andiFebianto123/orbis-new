@@ -19,6 +19,7 @@ class Appointment_history extends Model
     protected $fillable = [
         'title_appointment',
         'date_appointment',
+        'notes',
         'personel_id',
     ];
 

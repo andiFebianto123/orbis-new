@@ -30,7 +30,7 @@
 										<th>Church Name</th>
 										<th>Address</th>
 										<th>City</th>
-										<th>Province</th>
+										<th>Province / State</th>
 										<th>Postal Code</th>
 										<th>Country</th>
 										<th>Phone</th>
@@ -164,7 +164,7 @@
 				{
 					extend: 'searchPanes',
 					config: {
-						cascadePanes: false
+						cascadePanes: true
 					}
 				},
 				'columnsToggle'

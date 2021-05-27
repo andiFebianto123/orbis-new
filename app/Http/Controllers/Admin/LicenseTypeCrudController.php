@@ -41,11 +41,18 @@ class LicenseTypeCrudController extends CrudController
     {
         // $this->crud->setColumns(['id','pastors_license_type']);
 
+        // $this->crud->addColumn([
+        //     'name' => 'id', // The db column name
+        //     'label' => "ID", // Table column heading
+        //     'type' => 'number'
+        // ]);
+
         $this->crud->addColumn([
-            'name' => 'id', // The db column name
-            'label' => "ID", // Table column heading
-            'type' => 'number'
-        ]);
+            'name'      => 'row_number',
+            'type'      => 'row_number',
+            'label'     => 'No.',
+            'orderable' => false,
+        ])->makeFirstColumn();
 
         $this->crud->addColumn([
             'name' => 'pastors_license_type', // The db column name

@@ -25,19 +25,9 @@ class MinistryRoleSeeder extends Seeder
         ['ministry_role' => 'Satellite Pastor']
         );
         MinistryRole::updateOrCreate([
-            'ministry_role' => 'Coordinator'
+            'ministry_role' => 'Pastoral Team'
         ], 
-        ['ministry_role' => 'Coordinator']
-        );
-        MinistryRole::updateOrCreate([
-            'ministry_role' => 'Secretary'
-        ], 
-        ['ministry_role' => 'Secretary']
-        );
-        MinistryRole::updateOrCreate([
-            'ministry_role' => 'Treasurer'
-        ], 
-        ['ministry_role' => 'Treasurer']
+        ['ministry_role' => 'Pastoral Team']
         );
     }
 }
