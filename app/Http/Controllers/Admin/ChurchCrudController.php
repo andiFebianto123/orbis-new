@@ -55,8 +55,7 @@ class ChurchCrudController extends CrudController
         $this->crud->addColumn([
             'name' => 'church_status', // The db column name
             'label' => "Church Status", // Table column heading
-            'type' => 'relationship',
-            'attribute' => 'status',
+            'type' => 'text',
         ]);
 
         $this->crud->addColumn([
