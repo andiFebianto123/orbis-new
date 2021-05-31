@@ -55,7 +55,8 @@ class ChurchCrudController extends CrudController
         $this->crud->addColumn([
             'name' => 'church_status', // The db column name
             'label' => "Church Status", // Table column heading
-            'type' => 'text'
+            'type' => 'relationship',
+            'attribute' => 'status',
         ]);
 
         $this->crud->addColumn([
@@ -275,14 +276,14 @@ class ChurchCrudController extends CrudController
         $this->crud->addField([
             'name'            => 'first_email',
             'label'           => "Email 1",
-            'type'            => 'email',
+            'type'            => 'text',
             'tab'             => 'Church / Office Information',
         ]);
 
         $this->crud->addField([
             'name'            => 'second_email',
             'label'           => "Email 2",
-            'type'            => 'email',
+            'type'            => 'text',
             'tab'             => 'Church / Office Information',
         ]);
 
@@ -317,7 +318,7 @@ class ChurchCrudController extends CrudController
         $this->crud->addField([
             'name'            => 'service_time_church',
             'label'           => "Service Time",
-            'type'            => 'text',
+            'type'            => 'textarea',
             'tab'             => 'Church / Office Information',
         ]);
 
