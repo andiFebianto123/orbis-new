@@ -109,7 +109,7 @@ class Appointment_historyCrudController extends CrudController
         $this->crud->addField([
             'name'            => 'notes',
             'label'           => "Notes",
-            'type'            => 'text',
+            'type'            => 'textarea',
         ]);
 
         $this->crud->addField([

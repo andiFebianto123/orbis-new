@@ -92,14 +92,14 @@
 									<td>City</td>
 									<td> :  {{ $entry->city }}</td>
 								</tr>
-							</table>
-						</div>
-						<div class="col-md-6">
-							<table class = "table table-striped">
 								<tr>
 									<td>Province / State</td>
 									<td> :  {{ $entry->province }}</td>
 								</tr>
+							</table>
+						</div>
+						<div class="col-md-6">
+							<table class = "table table-striped">
 								<tr>
 									<td>Postal Code</td>
 									<td> :  {{ $entry->postal_code }}</td>
@@ -137,54 +137,20 @@
 									<td> :  {{ $entry->service_time_church }}</td>
 								</tr>
 								<tr>
+									<td>Certificate / SK</td>
+									<td> :  {{ $entry->certificate }}</td>
+								</tr>
+								<tr>
+									<td>Date of Certificate</td>
+									<td> :  {{ $entry->date_of_certificate }}</td>
+								</tr>
+								<tr>
 									<td>Notes</td>
 									<td> :  {{ $entry->notes }}</td>
 								</tr>
 							</table>
 						</div>
 					</div>	
-				</div>
-			</div>
-		</div>
-		<div class="col-md-12">
-  			<div class="card">
-				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
-			  		Legal Document For Church
-  				</div>
-				<div class="card-body">
-					<div class = "row">
-						<div class="col-md-12">
-  							<a href ="{{url('admin/legaldocumentchurch/create?churches_id='.$entry->id)}}" class = 'btn btn-primary btn-sm'>Add Document</a>
-							<table id ="tableLegalDocument" class = "table table-striped">
-								<thead>
-									<tr >
-										<th>Document</th>
-										<th>Number</th>
-										<th>Issue Date</th>
-										<th>Exp Date</th>
-										<th>Status</th>
-										<th>Action</th>
-									</tr>
-								</thead>
-								<tbody>
-									@foreach($entry->legal_document_church as $key => $ldc)
-										<tr>
-											<td>{{$ldc->legal_document_church->documents}}</td>
-											<td>{{$ldc->number_document}}</td>
-											<td>{{$ldc->issue_date}}</td>
-											<td>{{$ldc->exp_date}}</td>
-											<td>{{$ldc->status_document}}</td>
-											<td>
-											<a href="{{url('admin/legaldocumentchurch/'.$ldc->id.'/edit')}}"><i class="la la-edit"></i></a>
-											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
-											data-route="{{ url('admin/legaldocumentchurch/'.$ldc->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
-											</td>
-										</tr>
-									@endforeach
-								</tbody>
-							</table>
-						</div>
-					</div>
 				</div>
 			</div>
 		</div>

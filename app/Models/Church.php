@@ -39,6 +39,8 @@ class Church extends Model
         'website',
         'map_url',
         'service_time_church',
+        'certificate',
+        'date_of_certificate',
         'notes',
     ];
     // protected $primaryKey = 'id';

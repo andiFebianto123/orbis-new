@@ -448,7 +448,7 @@ class PersonelCrudController extends CrudController
         $this->crud->addField([
             'name'            => 'notes',
             'label'           => "Notes",
-            'type'            => 'text',
+            'type'            => 'textarea',
             'tab'             => 'Licensing Information',
         ]);
     }

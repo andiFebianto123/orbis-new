@@ -322,9 +322,31 @@ class ChurchCrudController extends CrudController
         ]);
 
         $this->crud->addField([
+            'name'            => 'certificate',
+            'label'           => "Certificate / SK",
+            'type'            => 'select2_from_array',
+            'options'         => ['Yes' => "Yes", 'No' => "No"],
+            'tab'             => 'Church / Office Information',
+        ]);
+
+        $this->crud->addField([
+            'name'  => 'date_of_certificate',
+            'type'  => 'date_picker',
+            'label' => 'Date of Certificate',
+            'tab'   => 'Church / Office Information',
+
+            // optional:
+            'date_picker_options' => [
+                'todayBtn' => 'linked',
+                'format'   => 'dd-mm-yyyy',
+                'language' => 'en'
+            ],
+        ]);
+
+        $this->crud->addField([
             'name'            => 'notes',
             'label'           => "Notes",
-            'type'            => 'text',
+            'type'            => 'textarea',
             'tab'             => 'Church / Office Information',
         ]);
     }
