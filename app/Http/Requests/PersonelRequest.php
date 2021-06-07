@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\Base64Rule;
 use App\Http\Requests\Request;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Foundation\Http\FormRequest;
 
 class PersonelRequest extends FormRequest
 {
@@ -49,7 +50,8 @@ class PersonelRequest extends FormRequest
         'card' => 'required',
         'valid_card_start' => 'required',
         'valid_card_end'=> 'required',
-        'current_certificate_number'=> 'required'
+        'current_certificate_number'=> 'required',
+        'image' => ['nullable', new Base64Rule(3, ['png', 'jpg', 'jpeg'])]
         ];
     }
 

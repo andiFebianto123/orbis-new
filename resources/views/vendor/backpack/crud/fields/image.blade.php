@@ -53,6 +53,10 @@
         $value = $field['disk']
             ? getDiskUrl($field['disk'], $value)
             : url($value);
+        $oldChange = 0;
+    }
+    else{
+        $oldChange = old($field['name']. '_change');
     }
 
     $max_image_size_in_bytes = $field['max_file_size'] ?? (int)maximumServerUploadSizeInBytes();
@@ -90,6 +94,7 @@
         <div class="btn btn-light btn-sm btn-file">
             {{ trans('backpack::crud.choose_file') }} <input type="file" accept="image/*" data-handle="uploadImage"  @include('crud::fields.inc.attributes')>
             <input type="hidden" data-handle="hiddenImage" name="{{ $field['name'] }}" data-value-prefix="{{ $field['prefix'] }}" value="{{ $value }}">
+            <input type="hidden" name="{{ $field['name'] }}_change" value="{{$oldChange ?? 0}}">
         </div>
         @if(isset($field['crop']) && $field['crop'])
         <button class="btn btn-light btn-sm" data-handle="rotateLeft" type="button" style="display: none;"><i class="la la-rotate-left"></i></button>
@@ -173,6 +178,7 @@
                     var $mainImage = element.find('[data-handle=mainImage]');
                     var $uploadImage = element.find("[data-handle=uploadImage]");
                     var $hiddenImage = element.find("[data-handle=hiddenImage]");
+                    var $changeImage = $hiddenImage.next();
                     var $rotateLeft = element.find("[data-handle=rotateLeft]");
                     var $rotateRight = element.find("[data-handle=rotateRight]");
                     var $zoomIn = element.find("[data-handle=zoomIn]");
@@ -214,6 +220,7 @@
                             $reset.hide();
                             $remove.hide();
                             $previews.hide();
+                            $changeImage.val(1);
                         });
                     } else {
 
@@ -222,6 +229,7 @@
                             $hiddenImage.val('');
                             $remove.hide();
                             $previews.hide();
+                            $changeImage.val(1);
                         });
                     }
 
@@ -243,7 +251,7 @@
 
                             fileReader.readAsDataURL(file);
                             fileReader.onload = function () {
-
+                                $changeImage.val(1);
                                 $uploadImage.val("");
                                 $previews.show();
                                 if(crop){

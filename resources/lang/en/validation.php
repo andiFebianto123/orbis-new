@@ -121,6 +121,8 @@ return [
     'url' => 'The :attribute format is invalid.',
     'uuid' => 'The :attribute must be a valid UUID.',
 
+    'base64_image' => 'The :attribute must be a base64 image with following extensions : :mimes.',
+    'base64_image_size' => 'The :attribute size may not be greater than :size MB.',
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines
