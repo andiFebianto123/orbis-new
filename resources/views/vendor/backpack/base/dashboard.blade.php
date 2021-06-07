@@ -416,6 +416,7 @@
 							<table id ="tableLicenseExpired" class = "table table-striped">
 								<thead>
 									<tr>
+										<th>Church Name</th>
 										<th>Document</th>
 										<th>Date</th>
 									</tr>
@@ -423,6 +424,7 @@
 								<tbody>
 									@foreach($license_expiration_tables as $key => $license_expiration_table)
 										<tr>
+											<td>{{$license_expiration_table->church_name}}</td>
 											<td>{{$license_expiration_table->documents}}</td>
 											<td>{{$license_expiration_table->exp_date}}</td>
 										</tr>

@@ -49,3 +49,6 @@
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('structurechurch') }}'><i class='nav-icon la la-question'></i> StructureChurches</a></li> -->
 <!-- <li class='nav-item'><a class='nav-link' href='{{ backpack_url('dashboard') }}'><i class='nav-icon la la-question'></i> Dashboards</a></li> -->
 <!-- <li class='nav-item'><a class='nav-link' href='{{ backpack_url('churchannualreportdetail') }}'><i class='nav-icon la la-question'></i> ChurchAnnualReportDetails</a></li> -->
+<!-- <li class='nav-item'><a class='nav-link' href='{{ backpack_url('childnamepastors') }}'><i class='nav-icon la la-question'></i> ChildNamePastors</a></li> -->
+<!-- <li class='nav-item'><a class='nav-link' href='{{ backpack_url('ministrybackgroundpastor') }}'><i class='nav-icon la la-question'></i> MinistryBackgroundPastors</a></li> -->
+<!-- <li class='nav-item'><a class='nav-link' href='{{ backpack_url('careerbackgroundpastors') }}'><i class='nav-icon la la-question'></i> CareerBackgroundPastors</a></li> -->

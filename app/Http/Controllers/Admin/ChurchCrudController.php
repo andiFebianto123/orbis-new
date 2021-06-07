@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\ChurchRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use App\Models\StatusHistoryChurch;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class ChurchCrudController
@@ -13,7 +15,7 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
  */
 class ChurchCrudController extends CrudController
 {
-    use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation{search as traitSearch;}
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
@@ -39,12 +41,7 @@ class ChurchCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        // $this->crud->addColumn([
-        //     'name' => 'id', // The db column name
-        //     'label' => "ID", // Table column heading
-        //     'type' => 'number'
-        // ]);
-
+        
         $this->crud->addColumn([
             'name'      => 'row_number',
             'type'      => 'row_number',
@@ -52,10 +49,26 @@ class ChurchCrudController extends CrudController
             'orderable' => false,
         ])->makeFirstColumn();
 
+        // $this->crud->addColumn([
+        //     'name' => 'church_status', // The db column name
+        //     'label' => "Church Status", // Table column heading
+        //     'type' => 'text',
+        // ]);
+
         $this->crud->addColumn([
             'name' => 'church_status', // The db column name
-            'label' => "Church Status", // Table column heading
-            'type' => 'text',
+            'label' => "Status", // Table column heading
+            'type' => 'closure',
+            'function' => function ($entry) {
+                return $entry->status;
+            },
+            'searchLogic' => function ($query, $column, $searchTerm) {
+                $query->orWhere(DB::raw('IFNULL(status_history_churches.status, "-")'), 'LIKE', '%' . $searchTerm . '%');
+            },
+            'orderable' => true,
+            'orderLogic' => function ($query, $column, $columnDirection) {
+                return $query->orderBy(DB::raw('IFNULL(status_history_churches.status, "-")'), $columnDirection);
+            },
         ]);
 
         $this->crud->addColumn([
@@ -147,6 +160,25 @@ class ChurchCrudController extends CrudController
 
     }
 
+    function search()
+    {
+        $subQuery = StatusHistoryChurch::leftJoin('status_history_churches as temps', function ($leftJoin) {
+            $leftJoin->on('temps.churches_id', 'status_history_churches.churches_id')
+                ->where(function ($innerQuery) {
+                    $innerQuery->whereRaw('status_history_churches.date_status < temps.date_status')
+                        ->orWhere(function ($deepestQuery) {
+                            $deepestQuery->whereRaw('status_history_churches.date_status = temps.date_status')
+                                ->where('status_history_churches.id', '<', 'temps.id');
+                        });
+                });
+        })->whereNull('temps.id')
+            ->select('status_history_churches.churches_id', 'status_history_churches.status');
+        $this->crud->query->leftJoinSub($subQuery, 'status_history_churches', function ($leftJoinSub) {
+            $leftJoinSub->on('churches.id', 'status_history_churches.churches_id');
+        })->select('churches.*', DB::raw('IFNULL(status_history_churches.status, "-") as status'));
+        return $this->traitSearch();
+    }
+
     /**
      * Define what happens when the Create operation is loaded.
      * 
@@ -156,14 +188,6 @@ class ChurchCrudController extends CrudController
     protected function setupCreateOperation()
     {
         CRUD::setValidation(ChurchRequest::class);
-
-        $this->crud->addField([
-            'name'            => 'church_status',
-            'label'           => "Status",
-            'type'            => 'select2_from_array',
-            'options'         => ['Active' => "Active", 'Non-active' => "Non-active"],
-            'tab'             => 'Church / Office Information',
-        ]);
 
         $this->crud->addField([
             'name'  => 'founded_on',

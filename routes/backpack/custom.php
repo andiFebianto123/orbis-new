@@ -64,4 +64,7 @@ Route::group([
     Route::get('import-rcdpw', 'ToolsUploadController@importrcdpw');
     Route::post('rcdpw-upload', 'RcDpwListCrudController@uploadrcdpw');
     
+    Route::crud('childnamepastors', 'ChildNamePastorsCrudController');
+    Route::crud('ministrybackgroundpastor', 'MinistryBackgroundPastorCrudController');
+    Route::crud('careerbackgroundpastors', 'CareerBackgroundPastorsCrudController');
 }); // this should be the absolute last line of this file

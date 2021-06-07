@@ -17,9 +17,8 @@ class Church extends Model
 
     protected $table = 'churches';
     protected $fillable = [
-        'church_status',
+        // 'church_status',
         'founded_on',
-        'church_id',
         'church_type_id',
         'rc_dpw_id',
         'church_name',

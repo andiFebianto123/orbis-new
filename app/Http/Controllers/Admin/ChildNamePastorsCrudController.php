@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\SpecialRolePersonelRequest;
+use App\Http\Requests\ChildNamePastorsRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
- * Class SpecialRolePersonelCrudController
+ * Class ChildNamePastorsCrudController
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class SpecialRolePersonelCrudController extends CrudController
+class ChildNamePastorsCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
@@ -24,9 +24,9 @@ class SpecialRolePersonelCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\SpecialRolePersonel::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/specialrolepersonel');
-        CRUD::setEntityNameStrings('Special Role', 'Special Role');
+        CRUD::setModel(\App\Models\ChildNamePastors::class);
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/childnamepastors');
+        CRUD::setEntityNameStrings("Child's Name", "Child's Name");
     }
 
     public function index()
@@ -49,10 +49,9 @@ class SpecialRolePersonelCrudController extends CrudController
         ]);
 
         $this->crud->addColumn([
-            'name' => 'special_role_personel', // The db column name
-            'label' => "Special Role Personel", // Table column heading
-            'type' => 'relationship',
-            'attribute' => 'special_role',
+            'name' => 'child_name', // The db column name
+            'label' => "Child's Name", // Table column heading
+            'type' => 'text'
         ]);
 
         $this->crud->addColumn([
@@ -71,15 +70,12 @@ class SpecialRolePersonelCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(SpecialRolePersonelRequest::class);
+        CRUD::setValidation(ChildNamePastorsRequest::class);
 
         $this->crud->addField([
-            'label'     => 'Special Role Personel', // Table column heading
-            'type'      => 'select2',
-            'name'      => 'special_role_id', // the column that contains the ID of that connected entity;
-            'entity'    => 'special_role_personel', // the method that defines the relationship in your Model
-            'attribute' => 'special_role', // foreign key attribute that is shown to user
-            'model'     => "App\Models\SpecialRole",
+            'name'            => 'child_name',
+            'label'           => "Child's Name",
+            'type'            => 'text',
         ]);
 
         $this->crud->addField([

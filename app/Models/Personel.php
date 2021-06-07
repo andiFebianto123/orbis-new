@@ -22,7 +22,7 @@ class Personel extends Authenticatable
 
     protected $table = 'personels';
     protected $fillable = [
-        'acc_status_id',
+        // 'acc_status_id',
         'rc_dpw_id',
         'title_id',
         'first_name',
@@ -71,10 +71,10 @@ class Personel extends Authenticatable
         'password',
     ];
 
-    public function accountstatus()
-    {
-        return $this->belongsTo('App\Models\Accountstatus', 'acc_status_id', 'id');
-    }
+    // public function accountstatus()
+    // {
+    //     return $this->belongsTo('App\Models\Accountstatus', 'acc_status_id', 'id');
+    // }
 
     public function rc_dpw()
     {
@@ -114,6 +114,21 @@ class Personel extends Authenticatable
     public function special_role_personel()
     {
         return $this->hasMany('App\Models\SpecialRolePersonel', 'personel_id', 'id');
+    }
+
+    public function child_name_pastor()
+    {
+        return $this->hasMany('App\Models\ChildNamePastors', 'personel_id', 'id');
+    }
+
+    public function ministry_background_pastor()
+    {
+        return $this->hasMany('App\Models\MinistryBackgroundPastor', 'personel_id', 'id');
+    }
+
+    public function career_background_pastor()
+    {
+        return $this->hasMany('App\Models\CareerBackgroundPastors', 'personel_id', 'id');
     }
 
     /*

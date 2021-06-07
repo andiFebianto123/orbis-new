@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use App\Http\Requests\Request;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ChurchRequest extends FormRequest
+class ChildNamePastorsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,23 +27,6 @@ class ChurchRequest extends FormRequest
     {
         return [
             // 'name' => 'required|min:5|max:255'
-        // 'church_status' => 'required',
-        // 'founded_on' => 'required',
-        // 'church_id' => 'required',
-        // 'church_type_id'=> 'required',
-        'rc_dpw_id' => 'required',
-        'church_name'=> 'required',
-        'contact_person' => 'required',
-        // 'building_name' => 'required',
-        'church_address' => 'required',
-        'office_address' => 'required',
-        'city' => 'required',
-        'province' => 'required',
-        'postal_code' => 'required',
-        'country_id' => 'required',
-        'first_email' => 'required|email' ,
-        'phone' => 'required',
-        'fax' => 'required',
         ];
     }
 

@@ -3,7 +3,7 @@
 @php
   $defaultBreadcrumbs = [
     trans('backpack::crud.admin') => backpack_url('dashboard'),
-    $crud->entity_name_plural => url($crud->route),
+    $crud->entity_name_plural => $crud->hasAccess('list') ? url($crud->route) : false,
     trans('backpack::crud.edit') => false,
   ];
 

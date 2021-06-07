@@ -44,7 +44,19 @@
 							<table class = "table table-striped">
 								<tr>
 									<td>Status</td>
-									<td> : {{ $entry->church_status }}</td>
+									<td> : {{
+											App\Models\StatusHistoryChurch::leftJoin('status_history_churches as temps', function($leftJoin){
+													$leftJoin->on('temps.churches_id', 'status_history_churches.churches_id')
+													->where(function($innerQuery){
+														$innerQuery->whereRaw('status_history_churches.date_status < temps.date_status')
+														->orWhere(function($deepestQuery){
+															$deepestQuery->whereRaw('status_history_churches.date_status = temps.date_status')
+															->where('status_history_churches.id', '<', 'temps.id');
+														});
+													});
+												})->whereNull('temps.id')
+												->select('status_history_churches.churches_id', 'status_history_churches.status')->first()->status ?? '-'
+										}} </td>
 								</tr>
 								<tr>
 									<td>Founded On</td>

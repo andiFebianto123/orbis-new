@@ -42,9 +42,23 @@
 					<div class="row">
 						<div class="col-md-6">
 							<table class = "table table-striped">
-							<tr>
+								<tr>
 									<td>Status</td>
-									<td> : {{ $entry->accountstatus->acc_status ?? '-' }}</td>
+									<td> : {{
+											App\Models\StatusHistory::leftJoin('status_histories as temps', function($leftJoin){
+													$leftJoin->on('temps.personel_id', 'status_histories.personel_id')
+													->where(function($innerQuery){
+														$innerQuery->whereRaw('status_histories.date_status < temps.date_status')
+														->orWhere(function($deepestQuery){
+															$deepestQuery->whereRaw('status_histories.date_status = temps.date_status')
+															->where('status_histories.id', '<', 'temps.id');
+														});
+													});
+												})->whereNull('temps.id')
+												->join('account_status', 'account_status.id', 'status_histories.status_histories_id')
+												->where('status_histories.personel_id', $entry->id)
+												->select('account_status.acc_status')->first()->acc_status ?? '-'
+										}} </td>
 								</tr>
 								<tr>
 									<td>Regional Council</td>
@@ -361,6 +375,118 @@
 		<div class="col-md-12">
   			<div class="card">
 				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
+			  		Child's Name
+  				</div>
+				<div class="card-body">
+					<div class = "row">
+						<div class="col-md-12">
+						<a href ="{{url('admin/childnamepastors/create?personel_id='.$entry->id)}}" class = 'btn btn-primary btn-sm'>Add Child's Name</a>
+							<table id ="tableChildName" class = "table table-striped">
+								<thead>
+									<tr>
+  										<th>No.</th>
+										<th>Name</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach($entry->child_name_pastor as $key => $cnp)
+										<tr>
+  											<td></td>
+											<td>{{$cnp->child_name }}</td>
+											<td>
+											<a href="{{url('admin/childnamepastors/'.$cnp->id.'/edit')}}"><i class="la la-edit"></i></a>
+											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
+											data-route="{{ url('admin/childnamepastors/'.$cnp->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
+											</td>
+										</tr>
+									@endforeach
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-12">
+  			<div class="card">
+				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
+			  		Ministry Background
+  				</div>
+				<div class="card-body">
+					<div class = "row">
+						<div class="col-md-12">
+						<a href ="{{url('admin/ministrybackgroundpastor/create?personel_id='.$entry->id)}}" class = 'btn btn-primary btn-sm'>Add Ministry Background</a>
+							<table id ="tableMinistryBackground" class = "table table-striped">
+								<thead>
+									<tr>
+  										<th>No.</th>
+										<th>Title</th>
+										<th>Description</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach($entry->ministry_background_pastor as $key => $mbp)
+										<tr>
+  											<td></td>
+											<td>{{$mbp->ministry_title }}</td>
+											<td>{{$mbp->ministry_description }}</td>
+											<td>
+											<a href="{{url('admin/ministrybackgroundpastor/'.$mbp->id.'/edit')}}"><i class="la la-edit"></i></a>
+											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
+											data-route="{{ url('admin/ministrybackgroundpastor/'.$mbp->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
+											</td>
+										</tr>
+									@endforeach
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-12">
+  			<div class="card">
+				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
+			  		Career Background
+  				</div>
+				<div class="card-body">
+					<div class = "row">
+						<div class="col-md-12">
+						<a href ="{{url('admin/careerbackgroundpastors/create?personel_id='.$entry->id)}}" class = 'btn btn-primary btn-sm'>Add Career Background</a>
+							<table id ="tableCareerBackground" class = "table table-striped">
+								<thead>
+									<tr>
+  										<th>No.</th>
+										<th>Title</th>
+										<th>Description</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach($entry->career_background_pastor as $key => $cbp)
+										<tr>
+  											<td></td>
+											<td>{{$cbp->career_title }}</td>
+											<td>{{$cbp->career_description }}</td>
+											<td>
+											<a href="{{url('admin/careerbackgroundpastors/'.$cbp->id.'/edit')}}"><i class="la la-edit"></i></a>
+											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
+											data-route="{{ url('admin/careerbackgroundpastors/'.$cbp->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
+											</td>
+										</tr>
+									@endforeach
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-12">
+  			<div class="card">
+				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
 			  		Status History
   				</div>
 				<div class="card-body">
@@ -505,6 +631,63 @@
 	<script>
 		$(document).ready(function() {
 		$('#tableEducationBackground').DataTable();
+		} );
+	</script>
+
+	<script>
+		$(document).ready(function() {
+		var t = $('#tableChildName').DataTable( {
+        	"columnDefs": [ {
+            "searchable": false,
+            "orderable": false,
+            "targets": 0
+        	} ],
+        	"order": [[ 1, 'asc' ]]
+    	} );
+ 
+		t.on( 'order.dt search.dt', function () {
+			t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+				cell.innerHTML = i+1;
+			} );
+		} ).draw();
+		} );
+	</script>
+
+	<script>
+		$(document).ready(function() {
+		var t = $('#tableMinistryBackground').DataTable( {
+        	"columnDefs": [ {
+            "searchable": false,
+            "orderable": false,
+            "targets": 0
+        	} ],
+        	"order": [[ 1, 'asc' ]]
+    	} );
+ 
+		t.on( 'order.dt search.dt', function () {
+			t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+				cell.innerHTML = i+1;
+			} );
+		} ).draw();
+		} );
+	</script>
+
+	<script>
+		$(document).ready(function() {
+		var t = $('#tableCareerBackground').DataTable( {
+        	"columnDefs": [ {
+            "searchable": false,
+            "orderable": false,
+            "targets": 0
+        	} ],
+        	"order": [[ 1, 'asc' ]]
+    	} );
+ 
+		t.on( 'order.dt search.dt', function () {
+			t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+				cell.innerHTML = i+1;
+			} );
+		} ).draw();
 		} );
 	</script>
 

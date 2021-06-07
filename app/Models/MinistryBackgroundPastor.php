@@ -5,7 +5,7 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 
-class Accountstatus extends Model
+class MinistryBackgroundPastor extends Model
 {
     use CrudTrait;
 
@@ -15,10 +15,13 @@ class Accountstatus extends Model
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'account_status';
+    protected $table = 'ministry_background_pastors';
     protected $fillable = [
-        'acc_status',
+        'ministry_title',
+        'ministry_description',
+        'personel_id',
     ];
+
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
@@ -26,14 +29,9 @@ class Accountstatus extends Model
     // protected $hidden = [];
     // protected $dates = [];
 
-    // public function personel()
-    // {
-    //     return $this->hasMany('App\Models\Personel', 'acc_status_id', 'id');
-    // }
-
-    public function status_history_personel()
+    public function personel()
     {
-        return $this->hasMany('App\Models\StatusHistory', 'status_histories_id', 'id');
+        return $this->belongsTo('App\Models\Personel', 'personel_id', 'id');
     }
 
     /*

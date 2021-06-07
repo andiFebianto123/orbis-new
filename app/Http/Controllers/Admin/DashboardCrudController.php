@@ -43,10 +43,30 @@ class DashboardCrudController extends CrudController
 
     public function index()
     {
-        $church_count = Church::where('church_status', 'Active')
-                    ->get();
-        $personel_count = Personel::where('acc_status_id', '1')
-                    ->get();
+        $church_count = StatusHistoryChurch::leftJoin('status_history_churches as temps', function($leftJoin){
+                            $leftJoin->on('temps.churches_id', 'status_history_churches.churches_id')
+                            ->where(function($innerQuery){
+                                $innerQuery->whereRaw('status_history_churches.date_status < temps.date_status')
+                                ->orWhere(function($deepestQuery){
+                                    $deepestQuery->whereRaw('status_history_churches.date_status = temps.date_status')
+                                    ->where('status_history_churches.id', '<', 'temps.id');
+                                });
+                            });
+                        })->whereNull('temps.id')
+                        ->where('status_history_churches.status', 'Active');
+
+        $personel_count = StatusHistory::leftJoin('status_histories as temps', function($leftJoin){
+                            $leftJoin->on('temps.personel_id', 'status_histories.personel_id')
+                            ->where(function($innerQuery){
+                                $innerQuery->whereRaw('status_histories.date_status < temps.date_status')
+                                ->orWhere(function($deepestQuery){
+                                    $deepestQuery->whereRaw('status_histories.date_status = temps.date_status')
+                                    ->where('status_histories.id', '<', 'temps.id');
+                                });
+                            });
+                        })->whereNull('temps.id')
+                        ->where('status_histories.status_histories_id', '1');
+
         $today_birthday = Personel::whereDay('date_of_birth', Carbon::now()->day)
                     ->whereMonth('date_of_birth', Carbon::now()->month)
                     ->select('first_name', DB::raw('count(first_name) as total'))
@@ -93,7 +113,8 @@ class DashboardCrudController extends CrudController
         $license_expiration_tables = LegalDocumentChurch::whereMonth('exp_date', Carbon::now()->month)
                     ->whereYear('exp_date', Carbon::now()->year)
                     ->join('legal_documents','legal_document_churches.legal_document_id','legal_documents.id')
-                    ->select('documents','exp_date')
+                    ->join('churches','legal_document_churches.churches_id','churches.id')
+                    ->select('church_name','documents','exp_date')
                     ->get();
         $inactive_church_tables = StatusHistoryChurch::where('status', 'Non-active')
                     ->whereYear('date_status', Carbon::now()->year)
