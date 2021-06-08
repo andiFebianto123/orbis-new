@@ -1,5 +1,12 @@
 @if(isset($saveAction['active']) && !is_null($saveAction['active']['value']))
     <div id="saveActions" class="form-group">
+        @if (($crud->saveOnly ?? false))
+            <input type="hidden" name="save_action" value="save_and_back">
+            <button type="submit" class="btn btn-success">
+                <span class="la la-save" role="presentation" aria-hidden="true"></span> &nbsp;
+                <span data-value="save_and_back">{{trans('backpack::crud.save')}}</span>
+            </button>
+        @else
 
         <input type="hidden" name="save_action" value="{{ $saveAction['active']['value'] }}">
         @if(!empty($saveAction['options']))
@@ -24,6 +31,8 @@
 
         @if(!empty($saveAction['options']))
             </div>
+        @endif
+
         @endif
 
         @if(!$crud->hasOperationSetting('showCancelButton') || $crud->getOperationSetting('showCancelButton') == true)

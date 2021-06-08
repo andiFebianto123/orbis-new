@@ -7,9 +7,9 @@ use App\Models\CountryList;
 use App\Models\RcDpwList;
 use App\Models\ChurchEntityType;
 use App\Models\LogErrorExcel;
+use App\Models\StatusHistoryChurch;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
-use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\WithValidation;
@@ -17,8 +17,10 @@ use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Validators\Failure;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
+use Maatwebsite\Excel\Row;
+use Maatwebsite\Excel\Concerns\OnEachRow;
 
-class ChurchImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFailure
+class ChurchImport implements OnEachRow, WithHeadingRow, WithValidation, SkipsOnFailure
 
 {
     use Importable, SkipsFailures;
@@ -30,7 +32,7 @@ class ChurchImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFa
         $this->failures = [];
     }
 
-    public function model(array $row)
+    public function onRow(Row $row)
     {
         $country  = CountryList::where('country_name', $row['country'])->first();
         // if($country === null || $country = "-" || $country = "-------"){
@@ -77,8 +79,7 @@ class ChurchImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFa
 
         //    if (isset($country) && isset($rcdpw) ) {
         
-        return new Church([
-            'church_status'  => $row['church_status'],
+        $church = new Church([
             'founded_on'     => $date,
             'rc_dpw_id'      => ($rcdpw['id'] ?? null),
             'church_type_id' => ($church_type['id'] ?? null),
@@ -97,6 +98,16 @@ class ChurchImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFa
             'service_time_church'   => $service_time_church,
             'notes'           => $row['notes'],
         ]);
+        
+        $church->save();
+
+        $status_history = new StatusHistoryChurch([
+            'status'  => $row['church_status'],
+            'date_status' => Carbon::now(),
+            'churches_id' => $church->id,
+        ]);
+
+        $status_history->save();
     }
 
     public function rules(): array

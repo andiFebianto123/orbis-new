@@ -55,6 +55,7 @@
 														});
 													});
 												})->whereNull('temps.id')
+												->where('status_history_churches.churches_id', $entry->id)
 												->select('status_history_churches.churches_id', 'status_history_churches.status')->first()->status ?? '-'
 										}} </td>
 								</tr>

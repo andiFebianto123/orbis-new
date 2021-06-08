@@ -27,6 +27,7 @@ class StatusHistoryChurchCrudController extends CrudController
         CRUD::setModel(\App\Models\StatusHistoryChurch::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/statushistorychurch');
         CRUD::setEntityNameStrings('Church Status Histories', 'Church Status Histories');
+        $this->crud->saveOnly=true;
     }
 
     public function index()
@@ -127,5 +128,39 @@ class StatusHistoryChurchCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    public function store()
+    {
+        $this->crud->hasAccessOrFail('create');
+
+        // execute the FormRequest authorization and validation, if one is required
+        $request = $this->crud->validateRequest();
+
+        // insert item in the db
+        $item = $this->crud->create($this->crud->getStrippedSaveRequest());
+        $this->data['entry'] = $this->crud->entry = $item;
+
+        // show a success message
+        \Alert::success(trans('backpack::crud.insert_success'))->flash();
+
+        return redirect(backpack_url('church/'.$item->churches_id.'/show'));
+    }
+
+    public function update()
+    {
+        $this->crud->hasAccessOrFail('update');
+
+        // execute the FormRequest authorization and validation, if one is required
+        $request = $this->crud->validateRequest();
+        // update the row in the db
+        $item = $this->crud->update($request->get($this->crud->model->getKeyName()),
+                            $this->crud->getStrippedSaveRequest());
+        $this->data['entry'] = $this->crud->entry = $item;
+
+        // show a success message
+        \Alert::success(trans('backpack::crud.update_success'))->flash();
+
+        return redirect(backpack_url('church/'.$item->churches_id.'/show'));    
     }
 }

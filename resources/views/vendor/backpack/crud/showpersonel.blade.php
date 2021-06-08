@@ -35,9 +35,6 @@
 				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
 			  		Biodata
   				</div>
-				<div class="text-center">
-					<img width="150px" style="margin:15px ; border-radius: 50%" src="{{str_replace('public', '', URL::to('/'))}}{{ str_replace('storage', 'storage/app/public', $entry->image) }}" alt="">
-				</div>
 				<div class="card-body">
 					<div class="row">
 						<div class="col-md-6">
@@ -81,14 +78,32 @@
 									<td> :  {{ $entry->gender }}</td>
 								</tr>
 								<tr>
-									<td>Date of Birth</td>
-									<td> :  {{ $entry->date_of_birth }}</td>
-								</tr>
+									<td>Photo Profile</td>
+									<td> :
+										@php
+											$image_personel = App\Models\PersonelImage::select('personel_images.personel_id', 'personel_images.image')
+																	->where('personel_images.personel_id', $entry->id)
+																	->whereIn('label', ['Profile Photo', 'Foto Profil'])
+																	->get();
+
+										@endphp
+										@foreach ($image_personel as $current_image)
+											@php
+											$image = $current_image->image;
+											@endphp
+											<img width="150px" style="margin:15px ; border-radius: 50%" src="{{url($image)}}" alt="">
+										@endforeach
+									</td>
+								<tr>
 							</table>
 						</div>
 						<div class="col-md-6">
 							<table class = "table table-striped">
-							<tr>
+								<tr>
+									<td>Date of Birth</td>
+									<td> :  {{ $entry->date_of_birth }}</td>
+								</tr>
+								<tr>
 									<td>Marital Status</td>
 									<td> :  {{ $entry->marital_status }}</td>
 								</tr>
@@ -105,20 +120,26 @@
 									<td> :  {{ $entry->anniversary }}</td>
 								</tr>
 								<tr>
-									<td>Children's Name</td>
-									<td> :  {{ $entry->child_name }}</td>
-								</tr>
-								<tr>
-									<td>Ministry Background</td>
-									<td> :  {{ $entry->ministry_background }}</td>
-								</tr>
-								<tr>
-									<td>Career Background</td>
-									<td> :  {{ $entry->career_background }}</td>
-								</tr>
-								<tr>
 									<td>Notes</td>
 									<td> :  {{ $entry->notes }}</td>
+								</tr>
+								<tr>
+									<td>Family Photo</td>
+									<td> :
+										@php
+											$image_family = App\Models\PersonelImage::select('personel_images.personel_id', 'personel_images.image')
+																->where('personel_images.personel_id', $entry->id)
+																->whereIn('label', ['Family Photo', 'Foto Keluarga'])
+																->get();
+
+										@endphp
+										@foreach ($image_family as $current_image)
+											@php
+											$image = $current_image->image;
+											@endphp
+											<img width="150px" style="margin:15px ; border-radius: 50%" src="{{url($image)}}" alt="">
+										@endforeach
+									</td>
 								</tr>
 							</table>
 						</div>
@@ -205,6 +226,14 @@
 								<tr>
 									<td>Current Certificate Number </td>
 									<td> :  {{ $entry->current_certificate_number }}</td>
+								</tr>
+								<tr>
+									<td>Pastor's Certificate </td>
+									<td> : <img width="150px" style="margin:15px" src="{{str_replace('public', '', URL::to('/'))}}{{ str_replace('storage', 'storage/app/public', $entry->certificate) }}" alt=""></td>
+								</tr>
+								<tr>
+									<td>Pastor's ID Card </td>
+									<td> : <img width="150px" style="margin:15px" src="{{str_replace('public', '', URL::to('/'))}}{{ str_replace('storage', 'storage/app/public', $entry->id_card) }}" alt=""></td>
 								</tr>
 							</table>
 						</div>

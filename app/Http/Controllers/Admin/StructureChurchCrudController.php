@@ -27,6 +27,7 @@ class StructureChurchCrudController extends CrudController
         CRUD::setModel(\App\Models\StructureChurch::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/structurechurch');
         CRUD::setEntityNameStrings('Leadership Structure', 'Leadership Structure');
+        $this->crud->saveOnly=true;
     }
 
     public function index()
@@ -50,7 +51,7 @@ class StructureChurchCrudController extends CrudController
 
         $this->crud->addColumn([
             'name' => 'personel_name', // The db column name
-            'label' => "Personnel Name", // Table column heading
+            'label' => "Pastor Name", // Table column heading
             'type' => 'text'
         ]);
 
@@ -81,7 +82,7 @@ class StructureChurchCrudController extends CrudController
 
         $this->crud->addField([
             'name'            => 'personel_name',
-            'label'           => "Personnel Name",
+            'label'           => "Pastor Name",
             'type'            => 'text',
         ]);
 
@@ -111,5 +112,39 @@ class StructureChurchCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    public function store()
+    {
+        $this->crud->hasAccessOrFail('create');
+
+        // execute the FormRequest authorization and validation, if one is required
+        $request = $this->crud->validateRequest();
+
+        // insert item in the db
+        $item = $this->crud->create($this->crud->getStrippedSaveRequest());
+        $this->data['entry'] = $this->crud->entry = $item;
+
+        // show a success message
+        \Alert::success(trans('backpack::crud.insert_success'))->flash();
+
+        return redirect(backpack_url('church/'.$item->churches_id.'/show'));
+    }
+
+    public function update()
+    {
+        $this->crud->hasAccessOrFail('update');
+
+        // execute the FormRequest authorization and validation, if one is required
+        $request = $this->crud->validateRequest();
+        // update the row in the db
+        $item = $this->crud->update($request->get($this->crud->model->getKeyName()),
+                            $this->crud->getStrippedSaveRequest());
+        $this->data['entry'] = $this->crud->entry = $item;
+
+        // show a success message
+        \Alert::success(trans('backpack::crud.update_success'))->flash();
+
+        return redirect(backpack_url('church/'.$item->churches_id.'/show'));    
     }
 }

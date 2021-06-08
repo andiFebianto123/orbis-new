@@ -8,9 +8,9 @@ use App\Models\CountryList;
 use App\Models\RcDpwList;
 use App\Models\TitleList;
 use App\Models\Accountstatus;
+use App\Models\StatusHistory;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
-use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Validators\Failure;
@@ -19,8 +19,10 @@ use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\SkipsFailures;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
+use Maatwebsite\Excel\Row;
+use Maatwebsite\Excel\Concerns\OnEachRow;
 
-class PersonelImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFailure, WithCalculatedFormulas
+class PersonelImport implements OnEachRow, WithHeadingRow, WithValidation, SkipsOnFailure, WithCalculatedFormulas
 
 {
     use Importable, SkipsFailures;
@@ -32,8 +34,11 @@ class PersonelImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
         $this->failures = [];
     }
 
-    public function model(array $row)
+    public function onRow(Row $row)
     {
+        $rowIndex = $row->getIndex();
+        $row      = $row->toArray();
+        
         $acc_status  = Accountstatus::where('acc_status', $row['acc_status'])->first();
         $country = CountryList::where('country_name', $row['country'])->first();
         $rcdpw  =  RcDpwList::where('rc_dpw_name', $row['dpw'])->first();
@@ -66,7 +71,7 @@ class PersonelImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
 
         //    if (isset($country)) {
         
-        return new Personel([
+        $personel = new Personel([
         'acc_status_id'  => ($acc_status['id'] ?? null),
         'rc_dpw_id'      => ($rcdpw['id'] ?? null),
         'title_id'      => $title['id'],
@@ -95,6 +100,16 @@ class PersonelImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
         'notes'           => $row['notes'],
         'is_lifetime'     => $is_lifetime,
         ]);
+
+        $personel->save();
+
+        $status_history = new StatusHistory([
+            'status_histories_id'  => ($acc_status['id'] ?? null),
+            'date_status' => Carbon::now(),
+            'personel_id' => $personel->id,
+        ]);
+
+        $status_history->save();
     }
     // }
 
