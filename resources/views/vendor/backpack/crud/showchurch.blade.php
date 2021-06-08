@@ -207,7 +207,7 @@
 		<div class="col-md-12">
   			<div class="card">
 				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
-			  		Related Entity Church
+			  		Related Entity Church (Foundation, Bussiness Unit, Non Profit Organization, etc)
   				</div>
 				<div class="card-body">
 					<div class = "row">
