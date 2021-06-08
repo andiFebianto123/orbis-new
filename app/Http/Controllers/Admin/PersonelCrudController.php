@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\PersonelRequest;
+use Exception;
+use App\Models\Personel;
+use App\Models\PersonelImage;
 use App\Models\StatusHistory;
-use Backpack\CRUD\app\Http\Controllers\CrudController;
-use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\PersonelRequest;
+use App\Http\Requests\PersonelUpdateRequest;
+use Backpack\CRUD\app\Http\Controllers\CrudController;
+use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
  * Class PersonelCrudController
@@ -32,6 +36,7 @@ class PersonelCrudController extends CrudController
         CRUD::setModel(\App\Models\Personel::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/personel');
         CRUD::setEntityNameStrings('Pastor', 'Pastors');
+        $this->crud->fromPastor = true;
     }
 
     /**
@@ -146,11 +151,11 @@ class PersonelCrudController extends CrudController
             'attribute' => 'country_name',
         ]);
 
-        $this->crud->addColumn([
-            'name' => 'image', // The db column name
-            'label' => "Image", // Table column heading
-            'type' => 'image',
-        ]);
+        // $this->crud->addColumn([
+        //     'name' => 'image', // The db column name
+        //     'label' => "Image", // Table column heading
+        //     'type' => 'image',
+        // ]);
 
     }
 
@@ -317,7 +322,7 @@ class PersonelCrudController extends CrudController
         $this->crud->addField([
             'label' => "Upload Your Photo & Family Photo (Max 3mb)",
             'name' => "image",
-            'type' => 'image',
+            'type' => 'image_multiple',
             'crop' => true, // set to true to allow cropping, false to disable
             'aspect_ratio' => 1, // omit or set to 0 to allow any aspect ratio
             'tab' => 'Biodata',
@@ -504,7 +509,42 @@ class PersonelCrudController extends CrudController
         $this->crud->setRequest($request);
         $this->crud->unsetValidation(); // Validation has already been run
 
-        return $this->traitStore();
+        DB::beginTransaction();
+        try {
+            $result = $this->checkMultipleImage($request, null);
+            if(count($result['errors']) != 0){
+                DB::rollback();
+                return redirect($this->crud->route . '/create')->withInput()
+                ->withErrors($result['errors']);
+            }
+            // insert item in the db
+            $item = $this->crud->create($this->crud->getStrippedSaveRequest());
+            $this->data['entry'] = $this->crud->entry = $item;
+
+            foreach($result['valid_images'] as $index => $validImage){
+                $personelImage = new PersonelImage;
+                $path = $personelImage->setImagePersonel('public/images_personel', $validImage['image'], 'image', '_' . $index);
+                $personelImage->fill([
+                    'personel_id' => $item->id,
+                    'image' => $path,
+                    'label' => $validImage['label']
+                ]);
+                $personelImage->save();
+            }
+            
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
+
+        // show a success message
+        \Alert::success(trans('backpack::crud.insert_success'))->flash();
+
+        // save the redirect choice for next time
+        $this->crud->setSaveAction();
+
+        return $this->crud->performSaveAction($item->getKey());
     }
 
     /**
@@ -516,9 +556,10 @@ class PersonelCrudController extends CrudController
     function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+        CRUD::setValidation(PersonelUpdateRequest::class);
     }
 
-    function update()
+    function update($id)
     {
         $this->crud->setRequest($this->crud->validateRequest());
 
@@ -537,7 +578,115 @@ class PersonelCrudController extends CrudController
         $this->crud->setRequest($request);
         $this->crud->unsetValidation(); // Validation has already been run
 
-        return $this->traitUpdate();
+        DB::beginTransaction();
+        try {
+            $model = Personel::where('id', $id)->firstOrFail();
+            $result = $this->checkMultipleImage($request, $model);
+            if(count($result['errors']) != 0){
+                DB::rollback();
+                return redirect($this->crud->route . '/' . $id . '/edit')->withInput()
+                ->withErrors($result['errors']);
+            }
+            // update the row in the db
+            $item = $this->crud->update($request->get($this->crud->model->getKeyName()),
+                $this->crud->getStrippedSaveRequest());
+            $this->data['entry'] = $this->crud->entry = $item;
+            $validIds = $result['valid_ids'];
+            if(count($validIds) > 0){
+                $personelImages = PersonelImage::where('personel_id', $item->id)->whereNotIn('id', $validIds)->get();  
+                foreach($personelImages as $personelImage){
+                    $personelImage->delete();
+                }
+            }
+            else{
+                $personelImages = PersonelImage::where('personel_id', $item->id)->get();
+                foreach($personelImages as $personelImage){
+                    $personelImage->delete();
+                }          
+            }
+
+            foreach($result['valid_images'] as $index => $validImage){
+                $imageChange = $validImage['image_change'];
+                if($validImage['id'] == null){
+                    $personelImage = new PersonelImage;
+                }
+                else{
+                    $personelImage = PersonelImage::where('id', $validImage['id'])->where('personel_id', $item->id)->first();
+                    if($personelImage == null){
+                        $personelImage = new PersonelImage;
+                    }
+                }
+                if($imageChange){
+                    $path = $personelImage->setImagePersonel('public/images_personel', $validImage['image'], 'image', '_' . $index);
+                    $personelImage->fill([
+                        'personel_id' => $item->id,
+                        'image' => $path,
+                        'label' => $validImage['label']
+                    ]);
+                    $personelImage->save();
+                }
+                else if($personelImage->id != null){
+                    $personelImage->fill([
+                        'label' => $validImage['label']
+                    ]);
+                    $personelImage->save();
+                }
+            }
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
+
+        // show a success message
+        \Alert::success(trans('backpack::crud.update_success'))->flash();
+
+        // save the redirect choice for next time
+        $this->crud->setSaveAction();
+
+        return $this->crud->performSaveAction($item->getKey());
+    }
+
+
+    public function checkMultipleImage($request, $item){
+        $images = $request->image;
+        $labels = $request->image_label ?? [];
+        $imageIds = $request->image_ids ?? [];
+        $imageChanges = $request->image_change ?? [];
+        $validIds = [];
+        $validImages = [];
+        $errors = [];
+        if($images != null && count($images) > 0){
+            $i = 0;
+            foreach($images as $index => $image){
+                $i++;
+                $id = $imageIds[$index] ?? null;
+                $validId = false;
+                if($id != null && $item != null && PersonelImage::where('personel_id', $item->id)->where('id', $id)->exists()){
+                    $validIds[$id] = true;
+                    $validId = true;
+                }
+                $label = $labels[$index] ?? '';
+                if(strlen(trim($label)) == 0){
+                    $errors['image_label.' . $index] = [trans('validation.required', ['attribute' => 'image label ' . $i])];
+                }
+                else{
+                    $imageChange = $imageChanges[$index] ?? false;
+                    $validImages[] = [
+                        'id' => $validId ? $id : null,
+                        'image' => $image,
+                        'label' => $label,
+                        'image_change' => $item != null && $imageChange
+                    ];
+                }
+            }
+        }
+        return [
+            'valid_ids' => array_keys($validIds),
+            'valid_images' => $validImages,
+            'errors' => $errors
+        ];
     }
 
     function show()
@@ -545,6 +694,65 @@ class PersonelCrudController extends CrudController
         $this->crud->getCurrentEntry();
         $data['crud'] = $this->crud;
         return view('vendor.backpack.crud.showpersonel', $data);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param int $id
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
+    function edit($id)
+    {
+        $this->crud->hasAccessOrFail('update');
+        // get entry ID from Request (makes sure its the last ID for nested resources)
+        $id = $this->crud->getCurrentEntryId() ?? $id;
+        $fields = $this->crud->getUpdateFields();
+        $personelImages = PersonelImage::where('personel_id', $id)->select('id', 'label', 'image')->get();
+        $fields['image']['value'] = $personelImages->toArray();
+        $this->crud->setOperationSetting('fields', $fields);
+        // get the info for that entry
+        $this->data['entry'] = $this->crud->getEntry($id);
+        $this->data['crud'] = $this->crud;
+        $this->data['saveAction'] = $this->crud->getSaveAction();
+        $this->data['title'] = $this->crud->getTitle() ?? trans('backpack::crud.edit') . ' ' . $this->crud->entity_name;
+
+        $this->data['id'] = $id;
+
+        // load the view from /resources/views/vendor/backpack/crud/ if it exists, otherwise load the one in the package
+        return view($this->crud->getEditView(), $this->data);
+    }
+
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param int $id
+     *
+     * @return string
+     */
+    public function destroy($id)
+    {
+        $this->crud->hasAccessOrFail('delete');
+
+        // get entry ID from Request (makes sure its the last ID for nested resources)
+        $id = $this->crud->getCurrentEntryId() ?? $id;
+
+        DB::beginTransaction();
+        try{
+            $personelImages = PersonelImage::where('personel_id', $id)->get();
+            foreach($personelImages as $personelImage){
+                $personelImage->delete();
+            }
+            $response = $this->crud->delete($id);
+            DB::commit();
+            return $response;
+        }
+        catch(Exception $e){
+            DB::rollback();
+            throw $e;
+        }
     }
 
 }

@@ -7,7 +7,7 @@ use App\Http\Requests\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class PersonelRequest extends FormRequest
+class PersonelUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -51,13 +51,13 @@ class PersonelRequest extends FormRequest
         'valid_card_start' => 'required',
         'valid_card_end'=> 'required',
         'current_certificate_number'=> 'required',
+        // 'image' => ['nullable', new Base64Rule(3, ['png', 'jpg', 'jpeg'])],
         'certificate' => ['nullable', new Base64Rule(3, ['png', 'jpg', 'jpeg'])],
         'id_card' => ['nullable', new Base64Rule(3, ['png', 'jpg', 'jpeg'])],
-        // 'image' => ['nullable', new Base64Rule(3, ['png', 'jpg', 'jpeg'])],
         'image_ids' => ['nullable', 'array'],
         'image_ids.*' => 'nullable|regex:/^[0-9]+$/',
         'image' => ['nullable', 'array'],
-        'image.*' => ['required', new Base64Rule(3, ['png', 'jpg', 'jpeg'], false)],
+        'image.*' => ['required', new Base64Rule(3, ['png', 'jpg', 'jpeg'])],
         'image_label' => ['nullable', 'array'],
         'image_label.*' => ['required', 'string', 'max:255'],
         ];

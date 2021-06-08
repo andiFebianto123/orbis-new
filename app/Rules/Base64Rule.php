@@ -11,15 +11,17 @@ class Base64Rule implements Rule
     private $errorImage = false;
     private $size = 0;
     private $mimes = [];
+    private $checkImageChange;
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct($size, $mimes)
+    public function __construct($size, $mimes, $checkImageChange = true)
     {
         $this->size = $size;
         $this->mimes = $mimes;
+        $this->checkImageChange = $checkImageChange;
     }
 
     /**
@@ -31,7 +33,7 @@ class Base64Rule implements Rule
      */
     public function passes($attribute, $value)
     {
-        if(!request()->{$attribute . '_change'}){
+        if(!request()->{$attribute . '_change'} && $this->checkImageChange){
             return true;
         }
 

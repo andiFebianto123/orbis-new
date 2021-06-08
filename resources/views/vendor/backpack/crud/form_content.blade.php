@@ -1,4 +1,4 @@
-<input type="hidden" name="http_referrer" value={{ session('referrer_url_override') ?? old('http_referrer') ?? \URL::previous() ?? url($crud->route) }}>
+<input type="hidden" name="http_referrer" value={{ url($crud->route) }}>
 
 {{-- See if we're using tabs --}}
 @if ($crud->tabsEnabled() && count($crud->getTabs()))
@@ -120,15 +120,29 @@
         // console.error(window.errors);
 
         $.each(errors, function(property, messages){
-
-            var normalizedProperty = property.split('.').map(function(item, index){
+            var isFromPastor = @json($crud->fromPastor ?? false);
+            if(isFromPastor){
+              var currentIndex = 0;
+              var normalizedProperty = property.split('.').map(function(item, index){
+                    if(index !== 0){
+                      currentIndex = item;
+                    }
+                    return index === 0 ? item : '';
+                }).join('');
+              var field = $('[name="' + normalizedProperty + '[]"]').length ?
+                        $('[name="' + normalizedProperty + '[]"]').eq(currentIndex) :
+                        $('[name="' + normalizedProperty + '"]'),
+                        container = field.parents('.form-group');
+            }
+            else{
+              var normalizedProperty = property.split('.').map(function(item, index){
                     return index === 0 ? item : '['+item+']';
                 }).join('');
-
-            var field = $('[name="' + normalizedProperty + '[]"]').length ?
+              var field = $('[name="' + normalizedProperty + '[]"]').length ?
                         $('[name="' + normalizedProperty + '[]"]') :
                         $('[name="' + normalizedProperty + '"]'),
                         container = field.parents('.form-group');
+            }
 
             container.addClass('text-danger');
             container.children('input, textarea, select').addClass('is-invalid');
