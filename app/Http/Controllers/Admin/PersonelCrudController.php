@@ -462,6 +462,24 @@ class PersonelCrudController extends CrudController
         ]);
 
         $this->crud->addField([
+            'label' => "Upload Certificate (Max 3mb)",
+            'name' => "certificate",
+            'type' => 'image',
+            'crop' => true, // set to true to allow cropping, false to disable
+            'aspect_ratio' => 1, // omit or set to 0 to allow any aspect ratio
+            'tab' => 'Licensing Information',
+        ]);
+
+        $this->crud->addField([
+            'label' => "Upload ID Card (Max 3mb)",
+            'name' => "id_card",
+            'type' => 'image',
+            'crop' => true, // set to true to allow cropping, false to disable
+            'aspect_ratio' => 1, // omit or set to 0 to allow any aspect ratio
+            'tab' => 'Licensing Information',
+        ]);
+
+        $this->crud->addField([
             'name' => 'notes',
             'label' => "Notes",
             'type' => 'textarea',

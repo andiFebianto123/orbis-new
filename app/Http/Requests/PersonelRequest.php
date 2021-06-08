@@ -51,7 +51,9 @@ class PersonelRequest extends FormRequest
         'valid_card_start' => 'required',
         'valid_card_end'=> 'required',
         'current_certificate_number'=> 'required',
-        'image' => ['nullable', new Base64Rule(3, ['png', 'jpg', 'jpeg'])]
+        'image' => ['nullable', new Base64Rule(3, ['png', 'jpg', 'jpeg'])],
+        'certificate' => ['nullable', new Base64Rule(3, ['png', 'jpg', 'jpeg'])],
+        'id_card' => ['nullable', new Base64Rule(3, ['png', 'jpg', 'jpeg'])]
         ];
     }
 
