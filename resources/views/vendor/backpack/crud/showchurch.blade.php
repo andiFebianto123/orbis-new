@@ -182,7 +182,7 @@
 										<th>Status</th>
 										<th>Reason</th>
 										<th>Date</th>
-										<th>Action</th>
+										<th class="hidden-print">Action</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -220,7 +220,7 @@
 										<th>No.</th>
 										<th>Entity Name</th>
 										<th>Type</th>
-										<th>Action</th>
+										<th class="hidden-print">Action</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -258,7 +258,7 @@
 										<th>No.</th>
 										<th>Personal Name</th>
 										<th>Title</th>
-										<th>Action</th>
+										<th class="hidden-print">Action</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -351,6 +351,46 @@
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
 	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
+
+	<style>
+
+		@media print {
+			.btn-primary{
+				display:none;
+			}
+			.dataTables_info{
+				display:none;
+			}
+			.dataTables_paginate{
+				display:none;
+			}
+			.dataTables_filter{
+				display:none;
+			}
+			.dataTables_length{
+				display:none;
+			}
+			.btn-link{
+				display:none;
+			}
+			.la-edit{
+				display:none;
+			}
+			.no-padding{
+				display:none;
+			}
+			.hidden-print{
+				display:none;
+			}
+			.sorting:before{
+				visibility:hidden;
+			}
+			.sorting:after{
+				visibility:hidden;
+			}
+		}
+
+	</style>
 
 @endsection
 

@@ -256,7 +256,7 @@
 										<th>Subject</th>
 										<th>Date</th>
 										<th>Notes</th>
-										<th>Action</th>
+										<th class="hidden-print">Action</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -293,7 +293,7 @@
 									<tr >
 										<th>No.</th>
 										<th>Special Role</th>
-										<th>Action</th>
+										<th class="hidden-print">Action</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -333,7 +333,7 @@
 										<th>Office Address</th>
 										<th>Phone</th>
 										<th>Role</th>
-										<th>Action</th>
+										<th class="hidden-print">Action</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -370,13 +370,13 @@
 						<a href ="{{url('admin/educationbackground/create?personel_id='.$entry->id)}}" class = 'btn btn-primary btn-sm'>Add Education</a>
 							<table id ="tableEducationBackground" class = "table table-striped">
 								<thead>
-									<tr >
+									<tr>
 										<th>Degree</th>
 										<th>Type</th>
 										<th>Concentration</th>
 										<th>School</th>
 										<th>Year</th>
-										<th>Action</th>
+										<th class="hidden-print">Action</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -415,7 +415,7 @@
 									<tr>
   										<th>No.</th>
 										<th>Name</th>
-										<th>Action</th>
+										<th class="hidden-print">Action</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -452,7 +452,7 @@
   										<th>No.</th>
 										<th>Title</th>
 										<th>Description</th>
-										<th>Action</th>
+										<th class="hidden-print">Action</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -490,7 +490,7 @@
   										<th>No.</th>
 										<th>Title</th>
 										<th>Description</th>
-										<th>Action</th>
+										<th class="hidden-print">Action</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -528,7 +528,7 @@
 										<th>Status</th>
 										<th>Reason</th>
 										<th>Date</th>
-										<th>Action</th>
+										<th class="hidden-print">Action</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -622,6 +622,48 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
 	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
 
+	<style>
+
+		@media print {
+			@page { margin: 0.1cm; }
+			
+			.btn-primary{
+				display:none;
+			}
+			.dataTables_info{
+				display:none;
+			}
+			.dataTables_paginate{
+				display:none;
+			}
+			.dataTables_filter{
+				display:none;
+			}
+			.dataTables_length{
+				display:none;
+			}
+			.btn-link{
+				display:none;
+			}
+			.la-edit{
+				display:none;
+			}
+			.no-padding{
+				display:none;
+			}
+			.hidden-print{
+				display:none;
+			}
+			.sorting:before{
+				visibility:hidden;
+			}
+			.sorting:after{
+				visibility:hidden;
+			}
+		}
+
+	</style>
+	
 @endsection
 
 @section('after_scripts')
