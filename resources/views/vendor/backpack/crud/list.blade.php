@@ -22,13 +22,28 @@
 
 @section('content')
   <!-- Default box -->
+  @if(isset($crud->typeReport))
   <div class="row">
-
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link {{$crud->typeReport == 'annual' || $crud->typeReport == 'detail' ? 'active' : ''}}" aria-current="page" href="{{url($crud->routeAnnual)}}">{{$crud->entityNameAnnual}}</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link {{$crud->typeReport == 'designer' ? 'active' : ''}}" href="{{url($crud->routeDesigner)}}">Report Designer</a>
+    </li>
+  </ul>
+  </div>
+  @endif
+  <div class="row {{isset($crud->typeReport) ? 'card' : ''}}">
+    <!-- CUSTOM CARD HEADER REPORT ANNUAL -->
+    <div class="card-header">
+          {{$crud->entityName}}
+    </div>
     <!-- THE ACTUAL CONTENT -->
     <div class="{{ $crud->getListContentClass() }}">
 
         <div class="row mb-0">
-          <div class="col-sm-6">
+          <div class="col-sm-6" {{isset($crud->typeReport) ? 'style=padding:1em;' : ''  }}>
             @if ( $crud->buttons()->where('stack', 'top')->count() ||  $crud->exportButtons())
               <div class="d-print-none {{ $crud->hasAccess('create')?'with-border':'' }}">
 
@@ -37,7 +52,7 @@
               </div>
             @endif
           </div>
-          <div class="col-sm-6">
+          <div class="col-sm-6" {{isset($crud->typeReport) ? 'style=padding:1em;' : ''  }}>
             <div id="datatable_search_stack" class="mt-sm-0 mt-2 d-print-none"></div>
           </div>
         </div>
@@ -128,9 +143,7 @@
             <div id="datatable_button_stack" class="float-right text-right hidden-xs"></div>
           </div>
           @endif
-
     </div>
-
   </div>
 
 @endsection
@@ -147,6 +160,18 @@
 
   <!-- CRUD LIST CONTENT - crud_list_styles stack -->
   @stack('crud_list_styles')
+  @if(isset($crud->typeReport))
+  <style>
+      .card {
+        background-color: rgba(235, 241, 239, 1);
+      }
+      .card-header{
+        background-color: #b5c7e0;
+        font-size: 16px;
+        font-weight:bold;
+      }
+  </style>
+  @endif
 @endsection
 
 @section('after_scripts')

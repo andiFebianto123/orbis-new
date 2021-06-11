@@ -67,4 +67,9 @@ Route::group([
     Route::crud('childnamepastors', 'ChildNamePastorsCrudController');
     Route::crud('ministrybackgroundpastor', 'MinistryBackgroundPastorCrudController');
     Route::crud('careerbackgroundpastors', 'CareerBackgroundPastorsCrudController');
+    Route::crud('church-annual-report', 'ChurchAnnualReportCrudController');
+    Route::prefix('church-annual-report/{year}')->group(function(){
+        Route::crud('detail', 'ChurchAnnualReportCrudController');
+    });
+    Route::crud('church-report-designer', 'ChurchAnnualReportCrudController');
 }); // this should be the absolute last line of this file
