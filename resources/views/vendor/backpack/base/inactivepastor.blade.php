@@ -13,6 +13,7 @@
 							<table id ="tableInactivePastor" class = "table table-striped">
 								<thead>
 									<tr>
+										<th>No.</th>
 										<th>RC / DPW</th>
 										<th>Title</th>
 										<th>First Name</th>
@@ -45,6 +46,7 @@
 								<tbody>
 									@foreach($inactive_pastor_reports as $key => $inactive_pastor_report)
 										<tr>
+											<td></td>
 											<td>{{$inactive_pastor_report->rc_dpw_name}}</td>
 											<td>{{$inactive_pastor_report->short_desc}}</td>
 											<td>{{$inactive_pastor_report->first_name}}</td>
@@ -125,7 +127,13 @@
 
 	<script>
 		$(document).ready(function() {
-		$('#tableInactivePastor').DataTable( {
+		var t = $('#tableInactivePastor').DataTable( {
+        	"columnDefs": [ {
+				"searchable": false,
+				"orderable": false,
+				"targets": 0
+        	} ],
+        	"order": [[ 1, 'asc' ]],
 			"scrollY": true,
         	"scrollX": true,
 			"pagingType": "simple_numbers",
@@ -137,6 +145,12 @@
 				},
 			]
 		} );
+
+		t.on( 'order.dt search.dt', function () {
+			t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+				cell.innerHTML = i+1;
+			} );
+    	} ).draw();
 		$( "<hr>" ).insertAfter( ".buttons-excel" );
     	$(".dt-button").addClass("btn btn-sm btn btn-outline-primary");
 		} );
