@@ -72,7 +72,21 @@
 											<td>{{$pastor_report_detail_table->spouse_name}}</td>
                       						<td>{{$pastor_report_detail_table->spouse_date_of_birth}}</td>
 											<td>{{$pastor_report_detail_table->anniversary}}</td>
-											<td>{{$pastor_report_detail_table->acc_status}}</td>
+											<td>{{ App\Models\StatusHistory::leftJoin('status_histories as temps', function($leftJoin){
+													$leftJoin->on('temps.personel_id', 'status_histories.personel_id')
+													->where(function($innerQuery){
+														$innerQuery->whereRaw('status_histories.date_status < temps.date_status')
+														->orWhere(function($deepestQuery){
+															$deepestQuery->whereRaw('status_histories.date_status = temps.date_status')
+															->whereRaw('status_histories.id < temps.id');
+														});
+													});
+												})->whereNull('temps.id')
+												->join('account_status', 'account_status.id', 'status_histories.status_histories_id')
+												->where('status_histories.personel_id', $pastor_report_detail_table->id)
+												->select('account_status.acc_status')->first()->acc_status ?? '-'
+												}}
+											</td>
 											<td>{{$pastor_report_detail_table->first_licensed_on}}</td>
 											<td>{{$pastor_report_detail_table->card}}</td>
                       						<td>{{$pastor_report_detail_table->valid_card_start}}</td>
