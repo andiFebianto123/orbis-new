@@ -22,13 +22,13 @@
 
 @section('content')
   <!-- Default box -->
-  @if(isset($crud->typeReport))
-  <div class="row">
   @if (isset($crud->viewBeforeContent) && is_array($crud->viewBeforeContent))
           @foreach ($crud->viewBeforeContent as $name)
             @include($name)
           @endforeach
   @endif
+  @if(isset($crud->typeReport))
+  <div class="row">
   <ul class="nav nav-tabs">
     <li class="nav-item">
       <a class="nav-link {{$crud->typeReport == 'annual' || $crud->typeReport == 'detail' ? 'active' : ''}}" aria-current="page" href="{{url($crud->routeAnnual)}}">{{$crud->entityNameAnnual}}</a>

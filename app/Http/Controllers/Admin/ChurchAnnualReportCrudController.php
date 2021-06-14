@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\ChurchAnnualReportRequest;
 use Illuminate\Support\Facades\Route;
 use Carbon\Carbon;
+use App\Models\ChurchAnnualDesignerView;
+use App\Models\RcDpwList;
+use App\Models\ChurchEntityType;
+use App\Models\CountryList;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
@@ -162,6 +166,47 @@ class ChurchAnnualReportCrudController extends CrudController
         }
         else if($this->crud->typeReport == "detail"){
             $this->crud->addClause('year', $detailYear);
+        }
+        else{
+            if(! request()->ajax()){
+                $this->crud->rc_dpw = RcDpwList::select('id', 'rc_dpw_name')->get();
+                $this->crud->churchType = ChurchEntityType::select('id', 'entities_type')->get();
+                $this->crud->country = CountryList::select('id', 'country_name')->get();
+                $this->crud->churchStatus = ChurchAnnualDesignerView::select('status')->get();
+            }
+            if ($this->crud->getRequest()->filled('rc_dpw_id')) {
+                try{
+                    $this->crud->addClause('where', 'rc_dpw_name', $this->crud->getRequest()->rc_dpw_id);
+                }
+                catch(Exception $e){
+    
+                }
+            }
+            if ($this->crud->getRequest()->filled('church_type_id')) {
+                try{
+                    $this->crud->addClause('where', 'entities_type', $this->crud->getRequest()->church_type_id);
+                }
+                catch(Exception $e){
+    
+                }
+            }
+            if ($this->crud->getRequest()->filled('country_id')) {
+                try{
+                    $this->crud->addClause('where', 'country_name', $this->crud->getRequest()->country_id);
+                }
+                catch(Exception $e){
+    
+                }
+            }
+            if ($this->crud->getRequest()->filled('church_status_id')) {
+                try{
+                    $this->crud->addClause('where', 'status)', $this->crud->getRequest()->church_status_id);
+                }
+                catch(Exception $e){
+    
+                }
+            }
+            $this->crud->viewBeforeContent = ['annualreport.report_designer_panel'];
         }
         
     }
