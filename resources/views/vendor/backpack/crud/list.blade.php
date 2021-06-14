@@ -24,6 +24,11 @@
   <!-- Default box -->
   @if(isset($crud->typeReport))
   <div class="row">
+  @if (isset($crud->viewBeforeContent) && is_array($crud->viewBeforeContent))
+          @foreach ($crud->viewBeforeContent as $name)
+            @include($name)
+          @endforeach
+  @endif
   <ul class="nav nav-tabs">
     <li class="nav-item">
       <a class="nav-link {{$crud->typeReport == 'annual' || $crud->typeReport == 'detail' ? 'active' : ''}}" aria-current="page" href="{{url($crud->routeAnnual)}}">{{$crud->entityNameAnnual}}</a>
@@ -41,7 +46,18 @@
     </div>
     <!-- THE ACTUAL CONTENT -->
     <div class="{{ $crud->getListContentClass() }}">
-
+        @if(isset($crud->typeReport) && $crud->typeReport == "designer")
+        <div class="row col-md-12 mt-3">
+            <span class="col-sm-12 label-toggle"> Toggle Table : </span>
+        </div> 
+        <div class="row mt-2">
+          <div class="col-md-12">
+              @foreach ($crud->columns() as $index => $column)
+                    <div class="toggle-btn btn btn-primary mt-1 active" data-column="{{$loop->index}}">{!! $column['label'] !!}</div>
+              @endforeach
+          </div> 
+        </div>
+        @endif
         <div class="row mb-0">
           <div class="col-sm-6" {{isset($crud->typeReport) ? 'style=padding:1em;' : ''  }}>
             @if ( $crud->buttons()->where('stack', 'top')->count() ||  $crud->exportButtons())
@@ -162,14 +178,26 @@
   @stack('crud_list_styles')
   @if(isset($crud->typeReport))
   <style>
-      .card {
-        background-color: rgba(235, 241, 239, 1);
-      }
+      
       .card-header{
         background-color: #b5c7e0;
+        font-size: 20px;
+        font-weight:bold;
+      }
+
+      .label-toggle{
         font-size: 16px;
         font-weight:bold;
       }
+
+      .toggle-btn{
+        cursor:pointer;
+      }
+
+      .toggle-btn.not-active{
+        background-color: #7C69EF;
+      }
+
   </style>
   @endif
 @endsection
@@ -182,4 +210,5 @@
 
   <!-- CRUD LIST CONTENT - crud_list_scripts stack -->
   @stack('crud_list_scripts')
+  
 @endsection
