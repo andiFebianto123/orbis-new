@@ -14,10 +14,10 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Church Type</label>
-                    <select id="church-type-filter-select" name="church_type_id_filter" class="form-control" style="width:100%">
-                        @foreach ($crud->churchType as $churchType)
-                            <option value="{{$churchType->entities_type}}">{{$churchType->entities_type}}</option>
+                    <label>Title</label>
+                    <select id="title-filter-select" name="title_id_filter" class="form-control" style="width:100%">
+                        @foreach ($crud->title as $title)
+                            <option value="{{$title->short_desc}}">{{$title->short_desc}}</option>
                         @endforeach
                     </select>
                 </div>
@@ -30,12 +30,33 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Church Status</label>
-                    <select id="church-status-filter-select" name="church_status_id_filter" class="form-control" style="width:100%">
-                        @foreach ($crud->churchStatus as $churchStatus)
-                            <option value="{{$churchStatus->status}}">{{$churchStatus->status}}</option>
+                    <label>Pastor Status</label>
+                    <select id="pastor-status-filter-select" name="pastor_status_id_filter" class="form-control" style="width:100%">
+                        @foreach ($crud->pastorStatus as $pastorStatus)
+                            <option value="{{$pastorStatus->status}}">{{$pastorStatus->status}}</option>
                         @endforeach
                     </select>
+                </div>
+                <div class="form-group">
+                    <label>Card</label>
+                    <select id="card-filter-select" name="card_id_filter" class="form-control" style="width:100%">
+                        @foreach ($crud->card as $card)
+                            <option value="{{$card->card}}">{{$card->card}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <label>Filter Type</label>
+                <div class="form-check mb-4 mt-2">
+                <div class="form-check-inline col-sm-5">
+                    <label class="form-check-label">
+                        <input type="radio" class="form-check-input" id="filter_type" name="filter_type" value="all" checked>All
+                    </label>
+                </div>
+                <div class="form-check-inline col-sm-5">
+                    <label class="form-check-label">
+                        <input type="radio" class="form-check-input" id="filter_type" name="filter_type"  value="d90">Valid by D-90
+                    </label>
+                </div>
                 </div>
                 <button class="btn btn-primary" id="btn-search"><i class="la la-search"></i>&nbsp;Search</button>
             </div>
@@ -147,7 +168,7 @@
                 placeholder:"",
                 allowClear: true,
             });
-            $('#church-type-filter-select').select2({
+            $('#title-filter-select').select2({
                 theme: "bootstrap",
                 placeholder:"",
                 allowClear: true
@@ -157,19 +178,26 @@
                 placeholder:"",
                 allowClear:true
             });
-            $('#church-status-filter-select').select2({
+            $('#pastor-status-filter-select').select2({
                 theme: "bootstrap",
                 placeholder:"",
                 allowClear:true
+            });
+            $('#card-filter-select').select2({
+                theme: "bootstrap",
+                placeholder: "",
+                allowClear: true
             });
 
             $('#btn-search').click(function(){
                 var ajax_table = $("#crudTable").DataTable();
                 var current_url = ajax_table.ajax.url();
                 var new_url = addOrUpdateUriParameterCustom(current_url, 'rc_dpw_id', $('#rc-dpw-filter-select').val());
-                var new_url = addOrUpdateUriParameterCustom(new_url, 'church_type_id', $('#church-type-filter-select').val());
+                var new_url = addOrUpdateUriParameterCustom(new_url, 'title_id', $('#church-type-filter-select').val());
                 var new_url = addOrUpdateUriParameterCustom(new_url, 'country_id', $('#country-filter-select').val());
-                var new_url = addOrUpdateUriParameterCustom(new_url, 'church_status_id', $('#church-status-filter-select').val());
+                var new_url = addOrUpdateUriParameterCustom(new_url, 'pastor_status_id', $('#pastor-status-select').val());
+                var new_url = addOrUpdateUriParameterCustom(new_url, 'card_id', $('#card-filter-select').val());
+                var new_url = addOrUpdateUriParameterCustom(new_url, 'filter_type', $('#filter_type:checked').val());
                 new_url = normalizeAmpersandCustom(new_url.toString());
 				ajax_table.ajax.url(new_url).load();
             });

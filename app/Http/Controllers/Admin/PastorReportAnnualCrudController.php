@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\ChurchAnnualReportRequest;
-use Illuminate\Support\Facades\Route;
-use Carbon\Carbon;
-use App\Models\ChurchAnnualDesignerView;
+use App\Http\Requests\PastorReportAnnualRequest;
 use App\Models\RcDpwList;
-use App\Models\ChurchEntityType;
 use App\Models\CountryList;
+use App\Models\TitleList;
+use App\Models\PastorAnnualDesignerView;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Route;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
-class ChurchAnnualReportCrudController extends CrudController
+class PastorReportAnnualCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
 
@@ -35,7 +35,7 @@ class ChurchAnnualReportCrudController extends CrudController
                     'name' => 'year'
                 ],
                 [
-                    'label' => 'Churches',
+                    'label' => 'Pastor',
                     'type' => 'text',
                     'name' => 'total'
                 ]
@@ -49,34 +49,34 @@ class ChurchAnnualReportCrudController extends CrudController
                     'name' => 'rc_dpw_name'
                 ],
                 [
+                    'label' => 'Title',
+                    'type' => 'text',
+                    'name' => 'short_desc',
+                ],
+                [
+                    'label' => 'First Name',
+                    'type' => 'text',
+                    'name' => 'first_name'
+                ],
+                [
+                    'label' => 'Last Name',
+                    'type' => 'text',
+                    'name' => 'last_name'
+                ],
+                [
+                    'label' => 'Gender',
+                    'type' => 'text',
+                    'name' => 'gender'
+                ],
+                [
                     'label' => 'Church Name',
                     'type' => 'text',
-                    'name' => 'church_name',
+                    'name' => 'church_name'
                 ],
                 [
-                    'label' => 'Church Type',
+                    'label' => 'Address',
                     'type' => 'text',
-                    'name' => 'entities_type'
-                ],
-                [
-                    'label' => 'Lead Pastor Name',
-                    'type' => 'text',
-                    'name' => 'lead_pastor_name'
-                ],
-                [
-                    'label' => 'Contact Person',
-                    'type' => 'text',
-                    'name' => 'contact_person'
-                ],
-                [
-                    'label' => 'Church Address',
-                    'type' => 'text',
-                    'name' => 'church_address'
-                ],
-                [
-                    'label' => 'Office Address',
-                    'type' => 'text',
-                    'name' => 'office_address'
+                    'name' => 'street_address'
                 ],
                 [
                     'label' => 'City',
@@ -96,7 +96,7 @@ class ChurchAnnualReportCrudController extends CrudController
                 [
                     'label' => 'Country',
                     'type' => 'text',
-                    'name' => 'country'
+                    'name' => 'country_name'
                 ],
                 [
                     'label' => 'Phone',
@@ -114,7 +114,32 @@ class ChurchAnnualReportCrudController extends CrudController
                     'name' => 'email'
                 ],
                 [
-                    'label' => 'Church Status',
+                    'label' => 'Marital Status',
+                    'type' => 'text',
+                    'name' => 'marital_status'
+                ],
+                [
+                    'label' => 'Date of Birth',
+                    'type' => 'text',
+                    'name' => 'date_of_birth'
+                ],
+                [
+                    'label' => 'Spouse Name',
+                    'type' => 'text',
+                    'name' => 'spouse_name'
+                ],
+                [
+                    'label' => 'Spouse Date of Birth',
+                    'type' => 'text',
+                    'name' => 'spouse_date_of_birth'
+                ],
+                [
+                    'label' => 'Anniversary',
+                    'type' => 'text',
+                    'name' => 'anniversary'
+                ],
+                [
+                    'label' => 'Status',
                     'type' => 'closure',
                     'name' => 'status',
                     'function' => function($entries){
@@ -122,14 +147,29 @@ class ChurchAnnualReportCrudController extends CrudController
                     }
                 ],
                 [
-                    'label' => 'Founded On',
+                    'label' => 'First Licensed On',
                     'type' => 'text',
-                    'name' => 'founded_on'
+                    'name' => 'first_licensed_on'
                 ],
                 [
-                    'label' => 'Service Time Church',
+                    'label' => 'Card',
                     'type' => 'text',
-                    'name' => 'service_time_church'
+                    'name' => 'card'
+                ],
+                [
+                    'label' => 'Valid Card Start',
+                    'type' => 'text',
+                    'name' => 'valid_card_start'
+                ],
+                [
+                    'label' => 'Valid Card End',
+                    'type' => 'text',
+                    'name' => 'valid_card_end'
+                ],
+                [
+                    'label' => 'Current Certiicate Number',
+                    'type' => 'text',
+                    'name' => 'current_certificate_number'
                 ],
                 [
                     'label' => 'Notes',
@@ -146,17 +186,17 @@ class ChurchAnnualReportCrudController extends CrudController
     public function setupListReport()
     {
         $detailYear = $this->getCurrentYear();
-        $crudModel = $this->crud->typeReport == "annual" ? \App\Models\ChurchAnnualView::class : \App\Models\ChurchAnnualDesignerView::class;
+        $crudModel = $this->crud->typeReport == "annual" ? \App\Models\PastorAnnualView::class : \App\Models\PastorAnnualDesignerView::class;
         $crudRoute = $this->crud->typeReport == "annual" ? 
-        config('backpack.base.route_prefix') . '/church-annual-report' : 
-        ( $this->crud->typeReport == "designer" ? config('backpack.base.route_prefix') . '/church-report-designer' : 
-        config('backpack.base.route_prefix') . '/church-annual-report/' . $detailYear . '/detail');
-        $entityName = $this->crud->typeReport == "annual" ? "Church Annual Report" :  ( $this->crud->typeReport == "designer" ? "Church Report Designer" :
+        config('backpack.base.route_prefix') . '/pastor-annual-report' : 
+        ( $this->crud->typeReport == "designer" ? config('backpack.base.route_prefix') . '/pastor-report-designer' : 
+        config('backpack.base.route_prefix') . '/pastor-annual-report/' . $detailYear . '/detail');
+        $entityName = $this->crud->typeReport == "annual" ? "Pastor Annual Report" :  ( $this->crud->typeReport == "designer" ? "Pastor Report Designer" :
         "Church List " . $detailYear);
         $this->crud->entityName = $entityName;
-        $this->crud->entityNameAnnual = "Church Annual Report";
-        $this->crud->routeAnnual = config('backpack.base.route_prefix') . '/church-annual-report';
-        $this->crud->routeDesigner = config('backpack.base.route_prefix') . '/church-report-designer';
+        $this->crud->entityNameAnnual = "Pastor Annual Report";
+        $this->crud->routeAnnual = config('backpack.base.route_prefix') . '/pastor-annual-report';
+        $this->crud->routeDesigner = config('backpack.base.route_prefix') . '/pastor-report-designer';
 
         CRUD::setModel($crudModel);
         CRUD::setRoute($crudRoute);
@@ -173,9 +213,10 @@ class ChurchAnnualReportCrudController extends CrudController
         else{
             if(! request()->ajax()){
                 $this->crud->rc_dpw = RcDpwList::select('id', 'rc_dpw_name')->get();
-                $this->crud->churchType = ChurchEntityType::select('id', 'entities_type')->get();
+                $this->crud->card = PastorAnnualDesignerView::select('id', 'card')->get();
                 $this->crud->country = CountryList::select('id', 'country_name')->get();
-                $this->crud->churchStatus = ChurchAnnualDesignerView::select('status')->get();
+                $this->crud->pastorStatus = PastorAnnualDesignerView::select('status')->get();
+                $this->crud->title = TitleList::select('id', 'short_desc')->get();
             }
             if ($this->crud->getRequest()->filled('rc_dpw_id')) {
                 try{
@@ -185,9 +226,9 @@ class ChurchAnnualReportCrudController extends CrudController
     
                 }
             }
-            if ($this->crud->getRequest()->filled('church_type_id')) {
+            if ($this->crud->getRequest()->filled('title_id')) {
                 try{
-                    $this->crud->addClause('where', 'entities_type', $this->crud->getRequest()->church_type_id);
+                    $this->crud->addClause('where', 'short_desc', $this->crud->getRequest()->church_type_id);
                 }
                 catch(Exception $e){
     
@@ -201,15 +242,36 @@ class ChurchAnnualReportCrudController extends CrudController
     
                 }
             }
-            if ($this->crud->getRequest()->filled('church_status_id')) {
+            if ($this->crud->getRequest()->filled('pastor_status_id')) {
                 try{
-                    $this->crud->addClause('where', 'status', $this->crud->getRequest()->church_status_id);
+                    $this->crud->addClause('where', 'status', $this->crud->getRequest()->pastor_status_id);
                 }
                 catch(Exception $e){
     
                 }
             }
-            $this->crud->viewBeforeContent = ['annualreport.report_designer_panel'];
+            if ($this->crud->getRequest()->filled('card_id')) {
+                try{
+                    $this->crud->addClause('where', 'card', $this->crud->getRequest()->card_id);
+                }
+                catch(Exception $e){
+    
+                }
+            }
+            if ($this->crud->getRequest()->filled('filter_type')) {
+                try{
+                    if($this->crud->getRequest()->filter_type == 'd90'){
+                        $realDateNow = Carbon::now();
+                        $maximumDateValid = $realDateNow->copy()->subDays(90);
+                        $this->crud->addClause('whereDate', 'valid_card_end', '<=', $realDateNow->toDateString());
+                        $this->crud->addClause('whereDate', 'valid_card_end', '>=', $maximumDateValid->toDateString());
+                    }                    
+                }
+                catch(Exception $e){
+    
+                }
+            }
+            $this->crud->viewBeforeContent = ['annualreport.report_designer_pastor_panel'];
         }
         
     }
@@ -218,7 +280,7 @@ class ChurchAnnualReportCrudController extends CrudController
     {
         $route = explode('/',Route::current()->uri);
 
-        return Route::current()->parameter('year') != null ? 'detail' : (preg_match('/church-report-designer/', $route[1]) ? 'designer' : 'annual');
+        return Route::current()->parameter('year') != null ? 'detail' : (preg_match('/pastor-report-designer/', $route[1]) ? 'designer' : 'annual');
     }
 
     private function getCurrentYear()
