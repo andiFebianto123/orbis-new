@@ -48,7 +48,7 @@
     <div class="{{ $crud->getListContentClass() }}">
         @if(isset($crud->typeReport) && $crud->typeReport == "designer")
         <div class="row col-md-12 mt-3">
-            <span class="col-sm-12 label-toggle"> Toggle Table : </span>
+            <span class="col-sm-12 label-toggle"> Toggle Column Visibilty : </span>
         </div> 
         <div class="row mt-2">
           <div class="col-md-12">
