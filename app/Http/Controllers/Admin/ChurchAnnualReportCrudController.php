@@ -9,12 +9,17 @@ use App\Models\ChurchAnnualDesignerView;
 use App\Models\RcDpwList;
 use App\Models\ChurchEntityType;
 use App\Models\CountryList;
+use App\Exports\ExportAnnualReport;
+use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 class ChurchAnnualReportCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
+
+    protected $listColumns;
 
     public function setup()
     {
@@ -96,7 +101,7 @@ class ChurchAnnualReportCrudController extends CrudController
                 [
                     'label' => 'Country',
                     'type' => 'text',
-                    'name' => 'country'
+                    'name' => 'country_name'
                 ],
                 [
                     'label' => 'Phone',
@@ -111,7 +116,7 @@ class ChurchAnnualReportCrudController extends CrudController
                 [
                     'label' => 'Email',
                     'type' => 'text',
-                    'name' => 'email'
+                    'name' => 'first_email'
                 ],
                 [
                     'label' => 'Church Status',
@@ -141,6 +146,7 @@ class ChurchAnnualReportCrudController extends CrudController
         else{
             $this->crud->denyAccess('list');
         }
+        
     }
 
     public function setupListReport()
@@ -157,6 +163,9 @@ class ChurchAnnualReportCrudController extends CrudController
         $this->crud->entityNameAnnual = "Church Annual Report";
         $this->crud->routeAnnual = config('backpack.base.route_prefix') . '/church-annual-report';
         $this->crud->routeDesigner = config('backpack.base.route_prefix') . '/church-report-designer';
+        $this->crud->viewAfterContent = ['export_report'];
+        $this->crud->routeExport =  $this->crud->typeReport == "annual" ?  '/church-annual-report' : ( $this->crud->typeReport == "designer" ? '/church-report-designer' : 
+        '/church-annual-report/' . $detailYear . '/detail');
 
         CRUD::setModel($crudModel);
         CRUD::setRoute($crudRoute);
@@ -175,7 +184,7 @@ class ChurchAnnualReportCrudController extends CrudController
                 $this->crud->rc_dpw = RcDpwList::select('id', 'rc_dpw_name')->get();
                 $this->crud->churchType = ChurchEntityType::select('id', 'entities_type')->get();
                 $this->crud->country = CountryList::select('id', 'country_name')->get();
-                $this->crud->churchStatus = ChurchAnnualDesignerView::select('status')->get();
+                $this->crud->churchStatus = ChurchAnnualDesignerView::select('status')->groupBy('status')->get();
             }
             if ($this->crud->getRequest()->filled('rc_dpw_id')) {
                 try{
@@ -224,5 +233,41 @@ class ChurchAnnualReportCrudController extends CrudController
     private function getCurrentYear()
     {
         return Route::current()->parameter('year');
+    }
+
+    public function exportReport(Request $request)
+    {
+        $visibleColumn = $request->visible_column;
+        $type = 'church_' . $this->crud->typeReport;
+        $year = $this->getCurrentYear() ?? 0;
+        $fileName = $this->crud->typeReport == 'annual' ? 'Church Annual Report' : ($this->crud->typeReport == 'detail' ? 'Church List ' . $year : 'Church Report');
+        $this->setupListOperation();
+        $columnList = CRUD::columns();
+        $realVisibleColumn = [];
+        $index = 0;
+        $filterBy = [];
+        if($this->crud->typeReport == 'designer')
+        {
+            if($request->rc_dpw_id != "null"){
+                $filterBy['rc_dpw_name'] = $request->rc_dpw_id;
+            }
+            if($request->church_type_id != "null"){
+                $filterBy['entities_type'] = $request->church_type_id;
+            }
+            if($request->country_id != "null"){
+                $filterBy['country_name'] = $request->country_id;
+            }
+            if($request->church_status_id != "null"){
+                $filterBy['status'] = $request->church_status_id;
+            }
+        }
+        
+        foreach($columnList as $indexColumn => $columnData){
+            if($this->crud->typeReport  != 'designer' || (isset($visibleColumn) && in_array($index, $visibleColumn))){
+                $realVisibleColumn[$indexColumn] = $columnData['label'];
+            }
+            $index++;
+        }
+        return Excel::download(new ExportAnnualReport($type, $realVisibleColumn, $year, $filterBy), $fileName . '.xlsx');
     }
 }

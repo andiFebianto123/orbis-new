@@ -77,6 +77,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/URI.js/1.18.2/URI.min.js" type="text/javascript"></script>
 
 <script>
+        var realSearchUrl = null;
         if (jQuery.ui) {
                 var datepicker = $.fn.datepicker.noConflict();
                 $.fn.bootstrapDP = datepicker;
@@ -193,12 +194,13 @@
                 var ajax_table = $("#crudTable").DataTable();
                 var current_url = ajax_table.ajax.url();
                 var new_url = addOrUpdateUriParameterCustom(current_url, 'rc_dpw_id', $('#rc-dpw-filter-select').val());
-                var new_url = addOrUpdateUriParameterCustom(new_url, 'title_id', $('#church-type-filter-select').val());
+                var new_url = addOrUpdateUriParameterCustom(new_url, 'title_id', $('#title-filter-select').val());
                 var new_url = addOrUpdateUriParameterCustom(new_url, 'country_id', $('#country-filter-select').val());
-                var new_url = addOrUpdateUriParameterCustom(new_url, 'pastor_status_id', $('#pastor-status-select').val());
+                var new_url = addOrUpdateUriParameterCustom(new_url, 'pastor_status_id', $('#pastor-status-filter-select').val());
                 var new_url = addOrUpdateUriParameterCustom(new_url, 'card_id', $('#card-filter-select').val());
                 var new_url = addOrUpdateUriParameterCustom(new_url, 'filter_type', $('#filter_type:checked').val());
                 new_url = normalizeAmpersandCustom(new_url.toString());
+                realSearchUrl = normalizeAmpersandCustom(new_url.toString());
 				ajax_table.ajax.url(new_url).load();
             });
         });

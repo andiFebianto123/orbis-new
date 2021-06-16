@@ -10,7 +10,7 @@ class PastorAnnualView extends Model
     use CrudTrait;
 
     public function ExportExcelButton(){
-        return '<a href="javascript:void(0)"  onclick="exportReport(this,AnnualReport)" class="btn btn-xs btn-success"><i class="la la-file-excel-o"></i> Export Button</a>';
+        return '<a href="javascript:void(0)"  onclick="exportReport()" class="btn btn-xs btn-success"><i class="la la-file-excel-o"></i> Export Button</a>';
     }
 
     public function DetailButton(){

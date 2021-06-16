@@ -68,13 +68,19 @@ Route::group([
     Route::crud('ministrybackgroundpastor', 'MinistryBackgroundPastorCrudController');
     Route::crud('careerbackgroundpastors', 'CareerBackgroundPastorsCrudController');
     Route::crud('church-annual-report', 'ChurchAnnualReportCrudController');
+    Route::post('church-annual-report/export-report', 'ChurchAnnualReportCrudController@exportReport');
     Route::prefix('church-annual-report/{year}')->group(function(){
         Route::crud('detail', 'ChurchAnnualReportCrudController');
+        Route::post('detail/export-report', 'ChurchAnnualReportCrudController@exportReport');
     });
     Route::crud('church-report-designer', 'ChurchAnnualReportCrudController');
+    Route::post('church-report-designer/export-report','ChurchAnnualReportCrudController@exportReport');
     Route::crud('pastor-annual-report', 'PastorReportAnnualCrudController');
+    Route::post('pastor-annual-report/export-report', 'PastorReportAnnualCrudController@exportReport');
     Route::prefix('pastor-annual-report/{year}')->group(function(){
         Route::crud('detail', 'PastorReportAnnualCrudController');
+        Route::post('detail/export-report', 'PastorReportAnnualCrudController@exportReport');
     });
     Route::crud('pastor-report-designer', 'PastorReportAnnualCrudController');
+    ROute::post('pastor-report-designer/export-report', 'PastorReportAnnualCrudController@exportReport');
 }); // this should be the absolute last line of this file

@@ -40,10 +40,12 @@
   </div>
   @endif
   <div class="row {{isset($crud->typeReport) ? 'card' : ''}}">
+    @if(isset($crud->typeReport))
     <!-- CUSTOM CARD HEADER REPORT ANNUAL -->
     <div class="card-header">
           {{$crud->entityName}}
     </div>
+    @endif
     <!-- THE ACTUAL CONTENT -->
     <div class="{{ $crud->getListContentClass() }}">
         @if(isset($crud->typeReport) && $crud->typeReport == "designer")
@@ -160,6 +162,11 @@
           </div>
           @endif
     </div>
+      @if (isset($crud->viewAfterContent) && is_array($crud->viewAfterContent))
+          @foreach ($crud->viewAfterContent as $name)
+            @include($name)
+          @endforeach
+        @endif
   </div>
 
 @endsection

@@ -34,6 +34,7 @@ class UserRequest extends FormRequest
             'privilege' => 'required',
             'password' => Rule::requiredIf($this->method() == 'POST'),
             'status_user' => 'required',
+            'role_id' => 'required',
         ];
     }
 

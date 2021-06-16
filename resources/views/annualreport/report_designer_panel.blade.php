@@ -56,6 +56,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/URI.js/1.18.2/URI.min.js" type="text/javascript"></script>
 
 <script>
+        var realSearchUrl = null;
         if (jQuery.ui) {
                 var datepicker = $.fn.datepicker.noConflict();
                 $.fn.bootstrapDP = datepicker;
@@ -171,6 +172,7 @@
                 var new_url = addOrUpdateUriParameterCustom(new_url, 'country_id', $('#country-filter-select').val());
                 var new_url = addOrUpdateUriParameterCustom(new_url, 'church_status_id', $('#church-status-filter-select').val());
                 new_url = normalizeAmpersandCustom(new_url.toString());
+                realSearchUrl = normalizeAmpersandCustom(new_url.toString());
 				ajax_table.ajax.url(new_url).load();
             });
         });

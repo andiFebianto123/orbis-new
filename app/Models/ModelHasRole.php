@@ -3,8 +3,9 @@
 namespace App\Models;
 
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
-use Spatie\Permission\Models\Role as SpatieRole;
-class Role extends SpatieRole
+use Illuminate\Database\Eloquent\Model;
+
+class ModelHasRole extends Model
 {
     use CrudTrait;
 
@@ -14,10 +15,13 @@ class Role extends SpatieRole
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'roles';
+    protected $table = 'model_has_roles';
     protected $fillable = [
-        'name',
-        'guard_name',
+        'role_id',
+        'model_type',
+        'model_id',
+        'created_at',
+        'updated_at'
     ];
     // protected $primaryKey = 'id';
     // public $timestamps = false;
@@ -26,14 +30,14 @@ class Role extends SpatieRole
     // protected $hidden = [];
     // protected $dates = [];
 
-    public function model()
+    public function role()
     {
-        return $this->hasMany('App\Models\Role', 'role_id', 'id');
+        return $this->belongsTo('App\Models\Role', 'role_id', 'id');
     }
 
     public function user()
     {
-        return $this->hasMany('App\Models\User', 'role_id', 'id');
+        return $this->belongsTo('App\Models\User', 'model_id', 'id');
     }
 
     /*

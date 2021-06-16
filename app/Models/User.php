@@ -26,7 +26,7 @@ class User extends Authenticatable
         'email',
         'password',
         'privilege',
-        'role',
+        'role_id',
         'status_user',
     ];
 
@@ -43,4 +43,15 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function model()
+    {
+        return $this->hasMany('App\Models\ModelHasRole', 'model_id', 'id');
+    }
+
+    public function role()
+    {
+        return $this->belongsTo('App\Models\Role', 'role_id', 'id');
+    }
+
 }
