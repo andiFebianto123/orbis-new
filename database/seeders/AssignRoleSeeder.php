@@ -21,12 +21,12 @@ class AssignRoleSeeder extends Seeder
         $role_id = Role::where('name', 'Super Admin')->first();
         if(ModelHasRole::where('model_id', 1)->count() != 0){
             ModelHasRole::where('model_id', 1)->update([
-                'role_id' => $role_id ?? 3
+                'role_id' => $role_id->id ?? 3
             ]);
         }
         else{
             ModelHasRole::create([
-                'role_id' => $role_id ?? 3,
+                'role_id' => $role_id->id ?? 3,
                 'model_type' => 'App\Models\User',
                 'model_id' => 1
             ]);
