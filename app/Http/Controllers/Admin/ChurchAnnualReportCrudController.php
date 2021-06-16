@@ -63,11 +63,11 @@ class ChurchAnnualReportCrudController extends CrudController
                     'type' => 'text',
                     'name' => 'entities_type'
                 ],
-                [
-                    'label' => 'Lead Pastor Name',
-                    'type' => 'text',
-                    'name' => 'lead_pastor_name'
-                ],
+                // [
+                //     'label' => 'Lead Pastor Name',
+                //     'type' => 'text',
+                //     'name' => 'lead_pastor_name'
+                // ],
                 [
                     'label' => 'Contact Person',
                     'type' => 'text',

@@ -41,6 +41,8 @@
   @endif
   <div class="row {{isset($crud->typeReport) ? 'card' : ''}}">
     @if(isset($crud->typeReport))
+    <div class="overlay"></div>
+
     <!-- CUSTOM CARD HEADER REPORT ANNUAL -->
     <div class="card-header">
           {{$crud->entityName}}
