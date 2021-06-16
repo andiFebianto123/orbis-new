@@ -14,22 +14,21 @@ class CreateChurchAnnualView extends Migration
     public function up()
     {
         DB::statement("DROP VIEW IF EXISTS church_annual_views");
-        DB::statement("delimiter //
+        DB::unprepared("
 
         CREATE FUNCTION `func_inc_var_session`() RETURNS int
             NO SQL
             NOT DETERMINISTIC
              begin
-              SET @var := @var + 1;
+              SET @var := IFNULL(@var,0) + 1;
               return @var;
              end
-             //
+             
         
-        delimiter ;");
+             ");
         DB::statement("CREATE VIEW church_annual_views AS 
         SELECT func_inc_var_session() as id, ct.* from(
-            SELECT count(founded_on) AS total , YEAR(founded_on) AS year FROM churches, 
-            (SELECT @row_number:=0) AS t
+            SELECT count(founded_on) AS total , YEAR(founded_on) AS year FROM churches 
             WHERE founded_on IS NOT NULL
             GROUP BY year)
         as ct");

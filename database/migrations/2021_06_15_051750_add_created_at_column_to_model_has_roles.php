@@ -13,6 +13,13 @@ class AddCreatedAtColumnToModelHasRoles extends Migration
      */
     public function up()
     {
+        if(Schema::hasColumn('model_has_roles', 'created_at')){
+            Schema::table('model_has_roles', function (Blueprint $table)
+            {   
+                $table->dropColumn('created_at'); //drop it
+                $table->dropColumn('updated_at'); //drop it
+            });
+        }
         Schema::table('model_has_roles', function (Blueprint $table) {
             $table->string('created_at')->after('model_id');
             $table->string('updated_at')->after('created_at');        
