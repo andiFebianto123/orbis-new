@@ -91,7 +91,7 @@
 											@php
 											$image = $current_image->image;
 											@endphp
-											<img width="150px" style="margin:15px ; border-radius: 50%" src="{{url($image)}}" alt="">
+											<img width="150px" style="margin:15px" src="{{url($image)}}" alt="">
 										@endforeach
 									</td>
 								<tr>
@@ -137,7 +137,7 @@
 											@php
 											$image = $current_image->image;
 											@endphp
-											<img width="150px" style="margin:15px ; border-radius: 50%" src="{{url($image)}}" alt="">
+											<img width="150px" style="margin:15px" src="{{url($image)}}" alt="">
 										@endforeach
 									</td>
 								</tr>
@@ -256,7 +256,9 @@
 										<th>Subject</th>
 										<th>Date</th>
 										<th>Notes</th>
+										@if(backpack_user()->hasRole(['Super Admin','Editor']))
 										<th class="hidden-print">Action</th>
+										@endif
 									</tr>
 								</thead>
 								<tbody>
@@ -265,11 +267,13 @@
 											<td>{{$ah->title_appointment}}</td>
 											<td>{{$ah->date_appointment}}</td>
 											<td>{{$ah->notes}}</td>
+											@if(backpack_user()->hasRole(['Super Admin','Editor']))
 											<td>
 											<a href="{{url('admin/appointment_history/'.$ah->id.'/edit')}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
 											data-route="{{ url('admin/appointment_history/'.$ah->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
+											@endif
 										</tr>
 									@endforeach
 								</tbody>
@@ -287,13 +291,17 @@
 				<div class="card-body">
 					<div class = "row">
 						<div class="col-md-12">
-						<a href ="{{url('admin/specialrolepersonel/create?personel_id='.$entry->id)}}" class = 'btn btn-primary btn-sm'>Add Special Role</a>
+						@if(backpack_user()->hasRole(['Super Admin','Editor']))
+							<a href ="{{url('admin/specialrolepersonel/create?personel_id='.$entry->id)}}" class = 'btn btn-primary btn-sm'>Add Special Role</a>
+						@endif
 							<table id ="tableSpecialRolePersonel" class = "table table-striped">
 								<thead>
 									<tr >
 										<th>No.</th>
 										<th>Special Role</th>
+										@if(backpack_user()->hasRole(['Super Admin','Editor']))
 										<th class="hidden-print">Action</th>
+										@endif
 									</tr>
 								</thead>
 								<tbody>
@@ -301,11 +309,13 @@
 										<tr>
   											<td></td>
 											<td>{{$srp->special_role_personel->special_role}}</td>
+											@if(backpack_user()->hasRole(['Super Admin','Editor']))
 											<td>
 											<a href="{{url('admin/specialrolepersonel/'.$srp->id.'/edit')}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
 											data-route="{{ url('admin/specialrolepersonel/'.$srp->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
+											@endif
 										</tr>
 									@endforeach
 								</tbody>
@@ -323,7 +333,9 @@
 				<div class="card-body">
 					<div class = "row">
 						<div class="col-md-12">
-						<a href ="{{url('admin/relatedentity/create?personel_id='.$entry->id)}}" class = 'btn btn-primary btn-sm'>Add Related Entity</a>
+						@if(backpack_user()->hasRole(['Super Admin','Editor']))
+							<a href ="{{url('admin/relatedentity/create?personel_id='.$entry->id)}}" class = 'btn btn-primary btn-sm'>Add Related Entity</a>
+						@endif
 							<table id ="tableRelatedEntity" class = "table table-striped">
 								<thead>
 									<tr >
@@ -333,7 +345,9 @@
 										<th>Office Address</th>
 										<th>Phone</th>
 										<th>Role</th>
+										@if(backpack_user()->hasRole(['Super Admin','Editor']))
 										<th class="hidden-print">Action</th>
+										@endif
 									</tr>
 								</thead>
 								<tbody>
@@ -345,11 +359,13 @@
 											<td>{{$re->office_address_entity}}</td>
 											<td>{{$re->phone}}</td>
 											<td>{{$re->role}}</td>
+											@if(backpack_user()->hasRole(['Super Admin','Editor']))
 											<td>
 											<a href="{{url('admin/relatedentity/'.$re->id.'/edit')}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
 											data-route="{{ url('admin/relatedentity/'.$re->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
+											@endif
 										</tr>
 									@endforeach
 								</tbody>
@@ -367,7 +383,9 @@
 				<div class="card-body">
 					<div class = "row">
 						<div class="col-md-12">
-						<a href ="{{url('admin/educationbackground/create?personel_id='.$entry->id)}}" class = 'btn btn-primary btn-sm'>Add Education</a>
+						@if(backpack_user()->hasRole(['Super Admin','Editor']))
+							<a href ="{{url('admin/educationbackground/create?personel_id='.$entry->id)}}" class = 'btn btn-primary btn-sm'>Add Education</a>
+						@endif
 							<table id ="tableEducationBackground" class = "table table-striped">
 								<thead>
 									<tr>
@@ -376,7 +394,9 @@
 										<th>Concentration</th>
 										<th>School</th>
 										<th>Year</th>
+										@if(backpack_user()->hasRole(['Super Admin','Editor']))
 										<th class="hidden-print">Action</th>
+										@endif
 									</tr>
 								</thead>
 								<tbody>
@@ -387,11 +407,13 @@
 											<td>{{$eb->concentration_education}}</td>
 											<td>{{$eb->school}}</td>
 											<td>{{$eb->year}}</td>
+											@if(backpack_user()->hasRole(['Super Admin','Editor']))
 											<td>
 											<a href="{{url('admin/educationbackground/'.$eb->id.'/edit')}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
 											data-route="{{ url('admin/educationbackground/'.$eb->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
+											@endif
 										</tr>
 									@endforeach
 								</tbody>
@@ -409,13 +431,17 @@
 				<div class="card-body">
 					<div class = "row">
 						<div class="col-md-12">
-						<a href ="{{url('admin/childnamepastors/create?personel_id='.$entry->id)}}" class = 'btn btn-primary btn-sm'>Add Child's Name</a>
+						@if(backpack_user()->hasRole(['Super Admin','Editor']))
+							<a href ="{{url('admin/childnamepastors/create?personel_id='.$entry->id)}}" class = 'btn btn-primary btn-sm'>Add Child's Name</a>
+						@endif
 							<table id ="tableChildName" class = "table table-striped">
 								<thead>
 									<tr>
   										<th>No.</th>
 										<th>Name</th>
+										@if(backpack_user()->hasRole(['Super Admin','Editor']))
 										<th class="hidden-print">Action</th>
+										@endif
 									</tr>
 								</thead>
 								<tbody>
@@ -423,11 +449,13 @@
 										<tr>
   											<td></td>
 											<td>{{$cnp->child_name }}</td>
+											@if(backpack_user()->hasRole(['Super Admin','Editor']))
 											<td>
 											<a href="{{url('admin/childnamepastors/'.$cnp->id.'/edit')}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
 											data-route="{{ url('admin/childnamepastors/'.$cnp->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
+											@endif
 										</tr>
 									@endforeach
 								</tbody>
@@ -445,14 +473,18 @@
 				<div class="card-body">
 					<div class = "row">
 						<div class="col-md-12">
-						<a href ="{{url('admin/ministrybackgroundpastor/create?personel_id='.$entry->id)}}" class = 'btn btn-primary btn-sm'>Add Ministry Background</a>
+						@if(backpack_user()->hasRole(['Super Admin','Editor']))
+							<a href ="{{url('admin/ministrybackgroundpastor/create?personel_id='.$entry->id)}}" class = 'btn btn-primary btn-sm'>Add Ministry Background</a>
+						@endif
 							<table id ="tableMinistryBackground" class = "table table-striped">
 								<thead>
 									<tr>
   										<th>No.</th>
 										<th>Title</th>
 										<th>Description</th>
+										@if(backpack_user()->hasRole(['Super Admin','Editor']))
 										<th class="hidden-print">Action</th>
+										@endif
 									</tr>
 								</thead>
 								<tbody>
@@ -461,11 +493,13 @@
   											<td></td>
 											<td>{{$mbp->ministry_title }}</td>
 											<td>{{$mbp->ministry_description }}</td>
+											@if(backpack_user()->hasRole(['Super Admin','Editor']))
 											<td>
 											<a href="{{url('admin/ministrybackgroundpastor/'.$mbp->id.'/edit')}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
 											data-route="{{ url('admin/ministrybackgroundpastor/'.$mbp->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
+											@endif
 										</tr>
 									@endforeach
 								</tbody>
@@ -483,14 +517,18 @@
 				<div class="card-body">
 					<div class = "row">
 						<div class="col-md-12">
-						<a href ="{{url('admin/careerbackgroundpastors/create?personel_id='.$entry->id)}}" class = 'btn btn-primary btn-sm'>Add Career Background</a>
+						@if(backpack_user()->hasRole(['Super Admin','Editor']))
+							<a href ="{{url('admin/careerbackgroundpastors/create?personel_id='.$entry->id)}}" class = 'btn btn-primary btn-sm'>Add Career Background</a>
+						@endif
 							<table id ="tableCareerBackground" class = "table table-striped">
 								<thead>
 									<tr>
   										<th>No.</th>
 										<th>Title</th>
 										<th>Description</th>
+										@if(backpack_user()->hasRole(['Super Admin','Editor']))
 										<th class="hidden-print">Action</th>
+										@endif
 									</tr>
 								</thead>
 								<tbody>
@@ -499,11 +537,13 @@
   											<td></td>
 											<td>{{$cbp->career_title }}</td>
 											<td>{{$cbp->career_description }}</td>
+											@if(backpack_user()->hasRole(['Super Admin','Editor']))
 											<td>
 											<a href="{{url('admin/careerbackgroundpastors/'.$cbp->id.'/edit')}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
 											data-route="{{ url('admin/careerbackgroundpastors/'.$cbp->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
+											@endif
 										</tr>
 									@endforeach
 								</tbody>
@@ -521,14 +561,18 @@
 				<div class="card-body">
 					<div class = "row">
 						<div class="col-md-12">
-						<a href ="{{url('admin/statushistory/create?personel_id='.$entry->id)}}" class = 'btn btn-primary btn-sm'>Add Status</a>
+						@if(backpack_user()->hasRole(['Super Admin','Editor']))
+							<a href ="{{url('admin/statushistory/create?personel_id='.$entry->id)}}" class = 'btn btn-primary btn-sm'>Add Status</a>
+						@endif
 							<table id ="tableStatusHistory" class = "table table-striped">
 								<thead>
 									<tr >
 										<th>Status</th>
 										<th>Reason</th>
 										<th>Date</th>
+										@if(backpack_user()->hasRole(['Super Admin','Editor']))
 										<th class="hidden-print">Action</th>
+										@endif
 									</tr>
 								</thead>
 								<tbody>
@@ -537,11 +581,13 @@
 											<td>{{$sh->accountstatushistories->acc_status}}</td>
 											<td>{{$sh->reason}}</td>
 											<td>{{$sh->date_status}}</td>
+											@if(backpack_user()->hasRole(['Super Admin','Editor']))
 											<td>
 											<a href="{{url('admin/statushistory/'.$sh->id.'/edit')}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
 											data-route="{{ url('admin/statushistory/'.$sh->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
+											@endif
 										</tr>
 									@endforeach
 								</tbody>
@@ -597,13 +643,15 @@
                         </td>
 		            </tr>
 		        @endforeach
-				@if ($crud->buttons()->where('stack', 'line')->count())
-					<tr>
-						<td><strong>{{ trans('backpack::crud.actions') }}</strong></td>
-						<td>
-							@include('crud::inc.button_stack', ['stack' => 'line'])
-						</td>
-					</tr>
+				@if(backpack_user()->hasRole(['Super Admin','Editor']))
+					@if ($crud->buttons()->where('stack', 'line')->count())
+						<tr>
+							<td><strong>{{ trans('backpack::crud.actions') }}</strong></td>
+							<td>
+								@include('crud::inc.button_stack', ['stack' => 'line'])
+							</td>
+						</tr>
+					@endif
 				@endif
 		        </tbody>
 			</table>

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Rules\Base64Rule;
+use App\Models\PersonelImage;
 use App\Http\Requests\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -59,7 +60,7 @@ class PersonelUpdateRequest extends FormRequest
         'image' => ['nullable', 'array'],
         'image.*' => ['required', new Base64Rule(3, ['png', 'jpg', 'jpeg'])],
         'image_label' => ['nullable', 'array'],
-        'image_label.*' => ['required', 'string', 'max:255'],
+        'image_label.*' => ['required', Rule::in(PersonelImage::$imageLabels)],
         ];
     }
 

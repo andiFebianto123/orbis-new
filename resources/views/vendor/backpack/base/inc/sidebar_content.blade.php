@@ -1,4 +1,5 @@
 <!-- This file is used to store sidebar items, starting with Backpack\Base 0.9.0 -->
+@if(backpack_user()->hasRole('Super Admin'))
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('dashboard') }}'><i class='la la-home nav-icon'></i> Dashboards</a></li>
 <!-- <li class="nav-item"><a class="nav-link" href="{{ backpack_url('dashboard') }}"><i class="la la-home nav-icon"></i> {{ trans('backpack::base.dashboard') }}</a></li> -->
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('church') }}'><i class='nav-icon la la-church'></i> Church</a></li>
@@ -6,8 +7,8 @@
 <li class="nav-item nav-dropdown">
 	<a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-file"></i>Report</a>
 	<ul class="nav-dropdown-items">
-        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('churchreport') }}'><i class='nav-icon la la-church'></i> Church Reports</a></li>
-        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('pastorreport') }}'><i class='nav-icon la la-users'></i> Pastor Reports</a></li>
+        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('church-annual-report') }}'><i class='nav-icon la la-church'></i> Church Reports</a></li>
+        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('pastor-annual-report') }}'><i class='nav-icon la la-users'></i> Pastor Reports</a></li>
         <li class='nav-item'><a class='nav-link' href='{{ backpack_url('quickreport') }}'><i class='nav-icon la la-list'></i> Quick Reports</a></li>
 	</ul>
 </li>
@@ -37,6 +38,30 @@
         <li class='nav-item'><a class='nav-link' href='{{ backpack_url('countrylist') }}'><i class='nav-icon la la-list'></i> Country List</a></li>
 	</ul>
 </li>
+@endif
+
+@if(backpack_user()->hasRole(['Editor', 'Viewer']))
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('dashboard') }}'><i class='la la-home nav-icon'></i> Dashboards</a></li>
+<!-- <li class="nav-item"><a class="nav-link" href="{{ backpack_url('dashboard') }}"><i class="la la-home nav-icon"></i> {{ trans('backpack::base.dashboard') }}</a></li> -->
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('church') }}'><i class='nav-icon la la-church'></i> Church</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('personel') }}'><i class='nav-icon la la-id-badge'></i> Pastors</a></li>
+<li class="nav-item nav-dropdown">
+	<a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-file"></i>Report</a>
+	<ul class="nav-dropdown-items">
+        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('churchreport') }}'><i class='nav-icon la la-church'></i> Church Reports</a></li>
+        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('pastorreport') }}'><i class='nav-icon la la-users'></i> Pastor Reports</a></li>
+        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('quickreport') }}'><i class='nav-icon la la-list'></i> Quick Reports</a></li>
+	</ul>
+</li>
+<!-- <li class='nav-item'><a class='nav-link' href='{{ backpack_url('toolsupload') }}'><i class='nav-icon la la-cog'></i> Tools</a></li> -->
+<li class="nav-item nav-dropdown">
+	<a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-cog"></i>Tools</a>
+	<ul class="nav-dropdown-items">
+        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('import-church') }}'><i class='nav-icon la la-church'></i> Import Data Church</a></li>
+        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('import-personel') }}'><i class='nav-icon la la-users'></i> Import Data Pastor</a></li>
+	</ul>
+</li>
+@endif
 <!-- <li class='nav-item'><a class='nav-link' href='{{ backpack_url('appointment_history') }}'><i class='nav-icon la la-question'></i> Appointment History</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('relatedentity') }}'><i class='nav-icon la la-question'></i> Related Eentities</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('educationbackground') }}'><i class='nav-icon la la-question'></i> Education Backgrounds</a></li>

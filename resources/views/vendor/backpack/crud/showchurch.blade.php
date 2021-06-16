@@ -171,14 +171,18 @@
 				<div class="card-body">
 					<div class = "row">
 						<div class="col-md-12">
-						<a href ="{{url('admin/statushistorychurch/create?churches_id='.$entry->id)}}" class = 'btn btn-primary btn-sm'>Add Status</a>
+						@if(backpack_user()->hasRole(['Super Admin','Editor']))
+							<a href ="{{url('admin/statushistorychurch/create?churches_id='.$entry->id)}}" class = 'btn btn-primary btn-sm'>Add Status</a>
+						@endif
 							<table id ="tableStatusHistory" class = "table table-striped">
 								<thead>
 									<tr>
 										<th>Status</th>
 										<th>Reason</th>
 										<th>Date</th>
+										@if(backpack_user()->hasRole(['Super Admin','Editor']))
 										<th class="hidden-print">Action</th>
+										@endif
 									</tr>
 								</thead>
 								<tbody>
@@ -187,11 +191,13 @@
 											<td>{{$shc->status}}</td>
 											<td>{{$shc->reason}}</td>
 											<td>{{$shc->date_status}}</td>
+											@if(backpack_user()->hasRole(['Super Admin','Editor']))
 											<td>
 											<a href="{{url('admin/statushistorychurch/'.$shc->id.'/edit')}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
 											data-route="{{ url('admin/statushistorychurch/'.$shc->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
+											@endif
 										</tr>
 									@endforeach
 								</tbody>
@@ -209,14 +215,18 @@
 				<div class="card-body">
 					<div class = "row">
 						<div class="col-md-12">
-						<a href ="{{url('admin/relatedentitychurch/create?churches_id='.$entry->id)}}"class = 'btn btn-primary btn-sm'>Add Related Entity</a>
+						@if(backpack_user()->hasRole(['Super Admin','Editor']))
+							<a href ="{{url('admin/relatedentitychurch/create?churches_id='.$entry->id)}}"class = 'btn btn-primary btn-sm'>Add Related Entity</a>
+						@endif
 							<table id ="tableRelatedEntity" class = "table table-striped">
 								<thead>
 									<tr >
 										<th>No.</th>
 										<th>Entity Name</th>
 										<th>Type</th>
+										@if(backpack_user()->hasRole(['Super Admin','Editor']))
 										<th class="hidden-print">Action</th>
+										@endif
 									</tr>
 								</thead>
 								<tbody>
@@ -225,11 +235,13 @@
 											<td></td>
 											<td>{{$rec->entity_church}}</td>
 											<td>{{$rec->type_entity}}</td>
+											@if(backpack_user()->hasRole(['Super Admin','Editor']))
 											<td>
 											<a href="{{url('admin/relatedentitychurch/'.$rec->id.'/edit')}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
 											data-route="{{ url('admin/relatedentitychurch/'.$rec->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
+											@endif
 										</tr>
 									@endforeach
 								</tbody>
@@ -247,14 +259,18 @@
 				<div class="card-body">
 					<div class = "row">
 						<div class="col-md-12">
-						<a href ="{{url('admin/structurechurch/create?churches_id='.$entry->id)}}" class = 'btn btn-primary btn-sm'>Add Structure</a>
+						@if(backpack_user()->hasRole(['Super Admin','Editor']))
+							<a href ="{{url('admin/structurechurch/create?churches_id='.$entry->id)}}" class = 'btn btn-primary btn-sm'>Add Structure</a>
+						@endif
 							<table id ="tableLeadershipStructure" class = "table table-striped">
 								<thead>
 									<tr >
 										<th>No.</th>
 										<th>Personal Name</th>
 										<th>Title</th>
+										@if(backpack_user()->hasRole(['Super Admin','Editor']))
 										<th class="hidden-print">Action</th>
+										@endif
 									</tr>
 								</thead>
 								<tbody>
@@ -263,11 +279,13 @@
 											<td></td>
 											<td>{{$mrc->personel->first_name}} {{$mrc->personel->last_name}}</td>
 											<td>{{$mrc->ministry_role_church->ministry_role}}</td>
+											@if(backpack_user()->hasRole(['Super Admin','Editor']))
 											<td>
 											<a href="{{url('admin/structurechurch/'.$mrc->id.'/edit')}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
 											data-route="{{ url('admin/structurechurch/'.$mrc->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
+											@endif
 										</tr>
 									@endforeach
 								</tbody>
@@ -323,13 +341,15 @@
                         </td>
 		            </tr>
 		        @endforeach
-				@if ($crud->buttons()->where('stack', 'line')->count())
-					<tr>
-						<td><strong>{{ trans('backpack::crud.actions') }}</strong></td>
-						<td>
-							@include('crud::inc.button_stack', ['stack' => 'line'])
-						</td>
-					</tr>
+				@if(backpack_user()->hasRole(['Super Admin','Editor']))
+					@if ($crud->buttons()->where('stack', 'line')->count())
+						<tr>
+							<td><strong>{{ trans('backpack::crud.actions') }}</strong></td>
+							<td>
+								@include('crud::inc.button_stack', ['stack' => 'line'])
+							</td>
+						</tr>
+					@endif
 				@endif
 		        </tbody>
 			</table>

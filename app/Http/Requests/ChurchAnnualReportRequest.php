@@ -4,10 +4,8 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
 use Illuminate\Foundation\Http\FormRequest;
-// use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 
-class UserRequest extends FormRequest
+class ChurchAnnualReportRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -29,12 +27,6 @@ class UserRequest extends FormRequest
     {
         return [
             // 'name' => 'required|min:5|max:255'
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email,'.$this->id.',id',
-            'privilege' => 'required',
-            'password' => Rule::requiredIf($this->method() == 'POST'),
-            'status_user' => 'required',
-            'role_id' => 'required',
         ];
     }
 
