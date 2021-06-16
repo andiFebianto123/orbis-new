@@ -42,10 +42,11 @@ class UserCrudController extends CrudController
         // $this->crud->setColumns(['id','name', 'email', 'privilege', 'role', 'status_user']);
 
         $this->crud->addColumn([
-            'name' => 'id', // The db column name
-            'label' => "ID", // Table column heading
-            'type' => 'number'
-        ]);
+            'name' => 'row_number',
+            'type' => 'row_number',
+            'label' => 'No.',
+            'orderable' => true,
+        ])->makeFirstColumn();
 
         $this->crud->addColumn([
             'name' => 'name', // The db column name
@@ -69,6 +70,13 @@ class UserCrudController extends CrudController
             'name' => 'status_user', // The db column name
             'label' => "Status User", // Table column heading
             'type' => 'text'
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'role_id', // The db column name
+            'label' => "Role", // Table column heading
+            'type' => 'relationship',
+            'attribute' => 'name'
         ]);
     }
 
@@ -117,6 +125,18 @@ class UserCrudController extends CrudController
             // 'allows_null' => false,
         ]);
 
+        $this->crud->addField([
+            'name'        => 'role_id', // the name of the db column
+            'label'       => 'Role', // the input label
+            'type'        => 'radio',
+            'options'     => [
+                // the key will be stored in the db, the value will be shown as label; 
+                1 => "Super Admin",
+                2 => "Editor",
+                3 => "Viewer"
+            ],
+        ]);
+
         /**
          * Fields can be defined using the fluent syntax or array syntax:
          * - CRUD::field('price')->type('number');
@@ -138,10 +158,28 @@ class UserCrudController extends CrudController
             $request->request->remove('password');
         }
 
+        $store = $this->traitStore();
+
+        if ($this->crud->getRequest()->role_id) {
+            $role_id = $this->crud->getRequest()->role_id;
+            $user_id = $this->crud->entry->id;
+            
+            //delete the old one
+            \App\Models\ModelHasRole::where('model_id', $user_id)->delete();
+            
+            //create new one
+            $model_has_role = new \App\Models\ModelHasRole();
+            $model_has_role->role_id = $role_id;
+            $model_has_role->model_type = 'App\Models\User';
+            $model_has_role->model_id = $user_id;
+            $model_has_role->save();
+
+        }
+
         $this->crud->setRequest($request);
         $this->crud->unsetValidation(); // Validation has already been run
 
-        return $this->traitStore();
+        return $store;
     }
 
     /**
@@ -170,6 +208,21 @@ class UserCrudController extends CrudController
             // $request->request->set('password', Hash::make($request->input('password')));
         } else {
             $request->request->remove('password');
+        }
+
+        if ($this->crud->getRequest()->role_id) {
+            $role_id = $this->crud->getRequest()->role_id;
+            $user_id = $this->crud->getRequest()->id;
+            
+            //delete the old one
+            \App\Models\ModelHasRole::where('model_id', $user_id)->delete();
+            
+            //create new one
+            $model_has_role = new \App\Models\ModelHasRole();
+            $model_has_role->role_id = $role_id;
+            $model_has_role->model_type = 'App\Models\User';
+            $model_has_role->model_id = $user_id;
+            $model_has_role->save();
         }
 
         $this->crud->setRequest($request);

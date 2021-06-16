@@ -323,7 +323,7 @@ class PersonelCrudController extends CrudController
             'label' => "Upload Your Photo & Family Photo (Max 3mb)",
             'name' => "image",
             'type' => 'image_multiple',
-            'crop' => true, // set to true to allow cropping, false to disable
+            'crop' => false, // set to true to allow cropping, false to disable
             'aspect_ratio' => 1, // omit or set to 0 to allow any aspect ratio
             'tab' => 'Biodata',
         ]);
@@ -470,7 +470,7 @@ class PersonelCrudController extends CrudController
             'label' => "Upload Certificate (Max 3mb)",
             'name' => "certificate",
             'type' => 'image',
-            'crop' => true, // set to true to allow cropping, false to disable
+            'crop' => false, // set to true to allow cropping, false to disable
             'aspect_ratio' => 1, // omit or set to 0 to allow any aspect ratio
             'tab' => 'Licensing Information',
         ]);
@@ -479,7 +479,7 @@ class PersonelCrudController extends CrudController
             'label' => "Upload ID Card (Max 3mb)",
             'name' => "id_card",
             'type' => 'image',
-            'crop' => true, // set to true to allow cropping, false to disable
+            'crop' => false, // set to true to allow cropping, false to disable
             'aspect_ratio' => 1, // omit or set to 0 to allow any aspect ratio
             'tab' => 'Licensing Information',
         ]);
