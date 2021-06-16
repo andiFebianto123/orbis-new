@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\ModelHasRole;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Schema;
 
 class AssignRoleSeeder extends Seeder
 {
@@ -14,6 +15,7 @@ class AssignRoleSeeder extends Seeder
      */
     public function run()
     {
+        Schema::disableForeignKeyConstraints();
         if(ModelHasRole::where('model_id', 1)->count() != 0){
             ModelHasRole::where('model_id', 1)->update([
                 'role_id' => 3
@@ -26,5 +28,6 @@ class AssignRoleSeeder extends Seeder
                 'model_id' => 1
             ]);
         }  
+        Schema::enableForeignKeyConstraints();
     }
 }
