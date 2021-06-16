@@ -7,13 +7,13 @@ use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use App\Models\Church;
 use App\Models\LogErrorExcel;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Imports\ChurchImport;
 use App\Imports\PersonelImport;
 use Maatwebsite\Excel\HeadingRowImport;
-use Excel;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ToolsUploadController extends Controller
 {
@@ -27,7 +27,7 @@ class ToolsUploadController extends Controller
         return view('vendor.backpack.base.importchurch');
     }
 
-    public function uploadchurch(Request $request)
+    public function uploadchurchold(Request $request)
     {
         $status = 'Successfully Done';
         $status_error = 'Invalid File';
@@ -107,12 +107,139 @@ class ToolsUploadController extends Controller
         return back()->with(['status' => $status]);
     }
 
+    public function uploadchurch(Request $request)
+    {
+        $rules = [
+            'file_church' => 'required|mimes:xlsx,xls',
+        ];
+
+        $file = $request->file('file_church');
+
+        $attrs['filename'] = $file;
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            $message_errors = $this->validationMessage($validator, $rules);
+            return response()->json([
+                'status' => false,
+                'alert' => 'danger',
+                'message' => 'Required Form',
+                'redirect_to' => url('admin/import-church'),
+                'validation_errors' => $message_errors,
+            ], 200);
+        }
+
+        try {
+            $import = new ChurchImport($attrs);
+            $import->import($file);
+
+            session()->flash('message', 'Sukses Mengimport Data');
+            session()->flash('status', 'success');
+
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+
+             $failures = $e->failures();
+
+             $arr_errors = [];
+
+            foreach ($failures as $failure) {
+                $arr_errors[] = [
+                    'row' => $failure->row(),
+                    'errormsg' => $failure->errors(),
+                    'values' => $failure->values(),
+                ];
+            }
+            $error_multiples = collect($arr_errors)->unique('row');
+
+            return response()->json([
+                'status' => false,
+                'alert' => 'danger',
+                'message' => 'Gagal mengimport data',
+                'redirect_to' => url('admin/import-church'),
+                'validation_errors' => [],
+                'mass_errors' => $error_multiples
+            ], 200);
+        }
+
+        return response()->json([
+            'status' => true,
+            'alert' => 'success',
+            'message' => 'Sukses mengimport data',
+            'redirect_to' => url('admin/import-church'),
+            'validation_errors' => [],
+        ], 200);
+    }
+
+
+    public function uploadpersonel(Request $request)
+    {
+        $rules = [
+            'file_personel' => 'required|mimes:xlsx,xls',
+        ];
+
+        $file = $request->file('file_personel');
+
+        $attrs['filename'] = $file;
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            $message_errors = $this->validationMessage($validator, $rules);
+            return response()->json([
+                'status' => false,
+                'alert' => 'danger',
+                'message' => 'Required Form',
+                'redirect_to' => url('admin/import-personel'),
+                'validation_errors' => $message_errors,
+            ], 200);
+        }
+
+        try {
+            $import = new PersonelImport($attrs);
+            $import->import($file);
+
+            session()->flash('message', 'Sukses Mengimport Data');
+            session()->flash('status', 'success');
+
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+
+             $failures = $e->failures();
+
+             $arr_errors = [];
+
+            foreach ($failures as $failure) {
+                $arr_errors[] = [
+                    'row' => $failure->row(),
+                    'errormsg' => $failure->errors(),
+                    'values' => $failure->values(),
+                ];
+            }
+            $error_multiples = collect($arr_errors)->unique('row');
+
+            return response()->json([
+                'status' => false,
+                'alert' => 'danger',
+                'message' => 'Gagal mengimport data',
+                'redirect_to' => url('admin/import-personel'),
+                'validation_errors' => [],
+                'mass_errors' => $error_multiples
+            ], 200);
+        }
+
+        return response()->json([
+            'status' => true,
+            'alert' => 'success',
+            'message' => 'Sukses mengimport data',
+            'redirect_to' => url('admin/import-personel'),
+            'validation_errors' => [],
+        ], 200);
+    }
+
     public function importpersonel()
     {
         return view('vendor.backpack.base.importpersonel');
     }
 
-    public function uploadpersonel(Request $request)
+    public function uploadpersonelold(Request $request)
     {
         
         $status = 'Successfully Done';
@@ -209,6 +336,18 @@ class ToolsUploadController extends Controller
     public function importrcdpw()
     {
         return view('vendor.backpack.base.importrcdpw');
+    }
+
+    private function validationMessage($validator,$rules)
+    {
+        $message_errors = [];
+            $obj_validators = $validator->errors();
+            foreach(array_keys($rules) as $key => $field){
+                if ($obj_validators->has($field)) {
+                    $message_errors[] = ['id' => $field , 'message'=> $obj_validators->first($field)];
+                }
+            }
+        return $message_errors;
     }
 
 }

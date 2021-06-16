@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\Personel;
+use App\Models\LogErrorExcel;
 use App\Models\CountryList;
 use App\Models\RcDpwList;
 use App\Models\TitleList;
@@ -20,20 +21,22 @@ use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
 use Maatwebsite\Excel\Row;
 use Maatwebsite\Excel\Concerns\OnEachRow;
-use Maatwebsite\Excel\Concerns\SkipsOnError;
-use Maatwebsite\Excel\Concerns\SkipsErrors;
 
-class PersonelImport implements OnEachRow, WithHeadingRow, SkipsOnError, WithValidation
+class PersonelImport implements OnEachRow, WithHeadingRow, WithValidation, SkipsOnFailure, WithCalculatedFormulas
+
 {
-    use Importable, SkipsErrors;
-    public function  __construct($attrs)
+    use Importable, SkipsFailures;
+
+    public function __construct($code, $filename)
     {
-      $this->filename = $attrs['filename'];
+        $this->code = $code;
+        $this->filename = $filename;
+        $this->failures = [];
     }
-    
 
     public function onRow(Row $row)
     {
+        $rowIndex = $row->getIndex();
         $row      = $row->toArray();
         
         $acc_status  = Accountstatus::where('acc_status', $row['acc_status'])->first();
@@ -51,12 +54,23 @@ class PersonelImport implements OnEachRow, WithHeadingRow, SkipsOnError, WithVal
         $address = trim(str_replace('_x000D_', "\n", $row['address'] ?? ''));
         $phone = trim(str_replace('_x000D_', "\n", $row['phone'] ?? ''));
         $email = (!isset($row['email']) || strlen($row['email']) == 0) ? null : $row['email'];
-    
-        $check_exist_personel = Personel::where('first_name', $row['first_name'])
-                                ->where('last_name', $row['last_name'])
-                                ->where('date_of_birth', $date_of_birth)
-                                ->exists();
+        // $address = trim(str_replace('_x005F_x000D_', " ", $row['address'] ?? ''));
+        // $address = preg_replace('/\s+/', ' ', $address);
 
+        // if ($rcdpw == NULL) {
+        //     dd($row['rc_dpw']);
+        // }
+
+        // if ($country == NULL) {
+        //     dd($row['country']);
+        // }
+
+        // if ($acc_status == NULL) {
+        //     dd($row['acc_status']);
+        // }
+
+        //    if (isset($country)) {
+        
         $personel = new Personel([
         'acc_status_id'  => ($acc_status['id'] ?? null),
         'rc_dpw_id'      => ($rcdpw['id'] ?? null),
@@ -87,18 +101,35 @@ class PersonelImport implements OnEachRow, WithHeadingRow, SkipsOnError, WithVal
         'is_lifetime'     => $is_lifetime,
         ]);
 
-        if (!$check_exist_personel) {
-            $personel->save();
-            $status_history = new StatusHistory([
-                'status_histories_id'  => ($acc_status['id'] ?? null),
-                'date_status' => Carbon::now(),
-                'personel_id' => $personel->id,
-            ]);
+        $personel->save();
 
-            $status_history->save();
-        }
+        $status_history = new StatusHistory([
+            'status_histories_id'  => ($acc_status['id'] ?? null),
+            'date_status' => Carbon::now(),
+            'personel_id' => $personel->id,
+        ]);
 
+        $status_history->save();
     }
+    // }
+
+    public function rules(): array
+    {
+        return [
+            // 'email' => 'unique:personels,email',
+            // 'acc_status_id' => 'required',
+            // 'dpw' => 'required|exists:rc_dpwlists,rc_dpw_name',
+            // 'country' => 'required|exists:country_lists,country_name'
+        ];
+    }
+
+    // public function customValidationMessages()
+    // {
+    //     return [
+    //         'email.required'    => 'Email must not be empty!',
+    //         'email.unique'      => 'The Personel email has already been used',
+    //     ];
+    // }
 
     function formatDateExcel($dateExcel){
         if (is_numeric($dateExcel)) {
@@ -107,14 +138,23 @@ class PersonelImport implements OnEachRow, WithHeadingRow, SkipsOnError, WithVal
         return Carbon::parse($dateExcel)->toDateString();
     }
 
-    public function rules(): array
+    public function onFailure(Failure ...$failures)
     {
-        return [];
+        $this->failures = $failures;
+        foreach ($failures as $failure) {
+            $insert = new LogErrorExcel();
+            $insert->row = $failure->row();
+            $insert->type = 'Personel';
+            $insert->code = $this->code;
+            $insert->file_name = $this->filename;
+            $insert->description = json_encode($failure->errors());
+
+            $insert->save();
+        }
     }
 
-    public function customValidationMessages()
+    public function failures()
     {
-        return [];
+        return $this->failures;
     }
-
 }
