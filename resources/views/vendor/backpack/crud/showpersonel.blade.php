@@ -91,7 +91,7 @@
 											@php
 											$image = $current_image->image;
 											@endphp
-											<img width="150px" style="margin:15px ; border-radius: 50%" src="{{url($image)}}" alt="">
+											<img width="150px" style="margin:15px" src="{{url($image)}}" alt="">
 										@endforeach
 									</td>
 								<tr>
@@ -137,7 +137,7 @@
 											@php
 											$image = $current_image->image;
 											@endphp
-											<img width="150px" style="margin:15px ; border-radius: 50%" src="{{url($image)}}" alt="">
+											<img width="150px" style="margin:15px" src="{{url($image)}}" alt="">
 										@endforeach
 									</td>
 								</tr>
