@@ -15,9 +15,11 @@ class CreatePastorAnnualView extends Migration
     {
         DB::statement("DROP VIEW IF EXISTS pastor_annual_views");
         DB::statement("CREATE VIEW pastor_annual_views AS 
-        SELECT row_number() OVER (ORDER BY year) AS id, count(first_licensed_on) AS total , YEAR(first_licensed_on) AS year FROM personels 
-        WHERE first_licensed_on IS NOT NULL
-        GROUP BY year");
+        SELECT func_inc_var_session() as id, ct.* FROM(
+            SELECT count(first_licensed_on) AS total , YEAR(first_licensed_on) AS year FROM personels 
+            WHERE first_licensed_on IS NOT NULL
+            GROUP BY year)
+        as ct");
     }
 
     /**

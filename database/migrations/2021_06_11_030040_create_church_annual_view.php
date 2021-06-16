@@ -27,7 +27,7 @@ class CreateChurchAnnualView extends Migration
         
              ");
         DB::statement("CREATE VIEW church_annual_views AS 
-        SELECT func_inc_var_session() as id, ct.* from(
+        SELECT func_inc_var_session() as id, ct.* FROM(
             SELECT count(founded_on) AS total , YEAR(founded_on) AS year FROM churches 
             WHERE founded_on IS NOT NULL
             GROUP BY year)
