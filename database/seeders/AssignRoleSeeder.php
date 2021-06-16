@@ -15,12 +15,16 @@ class AssignRoleSeeder extends Seeder
     public function run()
     {
         if(ModelHasRole::where('model_id', 1)->count() != 0){
-            ModelHasRole::where('model_id', 1)->delete();
+            ModelHasRole::where('model_id', 1)->update([
+                'role_id' => 3
+            ]);
         }
-        ModelHasRole::create([
-            'role_id' => 3,
-            'model_type' => 'App\Models\User',
-            'model_id' => 1
-        ]);
+        else{
+            ModelHasRole::create([
+                'role_id' => 3,
+                'model_type' => 'App\Models\User',
+                'model_id' => 1
+            ]);
+        }  
     }
 }
