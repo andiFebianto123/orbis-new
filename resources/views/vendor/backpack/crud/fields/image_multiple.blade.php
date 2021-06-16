@@ -68,10 +68,19 @@
     $field['wrapper']['data-real-field-name'] = $field['name'];
 @endphp
 @include('crud::fields.inc.wrapper_start')
-    <div class="row head-image mb-3">
+    <div class="row head-image mb-3 radio">
         <div class="col-sm-6">
             <small class="font-weight-bold image-label">Image Label</small>
-            <input type="text" class="form-control">
+            <input type="hidden"/>
+            @foreach (App\Models\PersonelImage::$imageLabels as $label )
+                <div class="form-check form-check-inline">
+                    <input  type="radio"
+                            class="form-check-input"
+                            value="{{$label}}"
+                            >
+                    <label class="radio-inline form-check-label font-weight-normal">{!! $label !!}</label>
+                </div>
+            @endforeach
             <input type="hidden" class="form-control">
         </div>
     </div>
@@ -153,10 +162,19 @@
         }
     @endphp
     @include('crud::fields.inc.wrapper_start')
-    <div class="row head-image mb-3">
+    <div class="row head-image mb-3 radio" data-custom-init-function="bpFieldInitRadioMultipleElement">
         <div class="col-sm-6">
             <small class="font-weight-bold image-label">Image Label</small>
-            <input type="text" class="form-control" name="{{$field['name'] . '_label[]'}}" value="{{$validImage['label'] ?? ''}}">
+            <input type="hidden" value="{{ $validImage['label'] ?? ''}}" name="{{$field['name'] . '_label[]'}}" />
+            @foreach (App\Models\PersonelImage::$imageLabels as $label )
+                <div class="form-check form-check-inline">
+                    <input  type="radio"
+                            class="form-check-input"
+                            value="{{$label}}"
+                            >
+                    <label class="radio-inline form-check-label font-weight-normal">{!! $label !!}</label>
+                </div>
+            @endforeach
             <input type="hidden" class="form-control" name="{{$field['name'] . '_ids[]'}}" value="{{$validImage['id'] ?? ''}}">
         </div>
     </div>
@@ -266,6 +284,28 @@
         <script src="{{ asset('packages/cropperjs/dist/cropper.min.js') }}"></script>
         <script src="{{ asset('packages/jquery-cropper/dist/jquery-cropper.min.js') }}"></script>
         <script>
+            function bpFieldInitRadioMultipleElement(element) {
+                var hiddenInput = element.find('input[type=hidden]').first();
+                var value = hiddenInput.val();
+                var id = 'radio_'+Math.floor(Math.random() * 1000000);
+
+                // set unique IDs so that labels are correlated with inputs
+                element.find('.form-check input[type=radio]').each(function(index, item) {
+                    $(this).attr('id', id+index);
+                    $(this).siblings('label').attr('for', id+index);
+                });
+
+                // when one radio input is selected
+                element.find('input[type=radio]').change(function(event) {
+                    // the value gets updated in the hidden input
+                    hiddenInput.val($(this).val());
+                    // all other radios get unchecked
+                    element.find('input[type=radio]').not(this).prop('checked', false);
+                });
+
+                // select the right radios
+                element.find('input[type=radio][value="'+value+'"]').prop('checked', true);
+            }
             function bpFieldInitMultipleCropperImageElement(element) {
                     // Find DOM elements under this form-group element
                     var $mainImage = element.find('[data-handle=mainImage]');
@@ -412,6 +452,16 @@
         </script>
         <script>
             $(document).ready(function(){
+                $('div[data-custom-init-function]').not("[data-initialized=true]").each(function(element){
+                    var element = $(this);
+                    var functionName = element.data('custom-init-function');
+                    console.log(functionName);
+                    if (typeof window[functionName] === "function") {
+                        window[functionName](element);
+                        // mark the element as initialized, so that its function is never called again
+                        element.attr('data-initialized', 'true');
+                    }
+                });
                 $('button.add-image').click(function(){
                     var clonedImageCropper = $('div.cropperImageMultiple[data-clonable=1]').first();
                     if(clonedImageCropper.length == 1){
@@ -419,10 +469,11 @@
                         clonedImageCropper.attr('data-clonable', 0);
                         var fieldname = clonedImageCropper.attr('data-real-field-name');
                         var headImage = clonedImageCropper.find('div.head-image');
-                        var inputLabel = headImage.find('input[type="text"]');
+                        var inputLabel = headImage.find('input[type="hidden"]').first();
                         inputLabel.attr('name', fieldname + '_label[]');
-                        var inputId = inputLabel.next();
+                        var inputId = headImage.find('input[type="hidden"]').last();
                         inputId.attr('name', fieldname + '_ids[]');
+                        bpFieldInitRadioMultipleElement(headImage);
 
                         var footerImage = clonedImageCropper.find('div.footer-image');
                         var inputImage = footerImage.find('input[data-handle="hiddenImage"]');
