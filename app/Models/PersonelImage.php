@@ -13,6 +13,9 @@ class PersonelImage extends Model
     use HasFactory;
     protected $fillable = ['personel_id', 'image', 'label'];
 
+
+    public static $imageLabels = ['Profile Photo', 'Family Photo'];
+
     public static function boot()
     {
         parent::boot();
