@@ -455,7 +455,6 @@
                 $('div[data-custom-init-function]').not("[data-initialized=true]").each(function(element){
                     var element = $(this);
                     var functionName = element.data('custom-init-function');
-                    console.log(functionName);
                     if (typeof window[functionName] === "function") {
                         window[functionName](element);
                         // mark the element as initialized, so that its function is never called again

@@ -360,6 +360,24 @@
         });
       @endif
 
+      @if(isset($crud->typeReport))
+        $('.toggle-btn').on('click',function(e){
+            e.preventDefault();
+
+            var column =  crud.table.column($(this).attr('data-column'));
+
+            column.visible(!column.visible());
+            if($(this).hasClass('active')){
+                $(this).removeClass('active');
+            }else{
+                $(this).addClass('active');
+            }
+        })
+    
+        $('.toggle-btn').hover(function(){
+            
+        })
+      @endif
     });
   </script>
 

@@ -22,13 +22,46 @@
 
 @section('content')
   <!-- Default box -->
+  @if (isset($crud->viewBeforeContent) && is_array($crud->viewBeforeContent))
+          @foreach ($crud->viewBeforeContent as $name)
+            @include($name)
+          @endforeach
+  @endif
+  @if(isset($crud->typeReport))
   <div class="row">
-
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link {{$crud->typeReport == 'annual' || $crud->typeReport == 'detail' ? 'active' : ''}}" aria-current="page" href="{{url($crud->routeAnnual)}}">{{$crud->entityNameAnnual}}</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link {{$crud->typeReport == 'designer' ? 'active' : ''}}" href="{{url($crud->routeDesigner)}}">Report Designer</a>
+    </li>
+  </ul>
+  </div>
+  @endif
+  <div class="row {{isset($crud->typeReport) ? 'card' : ''}}">
+    @if(isset($crud->typeReport))
+    <!-- CUSTOM CARD HEADER REPORT ANNUAL -->
+    <div class="card-header">
+          {{$crud->entityName}}
+    </div>
+    @endif
     <!-- THE ACTUAL CONTENT -->
     <div class="{{ $crud->getListContentClass() }}">
-
+        @if(isset($crud->typeReport) && $crud->typeReport == "designer")
+        <div class="row col-md-12 mt-3">
+            <span class="col-sm-12 label-toggle"> Toggle Column Visibilty : </span>
+        </div> 
+        <div class="row mt-2">
+          <div class="col-md-12">
+              @foreach ($crud->columns() as $index => $column)
+                    <div class="toggle-btn btn btn-primary mt-1 active" data-column="{{$loop->index}}">{!! $column['label'] !!}</div>
+              @endforeach
+          </div> 
+        </div>
+        @endif
         <div class="row mb-0">
-          <div class="col-sm-6">
+          <div class="col-sm-6" {{isset($crud->typeReport) ? 'style=padding:1em;' : ''  }}>
             @if ( $crud->buttons()->where('stack', 'top')->count() ||  $crud->exportButtons())
               <div class="d-print-none {{ $crud->hasAccess('create')?'with-border':'' }}">
 
@@ -37,7 +70,7 @@
               </div>
             @endif
           </div>
-          <div class="col-sm-6">
+          <div class="col-sm-6" {{isset($crud->typeReport) ? 'style=padding:1em;' : ''  }}>
             <div id="datatable_search_stack" class="mt-sm-0 mt-2 d-print-none"></div>
           </div>
         </div>
@@ -128,9 +161,12 @@
             <div id="datatable_button_stack" class="float-right text-right hidden-xs"></div>
           </div>
           @endif
-
     </div>
-
+      @if (isset($crud->viewAfterContent) && is_array($crud->viewAfterContent))
+          @foreach ($crud->viewAfterContent as $name)
+            @include($name)
+          @endforeach
+        @endif
   </div>
 
 @endsection
@@ -147,6 +183,30 @@
 
   <!-- CRUD LIST CONTENT - crud_list_styles stack -->
   @stack('crud_list_styles')
+  @if(isset($crud->typeReport))
+  <style>
+      
+      .card-header{
+        background-color: #b5c7e0;
+        font-size: 20px;
+        font-weight:bold;
+      }
+
+      .label-toggle{
+        font-size: 16px;
+        font-weight:bold;
+      }
+
+      .toggle-btn{
+        cursor:pointer;
+      }
+
+      .toggle-btn.not-active{
+        background-color: #7C69EF;
+      }
+
+  </style>
+  @endif
 @endsection
 
 @section('after_scripts')
@@ -157,4 +217,5 @@
 
   <!-- CRUD LIST CONTENT - crud_list_scripts stack -->
   @stack('crud_list_scripts')
+  
 @endsection
