@@ -14,11 +14,12 @@ class AddRoleColumnToUsers extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->unsignedBigInteger('role_id')->after('status_user');
+            $table->unsignedBigInteger('role_id')->after('status_user')->default('1');
             
             $table->foreign('role_id')
             ->references('id')
-            ->on('roles');
+            ->on('roles')
+            ->onUpdate('cascade');
         });
     }
 

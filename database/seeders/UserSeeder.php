@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
             'status_user' => 'Active']
         );
 
-        $power_user->assignRole('power_user');
+        $power_user->assignRole('Super Admin');
 
         $administrator = User::updateOrCreate([
             'name' => 'sontiara',
@@ -32,7 +32,7 @@ class UserSeeder extends Seeder
             'status_user' => 'Active']
         );
 
-        $administrator->assignRole('administrator');
+        $administrator->assignRole('Super Admin');
 
     }
 }
