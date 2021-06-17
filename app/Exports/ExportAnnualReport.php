@@ -72,7 +72,7 @@ class ExportAnnualReport implements FromView,WithEvents
                 $lastColumn = $event->sheet->getHighestColumn();
                 $lastRow = $event->sheet->getHighestRow();
                 $formatedListNameValue = function($string){
-                    return preg_replace("/Pdm+|Pdp+|Pdt+|Pdp+|Pdt (Em)+|Pnt+|Pst+|Mr+|Mrs+|Ms+/", "\n$0", $string );
+                    return preg_replace("/,+/", "\n", $string );
                 };
                 $formatedListPhoneValue = function($string){
                     return preg_replace("/\+62+/", "\n$0", $string );
@@ -115,7 +115,7 @@ class ExportAnnualReport implements FromView,WithEvents
                         $unFormattedNameList = $event->sheet->getCell($pastorNameHeader . $i)->getValue();
                         $event->sheet->setCellValue($pastorNameHeader . $i, $formatedListNameValue($unFormattedNameList));
                         if(strpos($formatedListNameValue($unFormattedNameList),"\n") !== false){
-                            $event->sheet->getRowDimension($i)->setRowHeight(60);  
+                            $event->sheet->getRowDimension($i)->setRowHeight(45);  
                         }
                     }
                 }
@@ -124,7 +124,7 @@ class ExportAnnualReport implements FromView,WithEvents
                         $unFormattedPhoneList = $event->sheet->getCell($phoneHeader . $i)->getValue();
                         $event->sheet->setCellValue($phoneHeader . $i, $formatedListPhoneValue($unFormattedPhoneList));
                         if(strpos($formatedListPhoneValue($unFormattedPhoneList),"\n") !== false){
-                            $event->sheet->getRowDimension($i)->setRowHeight(60);  
+                            $event->sheet->getRowDimension($i)->setRowHeight(45);  
                         }
                     }
                 }
@@ -133,7 +133,7 @@ class ExportAnnualReport implements FromView,WithEvents
                         $unFormattedEmailList = $event->sheet->getCell($emailHeader . $i)->getValue();
                         $event->sheet->setCellValue($emailHeader . $i, $formatedListEmailValue($unFormattedEmailList));
                         if(strpos($formatedListEmailValue($unFormattedEmailList),"\n") !== false){
-                            $event->sheet->getRowDimension($i)->setRowHeight(60);  
+                            $event->sheet->getRowDimension($i)->setRowHeight(45);  
                         }
                     }
                 }
