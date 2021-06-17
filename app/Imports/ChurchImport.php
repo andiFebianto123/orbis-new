@@ -191,7 +191,7 @@ class ChurchImport implements ToCollection, WithHeadingRow,  WithValidation
             $personel = Personel::where($filter_personel)->first();
             $ministry_role = MinistryRole::where('ministry_role', str_replace(")", "", $col_pastor[1]))->first();
 
-            if ($personel->id && $ministry_role->id) {
+            if ($personel != null && $ministry_role != null) {
                 $arr_pastor_name = [
                     'pastor_id' =>  ($personel->id ?? null),
                     'ministry_id' =>  $ministry_role->id,
