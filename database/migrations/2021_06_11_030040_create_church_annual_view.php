@@ -14,6 +14,7 @@ class CreateChurchAnnualView extends Migration
     public function up()
     {
         DB::statement("DROP VIEW IF EXISTS church_annual_views");
+        DB::statement("DROP FUNCTION IF EXISTS func_inc_var_session");
         DB::unprepared("
 
         CREATE FUNCTION `func_inc_var_session`() RETURNS int
