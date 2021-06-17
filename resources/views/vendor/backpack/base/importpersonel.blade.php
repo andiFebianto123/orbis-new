@@ -72,7 +72,12 @@
 				<form id="form-upload-personel" action="{{url('admin/personel-upload/')}}" method="POST" enctype="multipart/form-data">
 					@csrf
 					<div class="form-group">
-						<input type="file" name="file_personel" id="file_personel" class="rect-validation form-control" style="height: 100px;">
+						<input id="file_personel" class="upload rect-validation" type="file" name="file_personel" style="display: none;" >
+						<button type="button" class="file-upload btn btn-default">
+							<img src="https://image.flaticon.com/icons/png/512/568/568717.png" width="64px" class="img-responsive">
+							<br>
+							<span class="text-upload">Drop Your File Here</span>
+						</button>
 					</div>
 					<div class="form-group">
 						<button type='button' class="btn btn-primary" onclick="submitAfterValid('form-upload-personel', true)">Upload</button>
@@ -124,14 +129,15 @@
         </div>
     </div>
 </div>
-
-<!-- <script>
-		$(document).ready(function(){
-			$('form input').change(function () {
-				$('form p').text(this.files.length + " file(s) selected");
-			});
-		});
-	</script> -->
-
+<script>
+$(document).ready( function() {
+  $('.file-upload').click(function(){
+    $("#file_personel").click();
+  });
+});
+$('#file_personel').change(function() {
+  $('.text-upload').text($('#file_personel')[0].files[0].name);
+});
+</script>
 @endpush
 @endsection

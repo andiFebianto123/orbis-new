@@ -64,7 +64,11 @@ function submitAfterValid(formId, massError = false) {
         error: function(xhr, status, error) {
             $('.btn').removeAttr('disabled')
             $(".progress-loading").remove()
-            messageErrorGeneral("#"+formId, error.message)
+            var messageErr = error.message
+            if (error.message == undefined) {
+                messageErr = "Something went wrong"
+            }
+            messageErrorGeneral("#"+formId, messageErr)
         }
     });
 }

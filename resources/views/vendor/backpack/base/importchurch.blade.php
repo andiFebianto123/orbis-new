@@ -71,8 +71,15 @@
 				@endif
 				<form id="form-upload-church" action="{{url('admin/church-upload/')}}" method="POST" enctype="multipart/form-data">
 					@csrf
+					
 					<div class="form-group">
-						<input type="file" name="file_church" id="file_church" class="rect-validation form-control" style="height: 100px;">
+						<input id="file_church" class="upload rect-validation" type="file" name="file_church" style="display: none;" >
+						<button type="button" class="file-upload btn btn-default">
+							<img src="https://image.flaticon.com/icons/png/512/568/568717.png" width="64px" class="img-responsive">
+							<br>
+							<span class="text-upload">Drop Your File Here</span>
+						</button>
+						<!-- <input type="file" name="file_church" id="file_church" class="rect-validation form-control" style="height: 100px;"> -->
 					</div>
 					<div class="form-group">
 						<button type='button' class="btn btn-primary" onclick="submitAfterValid('form-upload-church', true)">Upload</button>
@@ -125,5 +132,15 @@
     </div>
 </div>
 
+<script>
+$(document).ready( function() {
+  $('.file-upload').click(function(){
+    $("#file_church").click();
+  });
+});
+$('#file_church').change(function() {
+  $('.text-upload').text($('#file_church')[0].files[0].name);
+});
+</script>
 @endpush
 @endsection
