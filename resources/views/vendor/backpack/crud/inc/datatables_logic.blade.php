@@ -1,3 +1,4 @@
+ @if(!isset($crud->quickReport) || (isset($crud->quickReport) && isset($crud->requestQuickReport)))
  @php
     // as it is possible that we can be redirected with persistent table we save the alerts in a variable
     // and flush them from session, so we will get them later from localStorage.
@@ -382,3 +383,4 @@
   </script>
 
   @include('crud::inc.details_row_logic')
+  @endif

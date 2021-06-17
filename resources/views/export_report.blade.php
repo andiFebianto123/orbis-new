@@ -34,7 +34,7 @@
         }
 
         $.urlTypeDesignerCheck = function(url){
-            return realSearchUrl.match(/church*/g) != null ? 'church' : (realSearchUrl.match(/pastor*/g) != null ? 'pastor' : '')
+            return realSearchUrl.match(/church*/g) != null ? 'church' : (realSearchUrl.match(/pastor*/g) != null ? 'pastor' : (realSearchUrl.match(/quick*/g) != null ? 'quick' : ''))
         }
 
         $.replaceAllUrlComponent = function(url){
@@ -50,6 +50,7 @@
                 arrayColumnVisibility.push($(this).data('column'));
             }
         }); 
+
         $.ajax({
             xhrFields: {
                 responseType: 'blob',
@@ -66,6 +67,7 @@
                 pastor_status_id: actualMenuType != '' && actualMenuType == 'pastor'? $.replaceAllUrlComponent($.urlParam('pastor_status_id', realSearchUrl)) : null,
                 card_id: actualMenuType != '' && actualMenuType == 'pastor'? $.replaceAllUrlComponent($.urlParam('card_id', realSearchUrl)) : null,
                 filter_type: actualMenuType != '' && actualMenuType == 'pastor'? $.replaceAllUrlComponent($.urlParam('filter_type', realSearchUrl)) : null,
+                report_type: actualMenuType != '' && actualMenuType == 'quick' ? $('#report-type-select').val() : null
             },
             beforeSend: function(){
                 $("body").addClass("loading"); 
