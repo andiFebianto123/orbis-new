@@ -1,57 +1,8 @@
 @extends(backpack_view('blank'))
 @section('content')
 
-{{--
-	@if(session()->has('status'))
-	<p class="alert alert-success">{{session('status')}}</p>
-@endif
-
-@if(session()->has('status_error'))
-<p class="alert alert-danger">{{session('status_error')}}</p>
-@endif
-
-
-@if (isset($failures))
-<div class="row">
-	<div class="col-md-12">
-		<div class="card">
-			<div class="card-header" style="background: #f8d7da; font-weight:bold;">
-				Log Errors
-			</div>
-			<div class="card-body">
-				<div class="row">
-					<div class="col-md-12">
-						<table id="tableLogError" class="table table-striped">
-							<thead>
-								<tr>
-									<th>Row</th>
-									<th>Description</th>
-								</tr>
-							</thead>
-							<tbody>
-								@foreach ($failures as $failure)
-								@foreach ($failure['errors'] as $error)
-								<tr>
-									<td>{{$failure['row']}}</td>
-									<td>{{$error}}</td>
-								</tr>
-								@endforeach
-								@endforeach
-							</tbody>
-						</table>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-@endif
-
---}}
-
 <div class="row">
 	<div class="col-md-6">
-
 		<div class="card">
 			<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
 				Import Pastor
@@ -85,7 +36,6 @@
 				</form>
 			</div>
 		</div>
-
 	</div>
 </div>
 @push('after_styles')
