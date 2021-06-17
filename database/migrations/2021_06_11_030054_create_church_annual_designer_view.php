@@ -20,7 +20,6 @@ class CreateChurchAnnualDesignerView extends Migration
                 rc_dpw_name, 
                 church_name, 
                 entities_type, 
-                lead_pastor_name, 
                 contact_person,
                 church_address,
                 office_address,city,
