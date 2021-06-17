@@ -14,7 +14,7 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $power_user = User::updateOrCreate([
+        $power_user = User::updateOrCreate(['email' => 'yemima@gmail.com'], [
             'name' => 'yemima',
             'email' => 'yemima@gmail.com',
             'password' => 'qwerty', // qwerty
@@ -24,7 +24,7 @@ class UserSeeder extends Seeder
 
         $power_user->assignRole('Super Admin');
 
-        $administrator = User::updateOrCreate([
+        $administrator = User::updateOrCreate(['email' => 'sontiara@gmail.com'], [
             'name' => 'sontiara',
             'email' => 'sontiara@gmail.com',
             'password' => 'qwerty', // qwerty
