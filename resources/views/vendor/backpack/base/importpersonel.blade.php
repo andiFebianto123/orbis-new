@@ -1,57 +1,8 @@
 @extends(backpack_view('blank'))
 @section('content')
 
-{{--
-	@if(session()->has('status'))
-	<p class="alert alert-success">{{session('status')}}</p>
-@endif
-
-@if(session()->has('status_error'))
-<p class="alert alert-danger">{{session('status_error')}}</p>
-@endif
-
-
-@if (isset($failures))
-<div class="row">
-	<div class="col-md-12">
-		<div class="card">
-			<div class="card-header" style="background: #f8d7da; font-weight:bold;">
-				Log Errors
-			</div>
-			<div class="card-body">
-				<div class="row">
-					<div class="col-md-12">
-						<table id="tableLogError" class="table table-striped">
-							<thead>
-								<tr>
-									<th>Row</th>
-									<th>Description</th>
-								</tr>
-							</thead>
-							<tbody>
-								@foreach ($failures as $failure)
-								@foreach ($failure['errors'] as $error)
-								<tr>
-									<td>{{$failure['row']}}</td>
-									<td>{{$error}}</td>
-								</tr>
-								@endforeach
-								@endforeach
-							</tbody>
-						</table>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-@endif
-
---}}
-
 <div class="row">
 	<div class="col-md-6">
-
 		<div class="card">
 			<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
 				Import Pastor
@@ -72,7 +23,12 @@
 				<form id="form-upload-personel" action="{{url('admin/personel-upload/')}}" method="POST" enctype="multipart/form-data">
 					@csrf
 					<div class="form-group">
-						<input type="file" name="file_personel" id="file_personel" class="rect-validation form-control" style="height: 100px;">
+						<input id="file_personel" class="upload rect-validation" type="file" name="file_personel" style="display: none;" >
+						<button type="button" class="file-upload btn btn-default">
+							<img src="https://image.flaticon.com/icons/png/512/568/568717.png" width="64px" class="img-responsive">
+							<br>
+							<span class="text-upload">Drop Your File Here</span>
+						</button>
 					</div>
 					<div class="form-group">
 						<button type='button' class="btn btn-primary" onclick="submitAfterValid('form-upload-personel', true)">Upload</button>
@@ -80,7 +36,6 @@
 				</form>
 			</div>
 		</div>
-
 	</div>
 </div>
 @push('after_styles')
@@ -124,14 +79,15 @@
         </div>
     </div>
 </div>
-
-<!-- <script>
-		$(document).ready(function(){
-			$('form input').change(function () {
-				$('form p').text(this.files.length + " file(s) selected");
-			});
-		});
-	</script> -->
-
+<script>
+$(document).ready( function() {
+  $('.file-upload').click(function(){
+    $("#file_personel").click();
+  });
+});
+$('#file_personel').change(function() {
+  $('.text-upload').text($('#file_personel')[0].files[0].name);
+});
+</script>
 @endpush
 @endsection

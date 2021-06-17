@@ -115,21 +115,21 @@ class ChurchImport implements ToCollection, WithHeadingRow,  WithValidation
                     $onFailure('Invalid Lead Pastor Format :: Firstname Lastname (Title)');
                 }
             },
-            'rc_dpw' => function($attribute, $value, $onFailure) {
-                if (!RcDpwList::where('rc_dpw_name', $value)->first()) {
-                     $onFailure('Invalid RC DPW');
-                }
-            },
-            'country' => function($attribute, $value, $onFailure) {
-                if (!CountryList::where('country_name',$value)->first()) {
-                     $onFailure('Invalid Country');
-                }
-            },
-            'church_type' => function($attribute, $value, $onFailure) {
-                if (!ChurchEntityType::where('entities_type', $value)->first()) {
-                     $onFailure('Invalid Church Type');
-                }
-            },
+            // 'rc_dpw' => function($attribute, $value, $onFailure) {
+            //     if (!RcDpwList::where('rc_dpw_name', $value)->first()) {
+            //          $onFailure('Invalid RC DPW');
+            //     }
+            // },
+            // 'country' => function($attribute, $value, $onFailure) {
+            //     if (!CountryList::where('country_name',$value)->first()) {
+            //          $onFailure('Invalid Country');
+            //     }
+            // },
+            // 'church_type' => function($attribute, $value, $onFailure) {
+            //     if (!ChurchEntityType::where('entities_type', $value)->first()) {
+            //          $onFailure('Invalid Church Type');
+            //     }
+            // },
         ];
     }
 
