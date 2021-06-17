@@ -320,9 +320,27 @@ class PersonelCrudController extends CrudController
         // ]);
 
         $this->crud->addField([
-            'label' => "Upload Your Photo & Family Photo (Max 3mb)",
-            'name' => "image",
-            'type' => 'image_multiple',
+            'label' => "Upload Profile Photo (Max 3mb)",
+            'name' => "profile_image",
+            'type' => 'image',
+            'crop' => false, // set to true to allow cropping, false to disable
+            'aspect_ratio' => 1, // omit or set to 0 to allow any aspect ratio
+            'tab' => 'Biodata',
+        ]);
+
+        $this->crud->addField([
+            'label' => "Upload Family Photo (Max 3mb)",
+            'name' => "family_image",
+            'type' => 'image',
+            'crop' => false, // set to true to allow cropping, false to disable
+            'aspect_ratio' => 1, // omit or set to 0 to allow any aspect ratio
+            'tab' => 'Biodata',
+        ]);
+
+        $this->crud->addField([
+            'label' => "Upload Misc Photo (Max 3mb)",
+            'name' => "misc_image",
+            'type' => 'image',
             'crop' => false, // set to true to allow cropping, false to disable
             'aspect_ratio' => 1, // omit or set to 0 to allow any aspect ratio
             'tab' => 'Biodata',
@@ -511,26 +529,26 @@ class PersonelCrudController extends CrudController
 
         DB::beginTransaction();
         try {
-            $result = $this->checkMultipleImage($request, null);
-            if(count($result['errors']) != 0){
-                DB::rollback();
-                return redirect($this->crud->route . '/create')->withInput()
-                ->withErrors($result['errors']);
-            }
+            // $result = $this->checkMultipleImage($request, null);
+            // if(count($result['errors']) != 0){
+            //     DB::rollback();
+            //     return redirect($this->crud->route . '/create')->withInput()
+            //     ->withErrors($result['errors']);
+            // }
             // insert item in the db
             $item = $this->crud->create($this->crud->getStrippedSaveRequest());
             $this->data['entry'] = $this->crud->entry = $item;
 
-            foreach($result['valid_images'] as $index => $validImage){
-                $personelImage = new PersonelImage;
-                $path = $personelImage->setImagePersonel('public/images_personel', $validImage['image'], 'image', '_' . $index);
-                $personelImage->fill([
-                    'personel_id' => $item->id,
-                    'image' => $path,
-                    'label' => $validImage['label']
-                ]);
-                $personelImage->save();
-            }
+            // foreach($result['valid_images'] as $index => $validImage){
+            //     $personelImage = new PersonelImage;
+            //     $path = $personelImage->setImagePersonel('public/images_personel', $validImage['image'], 'image', '_' . $index);
+            //     $personelImage->fill([
+            //         'personel_id' => $item->id,
+            //         'image' => $path,
+            //         'label' => $validImage['label']
+            //     ]);
+            //     $personelImage->save();
+            // }
             
             DB::commit();
         } catch (Exception $e) {
@@ -581,57 +599,60 @@ class PersonelCrudController extends CrudController
         DB::beginTransaction();
         try {
             $model = Personel::where('id', $id)->firstOrFail();
-            $result = $this->checkMultipleImage($request, $model);
-            if(count($result['errors']) != 0){
-                DB::rollback();
-                return redirect($this->crud->route . '/' . $id . '/edit')->withInput()
-                ->withErrors($result['errors']);
-            }
+
+            // $result = $this->checkMultipleImage($request, $model);
+            // if(count($result['errors']) != 0){
+            //     DB::rollback();
+            //     return redirect($this->crud->route . '/' . $id . '/edit')->withInput()
+            //     ->withErrors($result['errors']);
+            // }
+            
             // update the row in the db
             $item = $this->crud->update($request->get($this->crud->model->getKeyName()),
                 $this->crud->getStrippedSaveRequest());
             $this->data['entry'] = $this->crud->entry = $item;
-            $validIds = $result['valid_ids'];
-            if(count($validIds) > 0){
-                $personelImages = PersonelImage::where('personel_id', $item->id)->whereNotIn('id', $validIds)->get();  
-                foreach($personelImages as $personelImage){
-                    $personelImage->delete();
-                }
-            }
-            else{
-                $personelImages = PersonelImage::where('personel_id', $item->id)->get();
-                foreach($personelImages as $personelImage){
-                    $personelImage->delete();
-                }          
-            }
 
-            foreach($result['valid_images'] as $index => $validImage){
-                $imageChange = $validImage['image_change'];
-                if($validImage['id'] == null){
-                    $personelImage = new PersonelImage;
-                }
-                else{
-                    $personelImage = PersonelImage::where('id', $validImage['id'])->where('personel_id', $item->id)->first();
-                    if($personelImage == null){
-                        $personelImage = new PersonelImage;
-                    }
-                }
-                if($imageChange){
-                    $path = $personelImage->setImagePersonel('public/images_personel', $validImage['image'], 'image', '_' . $index);
-                    $personelImage->fill([
-                        'personel_id' => $item->id,
-                        'image' => $path,
-                        'label' => $validImage['label']
-                    ]);
-                    $personelImage->save();
-                }
-                else if($personelImage->id != null){
-                    $personelImage->fill([
-                        'label' => $validImage['label']
-                    ]);
-                    $personelImage->save();
-                }
-            }
+            // $validIds = $result['valid_ids'];
+            // if(count($validIds) > 0){
+            //     $personelImages = PersonelImage::where('personel_id', $item->id)->whereNotIn('id', $validIds)->get();  
+            //     foreach($personelImages as $personelImage){
+            //         $personelImage->delete();
+            //     }
+            // }
+            // else{
+            //     $personelImages = PersonelImage::where('personel_id', $item->id)->get();
+            //     foreach($personelImages as $personelImage){
+            //         $personelImage->delete();
+            //     }          
+            // }
+
+            // foreach($result['valid_images'] as $index => $validImage){
+            //     $imageChange = $validImage['image_change'];
+            //     if($validImage['id'] == null){
+            //         $personelImage = new PersonelImage;
+            //     }
+            //     else{
+            //         $personelImage = PersonelImage::where('id', $validImage['id'])->where('personel_id', $item->id)->first();
+            //         if($personelImage == null){
+            //             $personelImage = new PersonelImage;
+            //         }
+            //     }
+            //     if($imageChange){
+            //         $path = $personelImage->setImagePersonel('public/images_personel', $validImage['image'], 'image', '_' . $index);
+            //         $personelImage->fill([
+            //             'personel_id' => $item->id,
+            //             'image' => $path,
+            //             'label' => $validImage['label']
+            //         ]);
+            //         $personelImage->save();
+            //     }
+            //     else if($personelImage->id != null){
+            //         $personelImage->fill([
+            //             'label' => $validImage['label']
+            //         ]);
+            //         $personelImage->save();
+            //     }
+            // }
 
             DB::commit();
         } catch (Exception $e) {
@@ -649,45 +670,45 @@ class PersonelCrudController extends CrudController
     }
 
 
-    public function checkMultipleImage($request, $item){
-        $images = $request->image;
-        $labels = $request->image_label ?? [];
-        $imageIds = $request->image_ids ?? [];
-        $imageChanges = $request->image_change ?? [];
-        $validIds = [];
-        $validImages = [];
-        $errors = [];
-        if($images != null && count($images) > 0){
-            $i = 0;
-            foreach($images as $index => $image){
-                $i++;
-                $id = $imageIds[$index] ?? null;
-                $validId = false;
-                if($id != null && $item != null && PersonelImage::where('personel_id', $item->id)->where('id', $id)->exists()){
-                    $validIds[$id] = true;
-                    $validId = true;
-                }
-                $label = $labels[$index] ?? '';
-                if(strlen(trim($label)) == 0){
-                    $errors['image_label.' . $index] = [trans('validation.required', ['attribute' => 'image label ' . $i])];
-                }
-                else{
-                    $imageChange = $imageChanges[$index] ?? false;
-                    $validImages[] = [
-                        'id' => $validId ? $id : null,
-                        'image' => $image,
-                        'label' => $label,
-                        'image_change' => $item != null && $imageChange
-                    ];
-                }
-            }
-        }
-        return [
-            'valid_ids' => array_keys($validIds),
-            'valid_images' => $validImages,
-            'errors' => $errors
-        ];
-    }
+    // public function checkMultipleImage($request, $item){
+    //     $images = $request->image;
+    //     $labels = $request->image_label ?? [];
+    //     $imageIds = $request->image_ids ?? [];
+    //     $imageChanges = $request->image_change ?? [];
+    //     $validIds = [];
+    //     $validImages = [];
+    //     $errors = [];
+    //     if($images != null && count($images) > 0){
+    //         $i = 0;
+    //         foreach($images as $index => $image){
+    //             $i++;
+    //             $id = $imageIds[$index] ?? null;
+    //             $validId = false;
+    //             if($id != null && $item != null && PersonelImage::where('personel_id', $item->id)->where('id', $id)->exists()){
+    //                 $validIds[$id] = true;
+    //                 $validId = true;
+    //             }
+    //             $label = $labels[$index] ?? '';
+    //             if(strlen(trim($label)) == 0){
+    //                 $errors['image_label.' . $index] = [trans('validation.required', ['attribute' => 'image label ' . $i])];
+    //             }
+    //             else{
+    //                 $imageChange = $imageChanges[$index] ?? false;
+    //                 $validImages[] = [
+    //                     'id' => $validId ? $id : null,
+    //                     'image' => $image,
+    //                     'label' => $label,
+    //                     'image_change' => $item != null && $imageChange
+    //                 ];
+    //             }
+    //         }
+    //     }
+    //     return [
+    //         'valid_ids' => array_keys($validIds),
+    //         'valid_images' => $validImages,
+    //         'errors' => $errors
+    //     ];
+    // }
 
     function show()
     {
@@ -709,8 +730,8 @@ class PersonelCrudController extends CrudController
         // get entry ID from Request (makes sure its the last ID for nested resources)
         $id = $this->crud->getCurrentEntryId() ?? $id;
         $fields = $this->crud->getUpdateFields();
-        $personelImages = PersonelImage::where('personel_id', $id)->select('id', 'label', 'image')->get();
-        $fields['image']['value'] = $personelImages->toArray();
+        // $personelImages = PersonelImage::where('personel_id', $id)->select('id', 'label', 'image')->get();
+        // $fields['image']['value'] = $personelImages->toArray();
         $this->crud->setOperationSetting('fields', $fields);
         // get the info for that entry
         $this->data['entry'] = $this->crud->getEntry($id);
@@ -741,10 +762,10 @@ class PersonelCrudController extends CrudController
 
         DB::beginTransaction();
         try{
-            $personelImages = PersonelImage::where('personel_id', $id)->get();
-            foreach($personelImages as $personelImage){
-                $personelImage->delete();
-            }
+            // $personelImages = PersonelImage::where('personel_id', $id)->get();
+            // foreach($personelImages as $personelImage){
+            //     $personelImage->delete();
+            // }
             $response = $this->crud->delete($id);
             DB::commit();
             return $response;
