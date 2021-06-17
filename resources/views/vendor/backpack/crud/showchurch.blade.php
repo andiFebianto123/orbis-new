@@ -75,7 +75,7 @@
 								</tr>
 								<tr>
 									<td>RC / DPW</td>
-									<td> :  {{ $entry->rc_dpw->rc_dpw_name }}</td>
+									<td> :  {{ ($entry->rc_dpw) ? $entry->rc_dpw->rc_dpw_name : "-"}}</td>
 								</tr>
 								<tr>
 									<td>Church Name</td>
