@@ -64,9 +64,10 @@ function submitAfterValid(formId, massError = false) {
         error: function(xhr, status, error) {
             $('.btn').removeAttr('disabled')
             $(".progress-loading").remove()
-            var messageErr = error.message
-            if (error.message == undefined) {
-                messageErr = "Something went wrong"
+            
+            var messageErr = "Something Went Wrong"
+            if (xhr.responseJSON) {
+                messageErr = xhr.responseJSON.message
             }
             messageErrorGeneral("#"+formId, messageErr)
         }

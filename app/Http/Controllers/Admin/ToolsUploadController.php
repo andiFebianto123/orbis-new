@@ -114,45 +114,45 @@ class ToolsUploadController extends Controller
         ];
 
         $file = $request->file('file_church');
-        $headings = (new HeadingRowImport)->toArray($file);
+        // $headings = (new HeadingRowImport)->toArray($file);
 
-        $currentheading = $headings[0] ?? [];
-        $currentheading = $currentheading[0] ?? [];
-        $correctheading = [ 0 => "rc_dpw",
-        1 => "church_name",
-        2 => "church_type",
-        3 => "lead_pastor_name",
-        4 => "contact_person",
-        5 => "church_address",
-        6 => "office_address",
-        7 => "city",
-        8 => "province",
-        9 => "postal_code",
-        10 => "country",
-        11 => "phone",
-        12 => "fax",
-        13 => "first_email",
-        14 => "church_status",
-        15 => "founded_on",
-        16 => "service_time_church",
-        17 => "notes"];
+        // $currentheading = $headings[1] ?? [];
+        // $currentheading = $currentheading[1] ?? [];
+        // $correctheading = [ 0 => "RC / DPW",
+        // 1 => "Church Name",
+        // 2 => "Church Type",
+        // 3 => "Lead Pastor Name",
+        // 4 => "Contact Person",
+        // 5 => "Church Address",
+        // 6 => "Office Address",
+        // 7 => "City",
+        // 8 => "Province / State",
+        // 9 => "Postal Code",
+        // 10 => "Country",
+        // 11 => "Phone",
+        // 12 => "Fax",
+        // 13 => "Email",
+        // 14 => "Church Status",
+        // 15 => "Founded On",
+        // 16 => "Service Time Church",
+        // 17 => "Notes"];
 
-        foreach($currentheading as $current){
-            $index = array_search(strtolower($current), $correctheading);
-            if ($index !== false) {
-                unset($correctheading[$index]);
-            }
-        }
+        // foreach($currentheading as $current){
+        //     $index = array_search(strtolower($current), $correctheading);
+        //     if ($index !== false) {
+        //         unset($correctheading[$index]);
+        //     }
+        // }
 
-        if(count($correctheading) != 0){
-            return response()->json([
-                'status' => false,
-                'alert' => 'danger',
-                'message' => 'Invalid Header!',
-                'redirect_to' => url('admin/import-church'),
-                'validation_errors' => [],
-            ], 200);
-        }
+        // if(count($correctheading) != 0){
+        //     return response()->json([
+        //         'status' => false,
+        //         'alert' => 'danger',
+        //         'message' => 'Invalid Header!',
+        //         'redirect_to' => url('admin/import-church'),
+        //         'validation_errors' => [],
+        //     ], 200);
+        // }
 
         $attrs['filename'] = $file;
 
@@ -217,54 +217,7 @@ class ToolsUploadController extends Controller
         ];
 
         $file = $request->file('file_personel');
-        $headings = (new HeadingRowImport)->toArray($file);
-
-        $currentheading = $headings[0] ?? [];
-        $currentheading = $currentheading[0] ?? [];
-        $correctheading = [0 => "dpw",
-        1 => "title",
-        2 => "first_name",
-        3 => "last_name",
-        4 => "gender",
-        5 => "church_name",
-        6 => "address",
-        7 => "city",
-        8 => "province",
-        9 => "postal_code",
-        10 => "country",
-        11 => "phone",
-        12 => "fax",
-        13 => "email",
-        14 => "marital_status",
-        15 => "date_of_birth",
-        16 => "spouse_name",
-        17 => "spouse_date_of_birth",
-        18 => "anniversary",
-        19 => "acc_status",
-        20 => "first_licensed_on",
-        21 => "card",
-        22 => "valid_card_start",
-        23 => "valid_card_end",
-        24 => "current_certificate_number",
-        25 => "notes"];
-
-        foreach($currentheading as $current){
-            $index = array_search(strtolower($current), $correctheading);
-            if ($index !== false) {
-                unset($correctheading[$index]);
-            }
-        }
-
-        if(count($correctheading) != 0 ){
-            return response()->json([
-                'status' => false,
-                'alert' => 'danger',
-                'message' => 'Invalid Header',
-                'redirect_to' => url('admin/import-personel'),
-                'validation_errors' => [],
-            ], 200);
-        }
-
+        
         $attrs['filename'] = $file;
 
         $validator = Validator::make($request->all(), $rules);

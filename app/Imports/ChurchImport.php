@@ -9,22 +9,18 @@ use App\Models\ChurchEntityType;
 use App\Models\Personel;
 use App\Models\StructureChurch;
 use App\Models\MinistryRole;
-
-use App\Models\LogErrorExcel;
 use App\Models\StatusHistoryChurch;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\WithValidation;
-use Illuminate\Validation\Rule;
-use Maatwebsite\Excel\Validators\Failure;
-use Maatwebsite\Excel\Concerns\SkipsOnFailure;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
+use Maatwebsite\Excel\Imports\HeadingRowFormatter;
+use Maatwebsite\Excel\Concerns\WithStartRow;
+HeadingRowFormatter::default('none');
 
-class ChurchImport implements ToCollection, WithHeadingRow,  WithValidation
+class ChurchImport implements ToCollection,  WithValidation, WithHeadingRow
 {
     use Importable;
 
@@ -35,7 +31,6 @@ class ChurchImport implements ToCollection, WithHeadingRow,  WithValidation
 
     public function collection(Collection $rows)
     {
-
         foreach ($rows as $key => $row) {
            $this->singleRow($row);
         }
@@ -43,24 +38,62 @@ class ChurchImport implements ToCollection, WithHeadingRow,  WithValidation
 
     private function singleRow($row)
     {
-        $country  = CountryList::where('country_name', $row['country'])->first();
-        $church_type  =  ChurchEntityType::where('entities_type', $row['church_type'])->first();
-        $rcdpw  =  RcDpwList::where('rc_dpw_name', $row['rc_dpw'])->first();
-        $row['founded_on'] = trim($row['founded_on'] ?? '');
-        $date =  $row['founded_on'] == '-' || $row['founded_on'] == '' ? NULL : $this->formatDateExcel($row['founded_on']);
-        
-        $contact_person = $row['contact_person'] == '-' || $row['contact_person'] == '' ? NULL : $row['contact_person'];
-        $city = $row['city'] == '-' || $row['city'] == '' ? NULL : $row['city'];
-        $province = $row['province'] == '-' || $row['province'] == '' ? NULL : $row['province'];
-        $church_address = trim(str_replace('_x000D_', "\n", $row['church_address'] ?? ''));
-        $office_address = trim(str_replace('_x000D_', "\n", $row['office_address'] ?? ''));
-        $phone = trim(str_replace('_x000D_', "\n", $row['phone'] ?? ''));
-        $fax = trim(str_replace('_x000D_', "\n", $row['fax'] ?? ''));
-        $postal_code = $row['postal_code'] == '-' || $row['postal_code'] == '' ? NULL : $row['postal_code'];
-        $first_email = trim(str_replace('_x000D_', "\n", $row['first_email'] ?? ''));
-        $service_time_church = $row['service_time_church'] == ',' ? NULL : $row['service_time_church'];
+        $row_rc_dpw = $row['RC / DPW'];
+        $row_church_name = $row['Church Name'];
+        $row_church_type = $row['Church Type'];
+        $row_lead_pastor_name = $row['Lead Pastor Name'];
+        $row_contact_person = $row['Contact Person'];
+        $row_church_address = $row['Church Address'];
+        $row_office_address = $row['Office Address'];
+        $row_city = $row['City'];
+        $row_province = $row['Province / State'];
+        $row_postal_code = $row['Postal Code'];
+        $row_country = $row['Country'];
+        $row_phone = $row['Phone'];
+        $row_fax = $row['Fax'];
+        $row_email = $row['Email'];
+        $row_church_status = $row['Church Status'];
+        $row_founded_on = $row['Founded On'];
+        $row_service_time_church = $row['Service Time Church'];
+        $row_notes = $row['Notes'];
 
-        $exists_church = Church::where('church_name', $row['church_name'])
+        // $row_rc_dpw = $row[0];
+        // $row_church_name = $row[1];
+        // $row_church_type = $row[2];
+        // $row_lead_pastor_name = $row[3];
+        // $row_contact_person = $row[4];
+        // $row_church_address = $row[5];
+        // $row_office_address = $row[6];
+        // $row_city = $row[7];
+        // $row_province = $row[8];
+        // $row_postal_code = $row[9];
+        // $row_country = $row[10];
+        // $row_phone = $row[11];
+        // $row_fax = $row[12];
+        // $row_email = $row[13];
+        // $row_church_status = $row[14];
+        // $row_founded_on = $row[15];
+        // $row_service_time_church = $row[16];
+        // $row_notes = $row[17];
+        
+        $country  = CountryList::where('country_name', $row_country)->first();
+        $church_type  =  ChurchEntityType::where('entities_type', $row_church_type)->first();
+        $rcdpw  =  RcDpwList::where('rc_dpw_name', $row_rc_dpw)->first();
+        $row_founded_on = trim($row_founded_on ?? '');
+        $date =  $row_founded_on == '-' || $row_founded_on == '' ? NULL : $this->formatDateExcel($row_founded_on);
+        
+        $contact_person = $row_contact_person == '-' || $row_contact_person == '' ? NULL : $row_contact_person;
+        $city = $row_city == '-' || $row_city == '' ? NULL : $row_city;
+        $province = $row_province == '-' || $row_province == '' ? NULL : $row_province;
+        $church_address = trim(str_replace('_x000D_', "\n", $row_church_address ?? ''));
+        $office_address = trim(str_replace('_x000D_', "\n", $row_office_address ?? ''));
+        $phone = trim(str_replace('_x000D_', "\n", $row_phone ?? ''));
+        $fax = trim(str_replace('_x000D_', "\n", $row_fax ?? ''));
+        $postal_code = $row_postal_code == '-' || $row_postal_code == '' ? NULL : $row_postal_code;
+        $first_email = trim(str_replace('_x000D_', "\n", $row_email ?? ''));
+        $service_time_church = $row_service_time_church == ',' ? NULL : $row_service_time_church;
+
+        $exists_church = Church::where('church_name', $row_church_name)
                             ->where('phone', $phone)
                             ->where('postal_code', $postal_code)
                             ->exists();
@@ -69,7 +102,7 @@ class ChurchImport implements ToCollection, WithHeadingRow,  WithValidation
             'founded_on'     => $date,
             'rc_dpw_id'      => ($rcdpw['id'] ?? null),
             'church_type_id' => ($church_type->id ?? null),
-            'church_name'    => $row['church_name'],
+            'church_name'    => $row_church_name,
             // 'lead_pastor_name' => json_encode($this->handlePastorName($row['lead_pastor_name'])),
             'contact_person'   => $contact_person,
             'church_address'   => $church_address,
@@ -82,23 +115,26 @@ class ChurchImport implements ToCollection, WithHeadingRow,  WithValidation
             'phone'                 => $phone,
             'fax'                   => $fax,
             'service_time_church'   => $service_time_church,
-            'notes'           => $row['notes'],
+            'notes'           => $row_notes,
         ]);
 
         if (!$exists_church) {
             $church->save();
 
-            foreach ($this->handlePastorName($row['lead_pastor_name']) as $key => $hpn) {
-                $structure_church = new StructureChurch([
-                    'personel_id'  => $hpn['pastor_id'],
-                    'title_structure_id' => $hpn['ministry_id'],
-                    'churches_id' => $church->id,
-                ]);
-                $structure_church->save();
+            foreach ($this->handlePastorName($row_lead_pastor_name) as $key => $hpn) {
+                if ($hpn != []) {
+                    $structure_church = new StructureChurch([
+                        'personel_id'  => $hpn['pastor_id'],
+                        'title_structure_id' => $hpn['ministry_id'],
+                        'churches_id' => $church->id,
+                    ]);
+                    $structure_church->save();
+                }
+               
             }
 
             $status_history = new StatusHistoryChurch([
-                'status'  => $row['church_status'],
+                'status'  => $row_church_status,
                 'date_status' => Carbon::now(),
                 'churches_id' => $church->id,
             ]);
@@ -106,10 +142,15 @@ class ChurchImport implements ToCollection, WithHeadingRow,  WithValidation
         }
     }
 
+    public function headingRow(): int
+    {
+        return 2;
+    }
+
     public function rules(): array
     {
         return [
-            'lead_pastor_name' => function($attribute, $value, $onFailure) {
+            'Lead Pastor Name' => function($attribute, $value, $onFailure) {
                 $lead_pastor_name = $this->handlePastorName($value);
                 if (sizeof($lead_pastor_name) == 0) {
                     $onFailure('Invalid Lead Pastor Format :: Firstname Lastname (Title)');
@@ -191,9 +232,9 @@ class ChurchImport implements ToCollection, WithHeadingRow,  WithValidation
             $personel = Personel::where($filter_personel)->first();
             $ministry_role = MinistryRole::where('ministry_role', str_replace(")", "", $col_pastor[1]))->first();
 
-            if ($personel != null && $ministry_role != null) {
+            if (isset($personel) && isset($ministry_role)) {
                 $arr_pastor_name = [
-                    'pastor_id' =>  ($personel->id ?? null),
+                    'pastor_id' =>  $personel->id,
                     'ministry_id' =>  $ministry_role->id,
                     'pastor_name' =>  $col_pastor[0],
                     'pastor_ministry_role' =>  str_replace(")", "", $col_pastor[1]),
