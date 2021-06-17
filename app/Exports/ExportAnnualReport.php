@@ -75,10 +75,24 @@ class ExportAnnualReport implements FromView,WithEvents
                     return preg_replace("/,+/", "\n", $string );
                 };
                 $formatedListPhoneValue = function($string){
-                    return preg_replace("/\+62+/", "\n$0", $string );
+                    return preg_replace_callback("/\+62|;08+|;+/", function ($s) use (&$counter) {
+                        if($s[0] == ";08" || $s[0] == ";"){
+                            return $s[0] == ";08" ? "\n$s[0]" : "\n";
+                        }
+                        else{
+                            if ($counter++ != 0) {
+                                return "\n$s[0]";
+                           }
+                        }
+                        
+
+                        return $s[0];
+                   }, $string );
                 };
                 $formatedListEmailValue = function($string){
-                    return preg_replace("/.com;+|.co.id;+|.com,+|.co.id,+|.com +|.co.id +/", "$0\n", $string );
+                    return preg_replace_callback("/.com;+|.co.id;+|.com,+|.co.id,+|.com +|.co.id +/", function($s) use(&$counter){
+                       return "$s[0]\n";
+                    }, $string );
                 };
                 $pastorNameHeader = "";
                 $phoneHeader = "";
