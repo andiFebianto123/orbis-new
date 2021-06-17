@@ -172,7 +172,7 @@ class ToolsUploadController extends Controller
             $import = new ChurchImport($attrs);
             $import->import($file);
 
-            session()->flash('message', 'Sukses Mengimport Data');
+            session()->flash('message', 'Data has been successfully import');
             session()->flash('status', 'success');
 
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
@@ -203,7 +203,7 @@ class ToolsUploadController extends Controller
         return response()->json([
             'status' => true,
             'alert' => 'success',
-            'message' => 'Sukses mengimport data',
+            'message' => 'Data has been successfully import',
             'redirect_to' => url('admin/import-church'),
             'validation_errors' => [],
         ], 200);
@@ -283,7 +283,7 @@ class ToolsUploadController extends Controller
             $import = new PersonelImport($attrs);
             $import->import($file);
 
-            session()->flash('message', 'Sukses Mengimport Data');
+            session()->flash('message', 'Data has been successfully import');
             session()->flash('status', 'success');
 
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
@@ -304,7 +304,7 @@ class ToolsUploadController extends Controller
             return response()->json([
                 'status' => false,
                 'alert' => 'danger',
-                'message' => 'Gagal mengimport data',
+                'message' => 'Failure',
                 'redirect_to' => url('admin/import-personel'),
                 'validation_errors' => [],
                 'mass_errors' => $error_multiples
@@ -314,7 +314,7 @@ class ToolsUploadController extends Controller
         return response()->json([
             'status' => true,
             'alert' => 'success',
-            'message' => 'Sukses mengimport data',
+            'message' => 'Data has been successfully import',
             'redirect_to' => url('admin/import-personel'),
             'validation_errors' => [],
         ], 200);
