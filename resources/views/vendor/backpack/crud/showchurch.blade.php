@@ -74,12 +74,23 @@
 									</td>
 								</tr>
 								<tr>
+									<td>Local Church</td>
+									<td> : {{
+										App\Models\Church::where('id', $entry->church_local_id)->select('church_name')->first()->church_name ?? '-'
+											}}
+									</td>
+								<tr>
+								<tr>
 									<td>RC / DPW</td>
-									<td> :  {{ ($entry->rc_dpw) ? $entry->rc_dpw->rc_dpw_name : "-"}}</td>
+									<td> :  {{ $entry->rc_dpw->rc_dpw_name }}</td>
 								</tr>
 								<tr>
 									<td>Church Name</td>
 									<td> :  {{ $entry->church_name }}</td>
+								</tr>
+								<tr>
+									<td>Lead Pastor</td>
+									<td style="white-space: pre-line;" > :  {{ $entry->lead_pastor_name }} </td>
 								</tr>
 								<tr>
 									<td>Contact Person</td>
@@ -277,7 +288,7 @@
 									@foreach($entry->ministry_role_church as $key => $mrc)
 										<tr>
 											<td></td>
-											<td>{{$mrc->personel->first_name}} {{$mrc->personel->last_name}}</td>
+											<td>{{$mrc->personel_name}}</td>
 											<td>{{$mrc->ministry_role_church->ministry_role}}</td>
 											@if(backpack_user()->hasRole(['Super Admin','Editor']))
 											<td>
