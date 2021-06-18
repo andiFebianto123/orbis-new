@@ -29,6 +29,10 @@ class LicenseTypeCrudController extends CrudController
         CRUD::setModel(\App\Models\LicenseType::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/licensetype');
         CRUD::setEntityNameStrings('License Type', "Pastor's License Type");
+        if (backpack_user()->hasAnyRole(['Editor','Viewer']))
+        {
+            $this->crud->denyAccess('list');
+        }
     }
 
     /**

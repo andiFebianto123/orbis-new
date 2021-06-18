@@ -64,7 +64,7 @@
 									<td> : {{ $entry->founded_on }}</td>
 								</tr>
 								<tr>
-									<td>Type</td>
+									<td> Church Type</td>
 									<td> :  
 									@if(isset($entry->church_type->entities_type))
 									{{ $entry->church_type->entities_type }}

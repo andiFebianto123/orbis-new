@@ -6,6 +6,7 @@ use App\Http\Requests\ChurchRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use App\Models\StatusHistoryChurch;
+use App\Models\Church;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -204,14 +205,26 @@ class ChurchCrudController extends CrudController
         ]);
 
         $this->crud->addField([
-            'label'     => 'Type', // Table column heading
-            'type'      => 'select2',
+            'label'     => 'Church Type', // Table column heading
+            'type'      => 'select2_church_type',
             'name'      => 'church_type_id', // the column that contains the ID of that connected entity;
             'entity'    => 'church_type', // the method that defines the relationship in your Model
             'attribute' => 'entities_type', // foreign key attribute that is shown to user
             'model'     => "App\Models\ChurchEntityType",
             'tab'       => 'Church / Office Information',
         ]);
+
+        $this->crud->addField([
+            'label' => 'Local Church', // Table column heading
+            'type' => 'select2_from_array',
+            'name' => 'church_local_id', // the column that contains the ID of that connected entity;
+            'attributes' => ['id' => 'select-church-local'],
+            'options' => Church::select('id', 'church_name')->whereExists(function($query){
+                $query->from('church_types')->whereRaw('church_types.id = churches.church_type_id')
+                ->where('church_types.entities_type', 'Local Church');
+            })->get()->pluck('church_name', 'id')->toArray(),
+            'tab' => 'Church / Office Information',
+         ]);
 
         $this->crud->addField([
             'label'     => 'RC/DPW', // Table column heading

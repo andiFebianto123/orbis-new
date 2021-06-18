@@ -31,6 +31,10 @@ class AccountstatusCrudController extends CrudController
         CRUD::setModel(\App\Models\Accountstatus::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/accountstatus');
         CRUD::setEntityNameStrings('Account Status', 'Account Status');
+        if (backpack_user()->hasAnyRole(['Editor','Viewer']))
+        {
+            $this->crud->denyAccess('list');
+        }
     }
 
     /**

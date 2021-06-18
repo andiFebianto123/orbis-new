@@ -29,6 +29,10 @@ class LegalDocumentCrudController extends CrudController
         CRUD::setModel(\App\Models\LegalDocument::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/legaldocument');
         CRUD::setEntityNameStrings('Legal Document', 'Church Legal Document');
+        if (backpack_user()->hasAnyRole(['Editor','Viewer']))
+        {
+            $this->crud->denyAccess('list');
+        }
     }
 
     /**
@@ -39,13 +43,6 @@ class LegalDocumentCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        // $this->crud->setColumns(['id','documents']);
-
-        // $this->crud->addColumn([
-        //     'name' => 'id', // The db column name
-        //     'label' => "ID", // Table column heading
-        //     'type' => 'number'
-        // ]);
 
         $this->crud->addColumn([
             'name'      => 'row_number',

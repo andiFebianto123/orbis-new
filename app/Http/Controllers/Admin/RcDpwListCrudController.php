@@ -33,6 +33,10 @@ class RcDpwListCrudController extends CrudController
         CRUD::setModel(\App\Models\RcDpwList::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/rcdpwlist');
         CRUD::setEntityNameStrings('RC / DPW', 'Regional Council / DPW List');
+        if (backpack_user()->hasAnyRole(['Editor','Viewer']))
+        {
+            $this->crud->denyAccess('list');
+        }
     }
 
     /**

@@ -29,6 +29,10 @@ class ServiceTypeCrudController extends CrudController
         CRUD::setModel(\App\Models\ServiceType::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/servicetype');
         CRUD::setEntityNameStrings('Service Type', 'Service Types');
+        if (backpack_user()->hasAnyRole(['Editor','Viewer']))
+        {
+            $this->crud->denyAccess('list');
+        }
     }
 
     /**

@@ -20,6 +20,7 @@ class Church extends Model
         // 'church_status',
         'founded_on',
         'church_type_id',
+        'church_local_id',
         'rc_dpw_id',
         'church_name',
         'lead_pastor_name',

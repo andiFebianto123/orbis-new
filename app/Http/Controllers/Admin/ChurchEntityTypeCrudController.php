@@ -29,6 +29,10 @@ class ChurchEntityTypeCrudController extends CrudController
         CRUD::setModel(\App\Models\ChurchEntityType::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/churchentitytype');
         CRUD::setEntityNameStrings('Entity Type', 'Entities Type');
+        if (backpack_user()->hasAnyRole(['Editor','Viewer']))
+        {
+            $this->crud->denyAccess('list');
+        }
     }
 
     /**
