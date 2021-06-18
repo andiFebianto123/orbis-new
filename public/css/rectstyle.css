@@ -1,0 +1,25 @@
+.rect-progressbar{
+    height: 4px;
+    background: #6dc9f3;
+    border-radius: 4px;
+    margin-top:2px;
+}
+
+.file-upload {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    border: 1px solid silver;
+    padding: 40px;
+}
+.file-upload input.upload {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}

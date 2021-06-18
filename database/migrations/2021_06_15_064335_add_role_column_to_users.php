@@ -13,10 +13,12 @@ class AddRoleColumnToUsers extends Migration
      */
     public function up()
     {
+        
         if (Schema::hasColumn('users', 'role_id')) //check the column
         {
             Schema::table('users', function (Blueprint $table)
             {   
+                $table->dropForeign(['role_id']);
                 $table->dropColumn('role_id'); //drop it
             });
         }

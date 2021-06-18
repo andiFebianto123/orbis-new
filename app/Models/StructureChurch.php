@@ -17,7 +17,7 @@ class StructureChurch extends Model
 
     protected $table = 'structure_churches';
     protected $fillable = [
-        'personel_name',
+        'personel_id',
         'title_structure_id',
         'churches_id',
     ];
@@ -31,6 +31,11 @@ class StructureChurch extends Model
     public function ministry_role_church()
     {
         return $this->belongsTo('App\Models\MinistryRole', 'title_structure_id', 'id');
+    }
+
+    public function personel()
+    {
+        return $this->belongsTo('App\Models\Personel', 'personel_id', 'id');
     }
 
     public function church()

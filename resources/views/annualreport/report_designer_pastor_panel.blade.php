@@ -1,62 +1,70 @@
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-12">
         <div class="card">
             <div class="card-header">
                 <h5>Filter By</h5>
             </div>
             <div class="card-body">
-                <div class="form-group">
-                    <label>RC / DPW</label>
-                    <select id="rc-dpw-filter-select" name="rc_dpw_id_filter" class="form-control" style="width:100%">
-                        @foreach ($crud->rc_dpw as $key => $rcDpw)
-                            <option value="{{$rcDpw->rc_dpw_name}}">{{$rcDpw->rc_dpw_name}}</option>
-                        @endforeach
-                    </select>
+                <div class='row'>
+                    <div class="form-group col-sm-6">
+                        <label>RC / DPW</label>
+                        <select id="rc-dpw-filter-select" name="rc_dpw_id_filter" class="form-control" style="width:100%">
+                            @foreach ($crud->rc_dpw as $key => $rcDpw)
+                                <option value="{{$rcDpw->rc_dpw_name}}">{{$rcDpw->rc_dpw_name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label>Title</label>
+                        <select id="title-filter-select" name="title_id_filter" class="form-control" style="width:100%">
+                            @foreach ($crud->title as $title)
+                                <option value="{{$title->short_desc}}">{{$title->short_desc}}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Title</label>
-                    <select id="title-filter-select" name="title_id_filter" class="form-control" style="width:100%">
-                        @foreach ($crud->title as $title)
-                            <option value="{{$title->short_desc}}">{{$title->short_desc}}</option>
-                        @endforeach
-                    </select>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label>Country</label>
+                        <select id="country-filter-select" name="country_id_filter" class="form-control" style="width:100%">
+                            @foreach ($crud->country as $country)
+                                <option value="{{$country->country_name}}">{{$country->country_name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label>Pastor Status</label>
+                        <select id="pastor-status-filter-select" name="pastor_status_id_filter" class="form-control" style="width:100%">
+                            @foreach ($crud->pastorStatus as $pastorStatus)
+                                <option value="{{$pastorStatus->status}}">{{$pastorStatus->status}}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Country</label>
-                    <select id="country-filter-select" name="country_id_filter" class="form-control" style="width:100%">
-                        @foreach ($crud->country as $country)
-                            <option value="{{$country->country_name}}">{{$country->country_name}}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Pastor Status</label>
-                    <select id="pastor-status-filter-select" name="pastor_status_id_filter" class="form-control" style="width:100%">
-                        @foreach ($crud->pastorStatus as $pastorStatus)
-                            <option value="{{$pastorStatus->status}}">{{$pastorStatus->status}}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Card</label>
-                    <select id="card-filter-select" name="card_id_filter" class="form-control" style="width:100%">
-                        @foreach ($crud->card as $card)
-                            <option value="{{$card->card}}">{{$card->card}}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <label>Filter Type</label>
-                <div class="form-check mb-4 mt-2">
-                <div class="form-check-inline col-sm-5">
-                    <label class="form-check-label">
-                        <input type="radio" class="form-check-input" id="filter_type" name="filter_type" value="all" checked>All
-                    </label>
-                </div>
-                <div class="form-check-inline col-sm-5">
-                    <label class="form-check-label">
-                        <input type="radio" class="form-check-input" id="filter_type" name="filter_type"  value="d90">Valid by D-90
-                    </label>
-                </div>
+                <div class = "row">
+                    <div class="form-group col-sm-6">
+                        <label>Card</label>
+                        <select id="card-filter-select" name="card_id_filter" class="form-control" style="width:100%">
+                            @foreach ($crud->card as $card)
+                                <option value="{{$card->card}}">{{$card->card}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label>Filter Type</label>
+                        <div class="form-check mb-4 mt-2">
+                            <div class="form-check-inline col-sm-5">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" id="filter_type" name="filter_type" value="all" checked>All
+                                </label>
+                            </div>
+                            <div class="form-check-inline col-sm-5">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" id="filter_type" name="filter_type"  value="d90">Valid by D-90
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <button class="btn btn-primary" id="btn-search"><i class="la la-search"></i>&nbsp;Search</button>
             </div>

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\StructureChurchRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use App\Models\Personel;
+use App\Models\StructureChurch;
 
 /**
  * Class StructureChurchCrudController
@@ -50,11 +52,14 @@ class StructureChurchCrudController extends CrudController
         ]);
 
         $this->crud->addColumn([
-            'name' => 'personel_name', // The db column name
-            'label' => "Pastor Name", // Table column heading
-            'type' => 'text'
+            'name'        => 'personel_id',
+            'label'       => "Template",
+            'type'        => 'select2_from_array',
+            'options'   => $this->getPersonels(),
+            'allows_null' => false,
         ]);
 
+        
         $this->crud->addColumn([
             'name' => 'ministry_role_church', // The db column name
             'label' => "Title", // Table column heading
@@ -81,9 +86,11 @@ class StructureChurchCrudController extends CrudController
         CRUD::setValidation(StructureChurchRequest::class);
 
         $this->crud->addField([
-            'name'            => 'personel_name',
-            'label'           => "Pastor Name",
-            'type'            => 'text',
+            'label'     => "Pastor Name",
+            'type'      => 'select2_from_array',
+            'name'      => 'personel_id', // the column that contains the ID of that connected entity;
+            'options'   => $this->getPersonels(),
+            'allows_null' => false,
         ]);
 
         $this->crud->addField([
@@ -146,5 +153,18 @@ class StructureChurchCrudController extends CrudController
         \Alert::success(trans('backpack::crud.update_success'))->flash();
 
         return redirect(backpack_url('church/'.$item->churches_id.'/show'));    
+    }
+
+    private function getPersonels(){
+        // $personels = StructureChurch::join('personels', 'structur_churches.personel_id', 'personels.id')
+        //             ->where('structur_churches.churches_id', request('churches_id'))
+        //             ->get();
+        $personels = Personel::get();
+        $arr_personels = [];
+        foreach ($personels as $key => $value) {
+            $arr_personels[$value->id] = $value->first_name." ".$value->last_name;
+        }
+
+        return $arr_personels;
     }
 }

@@ -1,176 +1,88 @@
 @extends(backpack_view('blank'))
 @section('content')
 
-@if(session()->has('status'))
-	<p class="alert alert-success">{{session('status')}}</p>
-@endif
-
-@if(session()->has('status_error'))
-<p class="alert alert-danger">{{session('status_error')}}</p>
-@endif
-
-@if (isset($failures))
-	<div class="row">
-		<div class="col-md-12">
-			<div class="card">
-				<div class="card-header" style="background: #f8d7da; font-weight:bold;">
-					Log Errors
-				</div>
-				<div class="card-body">
-					<div class = "row">
-						<div class="col-md-12">
-							<table id ="tableLogError" class = "table table-striped">
-								<thead>
-									<tr>
-										<th>Row</th>
-										<th>Description</th>
-									</tr>
-								</thead>
-								<tbody>
-									@foreach ($failures as $failure)
-										@foreach ($failure['errors'] as $error)
-											<tr>
-												<td>{{$failure['row']}}</td>
-												<td>{{$error}}</td>
-											</tr>
-										@endforeach
-									@endforeach
-								</tbody>
-							</table>
+<div class="row">
+	<div class="col-md-6">
+		<div class="card">
+			<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
+				Import Pastor
+			</div>
+			<div class="card-body">
+				@if(Session::get('message'))
+				<div id="alertStatus" class="row">
+					<div class="col-md-12">
+						<div class="alert alert-{{Session::get('status')}} alert-dismissible fade show" role="alert">
+							{{Session::get('message')}}
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
 						</div>
 					</div>
 				</div>
-			</div>
-		</div>
-	</div>
-@endif
-
-<div class="row">
-	<div class="col-md-7">
-  		<div class="card">
-			<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
-			  	Import Pastor
-  			</div>
-		</div>
-		<div class="center">
-			<div class="col-md-7">
-				<form action="{{url('admin/personel-upload/')}}" method="POST" enctype="multipart/form-data">
-					@csrf
-					<input type="file" name="fileToUpload" id="fileToUpload">
-					<p>Drag your files here or click in this area.</p>
-					<button Type='submit'>Upload File</button>
-				</form>
-				@if ($errors->has('fileToUpload'))
-					@foreach ($errors->get('fileToUpload') as $error)
-						<p class= 'alert alert-danger text-small'>{{ $error }}</p>
-					@endforeach
 				@endif
+				<form id="form-upload-personel" action="{{url('admin/personel-upload/')}}" method="POST" enctype="multipart/form-data">
+					@csrf
+					<div class="form-group">
+						<div class="file-upload btn btn-default">
+							<img src="https://image.flaticon.com/icons/png/512/568/568717.png" width="64px" class="img-responsive">
+							<br>
+							<span class="text-upload">Drop Your File Here</span>
+							<input id="file_personel" class="upload rect-validation" type="file" name="file_personel" style="width: 100%; height:100%;">
+						</div>
+					</div>
+					<div class="form-group">
+						<button type='button' class="btn btn-primary" onclick="submitAfterValid('form-upload-personel', true)">Upload</button>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
 </div>
-@endsection
+@push('after_styles')
 
-@section('after_styles')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="{{asset('css/rectstyle.css')}}">
 
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
-	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
+@endpush
 
-	<style>
-		.bg-light {
-			background-color: #f9fbfd !important;
-		}
+@push('after_scripts')
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+<script src="{{asset('js/rectscript.js')}}"></script>
 
-		body{
-			background: #f9fbfd;
-		}
+<div class="modal fade bd-example-modal-lg" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" id="massError-form-upload-personel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Log Error</h5>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12 table-responsive">
+                    <table id="supportDtCust" class="table">
+                        <thead>
+                            <tr>
+                                <th width="10%">Row</th>
+                                <th>Pesan Error</th>
+                            </tr>
+                        </thead>
+                        <tbody class="tbody-errors">
+                           
+                        </tbody>
+                    </table>
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-danger" onclick="window.location = '{{url('admin/import-personel')}}'">Tutup</button>
 
-		.alert-danger {
-			color: #721c24;
-			background-color: #f8d7da;
-			border-color: #f5c6cb;
-			width: 300px;
-		}
-
-		.alert-success {
-			color: #155724;
-			background-color: #d4edda;
-			border-color: #c3e6cb;
-			width: 200px;
-		}
-
-		form{
-			position: absolute;
-			left: 40%;
-			top: 150%;
-			width: 400px;
-			height: 200px;
-			border: 4px dashed #b5c7e0;
-		}
-
-		form p{
-			width: 100%;
-			height: 100%;
-			text-align: center;
-			line-height: 200px;
-			color: #b5c7e0;
-			font-family: Arial;
-		}
-
-		form input{
-			position: absolute;
-			margin: 0;
-			padding: 0;
-			width: 100%;
-			height: 100%;
-			outline: none;
-			opacity: 0;
-		}
-
-		form button{
-			margin: 0;
-			color: #fff;
-			background: #16a085;
-			border: none;
-			width: 400px;
-			height: 35px;
-			margin-top: -20px;
-			margin-left: -4px;
-			border-radius: 4px;
-			border-bottom: 4px solid #117A60;
-			transition: all .2s ease;
-			outline: none;
-		}
-
-		form button:hover{
-			background: #149174;
-			color: #0C5645;
-		}
-
-		form button:active{
-			border:0;
-		}
-
-	</style>
-	
-@endsection
-
-@section('after_scripts')
-
-	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-	<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
-	<script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
-
-	<script>
-		$(document).ready(function() {
-		$('#tableLogError').DataTable();
-		} );
-
-		$(document).ready(function(){
-		$('form input').change(function () {
-			$('form p').text(this.files.length + " file(s) selected");
-		});
-		});
-	</script>
-	
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+$('#file_personel').change(function() {
+  $('.text-upload').text($('#file_personel')[0].files[0].name);
+});
+</script>
+@endpush
 @endsection

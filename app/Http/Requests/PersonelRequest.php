@@ -40,6 +40,9 @@ class PersonelRequest extends FormRequest
         'marital_status' => 'nullable',
         'ministry_background' => 'nullable',
         'career_background' => 'nullable',
+        'profile_image' => ['nullable', new Base64Rule(3, ['png', 'jpg', 'jpeg'])],
+        'family_image' => ['nullable', new Base64Rule(3, ['png', 'jpg', 'jpeg'])],
+        'misc_image' => ['nullable', new Base64Rule(3, ['png', 'jpg', 'jpeg'])],
         'password' => Rule::requiredIf($this->method() == 'POST'),
         'street_address' => 'nullable',
         'city' => 'nullable',
@@ -55,12 +58,12 @@ class PersonelRequest extends FormRequest
         'certificate' => ['nullable', new Base64Rule(3, ['png', 'jpg', 'jpeg'])],
         'id_card' => ['nullable', new Base64Rule(3, ['png', 'jpg', 'jpeg'])],
         // 'image' => ['nullable', new Base64Rule(3, ['png', 'jpg', 'jpeg'])],
-        'image_ids' => ['nullable', 'array'],
-        'image_ids.*' => 'nullable|regex:/^[0-9]+$/',
-        'image' => ['nullable', 'array'],
-        'image.*' => ['required', new Base64Rule(3, ['png', 'jpg', 'jpeg'], false)],
-        'image_label' => ['nullable', 'array'],
-        'image_label.*' => ['required', Rule::in(PersonelImage::$imageLabels)],
+        // 'image_ids' => ['nullable', 'array'],
+        // 'image_ids.*' => 'nullable|regex:/^[0-9]+$/',
+        // 'image' => ['nullable', 'array'],
+        // 'image.*' => ['required', new Base64Rule(3, ['png', 'jpg', 'jpeg'], false)],
+        // 'image_label' => ['nullable', 'array'],
+        // 'image_label.*' => ['required', Rule::in(PersonelImage::$imageLabels)],
         ];
     }
 
@@ -71,26 +74,27 @@ class PersonelRequest extends FormRequest
      */
     public function attributes()
     {
-        $attributes = [
-            'image_ids' => 'image ID'
-        ];
-        $arrayField = [
-            'image_ids' => 'image ID',
-            'image' => 'image',
-            'image_label' => 'image label'
-        ];
-        foreach ($arrayField as $key => $value) {
-            $i = 0;
-            if ($this->request->has($key)) {
-                $current = $this->request->get($key);
-                if(is_array($current)){
-                    foreach ($current as $innerValue) {
-                        $attributes[$key . '.' . $i] = $value . ' ' . ++$i;
-                    }
-                }
-            }
-        }
-        return $attributes;
+        // $attributes = [
+        //     'image_ids' => 'image ID'
+        // ];
+        // $arrayField = [
+        //     'image_ids' => 'image ID',
+        //     'image' => 'image',
+        //     'image_label' => 'image label'
+        // ];
+        // foreach ($arrayField as $key => $value) {
+        //     $i = 0;
+        //     if ($this->request->has($key)) {
+        //         $current = $this->request->get($key);
+        //         if(is_array($current)){
+        //             foreach ($current as $innerValue) {
+        //                 $attributes[$key . '.' . $i] = $value . ' ' . ++$i;
+        //             }
+        //         }
+        //     }
+        // }
+        // return $attributes;
+        return [];
     }
 
     /**

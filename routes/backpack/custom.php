@@ -1,5 +1,4 @@
 <?php
-
 // --------------------------
 // Custom Backpack Routes
 // --------------------------
@@ -38,7 +37,8 @@ Route::group([
     Route::crud('structurechurch', 'StructureChurchCrudController');
     Route::crud('dashboard', 'DashboardCrudController');
     Route::post('dashboard-upload', 'DashboardCrudController@uploadtest');
-    Route::crud('quickreport', 'QuickReportCrudController');
+    Route::crud('quick-report', 'QuickReportCrudController');
+    Route::post('quick-report/export-report', 'QuickReportCrudController@exportReport');
     Route::get('churchreport', 'ChurchAnnualReportController@index');
     Route::get('churchannualreportdetail/{year}', 'ChurchAnnualReportController@detail');
     Route::get('churchreportdesigner', 'ChurchAnnualReportController@reportdesigner');
@@ -82,5 +82,7 @@ Route::group([
         Route::post('detail/export-report', 'PastorReportAnnualCrudController@exportReport');
     });
     Route::crud('pastor-report-designer', 'PastorReportAnnualCrudController');
-    ROute::post('pastor-report-designer/export-report', 'PastorReportAnnualCrudController@exportReport');
+    Route::post('pastor-report-designer/export-report', 'PastorReportAnnualCrudController@exportReport');
+
+
 }); // this should be the absolute last line of this file

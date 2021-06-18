@@ -78,21 +78,19 @@
 									<td> :  {{ $entry->gender }}</td>
 								</tr>
 								<tr>
-									<td>Photo Profile</td>
-									<td> :
-										@php
-											$image_personel = App\Models\PersonelImage::select('personel_images.personel_id', 'personel_images.image')
-																	->where('personel_images.personel_id', $entry->id)
-																	->whereIn('label', ['Profile Photo', 'Foto Profil'])
-																	->get();
-
-										@endphp
-										@foreach ($image_personel as $current_image)
-											@php
-											$image = $current_image->image;
-											@endphp
-											<img width="150px" style="margin:15px" src="{{url($image)}}" alt="">
-										@endforeach
+									<td>Profile Photo</td>
+									<td> : 
+										@if ($entry->profile_image != null)
+											<img width="150px" style="margin:15px" src="{{url($entry->profile_image)}}" alt="">
+										@endif
+									</td>
+								<tr>
+								<tr>
+									<td>Misc Photo</td>
+									<td> : 
+										@if ($entry->misc_image != null)
+											<img width="150px" style="margin:15px" src="{{url($entry->misc_image)}}" alt="">
+										@endif
 									</td>
 								<tr>
 							</table>
@@ -126,19 +124,9 @@
 								<tr>
 									<td>Family Photo</td>
 									<td> :
-										@php
-											$image_family = App\Models\PersonelImage::select('personel_images.personel_id', 'personel_images.image')
-																->where('personel_images.personel_id', $entry->id)
-																->whereIn('label', ['Family Photo', 'Foto Keluarga'])
-																->get();
-
-										@endphp
-										@foreach ($image_family as $current_image)
-											@php
-											$image = $current_image->image;
-											@endphp
-											<img width="150px" style="margin:15px" src="{{url($image)}}" alt="">
-										@endforeach
+										@if ($entry->family_image != null)
+											<img width="150px" style="margin:15px" src="{{url($entry->family_image)}}" alt="">
+										@endif
 									</td>
 								</tr>
 							</table>

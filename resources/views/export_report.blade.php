@@ -1,3 +1,27 @@
+
+@push('after_styles')
+<style>
+    .overlay{
+        display: none;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 999;
+        background: rgba(255,255,255,0.8) url('http://asy-syifaa.com/images/ajax-loader.gif')  center no-repeat;
+    }
+    /* Turn off scrollbar when body element has the loading class */
+    body.loading{
+        overflow: hidden;   
+    }
+    /* Make spinner image visible when body element has the loading class */
+    body.loading .overlay{
+        display: block;
+    }
+</style>
+@endpush
+
 @push('after_scripts')
 <script>
     function exportReport(){
@@ -10,7 +34,7 @@
         }
 
         $.urlTypeDesignerCheck = function(url){
-            return realSearchUrl.match(/church*/g) != null ? 'church' : (realSearchUrl.match(/pastor*/g) != null ? 'pastor' : '')
+            return realSearchUrl.match(/church*/g) != null ? 'church' : (realSearchUrl.match(/pastor*/g) != null ? 'pastor' : (realSearchUrl.match(/quick*/g) != null ? 'quick' : ''))
         }
 
         $.replaceAllUrlComponent = function(url){
@@ -25,7 +49,7 @@
             if($(this).hasClass('active')){
                 arrayColumnVisibility.push($(this).data('column'));
             }
-        });
+        }); 
 
         $.ajax({
             xhrFields: {
@@ -43,6 +67,13 @@
                 pastor_status_id: actualMenuType != '' && actualMenuType == 'pastor'? $.replaceAllUrlComponent($.urlParam('pastor_status_id', realSearchUrl)) : null,
                 card_id: actualMenuType != '' && actualMenuType == 'pastor'? $.replaceAllUrlComponent($.urlParam('card_id', realSearchUrl)) : null,
                 filter_type: actualMenuType != '' && actualMenuType == 'pastor'? $.replaceAllUrlComponent($.urlParam('filter_type', realSearchUrl)) : null,
+                report_type: actualMenuType != '' && actualMenuType == 'quick' ? $('#report-type-select').val() : null
+            },
+            beforeSend: function(){
+                $("body").addClass("loading"); 
+            },
+            complete: function(){
+                $("body").removeClass("loading"); 
             },
             success: function(result, status, xhr) {
 

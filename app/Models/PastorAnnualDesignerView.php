@@ -42,6 +42,6 @@ class PastorAnnualDesignerView extends Model
         $todayNow = Carbon::now();
         $maximumValid = $todayNow->copy()->subDays(90);
         
-        return $value == 'all' ? $query : $query->whereDate('valid_card_end', '<=', $todayNow->toDateString())->whereDate('valid_card_end', '>=', $maximumValid->toDateString()); 
+        return $value == 'all' || $value == null ? $query : $query->whereDate('valid_card_end', '<=', $todayNow->toDateString())->whereDate('valid_card_end', '>=', $maximumValid->toDateString()); 
     }
 }

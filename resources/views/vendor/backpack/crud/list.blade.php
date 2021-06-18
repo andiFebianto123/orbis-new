@@ -27,6 +27,9 @@
             @include($name)
           @endforeach
   @endif
+  @if(isset($crud->quickReport) && !isset($crud->requestQuickReport))
+
+  @else
   @if(isset($crud->typeReport))
   <div class="row">
   <ul class="nav nav-tabs">
@@ -40,7 +43,9 @@
   </div>
   @endif
   <div class="row {{isset($crud->typeReport) ? 'card' : ''}}">
+    <div class="overlay"></div>
     @if(isset($crud->typeReport))
+
     <!-- CUSTOM CARD HEADER REPORT ANNUAL -->
     <div class="card-header">
           {{$crud->entityName}}
@@ -168,6 +173,7 @@
           @endforeach
         @endif
   </div>
+  @endif
 
 @endsection
 
@@ -183,7 +189,7 @@
 
   <!-- CRUD LIST CONTENT - crud_list_styles stack -->
   @stack('crud_list_styles')
-  @if(isset($crud->typeReport))
+  @if(isset($crud->typeReport) || isset($crud->quickReport))
   <style>
       
       .card-header{

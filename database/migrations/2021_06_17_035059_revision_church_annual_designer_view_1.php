@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateChurchAnnualDesignerView extends Migration
+class RevisionChurchAnnualDesignerView1 extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,13 @@ class CreateChurchAnnualDesignerView extends Migration
      */
     public function up()
     {
-       DB::statement("DROP VIEW IF EXISTS church_annual_designer_views");
+        DB::statement("DROP VIEW IF EXISTS church_annual_designer_views");
        DB::statement("CREATE VIEW church_annual_designer_views AS
             SELECT  
                 churches.id,
                 rc_dpw_name, 
                 church_name, 
+                lead_pastor_name,
                 entities_type, 
                 contact_person,
                 church_address,
@@ -79,7 +80,27 @@ class CreateChurchAnnualDesignerView extends Migration
                     ) AS temps ON status_history_churches.id = temps.id
                     WHERE 
                         temps.id IS NULL
-                ) AS status_churches ON churches.id = status_churches.churches_id;
+                ) AS status_churches ON churches.id = status_churches.churches_id
+                LEFT JOIN
+                (
+					SELECT churches_id, group_concat(name) as lead_pastor_name from (
+						SELECT churches_id, concat(name, ' (', ministry_role, ')') AS name from structure_churches
+							INNER JOIN (
+								SELECT
+									personels.id,
+									CONCAT(first_name, ' ', last_name) as name
+								FROM
+									personels
+							) as pd on pd.id = structure_churches.personel_id
+							INNER JOIN (
+								SELECT 
+									id,
+									ministry_role
+								FROM
+									ministry_roles
+							) as md on md.id = structure_churches.title_structure_id
+					) as ln
+				) as lnd on lnd.churches_id = churches.id;
        ");
     }
 
@@ -89,7 +110,7 @@ class CreateChurchAnnualDesignerView extends Migration
      * @return void
      */
     public function down()
-    {           
+    {
         DB::statement("DROP VIEW IF EXISTS church_annual_designer_views");
     }
 }

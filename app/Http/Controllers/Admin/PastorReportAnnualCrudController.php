@@ -170,7 +170,7 @@ class PastorReportAnnualCrudController extends CrudController
                     'name' => 'valid_card_end'
                 ],
                 [
-                    'label' => 'Current Certiicate Number',
+                    'label' => 'Current Certificate Number',
                     'type' => 'text',
                     'name' => 'current_certificate_number'
                 ],

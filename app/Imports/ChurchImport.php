@@ -6,129 +6,177 @@ use App\Models\Church;
 use App\Models\CountryList;
 use App\Models\RcDpwList;
 use App\Models\ChurchEntityType;
-use App\Models\LogErrorExcel;
+use App\Models\Personel;
+use App\Models\StructureChurch;
+use App\Models\MinistryRole;
 use App\Models\StatusHistoryChurch;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\WithValidation;
-use Illuminate\Validation\Rule;
-use Maatwebsite\Excel\Validators\Failure;
-use Maatwebsite\Excel\Concerns\SkipsOnFailure;
-use Maatwebsite\Excel\Concerns\SkipsFailures;
-use Maatwebsite\Excel\Row;
-use Maatwebsite\Excel\Concerns\OnEachRow;
+use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\ToCollection;
+use Maatwebsite\Excel\Imports\HeadingRowFormatter;
+use Maatwebsite\Excel\Concerns\WithStartRow;
+HeadingRowFormatter::default('none');
 
-class ChurchImport implements OnEachRow, WithHeadingRow, WithValidation, SkipsOnFailure
-
+class ChurchImport implements ToCollection,  WithValidation, WithHeadingRow
 {
-    use Importable, SkipsFailures;
+    use Importable;
 
-    public function __construct($code, $filename)
+    public function  __construct($attrs)
     {
-        $this->code = $code;
-        $this->filename = $filename;
-        $this->failures = [];
+      $this->filename = $attrs['filename'];
     }
 
-    public function onRow(Row $row)
+    public function collection(Collection $rows)
     {
-        $country  = CountryList::where('country_name', $row['country'])->first();
-        // if($country === null || $country = "-" || $country = "-------"){
-        //     $country = null;
-        // }
-        $rcdpw  =  RcDpwList::where('rc_dpw_name', $row['rc_dpw'])->first();
-        $church_type  =  ChurchEntityType::where('entities_type', $row['church_type'])->first();
-        $row['founded_on'] = trim($row['founded_on'] ?? '');
-        $date =  $row['founded_on'] == '-' || $row['founded_on'] == '' ? NULL : $this->formatDateExcel($row['founded_on']);
-        $lead_pastor_name = str_replace('\n', "\n", $row['lead_pastor_name'] ?? '');
-        // $lead_pastor_name = $row['lead_pastor_name'] == '. ' ? NULL : $row['lead_pastor_name'];
-        $contact_person = $row['contact_person'] == '-' || $row['contact_person'] == '' ? NULL : $row['contact_person'];
-        // $church_address = $row['church_address'] == '-' || $row['church_address'] == '' ? NULL : $row['church_address'];
-        // $office_address = $row['office_address'] == '-' || $row['office_address'] == '' ? NULL : $row['office_address'];
-        $city = $row['city'] == '-' || $row['city'] == '' ? NULL : $row['city'];
-        $province = $row['province'] == '-' || $row['province'] == '' ? NULL : $row['province'];
-        // $phone = $row['phone'] == '-' || $row['phone'] == '' ? NULL : $row['phone'];
-        $church_address = trim(str_replace('_x000D_', "\n", $row['church_address'] ?? ''));
-        $office_address = trim(str_replace('_x000D_', "\n", $row['office_address'] ?? ''));
-        $phone = trim(str_replace('_x000D_', "\n", $row['phone'] ?? ''));
-        $fax = trim(str_replace('_x000D_', "\n", $row['fax'] ?? ''));
-        // $fax = $row['fax'] == '-' || $row['fax'] == '' ? NULL : $row['fax'];
-        $postal_code = $row['postal_code'] == '-' || $row['postal_code'] == '' ? NULL : $row['postal_code'];
-        // $first_email = $row['first_email'] == '-' || $row['first_email'] == '' ? NULL : $row['first_email'];
-        $first_email = trim(str_replace('_x000D_', "\n", $row['first_email'] ?? ''));
-        $service_time_church = $row['service_time_church'] == ',' ? NULL : $row['service_time_church'];
+        foreach ($rows as $key => $row) {
+           $this->singleRow($row);
+        }
+    }
 
-        // $church = Church::where('church_name',$row['church_name'])->exists();
-        // if ($church){
-        //     return null;
-        // }
+    private function singleRow($row)
+    {
+        $row_rc_dpw = $row['RC / DPW'];
+        $row_church_name = $row['Church Name'];
+        $row_church_type = $row['Church Type'];
+        $row_lead_pastor_name = $row['Lead Pastor Name'];
+        $row_contact_person = $row['Contact Person'];
+        $row_church_address = $row['Church Address'];
+        $row_office_address = $row['Office Address'];
+        $row_city = $row['City'];
+        $row_province = $row['Province / State'];
+        $row_postal_code = $row['Postal Code'];
+        $row_country = $row['Country'];
+        $row_phone = $row['Phone'];
+        $row_fax = $row['Fax'];
+        $row_email = $row['Email'];
+        $row_church_status = $row['Church Status'];
+        $row_founded_on = $row['Founded On'];
+        $row_service_time_church = $row['Service Time Church'];
+        $row_notes = $row['Notes'];
 
-        // if ($rcdpw == NULL) {
-        //     dd($row['rc_dpw']);
-        // }
-
-        // if ($country == NULL) {
-        //     dd($row['country']);
-        // }
-
-        // if ($church_type == NULL) {
-        //     dd($row['church_type']);
-        // }
-
-        //    if (isset($country) && isset($rcdpw) ) {
+        // $row_rc_dpw = $row[0];
+        // $row_church_name = $row[1];
+        // $row_church_type = $row[2];
+        // $row_lead_pastor_name = $row[3];
+        // $row_contact_person = $row[4];
+        // $row_church_address = $row[5];
+        // $row_office_address = $row[6];
+        // $row_city = $row[7];
+        // $row_province = $row[8];
+        // $row_postal_code = $row[9];
+        // $row_country = $row[10];
+        // $row_phone = $row[11];
+        // $row_fax = $row[12];
+        // $row_email = $row[13];
+        // $row_church_status = $row[14];
+        // $row_founded_on = $row[15];
+        // $row_service_time_church = $row[16];
+        // $row_notes = $row[17];
         
+        $country  = CountryList::where('country_name', $row_country)->first();
+        $church_type  =  ChurchEntityType::where('entities_type', $row_church_type)->first();
+        $rcdpw  =  RcDpwList::where('rc_dpw_name', $row_rc_dpw)->first();
+        $row_founded_on = trim($row_founded_on ?? '');
+        $date =  $row_founded_on == '-' || $row_founded_on == '' ? NULL : $this->formatDateExcel($row_founded_on);
+        
+        $contact_person = $row_contact_person == '-' || $row_contact_person == '' ? NULL : $row_contact_person;
+        $city = $row_city == '-' || $row_city == '' ? NULL : $row_city;
+        $province = $row_province == '-' || $row_province == '' ? NULL : $row_province;
+        $church_address = trim(str_replace('_x000D_', "\n", $row_church_address ?? ''));
+        $office_address = trim(str_replace('_x000D_', "\n", $row_office_address ?? ''));
+        $phone = trim(str_replace('_x000D_', "\n", $row_phone ?? ''));
+        $fax = trim(str_replace('_x000D_', "\n", $row_fax ?? ''));
+        $postal_code = $row_postal_code == '-' || $row_postal_code == '' ? NULL : $row_postal_code;
+        $first_email = trim(str_replace('_x000D_', "\n", $row_email ?? ''));
+        $service_time_church = $row_service_time_church == ',' ? NULL : $row_service_time_church;
+
+        $exists_church = Church::where('church_name', $row_church_name)
+                            ->where('phone', $phone)
+                            ->where('postal_code', $postal_code)
+                            ->exists();
+
         $church = new Church([
             'founded_on'     => $date,
             'rc_dpw_id'      => ($rcdpw['id'] ?? null),
-            'church_type_id' => ($church_type['id'] ?? null),
-            'church_name'    => $row['church_name'],
-            'lead_pastor_name' => $lead_pastor_name,
+            'church_type_id' => ($church_type->id ?? null),
+            'church_name'    => $row_church_name,
+            // 'lead_pastor_name' => json_encode($this->handlePastorName($row['lead_pastor_name'])),
             'contact_person'   => $contact_person,
             'church_address'   => $church_address,
             'office_address' => $office_address,
             'city'           => $city,
             'province'    => $province,
             'postal_code' => $postal_code,
-            'country_id'  => ($country['id'] ?? null),
+            'country_id'  => ($country->id ?? null),
             'first_email'           => $first_email,
             'phone'                 => $phone,
             'fax'                   => $fax,
             'service_time_church'   => $service_time_church,
-            'notes'           => $row['notes'],
-        ]);
-        
-        $church->save();
-
-        $status_history = new StatusHistoryChurch([
-            'status'  => $row['church_status'],
-            'date_status' => Carbon::now(),
-            'churches_id' => $church->id,
+            'notes'           => $row_notes,
         ]);
 
-        $status_history->save();
+        if (!$exists_church) {
+            $church->save();
+
+            foreach ($this->handlePastorName($row_lead_pastor_name) as $key => $hpn) {
+                if ($hpn != []) {
+                    $structure_church = new StructureChurch([
+                        'personel_id'  => $hpn['pastor_id'],
+                        'title_structure_id' => $hpn['ministry_id'],
+                        'churches_id' => $church->id,
+                    ]);
+                    $structure_church->save();
+                }
+               
+            }
+
+            $status_history = new StatusHistoryChurch([
+                'status'  => $row_church_status,
+                'date_status' => Carbon::now(),
+                'churches_id' => $church->id,
+            ]);
+            $status_history->save();
+        }
+    }
+
+    public function headingRow(): int
+    {
+        return 2;
     }
 
     public function rules(): array
     {
         return [
-            // 'rc_dpw' => 'required|exists:rc_dpwlists,rc_dpw_name',
-            // 'country' => 'required|exists:country_lists,country_name',
-            // 'country' => 'exists:country_lists,country_name',
-            // 'first_email' => 'required|email|unique:churches,first_email',
-            // 'church_name' => 'unique:churches,church_name',
+            'Lead Pastor Name' => function($attribute, $value, $onFailure) {
+                $lead_pastor_name = $this->handlePastorName($value);
+                if (sizeof($lead_pastor_name) == 0) {
+                    $onFailure('Invalid Lead Pastor Format :: Firstname Lastname (Title)');
+                }
+            },
+            // 'rc_dpw' => function($attribute, $value, $onFailure) {
+            //     if (!RcDpwList::where('rc_dpw_name', $value)->first()) {
+            //          $onFailure('Invalid RC DPW');
+            //     }
+            // },
+            // 'country' => function($attribute, $value, $onFailure) {
+            //     if (!CountryList::where('country_name',$value)->first()) {
+            //          $onFailure('Invalid Country');
+            //     }
+            // },
+            // 'church_type' => function($attribute, $value, $onFailure) {
+            //     if (!ChurchEntityType::where('entities_type', $value)->first()) {
+            //          $onFailure('Invalid Church Type');
+            //     }
+            // },
         ];
     }
 
     public function customValidationMessages()
     {
-        return [
-            // 'first_email.required'    => 'Email must not be empty!',
-            // 'first_email.email'       => 'Incorrect Church Email Address!',
-            // 'first_email.unique'      => 'The Church email has already been used',
-            // 'church_name.unique'      => 'The Church Name has already been used',
-        ];
+        return [];
     }
 
     function formatDateExcel($dateExcel){
@@ -138,23 +186,61 @@ class ChurchImport implements OnEachRow, WithHeadingRow, WithValidation, SkipsOn
         return Carbon::parse($dateExcel)->toDateString();
     }
 
-    public function onFailure(Failure ...$failures)
-    {
-        $this->failures = $failures;
-        foreach ($failures as $failure) {
-            $insert = new LogErrorExcel();
-            $insert->row = $failure->row();
-            $insert->type = 'Church';
-            $insert->code = $this->code;
-            $insert->file_name = $this->filename;
-            $insert->description = json_encode($failure->errors());
-
-            $insert->save();
+    private function handlePastorName($value){
+        $lead_pastor_name = str_replace('\n', "\n", $value ?? '');
+        $arr_pastor_names = [];
+        $count_pastor = 0;
+        $count_valid_pastor = 0;
+        if (strpos( $lead_pastor_name, "\n") !== false) {
+            foreach(explode("\n",$lead_pastor_name) as $lead_pastore) {  
+                $arr_pastor_name = $this->unitPastorName($lead_pastore);
+                if($arr_pastor_name != []){
+                    $arr_pastor_names[] = $arr_pastor_name;
+                    $count_valid_pastor ++;
+                }
+                $count_pastor++;
+            }
+        }else{
+            $arr_pastor_names[] = $this->unitPastorName($value);
         }
+        return ($count_pastor == $count_valid_pastor) ? $arr_pastor_names :[];
     }
 
-    public function failures()
-    {
-        return $this->failures;
+
+    private function unitPastorName($lead_pastore){
+        $arr_pastor_name = [];
+        if (strpos( $lead_pastore, '(') !== false) {
+            $col_pastor = explode("(",$lead_pastore);
+            
+            $first_name = "";
+            $last_name = "";
+            $filter_personel = [];
+            if (strpos( $col_pastor[0], ' ') !== false) {
+                foreach (explode(" ",$col_pastor[0]) as $key => $fln) {
+                    if ($key == 0) {
+                        $first_name = $fln;
+                    }else{
+                        $last_name .= $fln." ";
+                    }
+                }
+                $filter_personel[] = ['first_name', $first_name];
+                if($last_name != ""){
+                    $filter_personel[] = ['last_name', rtrim($last_name, " ")];
+                }
+            }
+
+            $personel = Personel::where($filter_personel)->first();
+            $ministry_role = MinistryRole::where('ministry_role', str_replace(")", "", $col_pastor[1]))->first();
+
+            if (isset($personel) && isset($ministry_role)) {
+                $arr_pastor_name = [
+                    'pastor_id' =>  $personel->id,
+                    'ministry_id' =>  $ministry_role->id,
+                    'pastor_name' =>  $col_pastor[0],
+                    'pastor_ministry_role' =>  str_replace(")", "", $col_pastor[1]),
+                ];
+            }
+        } 
+        return $arr_pastor_name;
     }
 }
