@@ -79,7 +79,7 @@
 										App\Models\Church::where('id', $entry->church_local_id)->select('church_name')->first()->church_name ?? '-'
 											}}
 									</td>
-								<tr>
+								</tr>
 								<tr>
 									<td>RC / DPW</td>
 									<td> :  {{ $entry->rc_dpw->rc_dpw_name }}</td>
