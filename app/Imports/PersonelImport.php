@@ -90,7 +90,7 @@ class PersonelImport implements ToCollection, WithHeadingRow, WithValidation
                                 ->where('last_name', $row_last_name)
                                 ->where('date_of_birth', $date_of_birth)
                                 ->first();
-            $update_personel->acc_status_id = ($acc_status['id'] ?? null);
+            // $update_personel->acc_status_id = ($acc_status['id'] ?? null);
             $update_personel->rc_dpw_id = ($rcdpw['id'] ?? null);
             $update_personel->title_id = $title['id'];
             $update_personel->first_name = $row_first_name;
@@ -126,7 +126,7 @@ class PersonelImport implements ToCollection, WithHeadingRow, WithValidation
 
         }else{
             $new_personel = new Personel();
-            $new_personel->acc_status_id = ($acc_status['id'] ?? null);
+            // $new_personel->acc_status_id = ($acc_status['id'] ?? null);
             $new_personel->rc_dpw_id = ($rcdpw['id'] ?? null);
             $new_personel->title_id = $title['id'];
             $new_personel->first_name = $row_first_name;
