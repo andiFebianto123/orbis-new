@@ -2,6 +2,7 @@ function submitAfterValid(formId, massError = false) {
     $('.btn').attr('disabled', 'disabled')
     var datastring = $("#"+formId).serialize()
     var formData = new FormData($("#"+formId)[0]);
+    var percentComplete = 0
 
     var url = $("#"+formId).attr('action')
     
@@ -20,10 +21,10 @@ function submitAfterValid(formId, massError = false) {
             $("#"+formId).append("<div class='progress-loading' style='margin-top:10px;text-align:center;'></div>")
             xhr.upload.addEventListener("progress", function(evt) {
               if (evt.lengthComputable) {
-                var percentComplete = evt.loaded / evt.total;
+                percentComplete = evt.loaded / evt.total;
                 percentComplete = parseInt(percentComplete * 100);
-                var htmlProgress = "<span>Processing...</span><br><img src='https://asy-syifaa.com/images/ajax-loader.gif' style='height: 12px;width: 100%;'>"
-                // var htmlProgress = "<span>Processing... ("+percentComplete+"%)</span><div class='rect-progressbar' style='width:"+percentComplete+"%;'></div>"
+                // var htmlProgress = "<span>Processing...</span><br><img src='https://asy-syifaa.com/images/ajax-loader.gif' style='height: 12px;width: 100%;'>"
+                var htmlProgress = "<span>Processing... ("+percentComplete+"%)</span><div class='rect-progressbar' style='width:"+percentComplete+"%;'></div>"
                 $('.progress-loading').html(htmlProgress)
                 
                 if (percentComplete === 100) {

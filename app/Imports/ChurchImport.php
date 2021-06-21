@@ -98,35 +98,70 @@ class ChurchImport implements ToCollection,  WithValidation, WithHeadingRow
                             ->where('postal_code', $postal_code)
                             ->exists();
 
-        $church = new Church([
-            'founded_on'     => $date,
-            'rc_dpw_id'      => ($rcdpw['id'] ?? null),
-            'church_type_id' => ($church_type->id ?? null),
-            'church_name'    => $row_church_name,
-            // 'lead_pastor_name' => json_encode($this->handlePastorName($row['lead_pastor_name'])),
-            'contact_person'   => $contact_person,
-            'church_address'   => $church_address,
-            'office_address' => $office_address,
-            'city'           => $city,
-            'province'    => $province,
-            'postal_code' => $postal_code,
-            'country_id'  => ($country->id ?? null),
-            'first_email'           => $first_email,
-            'phone'                 => $phone,
-            'fax'                   => $fax,
-            'service_time_church'   => $service_time_church,
-            'notes'           => $row_notes,
-        ]);
+        if ($exists_church) {
+            $update_church = Church::where('church_name', $row_church_name)
+                        ->where('phone', $phone)
+                        ->where('postal_code', $postal_code)->first();
+            $update_church->founded_on = $date;
+            $update_church->rc_dpw_id = ($rcdpw['id'] ?? null);
+            $update_church->church_type_id = ($church_type->id ?? null);
+            $update_church->church_name = $row_church_name;
+            $update_church->contact_person = $contact_person;
+            $update_church->church_address = $church_address;
+            $update_church->office_address = $office_address;
+            $update_church->city = $city;
+            $update_church->province = $province;
+            $update_church->postal_code = $postal_code;
+            $update_church->country_id = ($country->id ?? null);
+            $update_church->first_email = $first_email;
+            $update_church->phone = $phone;
+            $update_church->fax = $fax;
+            $update_church->service_time_church = $service_time_church;
+            $update_church->notes = $row_notes;
+            $update_church->save();
+            StructureChurch::where('churches_id', $update_church->id)->delete();
 
-        if (!$exists_church) {
-            $church->save();
+            foreach ($this->handlePastorName($row_lead_pastor_name) as $key => $hpn) {
+                if ($hpn != []) {
+                    $structure_church = new StructureChurch();
+                    $structure_church->churches_id = $update_church->id;
+                    $structure_church->personel_id = $hpn['pastor_id'];
+                    $structure_church->title_structure_id = $hpn['ministry_id'];
+                    $structure_church->save();
+                }
+            }
+
+            $status_history =  StatusHistoryChurch::where('churches_id',  $update_church->id)->first();
+            $status_history->status = $row_church_status;
+            $status_history->date_status = Carbon::now();
+            $status_history->save();
+
+        }else {
+            $new_church = new Church();
+            $new_church->founded_on = $date;
+            $new_church->rc_dpw_id = ($rcdpw['id'] ?? null);
+            $new_church->church_type_id = ($church_type->id ?? null);
+            $new_church->church_name = $row_church_name;
+            $new_church->contact_person = $contact_person;
+            $new_church->church_address = $church_address;
+            $new_church->office_address = $office_address;
+            $new_church->city = $city;
+            $new_church->province = $province;
+            $new_church->postal_code = $postal_code;
+            $new_church->country_id = ($country->id ?? null);
+            $new_church->first_email = $first_email;
+            $new_church->phone = $phone;
+            $new_church->fax = $fax;
+            $new_church->service_time_church = $service_time_church;
+            $new_church->notes = $row_notes;
+            $new_church->save();
 
             foreach ($this->handlePastorName($row_lead_pastor_name) as $key => $hpn) {
                 if ($hpn != []) {
                     $structure_church = new StructureChurch([
                         'personel_id'  => $hpn['pastor_id'],
                         'title_structure_id' => $hpn['ministry_id'],
-                        'churches_id' => $church->id,
+                        'churches_id' => $new_church->id,
                     ]);
                     $structure_church->save();
                 }
@@ -136,7 +171,7 @@ class ChurchImport implements ToCollection,  WithValidation, WithHeadingRow
             $status_history = new StatusHistoryChurch([
                 'status'  => $row_church_status,
                 'date_status' => Carbon::now(),
-                'churches_id' => $church->id,
+                'churches_id' => $new_church->id,
             ]);
             $status_history->save();
         }
@@ -153,7 +188,7 @@ class ChurchImport implements ToCollection,  WithValidation, WithHeadingRow
             'Lead Pastor Name' => function($attribute, $value, $onFailure) {
                 $lead_pastor_name = $this->handlePastorName($value);
                 if (sizeof($lead_pastor_name) == 0) {
-                    $onFailure('Invalid Lead Pastor Format :: Firstname Lastname (Title)');
+                    $onFailure('Not Exist Pastor or Invalid Lead Pastor Format :: Firstname Lastname (Title)');
                 }
             },
             // 'rc_dpw' => function($attribute, $value, $onFailure) {
