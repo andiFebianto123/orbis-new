@@ -89,10 +89,6 @@
 									<td> :  {{ $entry->church_name }}</td>
 								</tr>
 								<tr>
-									<td>Lead Pastor</td>
-									<td style="white-space: pre-line;" > :  {{ $entry->lead_pastor_name }} </td>
-								</tr>
-								<tr>
 									<td>Contact Person</td>
 									<td> :  {{ $entry->contact_person }}</td>
 								</tr>
@@ -199,7 +195,7 @@
 								<tbody>
 									@foreach($entry->status_history_church as $key => $shc)
 										<tr>
-											<td>{{$shc->status}}</td>
+											<td>{{$shc->status ?? '-'}}</td>
 											<td>{{$shc->reason}}</td>
 											<td>{{$shc->date_status}}</td>
 											@if(backpack_user()->hasRole(['Super Admin','Editor']))
@@ -288,7 +284,7 @@
 									@foreach($entry->ministry_role_church as $key => $mrc)
 										<tr>
 											<td></td>
-											<td>{{$mrc->personel_name}}</td>
+											<td>{{$mrc->personel-> first_name." ".$mrc->personel->last_name}}</td>
 											<td>{{$mrc->ministry_role_church->ministry_role}}</td>
 											@if(backpack_user()->hasRole(['Super Admin','Editor']))
 											<td>

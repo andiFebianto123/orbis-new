@@ -298,27 +298,6 @@ class PersonelCrudController extends CrudController
             ],
         ]);
 
-        // $this->crud->addField([
-        //     'name' => 'child_name',
-        //     'label' => "Child Name",
-        //     'type' => 'text',
-        //     'tab' => 'Biodata',
-        // ]);
-
-        // $this->crud->addField([
-        //     'name' => 'ministry_background',
-        //     'label' => "Ministry Background",
-        //     'type' => 'text',
-        //     'tab' => 'Biodata',
-        // ]);
-
-        // $this->crud->addField([
-        //     'name' => 'career_background',
-        //     'label' => "Career Background",
-        //     'type' => 'text',
-        //     'tab' => 'Biodata',
-        // ]);
-
         $this->crud->addField([
             'label' => "Upload Profile Photo (Max 3mb)",
             'name' => "profile_image",

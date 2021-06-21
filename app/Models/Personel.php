@@ -138,7 +138,7 @@ class Personel extends Authenticatable
 
     public function church()
     {
-        return $this->hasMany('App\Models\StructurChurch', 'personel_id', 'id');
+        return $this->hasMany('App\Models\StructureChurch', 'personel_id', 'id');
     }
 
     /*

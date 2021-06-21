@@ -93,12 +93,6 @@ class ChurchCrudController extends CrudController
         ]);
 
         $this->crud->addColumn([
-            'name' => 'lead_pastor_name', // The db column name
-            'label' => "Lead Pastor", // Table column heading
-            'type' => 'text'
-        ]);
-
-        $this->crud->addColumn([
             'name' => 'contact_person', // The db column name
             'label' => "Contact Person", // Table column heading
             'type' => 'text'
@@ -240,13 +234,6 @@ class ChurchCrudController extends CrudController
             'name'            => 'church_name',
             'label'           => "Church Name",
             'type'            => 'text',
-            'tab'             => 'Church / Office Information',
-        ]);
-
-        $this->crud->addField([
-            'name'            => 'lead_pastor_name',
-            'label'           => "Lead Pastor",
-            'type'            => 'textarea',
             'tab'             => 'Church / Office Information',
         ]);
 
