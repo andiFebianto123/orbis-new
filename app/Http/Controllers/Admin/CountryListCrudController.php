@@ -33,6 +33,10 @@ class CountryListCrudController extends CrudController
         CRUD::setModel(\App\Models\CountryList::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/countrylist');
         CRUD::setEntityNameStrings('Country', 'Country List');
+        if (backpack_user()->hasAnyRole(['Editor','Viewer']))
+        {
+            $this->crud->denyAccess('list');
+        }
     }
 
     /**

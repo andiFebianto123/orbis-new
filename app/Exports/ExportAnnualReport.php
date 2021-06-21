@@ -6,6 +6,7 @@ use App\Models\ChurchAnnualView;
 use App\Models\ChurchAnnualDesignerView;
 use App\Models\PastorAnnualView;
 use App\Models\PastorAnnualDesignerView;
+use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\RegistersEventListeners;
 use Maatwebsite\Excel\Concerns\FromView;
@@ -31,7 +32,6 @@ class ExportAnnualReport implements FromView,WithEvents
     }
     public function view(): View
     {
-        $test = "A";
         $type = $this->type;
         if($type == 'church_annual'){
             $title = 'Church Annual Report';
@@ -58,6 +58,31 @@ class ExportAnnualReport implements FromView,WithEvents
             $title = "Pastor Report";
             $dataColumn = PastorAnnualDesignerView::rcDpw($this->filterBy['rc_dpw_name'] ?? null)->country($this->filterBy['country_name'] ?? null)->shortDesc($this->filterBy['short_desc'] ?? null)->status($this->filterBy['status'] ?? null)->card($this->filterBy['card'] ?? null)->dayValid($this->filterBy['filter_type'])->get()->toArray();
         }
+        else if($type == "new_church"){
+            $title = "New Church This Year";
+            $dataColumn = ChurchAnnualDesignerView::year(Carbon::now()->year)->get()->toArray();
+        }
+        else if($type == "new_pastor"){
+            $title = "New Pastor This Year";
+            $dataColumn = PastorAnnualDesignerView::year(Carbon::now()->year)->get()->toArray();
+        }
+        else if($type == "recent_church"){
+            $title = "Recently Inactive Church";
+            $dataColumn = ChurchAnnualDesignerView::year(Carbon::now()->year)->where('status', '=','Non-active')->get()->toArray();
+        }
+        else if($type == "recent_pastor"){
+            $title = "Recently Inactive Pastor";
+            $dataColumn = PastorAnnualDesignerView::year(Carbon::now()->year)->where('status', '=', 'Inactive')->get()->toArray();
+        }
+        else if($type == "all_church"){
+            $title = "All Church";
+            $dataColumn = ChurchAnnualDesignerView::get()->toArray();
+        }
+        else if($type == "all_pastor"){
+            $title = "All Pastor";
+            $dataColumn = PastorAnnualDesignerView::get()->toArray();
+        }
+        
         return view('exports.export_report',[
             'title' => $title,
             'columnHeader' => $this->columnHeader,

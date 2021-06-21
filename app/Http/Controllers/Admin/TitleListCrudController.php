@@ -29,6 +29,10 @@ class TitleListCrudController extends CrudController
         CRUD::setModel(\App\Models\TitleList::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/titlelist');
         CRUD::setEntityNameStrings('Title', 'Title List');
+        if (backpack_user()->hasAnyRole(['Editor','Viewer']))
+        {
+            $this->crud->denyAccess('list');
+        }
     }
 
     /**
@@ -39,13 +43,6 @@ class TitleListCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        // $this->crud->setColumns(['id','short_desc', 'long_desc']);
-
-        // $this->crud->addColumn([
-        //     'name' => 'id', // The db column name
-        //     'label' => "ID", // Table column heading
-        //     'type' => 'number'
-        // ]);
 
         $this->crud->addColumn([
             'name'      => 'row_number',

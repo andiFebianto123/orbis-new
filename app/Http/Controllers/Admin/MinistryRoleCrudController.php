@@ -29,6 +29,10 @@ class MinistryRoleCrudController extends CrudController
         CRUD::setModel(\App\Models\MinistryRole::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/ministryrole');
         CRUD::setEntityNameStrings('Ministry Role', 'Ministry Role');
+        if (backpack_user()->hasAnyRole(['Editor','Viewer']))
+        {
+            $this->crud->denyAccess('list');
+        }
     }
 
     /**

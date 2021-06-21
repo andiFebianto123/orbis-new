@@ -9,7 +9,7 @@
 	<ul class="nav-dropdown-items">
         <li class='nav-item'><a class='nav-link' href='{{ backpack_url('church-annual-report') }}'><i class='nav-icon la la-church'></i> Church Reports</a></li>
         <li class='nav-item'><a class='nav-link' href='{{ backpack_url('pastor-annual-report') }}'><i class='nav-icon la la-users'></i> Pastor Reports</a></li>
-        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('quickreport') }}'><i class='nav-icon la la-list'></i> Quick Reports</a></li>
+        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('quick-report') }}'><i class='nav-icon la la-list'></i> Quick Reports</a></li>
 	</ul>
 </li>
 <!-- <li class='nav-item'><a class='nav-link' href='{{ backpack_url('toolsupload') }}'><i class='nav-icon la la-cog'></i> Tools</a></li> -->
@@ -48,9 +48,9 @@
 <li class="nav-item nav-dropdown">
 	<a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-file"></i>Report</a>
 	<ul class="nav-dropdown-items">
-        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('churchreport') }}'><i class='nav-icon la la-church'></i> Church Reports</a></li>
-        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('pastorreport') }}'><i class='nav-icon la la-users'></i> Pastor Reports</a></li>
-        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('quickreport') }}'><i class='nav-icon la la-list'></i> Quick Reports</a></li>
+        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('church-annual-report') }}'><i class='nav-icon la la-church'></i> Church Reports</a></li>
+        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('pastor-annual-report') }}'><i class='nav-icon la la-users'></i> Pastor Reports</a></li>
+        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('quick-report') }}'><i class='nav-icon la la-list'></i> Quick Reports</a></li>
 	</ul>
 </li>
 <!-- <li class='nav-item'><a class='nav-link' href='{{ backpack_url('toolsupload') }}'><i class='nav-icon la la-cog'></i> Tools</a></li> -->

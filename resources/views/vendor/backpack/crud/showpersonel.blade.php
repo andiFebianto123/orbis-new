@@ -84,7 +84,7 @@
 											<img width="150px" style="margin:15px" src="{{url($entry->profile_image)}}" alt="">
 										@endif
 									</td>
-								<tr>
+								</tr>
 								<tr>
 									<td>Misc Photo</td>
 									<td> : 
@@ -566,7 +566,7 @@
 								<tbody>
 									@foreach($entry->status_history as $key => $sh)
 										<tr>
-											<td>{{$sh->accountstatushistories->acc_status}}</td>
+											<td>{{$sh->accountstatushistories->acc_status ?? '-'}}</td>
 											<td>{{$sh->reason}}</td>
 											<td>{{$sh->date_status}}</td>
 											@if(backpack_user()->hasRole(['Super Admin','Editor']))

@@ -64,7 +64,7 @@
 									<td> : {{ $entry->founded_on }}</td>
 								</tr>
 								<tr>
-									<td>Type</td>
+									<td> Church Type</td>
 									<td> :  
 									@if(isset($entry->church_type->entities_type))
 									{{ $entry->church_type->entities_type }}
@@ -74,8 +74,15 @@
 									</td>
 								</tr>
 								<tr>
+									<td>Local Church</td>
+									<td> : {{
+										App\Models\Church::where('id', $entry->church_local_id)->select('church_name')->first()->church_name ?? '-'
+											}}
+									</td>
+								</tr>
+								<tr>
 									<td>RC / DPW</td>
-									<td> :  {{ ($entry->rc_dpw) ? $entry->rc_dpw->rc_dpw_name : "-"}}</td>
+									<td> :  {{ $entry->rc_dpw->rc_dpw_name }}</td>
 								</tr>
 								<tr>
 									<td>Church Name</td>
@@ -188,7 +195,7 @@
 								<tbody>
 									@foreach($entry->status_history_church as $key => $shc)
 										<tr>
-											<td>{{$shc->status}}</td>
+											<td>{{$shc->status ?? '-'}}</td>
 											<td>{{$shc->reason}}</td>
 											<td>{{$shc->date_status}}</td>
 											@if(backpack_user()->hasRole(['Super Admin','Editor']))
@@ -277,7 +284,7 @@
 									@foreach($entry->ministry_role_church as $key => $mrc)
 										<tr>
 											<td></td>
-											<td>{{$mrc->personel->first_name}} {{$mrc->personel->last_name}}</td>
+											<td>{{$mrc->personel-> first_name." ".$mrc->personel->last_name}}</td>
 											<td>{{$mrc->ministry_role_church->ministry_role}}</td>
 											@if(backpack_user()->hasRole(['Super Admin','Editor']))
 											<td>
