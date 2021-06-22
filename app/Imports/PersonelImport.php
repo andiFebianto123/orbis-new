@@ -83,12 +83,14 @@ class PersonelImport implements ToCollection, WithHeadingRow, WithValidation
         $check_exist_personel = Personel::where('first_name', $row_first_name)
                                 ->where('last_name', $row_last_name)
                                 ->where('date_of_birth', $date_of_birth)
+                                ->where('church_name', $row_church_name)
                                 ->exists();
 
         if ($check_exist_personel) {
             $update_personel = Personel::where('first_name', $row_first_name)
                                 ->where('last_name', $row_last_name)
                                 ->where('date_of_birth', $date_of_birth)
+                                ->where('church_name', $row_church_name)
                                 ->first();
             // $update_personel->acc_status_id = ($acc_status['id'] ?? null);
             $update_personel->rc_dpw_id = ($rcdpw['id'] ?? null);
