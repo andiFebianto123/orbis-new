@@ -83,44 +83,84 @@ class PersonelImport implements ToCollection, WithHeadingRow, WithValidation
         $check_exist_personel = Personel::where('first_name', $row_first_name)
                                 ->where('last_name', $row_last_name)
                                 ->where('date_of_birth', $date_of_birth)
+                                ->where('church_name', $row_church_name)
                                 ->exists();
 
-        $personel = new Personel([
-        'acc_status_id'  => ($acc_status['id'] ?? null),
-        'rc_dpw_id'      => ($rcdpw['id'] ?? null),
-        'title_id'      => $title['id'],
-        'first_name'    => $row_first_name,
-        'last_name'      => $row_last_name,
-        'gender'         => $row_gender,
-        'church_name'    => $row_church_name,
-        'street_address' => $address,
-        'city'           => $row_city,
-        'province'       => $row_province,
-        'postal_code'    => $row_postal_code,
-        'country_id'     => ($country['id'] ?? null),
-        'phone'          => $phone,
-        'fax'            => $row_fax,
-        'email'          => $email,
-        'marital_status' => $row_marital_status,
-        'date_of_birth'  => $date_of_birth,
-        'spouse_name'    => $row_spouse_name,
-        'spouse_date_of_birth'          => $spouse_date_of_birth,
-        'anniversary'                   => $anniversary,
-        'first_licensed_on'             => $first_licensed_on,
-        'card'                          => $row_card,
-        'valid_card_start'              => $valid_card_start,
-        'valid_card_end'                => $valid_card_end,
-        'current_certificate_number'    => $row_current_certificate_number,
-        'notes'           => $row_notes,
-        'is_lifetime'     => $is_lifetime,
-        ]);
+        if ($check_exist_personel) {
+            $update_personel = Personel::where('first_name', $row_first_name)
+                                ->where('last_name', $row_last_name)
+                                ->where('date_of_birth', $date_of_birth)
+                                ->where('church_name', $row_church_name)
+                                ->first();
+            // $update_personel->acc_status_id = ($acc_status['id'] ?? null);
+            $update_personel->rc_dpw_id = ($rcdpw['id'] ?? null);
+            $update_personel->title_id = $title['id'];
+            $update_personel->first_name = $row_first_name;
+            $update_personel->last_name = $row_last_name;
+            $update_personel->gender = $row_gender;
+            $update_personel->church_name = $row_church_name;
+            $update_personel->street_address = $address;
+            $update_personel->city = $row_city;
+            $update_personel->province = $row_province;
+            $update_personel->postal_code = $row_postal_code;
+            $update_personel->country_id = ($country['id'] ?? null);
+            $update_personel->phone = $phone;
+            $update_personel->fax = $row_fax;
+            $update_personel->email = $email;
+            $update_personel->marital_status = $row_marital_status;
+            $update_personel->date_of_birth = $date_of_birth;
+            $update_personel->spouse_name = $row_spouse_name;
+            $update_personel->spouse_date_of_birth = $spouse_date_of_birth;
+            $update_personel->anniversary = $anniversary;
+            $update_personel->first_licensed_on = $first_licensed_on;
+            $update_personel->card = $row_card;
+            $update_personel->valid_card_start = $valid_card_start;
+            $update_personel->valid_card_end = $valid_card_end;
+            $update_personel->current_certificate_number = $row_current_certificate_number;
+            $update_personel->notes = $row_notes;
+            $update_personel->is_lifetime = $is_lifetime;
+            $update_personel->save();
 
-        if (!$check_exist_personel) {
-            $personel->save();
+            $status_history = StatusHistory::where('personel_id', $update_personel->id)->first();
+            $status_history->status_histories_id = ($acc_status['id'] ?? null);
+            $status_history->date_status = Carbon::now();
+            $status_history->save();
+
+        }else{
+            $new_personel = new Personel();
+            // $new_personel->acc_status_id = ($acc_status['id'] ?? null);
+            $new_personel->rc_dpw_id = ($rcdpw['id'] ?? null);
+            $new_personel->title_id = $title['id'];
+            $new_personel->first_name = $row_first_name;
+            $new_personel->last_name = $row_last_name;
+            $new_personel->gender = $row_gender;
+            $new_personel->church_name = $row_church_name;
+            $new_personel->street_address = $address;
+            $new_personel->city = $row_city;
+            $new_personel->province = $row_province;
+            $new_personel->postal_code = $row_postal_code;
+            $new_personel->country_id = ($country['id'] ?? null);
+            $new_personel->phone = $phone;
+            $new_personel->fax = $row_fax;
+            $new_personel->email = $email;
+            $new_personel->marital_status = $row_marital_status;
+            $new_personel->date_of_birth = $date_of_birth;
+            $new_personel->spouse_name = $row_spouse_name;
+            $new_personel->spouse_date_of_birth = $spouse_date_of_birth;
+            $new_personel->anniversary = $anniversary;
+            $new_personel->first_licensed_on = $first_licensed_on;
+            $new_personel->card = $row_card;
+            $new_personel->valid_card_start = $valid_card_start;
+            $new_personel->valid_card_end = $valid_card_end;
+            $new_personel->current_certificate_number = $row_current_certificate_number;
+            $new_personel->notes = $row_notes;
+            $new_personel->is_lifetime = $is_lifetime;
+            $new_personel->save();
+
             $status_history = new StatusHistory([
                 'status_histories_id'  => ($acc_status['id'] ?? null),
                 'date_status' => Carbon::now(),
-                'personel_id' => $personel->id,
+                'personel_id' => $new_personel->id,
             ]);
 
             $status_history->save();

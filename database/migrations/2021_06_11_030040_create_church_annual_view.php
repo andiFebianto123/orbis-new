@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 class CreateChurchAnnualView extends Migration
 {
@@ -14,7 +15,7 @@ class CreateChurchAnnualView extends Migration
     public function up()
     {
         DB::statement("DROP VIEW IF EXISTS church_annual_views");
-        DB::unprepared("DROP FUNCTION func_inc_var_session");
+        DB::unprepared("DROP FUNCTION IF EXISTS func_inc_var_session");
         DB::unprepared("
 
         CREATE FUNCTION `func_inc_var_session`() RETURNS int
