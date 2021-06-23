@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\PersonelRequest;
 use App\Http\Requests\PersonelUpdateRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
+use Illuminate\Http\Request;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
@@ -489,7 +490,7 @@ class PersonelCrudController extends CrudController
         ]);
     }
 
-    function store()
+    public function store(Request $request)
     {
         $this->crud->setRequest($this->crud->validateRequest());
 
@@ -508,6 +509,46 @@ class PersonelCrudController extends CrudController
 
         DB::beginTransaction();
         try {
+            $isDuplicate = Personel::query();
+
+            if (!$request->filled('first_name')) {
+                $isDuplicate->whereNull('first_name');
+            } else {
+                $isDuplicate->where('first_name', $request->first_name);
+            }
+
+            if (!$request->filled('last_name')) {
+                $isDuplicate->whereNull('last_name');
+            } else {
+                $isDuplicate->where('last_name', $request->last_name);
+            }
+
+            if (!$request->filled('church_name')) {
+                $isDuplicate->whereNull('church_name');
+            } else {
+                $isDuplicate->where('church_name', $request->church_name);
+            }
+
+            if (!$request->filled('date_of_birth')) {
+                $isDuplicate->whereNull('date_of_birth');
+            } else {
+                $isDuplicate->where('date_of_birth', $request->date_of_birth);
+            }
+
+            $isDuplicate = $isDuplicate->select('id')->first();
+
+            if ($isDuplicate != null) {
+                DB::rollback();
+                $errors = [
+                    'first_name' => ['The pastor with same First Name, Last Name, Church Name and Date of Birth has already exists.'],
+                    'last_name' => ['The pastor with same First Name, Last Name, Church Name and Date of Birth has already exists.'],
+                    'church_name' => ['The pastor with same First Name, Last Name, Church Name and Date of Birth has already exists.'],
+                    'date_of_birth' => ['The pastor with same First Name, Last Name, Church Name and Date of Birth has already exists.'],
+                ];
+                return redirect($this->crud->route . '/create')
+                                ->withInput()->withErrors($errors);
+            }
+
             // $result = $this->checkMultipleImage($request, null);
             // if(count($result['errors']) != 0){
             //     DB::rollback();
@@ -585,6 +626,46 @@ class PersonelCrudController extends CrudController
             //     return redirect($this->crud->route . '/' . $id . '/edit')->withInput()
             //     ->withErrors($result['errors']);
             // }
+
+            $isDuplicate = Personel::query();
+
+            if (!$request->filled('first_name')) {
+                $isDuplicate->whereNull('first_name');
+            } else {
+                $isDuplicate->where('first_name', $request->first_name);
+            }
+
+            if (!$request->filled('last_name')) {
+                $isDuplicate->whereNull('last_name');
+            } else {
+                $isDuplicate->where('last_name', $request->last_name);
+            }
+
+            if (!$request->filled('church_name')) {
+                $isDuplicate->whereNull('church_name');
+            } else {
+                $isDuplicate->where('church_name', $request->church_name);
+            }
+
+            if (!$request->filled('date_of_birth')) {
+                $isDuplicate->whereNull('date_of_birth');
+            } else {
+                $isDuplicate->where('date_of_birth', $request->date_of_birth);
+            }
+
+            $isDuplicate = $isDuplicate->select('id')->first();
+
+            if ($isDuplicate != null && $isDuplicate->id != $id) {
+                DB::rollback();
+                $errors = [
+                    'first_name' => ['The pastor with same First Name, Last Name, Church Name and Date of Birth has already exists.'],
+                    'last_name' => ['The pastor with same First Name, Last Name, Church Name and Date of Birth has already exists.'],
+                    'church_name' => ['The pastor with same First Name, Last Name, Church Name and Date of Birth has already exists.'],
+                    'date_of_birth' => ['The pastor with same First Name, Last Name, Church Name and Date of Birth has already exists.'],
+                ];
+                return redirect($this->crud->route . '/'. $id . '/edit')
+                    ->withInput()->withErrors($errors);
+            }
             
             // update the row in the db
             $item = $this->crud->update($request->get($this->crud->model->getKeyName()),

@@ -7,6 +7,7 @@ use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use App\Models\StatusHistoryChurch;
 use App\Models\Church;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -17,8 +18,8 @@ use Illuminate\Support\Facades\DB;
 class ChurchCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation{search as traitSearch;}
-    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation{store as traitStore;}
+    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation{update as traitUpdate;}
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 
@@ -375,6 +376,68 @@ class ChurchCrudController extends CrudController
         ]);
     }
 
+    public function store(Request $request)
+    {
+        $this->crud->setRequest($this->crud->validateRequest());
+
+        /** @var \Illuminate\Http\Request $request */
+        $request = $this->crud->getRequest();
+
+        $this->crud->setRequest($request);
+        $this->crud->unsetValidation(); // Validation has already been run
+
+        DB::beginTransaction();
+        try {
+            $isDuplicate = Church::query();
+
+            if (!$request->filled('church_name')) {
+                $isDuplicate->whereNull('church_name');
+            } else {
+                $isDuplicate->where('church_name', $request->church_name);
+            }
+
+            if (!$request->filled('phone')) {
+                $isDuplicate->whereNull('phone');
+            } else {
+                $isDuplicate->where('phone', $request->phone);
+            }
+
+            if (!$request->filled('postal_code')) {
+                $isDuplicate->whereNull('postal_code');
+            } else {
+                $isDuplicate->where('postal_code', $request->postal_code);
+            }
+
+            $isDuplicate = $isDuplicate->select('id')->first();
+
+            if ($isDuplicate != null) {
+                DB::rollback();
+                $errors = [
+                    'church_name' => ['The Church with same Church Name, Phone and Postal Code has already exists.'],
+                    'phone' => ['The Church with same Church Name, Phone and Postal Code has already exists.'],
+                    'postal_code' => ['The Church with same Church Name, Phone and Postal Code has already exists.'],
+                ];
+                return redirect($this->crud->route . '/create')
+                    ->withInput()->withErrors($errors);
+            }
+            $item = $this->crud->create($this->crud->getStrippedSaveRequest());
+            $this->data['entry'] = $this->crud->entry = $item;
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
+
+        // show a success message
+        \Alert::success(trans('backpack::crud.insert_success'))->flash();
+
+        // save the redirect choice for next time
+        $this->crud->setSaveAction();
+
+        return $this->crud->performSaveAction($item->getKey());
+    }
+
     /**
      * Define what happens when the Update operation is loaded.
      * 
@@ -384,6 +447,73 @@ class ChurchCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    function update($id)
+    {
+        $this->crud->setRequest($this->crud->validateRequest());
+
+        /** @var \Illuminate\Http\Request $request */
+        $request = $this->crud->getRequest();
+
+        $this->crud->setRequest($request);
+        $this->crud->unsetValidation(); // Validation has already been run
+
+        $model = Church::where('id', $id)->firstOrFail();
+
+        DB::beginTransaction();
+        try {
+
+            $isDuplicate = Church::query();
+
+            if (!$request->filled('church_name')) {
+                $isDuplicate->whereNull('church_name');
+            } else {
+                $isDuplicate->where('church_name', $request->church_name);
+            }
+
+            if (!$request->filled('phone')) {
+                $isDuplicate->whereNull('phone');
+            } else {
+                $isDuplicate->where('phone', $request->phone);
+            }
+
+            if (!$request->filled('postal_code')) {
+                $isDuplicate->whereNull('postal_code');
+            } else {
+                $isDuplicate->where('postal_code', $request->postal_code);
+            }
+
+            $isDuplicate = $isDuplicate->select('id')->first();
+
+            if ($isDuplicate != null && $isDuplicate->id != $id) {
+                DB::rollback();
+                $errors = [
+                    'church_name' => ['The Church with same Church Name, Phone and Postal Code has already exists.'],
+                    'phone' => ['The Church with same Church Name, Phone and Postal Code has already exists.'],
+                    'postal_code' => ['The Church with same Church Name, Phone and Postal Code has already exists.'],
+                ];
+                return redirect($this->crud->route . '/'. $id . '/edit')
+                    ->withInput()->withErrors($errors);
+            }
+
+            $item = $this->crud->update($request->get($this->crud->model->getKeyName()),
+            $this->crud->getStrippedSaveRequest());
+            $this->data['entry'] = $this->crud->entry = $item;
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
+
+        // show a success message
+        \Alert::success(trans('backpack::crud.update_success'))->flash();
+
+        // save the redirect choice for next time
+        $this->crud->setSaveAction();
+
+        return $this->crud->performSaveAction($item->getKey());
     }
 
     public function show()
