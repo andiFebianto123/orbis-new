@@ -38,6 +38,8 @@ class PersonelCrudController extends CrudController
         CRUD::setRoute(config('backpack.base.route_prefix') . '/personel');
         CRUD::setEntityNameStrings('Pastor', 'Pastors');
         $this->crud->fromPastor = true;
+        $this->crud->leftColumns = 4;
+        $this->crud->rightColumns = 1;
     }
 
     /**

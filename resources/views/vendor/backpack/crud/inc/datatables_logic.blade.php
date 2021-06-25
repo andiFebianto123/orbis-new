@@ -13,7 +13,7 @@
   <script type="text/javascript" src="{{ asset('packages/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}"></script>
   <script type="text/javascript" src="{{ asset('packages/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js') }}"></script>
   <script type="text/javascript" src="{{ asset('packages/datatables.net-fixedheader-bs4/js/fixedHeader.bootstrap4.min.js') }}"></script>
-
+  <script src="https://cdn.datatables.net/fixedcolumns/3.3.0/js/dataTables.fixedColumns.min.js"></script>
   <script>
     // here we will check if the cached dataTables paginator length is conformable with current paginator settings.
     // datatables caches the ajax responses with pageLength in LocalStorage so when changing this
@@ -160,6 +160,13 @@
         @else
         responsive: false,
         scrollX: true,
+        @if(isset($crud->leftColumns) || isset($crud->rightColumns))
+            fixedColumns: {
+                leftColumns: @json($crud->leftColumns ?? 0),
+                rightColumns: @json($crud->rightColumns ?? 0)
+            },
+            scrollCollapse:true,
+        @endif
         @endif
 
         @if ($crud->getPersistentTable())

@@ -33,6 +33,8 @@ class ChurchCrudController extends CrudController
         CRUD::setModel(\App\Models\Church::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/church');
         CRUD::setEntityNameStrings('Church / Office', 'Church & Office List');
+        $this->crud->leftColumns = 2;
+        $this->crud->rightColumns = 1;
     }
 
     /**
@@ -51,11 +53,11 @@ class ChurchCrudController extends CrudController
             'orderable' => false,
         ])->makeFirstColumn();
 
-        // $this->crud->addColumn([
-        //     'name' => 'church_status', // The db column name
-        //     'label' => "Church Status", // Table column heading
-        //     'type' => 'text',
-        // ]);
+        $this->crud->addColumn([
+            'name' => 'church_name', // The db column name
+            'label' => "Church Name", // Table column heading
+            'type' => 'text'
+        ]);
 
         $this->crud->addColumn([
             'name' => 'church_status', // The db column name
@@ -85,12 +87,6 @@ class ChurchCrudController extends CrudController
             'label' => "Type", // Table column heading
             'type' => 'relationship',
             'attribute' => 'entities_type',
-        ]);
-
-        $this->crud->addColumn([
-            'name' => 'church_name', // The db column name
-            'label' => "Church Name", // Table column heading
-            'type' => 'text'
         ]);
 
         $this->crud->addColumn([
