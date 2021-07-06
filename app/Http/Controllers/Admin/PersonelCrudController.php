@@ -501,7 +501,7 @@ class PersonelCrudController extends CrudController
 
         // Encrypt password if specified.
         if ($request->input('password')) {
-            $request->request->set('password', Hash::make($request->input('password')));
+            $request->request->set('password', $request->input('password'));
         } else {
             $request->request->remove('password');
         }
@@ -610,7 +610,7 @@ class PersonelCrudController extends CrudController
 
         // Encrypt password if specified.
         if ($request->input('password')) {
-            $request->request->set('password', Hash::make($request->input('password')));
+            $request->request->set('password',$request->input('password'));
         } else {
             $request->request->remove('password');
         }

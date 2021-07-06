@@ -62,9 +62,9 @@ class Personel extends Authenticatable
         'password',
     ];
 
-    // public function setPasswordAttribute($value) {
-    //     $this->attributes['password'] = Hash::make($value);
-    // }
+    public function setPasswordAttribute($value) {
+        $this->attributes['password'] = Hash::make($value);
+    }
 
     // protected $primaryKey = 'id';
     // public $timestamps = false;
