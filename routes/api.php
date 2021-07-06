@@ -16,8 +16,20 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('login', 'Api\AuthApiController@login');
 
+
 Route::group(['middleware' => ['auth:sanctum']], function () {
-   Route::get('profile/{id}', 'Api\AuthApiController@profile');
+   Route::get('profile-biodata/{id}', 'Api\DetailPersonelApiController@biodata');
+   Route::get('profile-contact-information/{id}', 'Api\DetailPersonelApiController@contactInformation');
+   Route::get('profile-licensing-information/{id}', 'Api\DetailPersonelApiController@licensingInformation');
+   Route::get('profile-appointment-histories/{id}', 'Api\DetailPersonelApiController@appointmentHistories');
+   Route::get('profile-special-roles/{id}', 'Api\DetailPersonelApiController@specialRoles');
+   Route::get('profile-related-entities/{id}', 'Api\DetailPersonelApiController@relatedEntities');
+   Route::get('profile-education-backgrounds/{id}', 'Api\DetailPersonelApiController@educationBackgrounds');
+   Route::get('profile-child-names/{id}', 'Api\DetailPersonelApiController@childNames');
+   Route::get('profile-ministry-backgrounds/{id}', 'Api\DetailPersonelApiController@ministryBackgrounds');
+   Route::get('profile-career-backgrounds/{id}', 'Api\DetailPersonelApiController@careerBackgrounds');
+   Route::get('profile-status-histories/{id}', 'Api\DetailPersonelApiController@statusHistories');
+  // Route::get('profile-biodata/{id}', 'Api\DetailPersonilApiController@biodata');
    Route::post('logout', 'Api\AuthApiController@logout');
    Route::post('logout-all', 'Api\AuthApiController@logoutAll');
 });

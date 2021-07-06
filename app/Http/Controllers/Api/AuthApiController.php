@@ -30,20 +30,7 @@ class AuthApiController extends Controller
 
         return response()->json($response, 200);
     }
-
-    public function profile($id)
-    {
-        $personel = Personel::where('id', $id)->get()->first();
-
-        $response = [
-            'status' => true,
-            'message' => 'Data Personel',
-            'data' => $personel,
-        ];
-
-        return response()->json($response, 200); 
-    }
-
+    
     public function logout(Request $request) {
         $personel = $request->user();
         $personel->currentAccessToken()->delete();
