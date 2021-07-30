@@ -90,6 +90,11 @@ class Church extends Model
         return $this->hasMany('App\Models\StructureChurch', 'churches_id', 'id');
     }
 
+    public function coordinator_church()
+    {
+        return $this->hasMany('App\Models\CoordinatorChurch', 'churches_id', 'id');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | FUNCTIONS

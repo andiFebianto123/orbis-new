@@ -302,6 +302,51 @@
 				</div>
 			</div>
 		</div>
+
+		<div class="col-md-12">
+  			<div class="card">
+				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
+					Coordinator Church
+  				</div>
+				<div class="card-body">
+					<div class = "row">
+						<div class="col-md-12">
+						@if(backpack_user()->hasRole(['Super Admin','Editor']))
+							<a href ="{{url('admin/coordinatorchurch/create?churches_id='.$entry->id)}}" class = 'btn btn-primary btn-sm'>Add Structure</a>
+						@endif
+							<table id ="tableCoordinatorChurch" class = "table table-striped">
+								<thead>
+									<tr >
+										<th>No.</th>
+										<th>Title</th>
+										<th>Coordinator Name</th>
+										@if(backpack_user()->hasRole(['Super Admin','Editor']))
+										<th class="hidden-print">Action</th>
+										@endif
+									</tr>
+								</thead>
+								<tbody>
+									@foreach($entry->coordinator_church as $key => $cc)
+										<tr>
+											<td></td>
+											<td>{{$cc->coordinator_title}}</td>
+											<td>{{$cc->coordinator_name}}</td>
+											@if(backpack_user()->hasRole(['Super Admin','Editor']))
+											<td>
+											<a href="{{url('admin/coordinatorchurch/'.$cc->id.'/edit')}}"><i class="la la-edit"></i></a>
+											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
+											data-route="{{ url('admin/coordinatorchurch/'.$cc->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
+											</td>
+											@endif
+										</tr>
+									@endforeach
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 
 	<!-- Default box -->
@@ -440,6 +485,24 @@
 	<script>
 		$(document).ready(function() {
 		var t = $('#tableLeadershipStructure').DataTable( {
+        	"columnDefs": [ {
+            "searchable": false,
+            "orderable": false,
+            "targets": 0
+        	} ],
+        	"order": [[ 1, 'asc' ]]
+    	} );
+ 
+		t.on( 'order.dt search.dt', function () {
+			t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+				cell.innerHTML = i+1;
+			} );
+		} ).draw();
+		} );
+
+
+		$(document).ready(function() {
+		var t = $('#tableCoordinatorChurch').DataTable( {
         	"columnDefs": [ {
             "searchable": false,
             "orderable": false,

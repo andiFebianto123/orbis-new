@@ -37,7 +37,6 @@ class DetailPersonelApiController extends Controller
         $arr_personel['short_title'] = $personel->short_title;
         $arr_personel['first_name'] = $personel->first_name;
         $arr_personel['last_name'] = $personel->last_name;
-        $arr_personel['last_name'] = $personel->last_name;
         $arr_personel['gender'] = $personel->gender;
         $arr_personel['profile_image'] = $personel->profile_image;
         $arr_personel['misc_image'] = $personel->misc_image;

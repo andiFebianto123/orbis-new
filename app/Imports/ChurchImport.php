@@ -8,6 +8,7 @@ use App\Models\RcDpwList;
 use App\Models\ChurchEntityType;
 use App\Models\Personel;
 use App\Models\StructureChurch;
+use App\Models\CoordinatorChurch;
 use App\Models\MinistryRole;
 use App\Models\StatusHistoryChurch;
 use Carbon\Carbon;
@@ -42,6 +43,7 @@ class ChurchImport implements ToCollection,  WithValidation, WithHeadingRow
         $row_church_name = $row['Church Name'];
         $row_church_type = $row['Church Type'];
         $row_lead_pastor_name = $row['Lead Pastor Name'];
+        $row_coordinator = $row['Coordinator'];
         $row_contact_person = $row['Contact Person'];
         $row_church_address = $row['Church Address'];
         $row_office_address = $row['Office Address'];
@@ -131,6 +133,17 @@ class ChurchImport implements ToCollection,  WithValidation, WithHeadingRow
                 }
             }
 
+            foreach ($this->handleCoordinator($row_coordinator) as $key => $hc) {
+                if ($hc != []) {
+                    $coordinator_church = new CoordinatorChurch([
+                        'coordinator_name'  => $hc['coordinator_name'],
+                        'coordinator_title'  => $hc['coordinator_title'],
+                        'churches_id' => $update_church->id,
+                    ]);
+                    $coordinator_church->save();
+                }
+            }
+
             $status_history =  StatusHistoryChurch::where('churches_id',  $update_church->id)->first();
             $status_history->status = $row_church_status;
             $status_history->date_status = Carbon::now();
@@ -168,6 +181,17 @@ class ChurchImport implements ToCollection,  WithValidation, WithHeadingRow
                
             }
 
+            foreach ($this->handleCoordinator($row_coordinator) as $key => $hc) {
+                if ($hc != []) {
+                    $coordinator_church = new CoordinatorChurch([
+                        'coordinator_name'  => $hc['coordinator_name'],
+                        'coordinator_title'  => $hc['coordinator_title'],
+                        'churches_id' => $new_church->id,
+                    ]);
+                    $coordinator_church->save();
+                }
+            }
+
             $status_history = new StatusHistoryChurch([
                 'status'  => $row_church_status,
                 'date_status' => Carbon::now(),
@@ -191,21 +215,6 @@ class ChurchImport implements ToCollection,  WithValidation, WithHeadingRow
                     $onFailure('Not Exist Pastor or Invalid Lead Pastor Format :: Firstname Lastname (Title)');
                 }
             },
-            // 'rc_dpw' => function($attribute, $value, $onFailure) {
-            //     if (!RcDpwList::where('rc_dpw_name', $value)->first()) {
-            //          $onFailure('Invalid RC DPW');
-            //     }
-            // },
-            // 'country' => function($attribute, $value, $onFailure) {
-            //     if (!CountryList::where('country_name',$value)->first()) {
-            //          $onFailure('Invalid Country');
-            //     }
-            // },
-            // 'church_type' => function($attribute, $value, $onFailure) {
-            //     if (!ChurchEntityType::where('entities_type', $value)->first()) {
-            //          $onFailure('Invalid Church Type');
-            //     }
-            // },
         ];
     }
 
@@ -277,5 +286,50 @@ class ChurchImport implements ToCollection,  WithValidation, WithHeadingRow
             }
         } 
         return $arr_pastor_name;
+    }
+
+
+    private function handleCoordinator($value){
+        $coordinator_name = str_replace('\n', "\n", $value ?? '');
+        $arr_coordinator_names = [];
+        $count_coordinator = 0;
+        $count_valid_coordinator = 0;
+        if (strpos( $coordinator_name, "\n") !== false) {
+            foreach(explode("\n",$coordinator_name) as $coordinator) {  
+                $arr_coordinator_name = $this->unitCoordinator($coordinator);
+                if($arr_coordinator_name != []){
+                    $arr_coordinator_names[] = $arr_coordinator_name;
+                    $count_valid_coordinator ++;
+                }
+                $count_coordinator++;
+            }
+        }else{
+            $arr_coordinator_names[] = $this->unitCoordinator($value);
+        }
+        return ($count_coordinator == $count_valid_coordinator) ? $arr_coordinator_names :[];
+    }
+
+
+    private function unitCoordinator($coordinator){
+        $arr_coordinator = [];
+        if (strpos( $coordinator, '(') !== false) {
+            $col_coordinator = explode("(",$coordinator);
+            
+            $coordinator_name = $col_coordinator[0];
+            $coordinator_title = $col_coordinator[1];
+            
+
+            $coordinator_data = CoordinatorChurch::where('coordinator_title', $coordinator_title )
+                        ->where('coordinator_name', $coordinator_name )
+                        ->first();
+
+            if (isset($coordinator_data)) {
+                $arr_coordinator = [
+                    'coordinator_name' =>  $coordinator_data->coordinator_name,
+                    'coordinator_title' =>  str_replace(")", "", $coordinator_data->coordinator_title),
+                ];
+            }
+        } 
+        return $arr_coordinator;
     }
 }

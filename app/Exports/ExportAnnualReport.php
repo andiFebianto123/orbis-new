@@ -50,6 +50,7 @@ class ExportAnnualReport implements FromView,WithEvents
             $title = 'Pastor Annual Report';
             $dataColumn = PastorAnnualView::get()->toArray();
         }
+        
         else if($type == 'pastor_detail'){
             $title = "Pastor List ". $this->year;
             $dataColumn = PastorAnnualDesignerView::year($this->year)->get()->toArray();
@@ -93,7 +94,7 @@ class ExportAnnualReport implements FromView,WithEvents
     public function registerEvents(): array
     {
         return [
-            AfterSheet::class    => function(AfterSheet $event) {
+            AfterSheet::class => function(AfterSheet $event) {
                 $lastColumn = $event->sheet->getHighestColumn();
                 $lastRow = $event->sheet->getHighestRow();
                 $formatedListNameValue = function($string){

@@ -35,6 +35,7 @@ Route::group([
     Route::crud('statushistorychurch', 'StatusHistoryChurchCrudController');
     Route::crud('relatedentitychurch', 'RelatedEntityChurchCrudController');
     Route::crud('structurechurch', 'StructureChurchCrudController');
+    Route::crud('coordinatorchurch', 'CoordinatorChurchCrudController');
     Route::crud('dashboard', 'DashboardCrudController');
     Route::post('dashboard-upload', 'DashboardCrudController@uploadtest');
     Route::crud('quick-report', 'QuickReportCrudController');
