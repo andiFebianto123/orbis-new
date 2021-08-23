@@ -140,7 +140,7 @@ class ExportAnnualReport implements FromView,WithEvents
                     if($valueCell == 'RC / DPW'  || $valueCell == 'Church Type' || $valueCell == 'City' || $valueCell == 'Province' || $valueCell ==  'Country'|| $valueCell == "Church Status"  || $valueCell == "Province / State" || $valueCell == "Marital Status" || $valueCell == "Date of Birth" || $valueCell == "Spouse Name" || $valueCell == "Spouse Date of Birth" || $valueCell == "Status" || $valueCell == "First Licensed On" || $valueCell == "Card" || $valueCell == "Valid Card Start" || $valueCell == "Valid Card End" ){
                         $event->sheet->getColumnDimension($column)->setWidth(20);
                     }
-                    if($valueCell == 'First Name' || $valueCell == 'Last Name' || $valueCell == "Current Certificate Number"){
+                    if($valueCell == 'First Name' || $valueCell == 'Last Name' || $valueCell == "Current Certificate Number" || $valueCell =='Coordinator'){
                         $event->sheet->getColumnDimension($column)->setWidth(30);
                     }
                     if($valueCell == 'Church Name' || $valueCell == 'Contact Person' || $valueCell == 'Phone' || $valueCell == 'Fax' || $valueCell == 'Email'  || $valueCell == 'Founded On' || $valueCell == 'Service Time Church' || $valueCell == 'Notes'){
