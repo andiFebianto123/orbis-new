@@ -416,7 +416,7 @@ class PersonelCrudController extends CrudController
         $this->crud->addField([
             'name' => 'is_lifetime',
             'label' => 'Lifetime',
-            'type' => 'checkbox',
+            'type' => 'checkbox_lifetime',
             'tab' => 'Licensing Information',
         ]);
 
@@ -458,7 +458,7 @@ class PersonelCrudController extends CrudController
 
         $this->crud->addField([
             'name' => 'valid_card_end',
-            'type' => 'date_picker',
+            'type' => 'date_picker_valid_card_end',
             'label' => 'Valid Card End',
             'tab' => 'Licensing Information',
 
@@ -468,6 +468,9 @@ class PersonelCrudController extends CrudController
                 'format' => 'dd-mm-yyyy',
                 'language' => 'en',
             ],
+            'attributes' => [
+                'required' => true,
+                ]
         ]);
 
         $this->crud->addField([
@@ -515,6 +518,9 @@ class PersonelCrudController extends CrudController
             $request->request->set('password', $request->input('password'));
         } else {
             $request->request->remove('password');
+        }
+        if ($request->input('is_lifetime') == 1) {
+            $request->request->set('valid_card_end',null);
         }
 
         $this->crud->setRequest($request);
@@ -626,6 +632,10 @@ class PersonelCrudController extends CrudController
             $request->request->remove('password');
         }
 
+        if ($request->input('is_lifetime') == 1) {
+            $request->request->set('valid_card_end',null);
+        }
+
         $this->crud->setRequest($request);
         $this->crud->unsetValidation(); // Validation has already been run
 
@@ -679,6 +689,14 @@ class PersonelCrudController extends CrudController
                 return redirect($this->crud->route . '/'. $id . '/edit')
                     ->withInput()->withErrors($errors);
             }
+            // if ($request->input('is_lifetime') == 0 && $request->input('valid_card_end') == null) {
+            //     DB::rollback();
+            //     $errors = [
+            //         'valid_card_end' => ['Valid Card End is required while lifetime is unchecked']
+            //     ];
+            //     return redirect($this->crud->route . '/'. $id . '/edit')
+            //         ->withInput()->withErrors($errors);
+            // }
             
             // update the row in the db
             $item = $this->crud->update($request->get($this->crud->model->getKeyName()),

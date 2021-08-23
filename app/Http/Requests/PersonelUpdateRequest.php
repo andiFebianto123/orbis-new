@@ -53,7 +53,7 @@ class PersonelUpdateRequest extends FormRequest
         'first_licensed_on' => 'required',
         'card' => 'required',
         'valid_card_start' => 'required',
-        'valid_card_end'=> 'required',
+        "valid_card_end" => "required_if:is_lifetime,==,0",
         'current_certificate_number'=> 'required',
         // 'image' => ['nullable', new Base64Rule(3, ['png', 'jpg', 'jpeg'])],
         'certificate' => ['nullable', new Base64Rule(3, ['png', 'jpg', 'jpeg'])],
@@ -105,7 +105,8 @@ class PersonelUpdateRequest extends FormRequest
     public function messages()
     {
         return [
-            'email.email'      => 'The email must be a valid email address.'
+            'email.email'      => 'The email must be a valid email address.',
+            'valid_card_end.required_if'      => 'Valid Card End is required while lifetime is unchecked'
         ];
     }
 }
