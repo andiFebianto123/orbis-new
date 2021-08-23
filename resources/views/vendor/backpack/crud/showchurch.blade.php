@@ -576,10 +576,13 @@
 								type: "success",
 								text: "{!! '<strong>'.trans('backpack::crud.delete_confirmation_title').'</strong><br>'.trans('backpack::crud.delete_confirmation_message') !!}"
 							}).show();
-							location.reload();
-
-							// Hide the modal, if any
-							$('.modal').modal('hide');
+							$('table').css("opacity", "0.4")
+							$('a').removeAttr("href")
+							$('button').attr("disabled", "disabled")
+							// $('.modal').modal('hide');
+							setTimeout(() => { 
+								window.location = "{{url('admin/church')}}"
+							}, 2000);
 						} else {
 							// if the result is an array, it means 
 							// we have notification bubbles to show

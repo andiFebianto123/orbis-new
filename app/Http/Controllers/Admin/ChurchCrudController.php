@@ -7,8 +7,12 @@ use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use App\Models\StatusHistoryChurch;
 use App\Models\Church;
+use App\Models\CoordinatorChurch;
+use App\Models\RelatedEntityChurch;
+use App\Models\StructureChurch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Exception;
 
 /**
  * Class ChurchCrudController
@@ -517,5 +521,35 @@ class ChurchCrudController extends CrudController
         $this->crud->getCurrentEntry();
         $data['crud'] = $this->crud;
         return view('vendor.backpack.crud.showchurch',$data);
+    }
+
+    public function destroy($id)
+    {
+        $this->crud->hasAccessOrFail('delete');
+
+        $id = $this->crud->getCurrentEntryId() ?? $id;
+
+        DB::beginTransaction();
+        try{
+            if(StatusHistoryChurch::where('churches_id', $id)->exists()){
+                StatusHistoryChurch::where('churches_id', $id)->delete();
+            }
+            if(RelatedEntityChurch::where('churches_id', $id)->exists()){
+                RelatedEntityChurch::where('churches_id', $id)->delete();
+            }
+            if(StructureChurch::where('churches_id', $id)->exists()){
+                StructureChurch::where('churches_id', $id)->delete();
+            }
+            if(CoordinatorChurch::where('churches_id', $id)->exists()){
+                CoordinatorChurch::where('churches_id', $id)->delete();
+            }
+            $response = $this->crud->delete($id);
+            DB::commit();
+            return $response;
+        }
+        catch(Exception $e){
+            DB::rollback();
+            throw $e;
+        }
     }
 }

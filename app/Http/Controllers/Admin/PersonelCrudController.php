@@ -6,13 +6,22 @@ use Exception;
 use App\Models\Personel;
 use App\Models\PersonelImage;
 use App\Models\StatusHistory;
+use App\Models\StructureChurch;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\PersonelRequest;
 use App\Http\Requests\PersonelUpdateRequest;
+use App\Models\Appointment_history;
+use App\Models\CareerBackgroundPastors;
+use App\Models\ChildNamePastors;
+use App\Models\EducationBackground;
+use App\Models\MinistryBackgroundPastor;
+use App\Models\Relatedentity;
+use App\Models\SpecialRolePersonel;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Illuminate\Http\Request;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Laravel\Sanctum\PersonalAccessToken;
 
 /**
  * Class PersonelCrudController
@@ -50,6 +59,8 @@ class PersonelCrudController extends CrudController
      */
     function setupListOperation()
     {
+        $this->crud->addClause('where', 'rc_dpw_id', '=', 48);
+
         $this->crud->addColumn([
             'name' => 'row_number',
             'type' => 'row_number',
@@ -824,10 +835,39 @@ class PersonelCrudController extends CrudController
 
         DB::beginTransaction();
         try{
-            // $personelImages = PersonelImage::where('personel_id', $id)->get();
-            // foreach($personelImages as $personelImage){
-            //     $personelImage->delete();
-            // }
+            if(Appointment_history::where('personel_id', $id)->exists()){
+                Appointment_history::where('personel_id', $id)->delete();
+            }
+            if(SpecialRolePersonel::where('personel_id', $id)->exists()){
+                SpecialRolePersonel::where('personel_id', $id)->delete();
+            }
+            if(Relatedentity::where('personel_id', $id)->exists()){
+                Relatedentity::where('personel_id', $id)->delete();
+            }
+            if(EducationBackground::where('personel_id', $id)->exists()){
+                EducationBackground::where('personel_id', $id)->delete();
+            }
+            if(ChildNamePastors::where('personel_id', $id)->exists()){
+                ChildNamePastors::where('personel_id', $id)->delete();
+            }
+            if(MinistryBackgroundPastor::where('personel_id', $id)->exists()){
+                MinistryBackgroundPastor::where('personel_id', $id)->delete();
+            }
+            if(CareerBackgroundPastors::where('personel_id', $id)->exists()){
+                CareerBackgroundPastors::where('personel_id', $id)->delete();
+            }
+            if(StatusHistory::where('personel_id', $id)->exists()){
+                StatusHistory::where('personel_id', $id)->delete();
+            }
+            if(PersonelImage::where('personel_id', $id)->exists()){
+                PersonelImage::where('personel_id', $id)->delete();
+            }
+            if(PersonalAccessToken::where('tokenable_id', $id)->exists()){
+                PersonalAccessToken::where('tokenable_id', $id)->delete();
+            }
+            if(StructureChurch::where('personel_id', $id)->exists()){
+                StructureChurch::where('personel_id', $id)->delete();
+            }
             $response = $this->crud->delete($id);
             DB::commit();
             return $response;
