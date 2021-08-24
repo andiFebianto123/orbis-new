@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Personel;
+use App\Models\StatusHistory;
 
 class AuthApiController extends Controller
 {
@@ -18,15 +19,32 @@ class AuthApiController extends Controller
                     ], 200);
         }
 
-        $personel = Personel::where('email', $request->email)->firstOrFail();
-        $token = $personel->createToken('auth_token')->plainTextToken;
+        $personels = Personel::where('email', $request->email)->get();
+        $active_email = false;
+        $valid_personel = [];
+        foreach ($personels as $key => $personel) {
+            if(StatusHistory::where('personel_id', $personel->id)->where('status_histories_id', 1)->exists()){
+                $active_email = true;
+                $valid_personel = $personel;
+            }
+        }
+        
+        if ($active_email) {
+            $token = $valid_personel->createToken('auth_token')->plainTextToken;
 
-        $response = [
-            'status' => true,
-            'message' => 'Success Login',
-            'access_token' => $token,
-            'data' => $personel,
-        ];
+            $response = [
+                'status' => true,
+                'message' => 'Success Login',
+                'access_token' => $token,
+                'data' => $valid_personel,
+            ];
+        }else{
+            $response = [
+                'status' => false,
+                'message' => 'Email is not active',
+            ];
+        }
+        
 
         return response()->json($response, 200);
     }
