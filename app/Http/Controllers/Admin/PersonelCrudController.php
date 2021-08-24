@@ -59,7 +59,6 @@ class PersonelCrudController extends CrudController
      */
     function setupListOperation()
     {
-        $this->crud->addClause('where', 'rc_dpw_id', '=', 48);
 
         $this->crud->addColumn([
             'name' => 'row_number',
