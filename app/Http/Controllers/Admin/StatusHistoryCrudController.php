@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\StatusHistoryRequest;
+use App\Models\Personel;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Illuminate\Support\Facades\Route;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
@@ -30,6 +31,10 @@ class StatusHistoryCrudController extends CrudController
         CRUD::setEntityNameStrings('Status History', 'Status Histories');
         $this->crud->currentId = request()->personel_id;
         $this->crud->redirectTo = backpack_url('personel/'.$this->crud->currentId.'/show');
+        $isPersonelExists =  Personel::where('id',$this->crud->currentId)->first();
+        if($isPersonelExists == null){
+            abort(404);
+        }
         $this->crud->saveOnly=true;
     }
 

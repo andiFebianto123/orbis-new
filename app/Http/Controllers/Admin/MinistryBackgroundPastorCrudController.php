@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\MinistryBackgroundPastorRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
+use App\Models\Personel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
@@ -29,6 +30,10 @@ class MinistryBackgroundPastorCrudController extends CrudController
         CRUD::setEntityNameStrings('Ministry Background', 'Ministry Background');
         $this->crud->currentId = request()->personel_id;
         $this->crud->redirectTo = backpack_url('personel/'.$this->crud->currentId.'/show');
+        $isPersonelExists =  Personel::where('id',$this->crud->currentId)->first();
+        if($isPersonelExists == null){
+            abort(404);
+        }
         $this->crud->saveOnly=true;
     }
 

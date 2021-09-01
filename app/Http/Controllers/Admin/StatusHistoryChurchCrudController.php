@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\StatusHistoryChurchRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use App\Models\Church;
 
 /**
  * Class StatusHistoryChurchCrudController
@@ -29,6 +30,10 @@ class StatusHistoryChurchCrudController extends CrudController
         CRUD::setEntityNameStrings('Church Status Histories', 'Church Status Histories');
         $this->crud->currentId = request()->churches_id;
         $this->crud->redirectTo = backpack_url('church/'.$this->crud->currentId.'/show');
+        $isChurchExists =  Church::where('id',$this->crud->currentId)->first();
+        if($isChurchExists == null){
+            abort(404);
+        }
         $this->crud->saveOnly=true;
     }
 
