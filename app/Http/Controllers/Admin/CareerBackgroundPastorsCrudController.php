@@ -27,6 +27,8 @@ class CareerBackgroundPastorsCrudController extends CrudController
         CRUD::setModel(\App\Models\CareerBackgroundPastors::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/careerbackgroundpastors');
         CRUD::setEntityNameStrings('Career Background', 'Career Background');
+        $this->crud->currentId = request()->personel_id;
+        $this->crud->redirectTo = backpack_url('personel/'.$this->crud->currentId.'/show');
         $this->crud->saveOnly=true;
     }
 

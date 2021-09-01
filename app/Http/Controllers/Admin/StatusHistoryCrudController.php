@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\StatusHistoryRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
+use Illuminate\Support\Facades\Route;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
@@ -27,6 +28,8 @@ class StatusHistoryCrudController extends CrudController
         CRUD::setModel(\App\Models\StatusHistory::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/statushistory');
         CRUD::setEntityNameStrings('Status History', 'Status Histories');
+        $this->crud->currentId = request()->personel_id;
+        $this->crud->redirectTo = backpack_url('personel/'.$this->crud->currentId.'/show');
         $this->crud->saveOnly=true;
     }
 
@@ -165,5 +168,9 @@ class StatusHistoryCrudController extends CrudController
         \Alert::success(trans('backpack::crud.update_success'))->flash();
 
         return redirect(backpack_url('personel/'.$item->personel_id.'/show'));    
+    }
+
+    public function getCurrentId(){
+        return Route::current()->parameter('personel_id');
     }
 }

@@ -29,6 +29,8 @@ class StructureChurchCrudController extends CrudController
         CRUD::setModel(\App\Models\StructureChurch::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/structurechurch');
         CRUD::setEntityNameStrings('Leadership Structure', 'Leadership Structure');
+        $this->crud->currentId = request()->churches_id;
+        $this->crud->redirectTo = backpack_url('church/'.$this->crud->currentId.'/show');
         $this->crud->saveOnly=true;
     }
 

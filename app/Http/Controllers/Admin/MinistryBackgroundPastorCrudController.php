@@ -27,6 +27,8 @@ class MinistryBackgroundPastorCrudController extends CrudController
         CRUD::setModel(\App\Models\MinistryBackgroundPastor::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/ministrybackgroundpastor');
         CRUD::setEntityNameStrings('Ministry Background', 'Ministry Background');
+        $this->crud->currentId = request()->personel_id;
+        $this->crud->redirectTo = backpack_url('personel/'.$this->crud->currentId.'/show');
         $this->crud->saveOnly=true;
     }
 

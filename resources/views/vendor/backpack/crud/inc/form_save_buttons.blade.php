@@ -37,7 +37,7 @@
 
         @if(!$crud->hasOperationSetting('showCancelButton') || $crud->getOperationSetting('showCancelButton') == true)
             <!-- <button Type="button" onclick="window.history.back();" class="btn btn-default"><span class="la la-ban"></span> &nbsp;{{ trans('backpack::crud.cancel') }}</button> -->
-            <a href="{{ $crud->hasAccess('list') ? url($crud->route) : url()->previous() }}" class="btn btn-default"><span class="la la-ban"></span> &nbsp;{{ trans('backpack::crud.cancel') }}</a>
+            <a href="{{$crud->redirectTo ?? ($crud->hasAccess('list') ? url($crud->route) : url()->previous() )}}" class="btn btn-default"><span class="la la-ban"></span> &nbsp;{{ trans('backpack::crud.cancel') }}</a>
         @endif
 
     </div>

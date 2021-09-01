@@ -27,6 +27,8 @@ class EducationBackgroundCrudController extends CrudController
         CRUD::setModel(\App\Models\EducationBackground::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/educationbackground');
         CRUD::setEntityNameStrings('Education Background', 'Education Backgrounds');
+        $this->crud->currentId = request()->personel_id;
+        $this->crud->redirectTo = backpack_url('personel/'.$this->crud->currentId.'/show');
         $this->crud->saveOnly=true;
     }
 

@@ -27,6 +27,8 @@ class SpecialRolePersonelCrudController extends CrudController
         CRUD::setModel(\App\Models\SpecialRolePersonel::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/specialrolepersonel');
         CRUD::setEntityNameStrings('Special Role', 'Special Role');
+        $this->crud->currentId = request()->personel_id;
+        $this->crud->redirectTo = backpack_url('personel/'.$this->crud->currentId.'/show');
         $this->crud->saveOnly=true;
     }
 

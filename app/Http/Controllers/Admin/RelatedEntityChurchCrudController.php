@@ -27,6 +27,8 @@ class RelatedEntityChurchCrudController extends CrudController
         CRUD::setModel(\App\Models\RelatedEntityChurch::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/relatedentitychurch');
         CRUD::setEntityNameStrings('Related Entity Church', 'Related Entity Church');
+        $this->crud->currentId = request()->churches_id;
+        $this->crud->redirectTo = backpack_url('church/'.$this->crud->currentId.'/show');
         $this->crud->saveOnly=true;
     }
 

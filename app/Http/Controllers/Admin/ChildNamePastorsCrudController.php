@@ -27,6 +27,8 @@ class ChildNamePastorsCrudController extends CrudController
         CRUD::setModel(\App\Models\ChildNamePastors::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/childnamepastors');
         CRUD::setEntityNameStrings("Child's Name", "Child's Name");
+        $this->crud->currentId = request()->personel_id;
+        $this->crud->redirectTo = backpack_url('personel/'.$this->crud->currentId.'/show');
         $this->crud->saveOnly=true;
     }
 
