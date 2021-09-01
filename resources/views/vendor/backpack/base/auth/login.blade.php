@@ -3,6 +3,9 @@
 @section('content')
     <div class="row justify-content-center">
         <div class="col-12 col-md-8 col-lg-4">
+            <div class="text-center logo-ifgf">
+                <img src="{{asset('img/logo_login.png')}}">
+            </div>
             <h3 class="text-center mb-4">{{ trans('backpack::base.login') }}</h3>
             <div class="card">
                 <div class="card-body">

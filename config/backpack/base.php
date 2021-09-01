@@ -44,7 +44,7 @@ return [
     'styles' => [
         
         'packages/backpack/base/css/bundle-custom.css',
-
+        'css/rectstyle.css',
         // Here's what's inside the bundle:
         // 'packages/@digitallyhappy/backstrap/css/style.min.css',
         // 'packages/animate.css/animate.min.css',
@@ -72,7 +72,7 @@ return [
     // ------
 
     // Menu logo. You can replace this with an <img> tag if you have a logo.
-    'project_logo'   => 'Orbis Database',
+    'project_logo'   => '<img src="'.asset('img/logo_header.png').'">',
 
     // Show / hide breadcrumbs on admin panel pages.
     'breadcrumbs' => true,
