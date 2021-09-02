@@ -62,19 +62,21 @@
     <div class="col-lg-3 col-md-6 col-sm-6">
       <div class="card card-stats">
         <div class="card-body ">
+		  <div id="birthdayButton" class="birthday">
           <div class="row">
-            <div class="col-5 col-md-4">
-              <div class="icon-big text-center icon-warning">
-                <i class="la la-birthday-cake text-primary"></i>
-              </div>
-            </div>
-            <div class="col-7 col-md-8">
-              <div class="numbers">
-                <h5 class="card-category">Today's Birthday</h5>
-                <h3 class="card-title">{{$today_birthday}}</h3>
-              </div>
-            </div>
+				<div class="col-5 col-md-4">
+				<div class="icon-big text-center icon-warning">
+					<i class="la la-birthday-cake text-primary"></i>
+				</div>
+				</div>
+				<div class="col-7 col-md-8">
+				<div class="numbers">
+						<h5 class="card-category">Today's Birthday</h5>
+						<h3 class="card-title">{{$today_birthday}}</h3>
+				</div>
+			</div>
           </div>
+		</div>
         </div>
       </div>
     </div>
@@ -254,7 +256,7 @@
 		</div>
     <div class="col-md-6">
   		<div class="card">
-				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
+				<div class="card-header" style="background: #b5c7e0; font-weight:bold;" id="headerPastorBirthday">
 			  	Pastor's Birthday
   			</div>
 				<div class="card-body">
@@ -508,6 +510,9 @@
 		.dataTables_paginate .previous {
     		display: none;
 		}
+		.birthday{
+			cursor: pointer;
+		}
     </style>
 @endsection
 
@@ -569,6 +574,11 @@
 	</script>
   	<script>
 		$(document).ready(function() {
+		$("#birthdayButton").click((e)=>{
+			$('html,body').animate({scrollTop: $('#headerPastorBirthday').offset().top}, 2000, function() {
+				$('#headerPastorBirthday').focus();
+			});
+		})
 		$('#tablePastorBirthday').DataTable({
 			"bLengthChange": false,
 			"bFilter": true,

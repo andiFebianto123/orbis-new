@@ -72,7 +72,7 @@ return [
     // ------
 
     // Menu logo. You can replace this with an <img> tag if you have a logo.
-    'project_logo'   => '<img src="'.asset('img/logo_header.png').'">',
+    'project_logo'   => '',
 
     // Show / hide breadcrumbs on admin panel pages.
     'breadcrumbs' => true,
