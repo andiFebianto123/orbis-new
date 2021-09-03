@@ -4,7 +4,7 @@
     <span class="navbar-toggler-icon"></span>
   </button>
   <a class="navbar-brand" href="{{ url(config('backpack.base.home_link')) }}" title="{{ config('backpack.base.project_name') }}">
-    <img src="{{asset('img/logo-ifgf.png')}}" style="width: 36px; height:auto" class="mx-2">
+    <img src="{{asset('img/logo-ifgf.png')}}" style="width: 30px; height:auto" class="mx-2">
     {!! config('backpack.base.project_logo') !!}
   </a>
   <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button" data-toggle="sidebar-lg-show" aria-label="{{ trans('backpack::base.toggle_navigation')}}">
