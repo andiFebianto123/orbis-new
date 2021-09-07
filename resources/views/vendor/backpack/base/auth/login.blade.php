@@ -1,10 +1,13 @@
-@extends(backpack_view('layouts.plain'))
+@extends(backpack_view('layouts.plain_login'))
 
 @section('content')
     <div class="row justify-content-center">
         <div class="col-12 col-md-8 col-lg-4">
-            <h3 class="text-center mb-4">{{ trans('backpack::base.login') }}</h3>
             <div class="card">
+                <div class="text-center mt-4">
+                    <img src="{{asset('img/logo-ifgf.png')}}" style="width: 100px; height:auto">
+                </div>
+                <h5 class="text-center mt-3 mb-0 font-weight-bold">{{ trans('backpack::base.login') }} {{config('backpack.base.project_name')}}</h5>
                 <div class="card-body">
                     <form class="col-md-12 p-t-10" role="form" method="POST" action="{{ route('backpack.auth.login') }}">
                         {!! csrf_field() !!}

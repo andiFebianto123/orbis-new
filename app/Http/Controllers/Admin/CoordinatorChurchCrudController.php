@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\CoordinatorChurchRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use App\Models\Church;
 use App\Models\CoordinatorChurch;
 use Prologue\Alerts\Facades\Alert;
 
@@ -29,6 +30,12 @@ class CoordinatorChurchCrudController extends CrudController
         CRUD::setModel(\App\Models\CoordinatorChurch::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/coordinatorchurch');
         CRUD::setEntityNameStrings('Coordinator Church', 'Coordinator Church');
+        $this->crud->currentId = request()->churches_id;
+        $this->crud->redirectTo = backpack_url('church/'.$this->crud->currentId.'/show');
+        $isChurchExists =  Church::where('id',$this->crud->currentId)->first();
+        if($isChurchExists == null){
+            abort(404);
+        }
         $this->crud->saveOnly=true;
     }
 

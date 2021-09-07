@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\ChildNamePastorsRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
+use App\Models\Personel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
@@ -27,6 +28,12 @@ class ChildNamePastorsCrudController extends CrudController
         CRUD::setModel(\App\Models\ChildNamePastors::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/childnamepastors');
         CRUD::setEntityNameStrings("Child's Name", "Child's Name");
+        $this->crud->currentId = request()->personel_id;
+        $this->crud->redirectTo = backpack_url('personel/'.$this->crud->currentId.'/show');
+        $isPersonelExists =  Personel::where('id',$this->crud->currentId)->first();
+        if($isPersonelExists == null){
+            abort(404);
+        }
         $this->crud->saveOnly=true;
     }
 

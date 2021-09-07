@@ -24,7 +24,7 @@ return [
     // ----
 
     // Project name. Shown in the window title.
-    'project_name' => 'Orbis Database',
+    'project_name' => 'IFGF Database',
 
     // When clicking on the admin panel's top-left logo/name,
     // where should the user be redirected?
@@ -42,8 +42,9 @@ return [
 
     // CSS files that are loaded in all pages, using Laravel's asset() helper
     'styles' => [
-        'packages/backpack/base/css/bundle.css',
-
+        
+        'packages/backpack/base/css/bundle-custom.css',
+        'css/rectstyle.css',
         // Here's what's inside the bundle:
         // 'packages/@digitallyhappy/backstrap/css/style.min.css',
         // 'packages/animate.css/animate.min.css',
@@ -71,7 +72,7 @@ return [
     // ------
 
     // Menu logo. You can replace this with an <img> tag if you have a logo.
-    'project_logo'   => 'Orbis Database',
+    'project_logo'   => '<b>IFGF</b>&nbsp;Database',
 
     // Show / hide breadcrumbs on admin panel pages.
     'breadcrumbs' => true,

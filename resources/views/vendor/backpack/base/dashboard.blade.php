@@ -3,9 +3,9 @@
 
 <div class="row">
     <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card card-stats">
-        <div class="card-body ">
-          <div class="row">
+      <div class="card card-stats card-same-height">
+        <div class="card-body">
+          <div class="row h-100 align-items-center">
             <div class="col-5 col-md-4">
               <div class="icon-big text-center icon-warning">
                 <i class="la la-church text-primary"></i>
@@ -13,8 +13,8 @@
             </div>
             <div class="col-7 col-md-8">
               <div class="numbers">
-                <h4 class="card-category"> Active Churches</h4>
-                <h2 class="card-title">{{$church_count}}</h2>
+                <h5 class="card-category"> Active Churches</h4>
+                <h3 class="card-title">{{$church_count}}</h2>
               </div>
             </div>
           </div>
@@ -22,9 +22,9 @@
       </div>
     </div>
     <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card card-stats">
-        <div class="card-body ">
-          <div class="row">
+      <div class="card card-stats card-same-height">
+        <div class="card-body">
+          <div class="row h-100 align-items-center">
             <div class="col-5 col-md-4">
               <div class="icon-big text-center icon-warning">
                 <i class="la la-globe text-primary"></i>
@@ -32,8 +32,8 @@
             </div>
             <div class="col-7 col-md-8">
               <div class="numbers">
-                <h4 class="card-category">Countries</h4>
-                <h2 class="card-title">{{$country_count}}</h2>
+                <h5 class="card-category">Countries</h4>
+                <h3 class="card-title">{{$country_count}}</h2>
               </div>
             </div>
           </div>
@@ -41,9 +41,9 @@
       </div>
     </div>
     <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card card-stats">
-        <div class="card-body ">
-          <div class="row">
+      <div class="card card-stats card-same-height">
+        <div class="card-body">
+          <div class="row h-100 align-items-center">
             <div class="col-5 col-md-4">
               <div class="icon-big text-center icon-warning">
                 <i class="las la-users text-primary"></i>
@@ -51,8 +51,8 @@
             </div>
             <div class="col-7 col-md-8">
               <div class="numbers">
-                <h4 class="card-category">Active Personnels</h4>
-                <h2 class="card-title">{{$personel_count}}</h2>
+                <h5 class="card-category">Active Personnels</h4>
+                <h3 class="card-title">{{$personel_count}}</h2>
               </div>
             </div>
           </div>
@@ -60,21 +60,21 @@
       </div>
     </div>
     <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card card-stats">
-        <div class="card-body ">
-          <div class="row">
-            <div class="col-5 col-md-4">
-              <div class="icon-big text-center icon-warning">
-                <i class="la la-birthday-cake text-primary"></i>
-              </div>
-            </div>
-            <div class="col-7 col-md-8">
-              <div class="numbers">
-                <h5 class="card-category">Today's Birthday</h5>
-                <h3 class="card-title">{{$today_birthday}}</h3>
-              </div>
-            </div>
-          </div>
+      <div class="card card-stats card-same-height">
+        <div class="card-body birthday" id="birthdayButton">
+          <div class="row h-100 align-items-center">
+				<div class="col-5 col-md-4">
+				<div class="icon-big text-center icon-warning">
+					<i class="la la-birthday-cake text-primary"></i>
+				</div>
+				</div>
+				<div class="col-7 col-md-8">
+				<div class="numbers">
+						<h5 class="card-category">Today's Birthday</h5>
+						<h3 class="card-title">{{$today_birthday}}</h3>
+				</div>
+			</div>
+		</div>
         </div>
       </div>
     </div>
@@ -254,7 +254,7 @@
 		</div>
     <div class="col-md-6">
   		<div class="card">
-				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
+				<div class="card-header" style="background: #b5c7e0; font-weight:bold;" id="headerPastorBirthday">
 			  	Pastor's Birthday
   			</div>
 				<div class="card-body">
@@ -501,12 +501,18 @@
 
 @section('after_styles')
 	<style>
-        .icon-big{font-size:4em;min-height:69px}
+		.card-same-height{
+			height: calc(100% - 1.5rem);
+		}
+        .icon-big{font-size:3rem;}
 		.dataTables_paginate .next {
     		display: none;
 		}
 		.dataTables_paginate .previous {
     		display: none;
+		}
+		.birthday{
+			cursor: pointer;
 		}
     </style>
 @endsection
@@ -569,6 +575,11 @@
 	</script>
   	<script>
 		$(document).ready(function() {
+		$("#birthdayButton").click((e)=>{
+			$('html,body').animate({scrollTop: $('#headerPastorBirthday').offset().top}, 2000, function() {
+				$('#headerPastorBirthday').focus();
+			});
+		})
 		$('#tablePastorBirthday').DataTable({
 			"bLengthChange": false,
 			"bFilter": true,
