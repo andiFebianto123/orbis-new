@@ -229,6 +229,43 @@
 				</div>
 			</div>
 		</div>
+		<div class="col-md-6">
+  			<div class="card">
+				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
+			  		Church Information
+  				</div>
+				<div class="card-body">
+					<div class = "row">
+						<div class="col-md-12">
+							@if(sizeof($churches)>1)
+							<div id="prev-next-section" class="mb-4" max-key="{{sizeof($churches)-1}}">
+								<button id="btn-prev" class="btn btn-sm btn-outline-primary" type="button"><i class="las la-angle-left"></i></button>
+								<button id="btn-next" class="btn btn-sm btn-outline-primary" type="button"><i class="las la-angle-right"></i></button>
+							</div>
+							@endif
+							
+							@foreach($churches as $key => $church)
+							
+							<table class = "table table-striped church-informations church-info-{{$key}}">
+								<tr>
+									<td>RC / DPW</td>
+									<td style="white-space: pre-line;" > :  {{ $church->rc_dpw_name }} </td>
+								</tr>
+								<tr>
+									<td>Church Name</td>
+									<td> :  {{ $church->church_name }}</td>
+								</tr>
+								<tr>
+									<td>Address</td>
+									<td> :  {{ $church->church_address }}</td>
+								</tr>
+							</table>
+							@endforeach
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 		<div class="col-md-12">
   			<div class="card">
 				<div class="card-header" style="background: #b5c7e0; font-weight:bold;">
@@ -912,6 +949,33 @@
 
 		// make it so that the function above is run after each DataTable draw event
 		// crud.addFunctionToDataTablesDrawEventQueue('deleteEntry');
+
+		var currentKey = 0
+		var maxKey = $("#prev-next-section").attr("max-key")
+		visibilityChurch(currentKey)
+
+		$("#btn-next").click(function() {
+			currentKey++
+			visibilityChurch(currentKey)
+			$("#btn-prev").removeAttr("disabled")
+		})
+		$("#btn-prev").click(function() {
+			currentKey--
+			visibilityChurch(currentKey)
+			$("#btn-next").removeAttr("disabled")
+		})
+
+		function visibilityChurch(key){
+			$('.church-informations').hide()
+			$('.church-info-'+key).show()
+			if(key == 0){
+				$("#btn-prev").attr("disabled", "disabled")
+			}
+			if(key == maxKey){
+				$("#btn-next").attr("disabled", "disabled")
+			}
+		}
+
 	</script>
 
 @endsection

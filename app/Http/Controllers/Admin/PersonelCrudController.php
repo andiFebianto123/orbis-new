@@ -803,7 +803,13 @@ class PersonelCrudController extends CrudController
     function show()
     {
         $this->crud->getCurrentEntry();
+        $churches = StructureChurch::where('personel_id', $this->crud->getCurrentEntry()->id)
+                    ->join('churches', 'churches.id', 'structure_churches.churches_id')
+                    ->join('rc_dpwlists', 'rc_dpwlists.id', 'churches.rc_dpw_id')
+                    ->get(['churches.*', 'rc_dpwlists.rc_dpw_name']);
         $data['crud'] = $this->crud;
+        $data['churches'] = $churches;
+
         return view('vendor.backpack.crud.showpersonel', $data);
     }
 
