@@ -14,6 +14,7 @@ use App\Models\EducationBackground;
 use App\Models\ChildNamePastors;
 use App\Models\MinistryBackgroundPastor;
 use App\Models\CareerBackgroundPastors;
+use App\Models\StructureChurch;
 
 class DetailPersonelApiController extends Controller
 {
@@ -222,6 +223,21 @@ class DetailPersonelApiController extends Controller
             'data' => $lists,
         ];
 
+        return response()->json($response, 200); 
+    }
+
+    public function churches($id){
+        $churches = StructureChurch::where('personel_id', $id)
+                    ->join('churches', 'churches.id', 'structure_churches.churches_id')
+                    ->join('rc_dpwlists', 'rc_dpwlists.id', 'churches.rc_dpw_id')
+                    ->get(['churches.*', 'rc_dpwlists.rc_dpw_name']);
+        
+        $response = [
+            'status' => true,
+            'title' => 'Church Information',
+            'data' => $churches,
+        ];
+        
         return response()->json($response, 200); 
     }
 

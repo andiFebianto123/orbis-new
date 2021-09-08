@@ -29,7 +29,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
    Route::get('profile-ministry-backgrounds/{id}', 'Api\DetailPersonelApiController@ministryBackgrounds');
    Route::get('profile-career-backgrounds/{id}', 'Api\DetailPersonelApiController@careerBackgrounds');
    Route::get('profile-status-histories/{id}', 'Api\DetailPersonelApiController@statusHistories');
-  // Route::get('profile-biodata/{id}', 'Api\DetailPersonilApiController@biodata');
+   Route::get('profile-churches/{id}', 'Api\DetailPersonelApiController@churches');
+   Route::get('church-information/{id}', 'Api\DetailChurchApiController@information');
+   Route::get('church-status-history/{id}', 'Api\DetailChurchApiController@statusHistory');
+   Route::get('church-related-entity/{id}', 'Api\DetailChurchApiController@relatedEntity');
+   Route::get('church-coordinator/{id}', 'Api\DetailChurchApiController@coordinator');
+
    Route::post('logout', 'Api\AuthApiController@logout');
    Route::post('logout-all', 'Api\AuthApiController@logoutAll');
 });
