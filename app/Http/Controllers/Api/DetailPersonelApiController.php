@@ -154,48 +154,7 @@ class DetailPersonelApiController extends Controller
 
         return response()->json($response, 200); 
     }
-
-    public function childNames($id)
-    {
-        $lists = ChildNamePastors::where('personel_id', $id)
-                ->get();
-        
-        $response = [
-            'status' => true,
-            'title' => 'Child Names',
-            'data' => $lists,
-        ];
-
-        return response()->json($response, 200); 
-    }
-
-    public function ministryBackgrounds($id)
-    {
-        $lists = MinistryBackgroundPastor::where('personel_id', $id)
-                ->get();
-        
-        $response = [
-            'status' => true,
-            'title' => 'Ministry Backgrounds',
-            'data' => $lists,
-        ];
-
-        return response()->json($response, 200); 
-    }
-
-    public function careerBackgrounds($id)
-    {
-        $lists = CareerBackgroundPastors::where('personel_id', $id)
-                ->get();
-        
-        $response = [
-            'status' => true,
-            'title' => 'Career Backgrounds',
-            'data' => $lists,
-        ];
-
-        return response()->json($response, 200); 
-    }
+    
 
     public function statusHistories($id)
     {

@@ -25,10 +25,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
    Route::get('profile-appointment-histories/{id}', 'Api\DetailPersonelApiController@appointmentHistories');
    Route::get('profile-special-roles/{id}', 'Api\DetailPersonelApiController@specialRoles');
    Route::get('profile-related-entities/{id}', 'Api\DetailPersonelApiController@relatedEntities');
-   Route::get('profile-education-backgrounds/{id}', 'Api\EducationBackgroundApiController@list');
    Route::get('profile-child-names/{id}', 'Api\DetailPersonelApiController@childNames');
-   Route::get('profile-ministry-backgrounds/{id}', 'Api\DetailPersonelApiController@ministryBackgrounds');
-   Route::get('profile-career-backgrounds/{id}', 'Api\DetailPersonelApiController@careerBackgrounds');
    Route::get('profile-status-histories/{id}', 'Api\DetailPersonelApiController@statusHistories');
    Route::get('profile-churches/{id}', 'Api\DetailPersonelApiController@churches');
    Route::post('profile-update', 'Api\DetailPersonelApiController@update');
@@ -39,9 +36,25 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
    Route::get('church-status-history/{id}', 'Api\DetailChurchApiController@statusHistory');
    Route::get('church-related-entity/{id}', 'Api\DetailChurchApiController@relatedEntity');
    
+   Route::get('profile-education-backgrounds/{id}', 'Api\EducationBackgroundApiController@list');
    Route::post('education-backgrounds-update', 'Api\EducationBackgroundApiController@update');
    Route::post('education-backgrounds-create', 'Api\EducationBackgroundApiController@create');
    Route::post('education-backgrounds-delete', 'Api\EducationBackgroundApiController@delete');
+
+   Route::get('profile-ministry-backgrounds/{id}', 'Api\MinistryBackgroundApiController@list');
+   Route::post('ministry-backgrounds-update', 'Api\MinistryBackgroundApiController@update');
+   Route::post('ministry-backgrounds-create', 'Api\MinistryBackgroundApiController@create');
+   Route::post('ministry-backgrounds-delete', 'Api\MinistryBackgroundApiController@delete');
+
+   Route::get('profile-child-names/{id}', 'Api\ChildNameApiController@list');
+   Route::post('child-names-update', 'Api\ChildNameApiController@update');
+   Route::post('child-names-create', 'Api\ChildNameApiController@create');
+   Route::post('child-names-delete', 'Api\ChildNameApiController@delete');
+
+   Route::get('profile-career-backgrounds/{id}', 'Api\CareerBackgroundApiController@list');
+   Route::post('career-backgrounds-update', 'Api\CareerBackgroundApiController@update');
+   Route::post('career-backgrounds-create', 'Api\CareerBackgroundApiController@create');
+   Route::post('career-backgrounds-delete', 'Api\CareerBackgroundApiController@delete');
 
    Route::get('master-title', 'Api\DataMasterApiController@title');
    Route::get('master-regional-council', 'Api\DataMasterApiController@regionalCouncil');
