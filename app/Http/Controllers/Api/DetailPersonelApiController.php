@@ -241,4 +241,28 @@ class DetailPersonelApiController extends Controller
         return response()->json($response, 200); 
     }
 
+    public function update(Request $request){
+        $id = $request->id;
+
+        $update_p = Personel::where('id', $id)->first();
+
+        if (isset($request->first_name)) {
+            $update_p->first_name = $request->first_name;
+        }
+        if (isset($request->last_name)) {
+            $update_p->last_name = $request->last_name;
+        }
+        if (isset($request->church_name)) {
+            $update_p->church_name = $request->church_name;
+        }
+        $update_p->save();
+
+        $response = [
+            'status' => true,
+            'title' => 'Successfully',
+        ];
+        
+        return response()->json($response, 200); 
+    }
+
 }
