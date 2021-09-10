@@ -155,20 +155,6 @@ class DetailPersonelApiController extends Controller
         return response()->json($response, 200); 
     }
 
-    public function educationBackgrounds($id)
-    {
-        $lists = EducationBackground::where('personel_id', $id)
-                ->get();
-        
-        $response = [
-            'status' => true,
-            'title' => 'Education Backgrounds',
-            'data' => $lists,
-        ];
-
-        return response()->json($response, 200); 
-    }
-
     public function childNames($id)
     {
         $lists = ChildNamePastors::where('personel_id', $id)

@@ -25,7 +25,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
    Route::get('profile-appointment-histories/{id}', 'Api\DetailPersonelApiController@appointmentHistories');
    Route::get('profile-special-roles/{id}', 'Api\DetailPersonelApiController@specialRoles');
    Route::get('profile-related-entities/{id}', 'Api\DetailPersonelApiController@relatedEntities');
-   Route::get('profile-education-backgrounds/{id}', 'Api\DetailPersonelApiController@educationBackgrounds');
+   Route::get('profile-education-backgrounds/{id}', 'Api\EducationBackgroundApiController@list');
    Route::get('profile-child-names/{id}', 'Api\DetailPersonelApiController@childNames');
    Route::get('profile-ministry-backgrounds/{id}', 'Api\DetailPersonelApiController@ministryBackgrounds');
    Route::get('profile-career-backgrounds/{id}', 'Api\DetailPersonelApiController@careerBackgrounds');
@@ -39,6 +39,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
    Route::get('church-status-history/{id}', 'Api\DetailChurchApiController@statusHistory');
    Route::get('church-related-entity/{id}', 'Api\DetailChurchApiController@relatedEntity');
    
+   Route::post('education-backgrounds-update', 'Api\EducationBackgroundApiController@update');
+   Route::post('education-backgrounds-create', 'Api\EducationBackgroundApiController@create');
+   Route::post('education-backgrounds-delete', 'Api\EducationBackgroundApiController@delete');
+
    Route::get('master-title', 'Api\DataMasterApiController@title');
    Route::get('master-regional-council', 'Api\DataMasterApiController@regionalCouncil');
    Route::get('master-country', 'Api\DataMasterApiController@country');
