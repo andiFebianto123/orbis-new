@@ -18,6 +18,7 @@ use App\Models\Church;
 use App\Models\CoordinatorChurch;
 use App\Models\RelatedEntityChurch;
 use App\Models\StatusHistoryChurch;
+use App\Models\StructureChurch;
 
 class DetailChurchApiController extends Controller
 {
@@ -97,6 +98,21 @@ class DetailChurchApiController extends Controller
             'status' => true,
             'title' => 'Coordinator',
             'data' => $coordinators,
+        ];
+
+        return response()->json($response, 200); 
+    }
+
+    public function leadership($id)
+    {
+        $leaderships = StructureChurch::join('personels', 'personels.id', 'structure_churches.personel_id')
+                        ->join('title_lists', 'title_lists.id', 'structure_churches.title_structure_id')
+                        ->where('structure_churches.churches_id', $id)
+                        ->get(['structure_churches.id', 'title_lists.long_desc', 'personels.first_name', 'personels.last_name']);
+        $response = [
+            'status' => true,
+            'title' => 'Leadership',
+            'data' => $leaderships,
         ];
 
         return response()->json($response, 200); 
