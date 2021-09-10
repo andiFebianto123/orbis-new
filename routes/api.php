@@ -16,8 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('login', 'Api\AuthApiController@login');
 
-Route::get('church-coordinator/{id}', 'Api\DetailChurchApiController@coordinator');
-Route::get('church-leadership/{id}', 'Api\DetailChurchApiController@leadership');
+
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
    Route::get('profile-biodata/{id}', 'Api\DetailPersonelApiController@biodata');
@@ -34,9 +33,13 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
    Route::get('profile-churches/{id}', 'Api\DetailPersonelApiController@churches');
    Route::post('profile-update', 'Api\DetailPersonelApiController@update');
 
+   Route::get('church-coordinator/{id}', 'Api\DetailChurchApiController@coordinator');
+   Route::get('church-leadership/{id}', 'Api\DetailChurchApiController@leadership');
    Route::get('church-information/{id}', 'Api\DetailChurchApiController@information');
    Route::get('church-status-history/{id}', 'Api\DetailChurchApiController@statusHistory');
    Route::get('church-related-entity/{id}', 'Api\DetailChurchApiController@relatedEntity');
+   
+   Route::get('master-title', 'Api\DataMasterApiController@title');
   
    Route::post('logout', 'Api\AuthApiController@logout');
    Route::post('logout-all', 'Api\AuthApiController@logoutAll');
