@@ -246,6 +246,12 @@ class DetailPersonelApiController extends Controller
 
         $update_p = Personel::where('id', $id)->first();
 
+        if (isset($request->rc_dpw_id)) {
+            $update_p->rc_dpw_id = $request->rc_dpw_id;
+        }
+        if (isset($request->title_id)) {
+            $update_p->title_id = $request->title_id;
+        }
         if (isset($request->first_name)) {
             $update_p->first_name = $request->first_name;
         }
@@ -255,6 +261,64 @@ class DetailPersonelApiController extends Controller
         if (isset($request->church_name)) {
             $update_p->church_name = $request->church_name;
         }
+        if (isset($request->gender)) {
+            $update_p->gender = $request->gender;
+        }
+        if (isset($request->date_of_birth)) {
+            $update_p->date_of_birth = $request->date_of_birth;
+        }
+        if (isset($request->marital_status)) {
+            $update_p->marital_status = $request->marital_status;
+        }
+        if (isset($request->spouse_name)) {
+            $update_p->spouse_name = $request->spouse_name;
+        }
+        if (isset($request->spouse_date_of_birth)) {
+            $update_p->spouse_date_of_birth = $request->spouse_date_of_birth;
+        }
+        if (isset($request->anniversary)) {
+            $update_p->anniversary = $request->anniversary;
+        }
+        if (isset($request->street_address)) {
+            $update_p->street_address = $request->street_address;
+        }
+        if (isset($request->city)) {
+            $update_p->city = $request->city;
+        }
+        if (isset($request->province)) {
+            $update_p->province = $request->province;
+        }
+        if (isset($request->postal_code)) {
+            $update_p->postal_code = $request->postal_code;
+        }
+        if (isset($request->country_id)) {
+            $update_p->country_id = $request->country_id;
+        }
+        if (isset($request->email)) {
+            $update_p->email = $request->email;
+        }
+        if (isset($request->second_email)) {
+            $update_p->second_email = $request->second_email;
+        }
+        if (isset($request->phone)) {
+            $update_p->phone = $request->phone;
+        }
+        if (isset($request->fax)) {
+            $update_p->fax = $request->fax;
+        }
+        if (isset($request->first_licensed_on)) {
+            $update_p->first_licensed_on = $request->first_licensed_on;
+        }
+        if (isset($request->card)) {
+            $update_p->card = $request->card;
+        }
+        if (isset($request->valid_card_start)) {
+            $update_p->valid_card_start = $request->valid_card_start;
+        }
+        if (isset($request->valid_card_end)) {
+            $update_p->valid_card_end = $request->valid_card_end;
+        }
+
         $update_p->save();
 
         $response = [

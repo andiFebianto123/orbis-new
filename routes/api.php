@@ -40,6 +40,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
    Route::get('church-related-entity/{id}', 'Api\DetailChurchApiController@relatedEntity');
    
    Route::get('master-title', 'Api\DataMasterApiController@title');
+   Route::get('master-regional-council', 'Api\DataMasterApiController@regionalCouncil');
+   Route::get('master-country', 'Api\DataMasterApiController@country');
+   Route::get('master-marital-status', 'Api\DataMasterApiController@maritalStatus');
   
    Route::post('logout', 'Api\AuthApiController@logout');
    Route::post('logout-all', 'Api\AuthApiController@logoutAll');
