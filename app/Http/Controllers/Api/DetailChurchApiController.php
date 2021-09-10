@@ -108,7 +108,7 @@ class DetailChurchApiController extends Controller
         $leaderships = StructureChurch::join('personels', 'personels.id', 'structure_churches.personel_id')
                         ->join('title_lists', 'title_lists.id', 'structure_churches.title_structure_id')
                         ->where('structure_churches.churches_id', $id)
-                        ->get(['structure_churches.id', 'title_lists.long_desc', 'personels.first_name', 'personels.last_name']);
+                        ->get(['structure_churches.churches_id as id', 'title_lists.long_desc', 'personels.first_name', 'personels.last_name']);
         $response = [
             'status' => true,
             'title' => 'Leadership',
