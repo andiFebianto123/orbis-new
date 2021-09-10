@@ -118,6 +118,93 @@ class DetailChurchApiController extends Controller
         return response()->json($response, 200); 
     }
 
+
+    public function update(Request $request){
+        $id = $request->id;
+
+        $update_p = Church::where('id', $id)->first();
+
+        if (isset($request->founded_on)) {
+            $update_p->founded_on = $request->founded_on;
+        }
+        if (isset($request->church_type_id)) {
+            $update_p->church_type_id = $request->church_type_id;
+        }
+        if (isset($request->church_local_id)) {
+            $update_p->church_local_id = $request->church_local_id;
+        }
+        if (isset($request->rc_dpw_id)) {
+            $update_p->rc_dpw_id = $request->rc_dpw_id;
+        }
+        if (isset($request->church_name)) {
+            $update_p->church_name = $request->church_name;
+        }
+        if (isset($request->contact_person)) {
+            $update_p->contact_person = $request->contact_person;
+        }
+        if (isset($request->building_name)) {
+            $update_p->building_name = $request->building_name;
+        }
+        if (isset($request->church_address)) {
+            $update_p->church_address = $request->church_address;
+        }
+        if (isset($request->office_address)) {
+            $update_p->office_address = $request->office_address;
+        }
+        if (isset($request->city)) {
+            $update_p->city = $request->city;
+        }
+        if (isset($request->province)) {
+            $update_p->province = $request->province;
+        }
+        if (isset($request->postal_code)) {
+            $update_p->postal_code = $request->postal_code;
+        }
+        if (isset($request->country_id)) {
+            $update_p->country_id = $request->country_id;
+        }
+        if (isset($request->first_email)) {
+            $update_p->first_email = $request->first_email;
+        }
+        if (isset($request->second_email)) {
+            $update_p->second_email = $request->second_email;
+        }
+        if (isset($request->phone)) {
+            $update_p->phone = $request->phone;
+        }
+        if (isset($request->fax)) {
+            $update_p->fax = $request->fax;
+        }
+        if (isset($request->website)) {
+            $update_p->website = $request->website;
+        }
+        if (isset($request->map_url)) {
+            $update_p->map_url = $request->map_url;
+        }
+        if (isset($request->service_time_church)) {
+            $update_p->service_time_church = $request->service_time_church;
+        }
+        if (isset($request->certificate)) {
+            $update_p->certificate = $request->certificate;
+        }
+        if (isset($request->date_of_certificate)) {
+            $update_p->date_of_certificate = $request->date_of_certificate;
+        }
+        if (isset($request->notes)) {
+            $update_p->notes = $request->notes;
+        }
+
+        $update_p->save();
+
+        $response = [
+            'status' => true,
+            'title' => 'Successfully',
+        ];
+        
+        return response()->json($response, 200); 
+    }
+
+
     
 
 }

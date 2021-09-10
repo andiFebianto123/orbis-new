@@ -35,7 +35,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
    Route::get('church-information/{id}', 'Api\DetailChurchApiController@information');
    Route::get('church-status-history/{id}', 'Api\DetailChurchApiController@statusHistory');
    Route::get('church-related-entity/{id}', 'Api\DetailChurchApiController@relatedEntity');
-   
+   Route::post('church-update', 'Api\DetailChurchApiController@update');
+
    Route::get('profile-education-backgrounds/{id}', 'Api\EducationBackgroundApiController@list');
    Route::post('education-backgrounds-update', 'Api\EducationBackgroundApiController@update');
    Route::post('education-backgrounds-create', 'Api\EducationBackgroundApiController@create');
