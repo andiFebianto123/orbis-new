@@ -22,6 +22,46 @@ use App\Models\StructureChurch;
 
 class DetailChurchApiController extends Controller
 {
+    public function list(){
+        $filters = [];
+        if (request('city')) {
+            $filters[] = ['city', 'LIKE', '%'.request('city').'%'];
+        }
+
+        $churches = Church::where($filters)
+                    ->leftJoin('rc_dpwlists', 'rc_dpwlists.id', 'churches.rc_dpw_id')
+                    ->leftJoin('church_types', 'church_types.id', 'churches.church_type_id')
+                    ->leftJoin('country_lists', 'country_lists.id', 'churches.country_id')
+                    ->get(['churches.id', 'churches.church_address', 'church_name', 'city', 'phone', 'map_url', 'website', 'service_time_church', 'first_email']);
+
+        $arr_res = [];
+        foreach ($churches as $key => $church) {
+
+            $arr_personel = [];
+            if(StructureChurch::where('churches_id', $church->id)->exists()){
+                $leaderships = StructureChurch::join('personels', 'personels.id', 'structure_churches.personel_id')
+                        ->join('title_lists', 'title_lists.id', 'structure_churches.title_structure_id')
+                        ->where('structure_churches.churches_id', $church->id)
+                        ->get(['structure_churches.churches_id as id', 'title_lists.long_desc', 'personels.first_name', 'personels.last_name']);
+                $arr_personel = $leaderships;
+            }
+            $arr_res[] = [
+                'id' => $church->id,
+                'church_address' => $church->church_address,
+                'church_name' => $church->church_name,
+                'city' => $church->city,
+                'phone' => $church->phone,
+                'map_url' => $church->map_url,
+                'website' => $church->website,
+                'service_time_church' => $church->service_time_church,
+                'first_email' => $church->first_email,
+                'personels' => $arr_personel
+            ];
+        }
+
+        return $arr_res;
+    }
+
 
     public function information($id)
     {

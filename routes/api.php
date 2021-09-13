@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Route;
 Route::post('login', 'Api\AuthApiController@login');
 
 
+Route::get('church-list', 'Api\DetailChurchApiController@list');
+
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
    Route::get('profile-biodata/{id}', 'Api\DetailPersonelApiController@biodata');
