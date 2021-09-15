@@ -200,9 +200,9 @@
 											<td>{{$shc->date_status}}</td>
 											@if(backpack_user()->hasRole(['Super Admin','Editor']))
 											<td>
-											<a href="{{url('admin/statushistorychurch/'.$shc->id.'/edit')}}"><i class="la la-edit"></i></a>
+											<a href="{{url('admin/statushistorychurch/'.$shc->id.'/edit?churches_id='.$entry->id)}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
-											data-route="{{ url('admin/statushistorychurch/'.$shc->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
+											data-route="{{ url('admin/statushistorychurch/'.$shc->id.'?churches_id='.$entry->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
 											@endif
 										</tr>
@@ -244,9 +244,9 @@
 											<td>{{$rec->type_entity}}</td>
 											@if(backpack_user()->hasRole(['Super Admin','Editor']))
 											<td>
-											<a href="{{url('admin/relatedentitychurch/'.$rec->id.'/edit')}}"><i class="la la-edit"></i></a>
+											<a href="{{url('admin/relatedentitychurch/'.$rec->id.'/edit?churches_id='.$entry->id)}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
-											data-route="{{ url('admin/relatedentitychurch/'.$rec->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
+											data-route="{{ url('admin/relatedentitychurch/'.$rec->id.'?churches_id='.$entry->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
 											@endif
 										</tr>
@@ -333,9 +333,9 @@
 											<td>{{$cc->coordinator_name}}</td>
 											@if(backpack_user()->hasRole(['Super Admin','Editor']))
 											<td>
-											<a href="{{url('admin/coordinatorchurch/'.$cc->id.'/edit')}}"><i class="la la-edit"></i></a>
+											<a href="{{url('admin/coordinatorchurch/'.$cc->id.'/edit?churches_id='.$entry->id)}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
-											data-route="{{ url('admin/coordinatorchurch/'.$cc->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
+											data-route="{{ url('admin/coordinatorchurch/'.$cc->id.'?churches_id='.$entry->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
 											@endif
 										</tr>
