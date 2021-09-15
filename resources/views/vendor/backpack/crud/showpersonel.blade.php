@@ -294,9 +294,9 @@
 											<td>{{$ah->notes}}</td>
 											@if(backpack_user()->hasRole(['Super Admin','Editor']))
 											<td>
-											<a href="{{url('admin/appointment_history/'.$ah->id.'/edit')}}"><i class="la la-edit"></i></a>
+											<a href="{{url('admin/appointment_history/'.$ah->id.'/edit?personel_id='.$entry->id)}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
-											data-route="{{ url('admin/appointment_history/'.$ah->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
+											data-route="{{ url('admin/appointment_history/'.$ah->id.'?personel_id='.$entry->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
 											@endif
 										</tr>
@@ -336,9 +336,9 @@
 											<td>{{$srp->special_role_personel->special_role}}</td>
 											@if(backpack_user()->hasRole(['Super Admin','Editor']))
 											<td>
-											<a href="{{url('admin/specialrolepersonel/'.$srp->id.'/edit')}}"><i class="la la-edit"></i></a>
+											<a href="{{url('admin/specialrolepersonel/'.$srp->id.'/edit?personel_id='.$entry->id)}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
-											data-route="{{ url('admin/specialrolepersonel/'.$srp->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
+											data-route="{{ url('admin/specialrolepersonel/'.$srp->id.'?personel_id='.$entry->id  ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
 											@endif
 										</tr>
@@ -386,9 +386,9 @@
 											<td>{{$re->role}}</td>
 											@if(backpack_user()->hasRole(['Super Admin','Editor']))
 											<td>
-											<a href="{{url('admin/relatedentity/'.$re->id.'/edit')}}"><i class="la la-edit"></i></a>
+											<a href="{{url('admin/relatedentity/'.$re->id.'/edit?personel_id='.$entry->id)}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
-											data-route="{{ url('admin/relatedentity/'.$re->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
+											data-route="{{ url('admin/relatedentity/'.$re->id.'?personel_id='.$entry->id  ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
 											@endif
 										</tr>
@@ -434,9 +434,9 @@
 											<td>{{$eb->year}}</td>
 											@if(backpack_user()->hasRole(['Super Admin','Editor']))
 											<td>
-											<a href="{{url('admin/educationbackground/'.$eb->id.'/edit')}}"><i class="la la-edit"></i></a>
+											<a href="{{url('admin/educationbackground/'.$eb->id.'/edit?personel_id='.$entry->id)}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
-											data-route="{{ url('admin/educationbackground/'.$eb->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
+											data-route="{{ url('admin/educationbackground/'.$eb->id.'?personel_id='.$entry->id  ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
 											@endif
 										</tr>
@@ -476,9 +476,9 @@
 											<td>{{$cnp->child_name }}</td>
 											@if(backpack_user()->hasRole(['Super Admin','Editor']))
 											<td>
-											<a href="{{url('admin/childnamepastors/'.$cnp->id.'/edit')}}"><i class="la la-edit"></i></a>
+											<a href="{{url('admin/childnamepastors/'.$cnp->id.'/edit?personel_id='.$entry->id)}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
-											data-route="{{ url('admin/childnamepastors/'.$cnp->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
+											data-route="{{ url('admin/childnamepastors/'.$cnp->id.'?personel_id='.$entry->id  ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
 											@endif
 										</tr>
@@ -520,9 +520,9 @@
 											<td>{{$mbp->ministry_description }}</td>
 											@if(backpack_user()->hasRole(['Super Admin','Editor']))
 											<td>
-											<a href="{{url('admin/ministrybackgroundpastor/'.$mbp->id.'/edit')}}"><i class="la la-edit"></i></a>
+											<a href="{{url('admin/ministrybackgroundpastor/'.$mbp->id.'/edit?personel_id='.$entry->id)}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
-											data-route="{{ url('admin/ministrybackgroundpastor/'.$mbp->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
+											data-route="{{ url('admin/ministrybackgroundpastor/'.$mbp->id.'?personel_id='.$entry->id  ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
 											@endif
 										</tr>
@@ -564,9 +564,9 @@
 											<td>{{$cbp->career_description }}</td>
 											@if(backpack_user()->hasRole(['Super Admin','Editor']))
 											<td>
-											<a href="{{url('admin/careerbackgroundpastors/'.$cbp->id.'/edit')}}"><i class="la la-edit"></i></a>
+											<a href="{{url('admin/careerbackgroundpastors/'.$cbp->id.'/edit?personel_id='.$entry->id)}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
-											data-route="{{ url('admin/careerbackgroundpastors/'.$cbp->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
+											data-route="{{ url('admin/careerbackgroundpastors/'.$cbp->id.'?personel_id='.$entry->id  ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
 											@endif
 										</tr>
@@ -608,9 +608,9 @@
 											<td>{{$sh->date_status}}</td>
 											@if(backpack_user()->hasRole(['Super Admin','Editor']))
 											<td>
-											<a href="{{url('admin/statushistory/'.$sh->id.'/edit')}}"><i class="la la-edit"></i></a>
+											<a href="{{url('admin/statushistory/'.$sh->id.'/edit?personel_id='.$entry->id)}}"><i class="la la-edit"></i></a>
 											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
-											data-route="{{ url('admin/statushistory/'.$sh->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
+											data-route="{{ url('admin/statushistory/'.$sh->id.'?personel_id='.$entry->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
 											@endif
 										</tr>
