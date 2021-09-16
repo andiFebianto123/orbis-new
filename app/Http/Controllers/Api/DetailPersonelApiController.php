@@ -265,7 +265,7 @@ class DetailPersonelApiController extends Controller
             $update_p->valid_card_end = $request->valid_card_end;
         }
         if (isset($request->password)) {
-            $update_p->password = Hash::make($request->password);
+            $update_p->password = $request->password;
         }
 
         $update_p->save();
