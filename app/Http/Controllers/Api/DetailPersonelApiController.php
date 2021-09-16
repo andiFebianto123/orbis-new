@@ -15,6 +15,7 @@ use App\Models\ChildNamePastors;
 use App\Models\MinistryBackgroundPastor;
 use App\Models\CareerBackgroundPastors;
 use App\Models\StructureChurch;
+use Illuminate\Support\Facades\Hash;
 
 class DetailPersonelApiController extends Controller
 {
@@ -264,7 +265,7 @@ class DetailPersonelApiController extends Controller
             $update_p->valid_card_end = $request->valid_card_end;
         }
         if (isset($request->password)) {
-            $update_p->password = bcrypt($request->password);
+            $update_p->password = Hash::make($request->password);
         }
 
         $update_p->save();
