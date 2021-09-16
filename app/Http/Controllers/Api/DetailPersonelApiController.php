@@ -263,6 +263,9 @@ class DetailPersonelApiController extends Controller
         if (isset($request->valid_card_end)) {
             $update_p->valid_card_end = $request->valid_card_end;
         }
+        if (isset($request->password)) {
+            $update_p->password = bcrypt($request->password);
+        }
 
         $update_p->save();
 
