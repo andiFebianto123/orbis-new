@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Personel;
 use App\Models\StatusHistory;
+use App\Models\StructureChurch;
 
 class AuthApiController extends Controller
 {
@@ -31,12 +32,17 @@ class AuthApiController extends Controller
         
         if ($active_email) {
             $token = $valid_personel->createToken('auth_token')->plainTextToken;
+            $church = StructureChurch::where('personel_id', $valid_personel->id)
+                        ->join('churches', 'churches.id', 'structure_churches.churches_id')
+                        ->get(['churches.id as church_id', 'church_name'])
+                        ->first();
 
             $response = [
                 'status' => true,
                 'message' => 'Success Login',
                 'access_token' => $token,
                 'data' => $valid_personel,
+                'data_church' => $church,
             ];
         }else{
             $response = [

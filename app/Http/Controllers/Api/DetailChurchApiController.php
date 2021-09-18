@@ -23,6 +23,9 @@ use App\Models\StructureChurch;
 class DetailChurchApiController extends Controller
 {
     public function list(){
+
+
+        return date("Y-m-d H:i:s", strtotime(str_replace('/','-','16/09/2021 13:11:36')));
         $filters = [];
         if (request('city')) {
             $filters[] = ['city', 'LIKE', '%'.request('city').'%'];
