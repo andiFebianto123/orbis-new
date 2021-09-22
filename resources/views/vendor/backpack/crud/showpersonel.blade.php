@@ -903,7 +903,7 @@
 							$('button').attr("disabled", "disabled")
 							// $('.modal').modal('hide');
 							setTimeout(() => { 
-								window.location = "{{url('admin/personel')}}"
+								window.location = "{{url('admin/personel')}}/{{$entry->id}}/show"
 							}, 2000);
 						} else {
 							// if the result is an array, it means 

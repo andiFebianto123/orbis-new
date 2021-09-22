@@ -65,7 +65,7 @@ class DetailChurchApiController extends Controller
 
 
     public function information($id)
-    {
+    {   
         $church = Church::where('churches.id', $id)
                     ->leftJoin('rc_dpwlists', 'rc_dpwlists.id', 'churches.rc_dpw_id')
                     ->leftJoin('church_types', 'church_types.id', 'churches.church_type_id')
@@ -99,6 +99,10 @@ class DetailChurchApiController extends Controller
         $arr_church['church_type'] = (isset($church->entities_type ))?$church->entities_type:"-";
         $arr_church['country_name'] = (isset($church->country_name))? $church->country_name:"-";
         
+        if(!StructureChurch::where('churches_id', $id)->where('personel_id', request('personel_id'))->exists()){
+            $arr_church = [];
+        }
+
         $response = [
             'status' => true,
             'title' => 'Information',
@@ -111,6 +115,9 @@ class DetailChurchApiController extends Controller
     public function statusHistory($id)
     {
         $status_histories = StatusHistoryChurch::where('churches_id', $id)->get();
+        if(!StructureChurch::where('churches_id', $id)->where('personel_id', request('personel_id'))->exists()){
+            $status_histories = [];
+        }
         $response = [
             'status' => true,
             'title' => 'Status History',
@@ -123,6 +130,9 @@ class DetailChurchApiController extends Controller
     public function relatedEntity($id)
     {
         $related_entities = RelatedEntityChurch::where('churches_id', $id)->get();
+        if(!StructureChurch::where('churches_id', $id)->where('personel_id', request('personel_id'))->exists()){
+            $related_entities = [];
+        }
         $response = [
             'status' => true,
             'title' => 'Related Entity',
@@ -135,6 +145,9 @@ class DetailChurchApiController extends Controller
     public function coordinator($id)
     {
         $coordinators = CoordinatorChurch::where('churches_id', $id)->get();
+        if(!StructureChurch::where('churches_id', $id)->where('personel_id', request('personel_id'))->exists()){
+            $coordinators = [];
+        }
         $response = [
             'status' => true,
             'title' => 'Coordinator',
@@ -150,6 +163,10 @@ class DetailChurchApiController extends Controller
                         ->join('title_lists', 'title_lists.id', 'structure_churches.title_structure_id')
                         ->where('structure_churches.churches_id', $id)
                         ->get(['structure_churches.churches_id as id', 'title_lists.long_desc', 'personels.first_name', 'personels.last_name']);
+        
+        if(!StructureChurch::where('churches_id', $id)->where('personel_id', request('personel_id'))->exists()){
+            $leaderships = [];
+        }
         $response = [
             'status' => true,
             'title' => 'Leadership',
