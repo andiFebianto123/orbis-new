@@ -74,7 +74,7 @@ class DetailChurchApiController extends Controller
                     'country_lists.country_name'])
                     ->first();
 
-        $arr_church = [];
+        $arr_church = null;
         $arr_church['status'] = (isset($church->active))?$church->active:"-";
         $arr_church['founded_on'] = (isset($church->founded_on))?$church->founded_on:"-";
         $arr_church['church_name'] = (isset($church->church_name))? $church->church_name:"-";
@@ -100,7 +100,7 @@ class DetailChurchApiController extends Controller
         $arr_church['country_name'] = (isset($church->country_name))? $church->country_name:"-";
         
         if(!StructureChurch::where('churches_id', $id)->where('personel_id', request('personel_id'))->exists()){
-            $arr_church = [];
+            $arr_church = null;
         }
 
         $response = [
