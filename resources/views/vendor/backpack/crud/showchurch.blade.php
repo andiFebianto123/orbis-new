@@ -200,8 +200,8 @@
 											<td>{{$shc->date_status}}</td>
 											@if(backpack_user()->hasRole(['Super Admin','Editor']))
 											<td>
-											<a href="{{url('admin/statushistorychurch/'.$shc->id.'/edit?churches_id='.$entry->id)}}"><i class="la la-edit"></i></a>
-											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
+											<a href="{{url('admin/statushistorychurch/'.$shc->id.'/edit?churches_id='.$entry->id)}}" class="btn btn-sm btn-link"><i class="la la-edit"></i></a>
+											<a href="javascript:void(0)" onclick="deleteEntry(this, 'table')" 
 											data-route="{{ url('admin/statushistorychurch/'.$shc->id.'?churches_id='.$entry->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
 											@endif
@@ -244,8 +244,8 @@
 											<td>{{$rec->type_entity}}</td>
 											@if(backpack_user()->hasRole(['Super Admin','Editor']))
 											<td>
-											<a href="{{url('admin/relatedentitychurch/'.$rec->id.'/edit?churches_id='.$entry->id)}}"><i class="la la-edit"></i></a>
-											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
+											<a href="{{url('admin/relatedentitychurch/'.$rec->id.'/edit?churches_id='.$entry->id)}}" class="btn btn-sm btn-link"><i class="la la-edit"></i></a>
+											<a href="javascript:void(0)" onclick="deleteEntry(this, 'table')" 
 											data-route="{{ url('admin/relatedentitychurch/'.$rec->id.'?churches_id='.$entry->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
 											@endif
@@ -288,9 +288,9 @@
 											<td>{{$mrc->ministry_role_church->ministry_role}}</td>
 											@if(backpack_user()->hasRole(['Super Admin','Editor']))
 											<td>
-											<a href="{{url('admin/structurechurch/'.$mrc->id.'/edit')}}"><i class="la la-edit"></i></a>
-											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
-											data-route="{{ url('admin/structurechurch/'.$mrc->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
+											<a href="{{url('admin/structurechurch/'.$mrc->id.'/edit?churches_id='.$entry->id)}}" class="btn btn-sm btn-link"><i class="la la-edit"></i></a>
+											<a href="javascript:void(0)" onclick="deleteEntry(this, 'table')" 
+											data-route="{{ url('admin/structurechurch/'.$mrc->id.'?churches_id='.$entry->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
 											@endif
 										</tr>
@@ -333,8 +333,8 @@
 											<td>{{$cc->coordinator_name}}</td>
 											@if(backpack_user()->hasRole(['Super Admin','Editor']))
 											<td>
-											<a href="{{url('admin/coordinatorchurch/'.$cc->id.'/edit?churches_id='.$entry->id)}}"><i class="la la-edit"></i></a>
-											<a href="javascript:void(0)" onclick="deleteEntry(this)" 
+											<a href="{{url('admin/coordinatorchurch/'.$cc->id.'/edit?churches_id='.$entry->id)}}" class="btn btn-sm btn-link"><i class="la la-edit"></i></a>
+											<a href="javascript:void(0)" onclick="deleteEntry(this, 'table')" 
 											data-route="{{ url('admin/coordinatorchurch/'.$cc->id.'?churches_id='.$entry->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i></a>
 											</td>
 											@endif
@@ -398,7 +398,9 @@
 						<tr>
 							<td><strong>{{ trans('backpack::crud.actions') }}</strong></td>
 							<td>
-								@include('crud::inc.button_stack', ['stack' => 'line'])
+								<a href="{{url('admin/church/'.$entry->id.'/edit')}}" class="btn btn-sm btn-link"><i class="la la-edit"></i> Edit</a>
+								<a href="javascript:void(0)" onclick="deleteEntry(this, 'parent')" data-route="{{url('admin/church/'.$entry->id)}}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i> Delete</a>
+								{{-- @include('crud::inc.button_stack', ['stack' => 'line']) --}}
 							</td>
 						</tr>
 					@endif
@@ -542,7 +544,7 @@
 		if (typeof deleteEntry != 'function') {
 		$("[data-button-type=delete]").unbind('click');
 
-		function deleteEntry(button) {
+		function deleteEntry(button, typeRedirect) {
 			// ask for confirmation before deleting an item
 			// e.preventDefault();
 			var route = $(button).attr('data-route');
@@ -580,8 +582,19 @@
 							$('a').removeAttr("href")
 							$('button').attr("disabled", "disabled")
 							// $('.modal').modal('hide');
+							var redirectTo = "{{url('admin/church')}}/{{$entry->id}}/show"
+							switch (typeRedirect) {
+								case 'parent':
+									redirectTo = "{{url('admin/church')}}"
+									break;
+								case 'table':
+									redirectTo = "{{url('admin/church')}}/{{$entry->id}}/show"
+									break;
+								default:
+									break;
+							}
 							setTimeout(() => { 
-								window.location = "{{url('admin/church')}}/{{$entry->id}}/show"
+								window.location = redirectTo
 							}, 2000);
 						} else {
 							// if the result is an array, it means 
