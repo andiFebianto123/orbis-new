@@ -164,6 +164,18 @@ class PersonelCrudController extends CrudController
             'attribute' => 'country_name',
         ]);
 
+        $this->crud->addColumn([
+            'name' => 'id_card', // The db column name
+            'label' => "Card ID", // Table column heading
+            'type' => 'text',
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'current_certificate_number', // The db column name
+            'label' => "Certificate Number	", // Table column heading
+            'type' => 'text',
+        ]);
+
         // $this->crud->addColumn([
         //     'name' => 'image', // The db column name
         //     'label' => "Image", // Table column heading

@@ -121,11 +121,20 @@ class PersonelImport implements ToCollection, WithHeadingRow, WithValidation
             $update_personel->is_lifetime = $is_lifetime;
             $update_personel->save();
 
-            $status_history = StatusHistory::where('personel_id', $update_personel->id)->first();
-            $status_history->status_histories_id = ($acc_status['id'] ?? null);
-            $status_history->date_status = Carbon::now();
-            $status_history->save();
-
+            if (StatusHistory::where('personel_id', $update_personel->id)->exists()) {
+                $status_history = StatusHistory::where('personel_id', $update_personel->id)->first();
+                $status_history->status_histories_id = ($acc_status['id'] ?? null);
+                $status_history->date_status = Carbon::now();
+                $status_history->save();
+            }else{
+                $status_history = new StatusHistory([
+                    'status_histories_id'  => ($acc_status['id'] ?? null),
+                    'date_status' => Carbon::now(),
+                    'personel_id' => $update_personel->id,
+                ]);
+                $status_history->save();
+            }
+            
         }else{
             $new_personel = new Personel();
             // $new_personel->acc_status_id = ($acc_status['id'] ?? null);
