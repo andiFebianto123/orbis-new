@@ -25,18 +25,10 @@ class AuthApiController extends Controller
         $valid_personel = [];
         $can_crud = false;
         foreach ($personels as $key => $personel) {
-            $leaderships_exist = StructureChurch::join('personels', 'personels.id', 'structure_churches.personel_id')
-                            ->join('ministry_roles', 'ministry_roles.id', 'structure_churches.title_structure_id')
-                            ->where('structure_churches.personel_id', $personel->id)
-                            ->where(function ($query) {
-                                $query->where('ministry_roles.ministry_role as long_desc', 'Lead Pastor')
-                                      ->orWhere('ministry_roles.ministry_role as long_desc', 'Senior Pastor');
-                            })
-                            ->exists();
+           
             if(StatusHistory::where('personel_id', $personel->id)->where('status_histories_id', 1)->exists()){
                 $active_email = true;
                 $valid_personel = $personel;
-                $can_crud = $leaderships_exist;
             }
         }
         
@@ -46,6 +38,16 @@ class AuthApiController extends Controller
                         ->join('churches', 'churches.id', 'structure_churches.churches_id')
                         ->get(['churches.id as church_id', 'church_name'])
                         ->first();
+            
+            $leaderships_exist = StructureChurch::join('personels', 'personels.id', 'structure_churches.personel_id')
+                        ->join('ministry_roles', 'ministry_roles.id', 'structure_churches.title_structure_id')
+                        ->where('structure_churches.personel_id', $valid_personel->id)
+                        ->where(function ($query) {
+                            $query->where('ministry_roles.ministry_role', 'Lead Pastor')
+                                  ->orWhere('ministry_roles.ministry_role', 'Senior Pastor');
+                        })
+                        ->exists();
+            $can_crud = $leaderships_exist;
 
             $response = [
                 'status' => true,
