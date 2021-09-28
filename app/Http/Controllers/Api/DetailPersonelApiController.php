@@ -27,7 +27,7 @@ class DetailPersonelApiController extends Controller
                     ->leftJoin('title_lists', 'title_lists.id', 'personels.title_id')
                     ->get(['personels.id as id', 'rc_dpwlists.rc_dpw_name', 'title_lists.short_desc as short_title', 'first_name', 'last_name', 'gender', 'profile_image', 'misc_image', 'date_of_birth', 'marital_status', 'spouse_name', 'spouse_date_of_birth', 'anniversary', 'notes', 'family_image'])
                     ->first();
-        
+     
         $status_history = StatusHistory::where('personel_id', $id)
                             ->leftJoin('account_status', 'account_status.id', 'status_histories.status_histories_id')
                             ->get(['account_status.acc_status'])

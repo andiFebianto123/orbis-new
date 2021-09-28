@@ -160,9 +160,9 @@ class DetailChurchApiController extends Controller
     public function leadership($id)
     {
         $leaderships = StructureChurch::join('personels', 'personels.id', 'structure_churches.personel_id')
-                        ->join('title_lists', 'title_lists.id', 'structure_churches.title_structure_id')
+                        ->join('ministry_roles', 'ministry_roles.id', 'structure_churches.title_structure_id')
                         ->where('structure_churches.churches_id', $id)
-                        ->get(['structure_churches.churches_id as id', 'title_lists.long_desc', 'personels.first_name', 'personels.last_name']);
+                        ->get(['structure_churches.churches_id as id', 'ministry_roles.ministry_role as long_desc', 'personels.first_name', 'personels.last_name']);
         
         if(!StructureChurch::where('churches_id', $id)->where('personel_id', request('personel_id'))->exists()){
             $leaderships = [];
