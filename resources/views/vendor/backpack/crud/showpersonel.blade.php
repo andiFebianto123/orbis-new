@@ -221,7 +221,7 @@
 								</tr>
 								<tr>
 									<td>Pastor's ID Card </td>
-									<td> : <img width="150px" style="margin:15px" src="{{str_replace('public', '', URL::to('/'))}}{{ str_replace('storage', 'storage/app/public', $entry->id_card) }}" alt=""></td>
+									<td> : <img width="150px" style="margin:15px" src="{{str_replace('public', '', URL::to('/'))}}{{ str_replace('storage', 'storage/app/public', $entry->pastor_id_card) }}" alt=""></td>
 								</tr>
 							</table>
 						</div>
