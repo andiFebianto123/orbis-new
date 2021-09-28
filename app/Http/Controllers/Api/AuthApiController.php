@@ -33,11 +33,10 @@ class AuthApiController extends Controller
                                       ->orWhere('ministry_roles.ministry_role as long_desc', 'Senior Pastor');
                             })
                             ->exists();
-            $can_crud = $leaderships_exist;
-
             if(StatusHistory::where('personel_id', $personel->id)->where('status_histories_id', 1)->exists()){
                 $active_email = true;
                 $valid_personel = $personel;
+                $can_crud = $leaderships_exist;
             }
         }
         
