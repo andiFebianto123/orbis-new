@@ -267,6 +267,12 @@ class DetailPersonelApiController extends Controller
         if (isset($request->password)) {
             $update_p->password = $request->password;
         }
+        if (isset($request->profile_image)) {
+            $update_p->profile_image = $request->profile_image;
+        }
+        if (isset($request->family_image)) {
+            $update_p->family_image = $request->family_image;
+        }
 
         $update_p->save();
 
