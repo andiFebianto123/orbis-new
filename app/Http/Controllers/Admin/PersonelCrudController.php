@@ -123,7 +123,7 @@ class PersonelCrudController extends CrudController
 
         $this->crud->addColumn([
             'name' => 'Second_email', // The db column name
-            'label' => "Email 2", // Table column heading
+            'label' => "Email (Secondary)", // Table column heading
             'type' => 'text',
         ]);
 
@@ -135,7 +135,7 @@ class PersonelCrudController extends CrudController
 
         $this->crud->addColumn([
             'name' => 'street_address', // The db column name
-            'label' => "Street Address", // Table column heading
+            'label' => "Address", // Table column heading
             'type' => 'text',
         ]);
 
@@ -147,13 +147,13 @@ class PersonelCrudController extends CrudController
 
         $this->crud->addColumn([
             'name' => 'province', // The db column name
-            'label' => "Province / State", // Table column heading
+            'label' => "State", // Table column heading
             'type' => 'text',
         ]);
 
         $this->crud->addColumn([
             'name' => 'postal_code', // The db column name
-            'label' => "Postal Code", // Table column heading
+            'label' => "Postcode", // Table column heading
             'type' => 'text',
         ]);
 
@@ -360,7 +360,7 @@ class PersonelCrudController extends CrudController
         //tab contact
         $this->crud->addField([
             'name' => 'street_address',
-            'label' => "Street Address",
+            'label' => "Address",
             'type' => 'text',
             'tab' => 'Contact Information',
         ]);
@@ -374,14 +374,14 @@ class PersonelCrudController extends CrudController
 
         $this->crud->addField([
             'name' => 'province',
-            'label' => "Province / State",
+            'label' => "State",
             'type' => 'text',
             'tab' => 'Contact Information',
         ]);
 
         $this->crud->addField([
             'name' => 'postal_code',
-            'label' => "Postal Code",
+            'label' => "Postcode",
             'type' => 'text',
             'tab' => 'Contact Information',
         ]);
@@ -405,7 +405,7 @@ class PersonelCrudController extends CrudController
 
         $this->crud->addField([
             'name' => 'second_email',
-            'label' => "Email 2",
+            'label' => "Email (Secondary)",
             'type' => 'text',
             'tab' => 'Contact Information',
         ]);
@@ -419,7 +419,7 @@ class PersonelCrudController extends CrudController
 
         $this->crud->addField([
             'name' => 'fax',
-            'label' => "Fax",
+            'label' => "Mobile Phone",
             'type' => 'number',
             'tab' => 'Contact Information',
         ]);

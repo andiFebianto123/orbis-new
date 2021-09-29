@@ -109,7 +109,7 @@
 									<td> :  {{ $entry->city }}</td>
 								</tr>
 								<tr>
-									<td>Province / State</td>
+									<td>State</td>
 									<td> :  {{ $entry->province }}</td>
 								</tr>
 							</table>
@@ -117,7 +117,7 @@
 						<div class="col-md-6">
 							<table class = "table table-striped">
 								<tr>
-									<td>Postal Code</td>
+									<td>Postcode</td>
 									<td> :  {{ $entry->postal_code }}</td>
 								</tr>
 								<tr>
@@ -129,7 +129,7 @@
 									<td> :  {{ $entry->first_email }}</td>
 								</tr>
 								<tr>
-									<td>Email 2</td>
+									<td>Email (Secondary)</td>
 									<td> :  {{ $entry->second_email }}</td>
 								</tr>
 								<tr>
@@ -154,7 +154,7 @@
 								</tr>
 								<tr>
 									<td>Certificate / SK</td>
-									<td> :  {{ $entry->certificate }}</td>
+									<td> : <img width="150px" style="margin:15px" src="{{str_replace('public', '', URL::to('/'))}}{{ str_replace('storage', 'storage/app/public', $entry->certificate) }}" alt=""></td>
 								</tr>
 								<tr>
 									<td>Date of Certificate</td>

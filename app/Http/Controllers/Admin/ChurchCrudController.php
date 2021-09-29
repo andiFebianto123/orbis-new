@@ -346,13 +346,6 @@ class ChurchCrudController extends CrudController
             'tab'             => 'Church / Office Information',
         ]);
 
-        $this->crud->addField([
-            'name'            => 'certificate',
-            'label'           => "Certificate / SK",
-            'type'            => 'select2_from_array',
-            'options'         => ['Yes' => "Yes", 'No' => "No"],
-            'tab'             => 'Church / Office Information',
-        ]);
 
         $this->crud->addField([
             'name'  => 'date_of_certificate',
@@ -373,6 +366,31 @@ class ChurchCrudController extends CrudController
             'label'           => "Notes",
             'type'            => 'textarea',
             'tab'             => 'Church / Office Information',
+        ]);
+
+        $is_certificate_available = 0;
+        if ($this->crud->getCurrentOperation() == 'update') {
+            $is_certificate_available = (isset($this->crud->getCurrentEntry()->getAttributes()['certificate']))?1:0;
+        }
+
+        $this->crud->addField([
+            'name' => 'check_certificate',
+            'label' => "Certificate",
+            'type'  => 'checkbox_certificate',
+             'default' => $is_certificate_available,
+            'tab' => 'Church / Office Information',
+        ]);
+
+        $this->crud->addField([
+            'label' => "Certificate",
+            'name' => "certificate",
+            'type' => 'image_certificate',
+            'crop' => false, // set to true to allow cropping, false to disable
+            'aspect_ratio' => 1, // omit or set to 0 to allow any aspect ratio
+            'tab' => 'Church / Office Information',
+            'wrapper'   => [ 
+                'class'      => 'form-group col-sm-12 rect-image-certificate'
+             ],
         ]);
     }
 

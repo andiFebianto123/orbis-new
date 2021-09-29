@@ -48,8 +48,8 @@ class ChurchImport implements ToCollection,  WithValidation, WithHeadingRow
         $row_church_address = $row['Church Address'];
         $row_office_address = $row['Office Address'];
         $row_city = $row['City'];
-        $row_province = $row['Province / State'];
-        $row_postal_code = $row['Postal Code'];
+        $row_province = $row['State'];
+        $row_postal_code = $row['Postcode'];
         $row_country = $row['Country'];
         $row_phone = $row['Phone'];
         $row_fax = $row['Fax'];

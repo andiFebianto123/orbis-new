@@ -87,12 +87,12 @@ class PastorReportAnnualCrudController extends CrudController
                     'name' => 'city'
                 ],
                 [
-                    'label' => 'Province / State',
+                    'label' => 'State',
                     'type' => 'text',
                     'name' => 'province'
                 ],
                 [
-                    'label' => 'Postal Code',
+                    'label' => 'Postcode',
                     'type' => 'text',
                     'name' => 'postal_code'
                 ],
@@ -107,7 +107,7 @@ class PastorReportAnnualCrudController extends CrudController
                     'name' => 'phone'
                 ],
                 [
-                    'label' => 'Fax',
+                    'label' => 'Mobile Phone',
                     'type' => 'text',
                     'name' => 'fax'
                 ],

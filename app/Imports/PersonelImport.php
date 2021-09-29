@@ -44,11 +44,11 @@ class PersonelImport implements ToCollection, WithHeadingRow, WithValidation
         $row_church_name = $row['Church Name'];
         $row_address = $row['Address'];
         $row_city = $row['City'];
-        $row_province = $row['Province / State'];
-        $row_postal_code = $row['Postal Code'];
+        $row_province = $row['State'];
+        $row_postal_code = $row['Postcode'];
         $row_country = $row['Country'];
         $row_phone = $row['Phone'];
-        $row_fax = $row['Fax'];
+        $row_fax = $row['Mobile Phone'];
         $row_email = $row['Email'];
         $row_marital_status = $row['Marital Status'];
         $row_date_of_birth = $row['Date of Birth'];

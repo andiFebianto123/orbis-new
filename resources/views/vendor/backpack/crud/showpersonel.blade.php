@@ -145,7 +145,7 @@
 						<div class="col-md-12">
 							<table class = "table table-striped">
 							<tr>
-									<td>Street Address</td>
+									<td>Address</td>
 									<td style="white-space: pre-line;" > :  {{ $entry->street_address }} </td>
 								</tr>
 								<tr>
@@ -153,11 +153,11 @@
 									<td> :  {{ $entry->city }}</td>
 								</tr>
 								<tr>
-									<td>Province / State</td>
+									<td>State</td>
 									<td> :  {{ $entry->province }}</td>
 								</tr>
 								<tr>
-									<td>Postal Code</td>
+									<td>Postcode</td>
 									<td> :  {{ $entry->postal_code }}</td>
 								</tr>
 								<tr>
@@ -169,7 +169,7 @@
 									<td> :  {{ $entry->email }}</td>
 								</tr>
 								<tr>
-									<td>Email 2</td>
+									<td>Email (Secondary)</td>
 									<td> :  {{ $entry->second_email }}</td>
 								</tr>
 								<tr>
@@ -177,7 +177,7 @@
 									<td style="white-space: pre-line;"> :  {{ $entry->phone }}</td>
 								</tr>
 								<tr>
-									<td>Fax</td>
+									<td>Mobile Phone</td>
 									<td> :  {{ $entry->fax }}</td>
 								</tr>
 							</table>
