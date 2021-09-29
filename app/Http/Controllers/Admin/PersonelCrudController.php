@@ -165,7 +165,7 @@ class PersonelCrudController extends CrudController
         ]);
 
         $this->crud->addColumn([
-            'name' => 'id_card', // The db column name
+            'name' => 'card', // The db column name
             'label' => "Card ID", // Table column heading
             'type' => 'text',
         ]);
