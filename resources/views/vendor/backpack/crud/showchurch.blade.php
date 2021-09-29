@@ -154,7 +154,7 @@
 								</tr>
 								<tr>
 									<td>Certificate / SK</td>
-									<td> : <img width="150px" style="margin:15px" src="{{str_replace('public', '', URL::to('/'))}}{{ str_replace('storage', 'storage/app/public', $entry->certificate) }}" alt=""></td>
+									<td> : <img width="150px" style="margin:15px" src="{{str_replace('public', '', URL::to('/'))}}{{ str_replace('storage', '/storage', $entry->certificate) }}" alt=""></td>
 								</tr>
 								<tr>
 									<td>Date of Certificate</td>
