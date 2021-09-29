@@ -105,11 +105,7 @@ class Church extends Model
             Storage::delete(Str::replaceFirst('storage/','public/', $obj->certificate));
         });
     }
-
-    public function getCertificateAttribute($value){
-        return str_replace('storage', 'storage/app/public', $value);
-    }
-
+    
     public function setCertificateAttribute($value)
     {
         $attribute_name = "certificate";
