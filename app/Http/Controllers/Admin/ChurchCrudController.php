@@ -383,7 +383,7 @@ class ChurchCrudController extends CrudController
         ]);
 
         $this->crud->addField([
-            'label' => "Certificate",
+            'label' => "Upload Certificate Photo (Max 3mb)",
             'name' => "certificate",
             'type' => 'image_certificate',
             'crop' => false, // set to true to allow cropping, false to disable

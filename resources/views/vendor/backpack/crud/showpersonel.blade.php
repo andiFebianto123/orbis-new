@@ -41,7 +41,8 @@
 							<table class = "table table-striped">
 								<tr>
 									<td>Status</td>
-									<td> : {{
+									<td> : {{$current_status}} 
+										{{--
 											App\Models\StatusHistory::leftJoin('status_histories as temps', function($leftJoin){
 													$leftJoin->on('temps.personel_id', 'status_histories.personel_id')
 													->where(function($innerQuery){
@@ -54,8 +55,9 @@
 												})->whereNull('temps.id')
 												->join('account_status', 'account_status.id', 'status_histories.status_histories_id')
 												->where('status_histories.personel_id', $entry->id)
+												->orderBy('temps.created_at', 'desc')
 												->select('account_status.acc_status')->first()->acc_status ?? '-'
-										}} </td>
+										--}} </td>
 								</tr>
 								<tr>
 									<td>Regional Council</td>

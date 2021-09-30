@@ -71,6 +71,10 @@
 @endphp
 
 @include('crud::fields.inc.wrapper_start')
+    <div>
+        <label>{!! $field['label'] !!}</label>
+        @include('crud::fields.inc.translatable_icon')
+    </div>
     <div class="row">
         <div class="col-sm-6" data-handle="previewArea" style="margin-bottom: 20px;">
             <img class="img-preview-available" data-handle="mainImage" src="">

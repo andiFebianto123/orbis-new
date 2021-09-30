@@ -820,7 +820,15 @@ class PersonelCrudController extends CrudController
                     ->join('churches', 'churches.id', 'structure_churches.churches_id')
                     ->join('rc_dpwlists', 'rc_dpwlists.id', 'churches.rc_dpw_id')
                     ->get(['churches.*', 'rc_dpwlists.rc_dpw_name']);
+
+        $current_status = StatusHistory::where('personel_id', $this->crud->getCurrentEntry()->id)
+                            ->leftJoin('account_status', 'account_status.id', 'status_histories.status_histories_id')
+                            ->orderBy('date_status','desc')
+                            ->orderBy('status_histories.created_at','desc')
+                            ->first();
+                            
         $data['crud'] = $this->crud;
+        $data['current_status'] = (isset($current_status))?$current_status->acc_status:"-";
         $data['churches'] = $churches;
 
         return view('vendor.backpack.crud.showpersonel', $data);

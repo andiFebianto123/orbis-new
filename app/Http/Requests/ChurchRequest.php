@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\Base64Rule;
 
 class ChurchRequest extends FormRequest
 {
@@ -44,8 +45,9 @@ class ChurchRequest extends FormRequest
         'first_email' => 'required|email' ,
         'phone' => 'required',
         'fax' => 'required',
+        'certificate' => ['required_if:check_certificate,==,', new Base64Rule(3, ['png', 'jpg', 'jpeg'])],
         "date_of_certificate" => "required_if:check_certificate,==,1",
-        "certificate" => "required_if:check_certificate,==,1",
+        // "certificate" => "required_if:check_certificate,==,1",
         ];
     }
 
