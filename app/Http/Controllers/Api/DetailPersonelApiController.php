@@ -28,14 +28,9 @@ class DetailPersonelApiController extends Controller
                     ->leftJoin('title_lists', 'title_lists.id', 'personels.title_id')
                     ->get(['personels.id as id', 'rc_dpwlists.rc_dpw_name', 'title_lists.short_desc as short_title', 'first_name', 'last_name', 'gender', 'profile_image', 'misc_image', 'date_of_birth', 'marital_status', 'spouse_name', 'spouse_date_of_birth', 'anniversary', 'notes', 'family_image'])
                     ->first();
-     
-        $status_history = StatusHistory::where('personel_id', $id)
-                            ->leftJoin('account_status', 'account_status.id', 'status_histories.status_histories_id')
-                            ->get(['account_status.acc_status'])
-                            ->first();
-
+                    
         $arr_personel = [];
-        $arr_personel['status'] = (isset($status_history)) ? $status_history->acc_status : '-';
+        $arr_personel['status'] = 'Active';
         $arr_personel['regional_council'] = $personel->rc_dpw_name;
         $arr_personel['short_title'] = $personel->short_title;
         $arr_personel['first_name'] = $personel->first_name;
@@ -64,7 +59,7 @@ class DetailPersonelApiController extends Controller
     {
         $personel = Personel::where('personels.id', $id)
                     ->leftJoin('country_lists', 'country_lists.id', 'personels.country_id')
-                    ->get(['street_address', 'city', 'province', 'country_lists.country_name', 'email', 'second_email', 'phone', 'fax', 'first_licensed_on', 'card', 'valid_card_start', 'valid_card_end', 'current_certificate_number', 'id_card'])
+                    ->get(['street_address', 'city', 'province', 'postal_code', 'country_lists.country_name', 'email', 'second_email', 'phone', 'fax', 'first_licensed_on', 'card', 'valid_card_start', 'valid_card_end', 'current_certificate_number', 'id_card'])
                     ->first();
 
         $arr_personel = [];

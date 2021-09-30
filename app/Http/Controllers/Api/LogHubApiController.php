@@ -8,7 +8,11 @@ use App\Models\LogHub;
 class LogHubApiController extends Controller
 {
     public function list(){
-        return LogHub::orderBy('id', 'desc')->paginate(100);
+        if (request('personel_id')) {
+            $filters[] = ['personel_id', '=', request('personel_id')];
+        }
+
+        return LogHub::where($filters)->orderBy('id', 'desc')->paginate(100);
     }
 
 
