@@ -14,7 +14,7 @@ class LogHubApi
             $log_hub->personel_id = $personel->id;
             $log_hub->name = $personel->first_name. " ".$personel->last_name;
             $log_hub->email = $personel->email;
-            $log_hub->user_agent =  $_SERVER['HTTP_USER_AGENT'];
+            $log_hub->user_agent =  isset($_SERVER['HTTP_USER_AGENT'])?$_SERVER['HTTP_USER_AGENT']:"unkown";
             $log_hub->ip = $this->getClientIp();
             $log_hub->action =  $action;
             $log_hub->save();

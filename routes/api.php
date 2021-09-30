@@ -18,6 +18,7 @@ Route::post('login', 'Api\AuthApiController@login');
 
 
 Route::get('church-list', 'Api\DetailChurchApiController@list');
+Route::get('log-hub-list', 'Api\LogHubApiController@list');
 
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
@@ -63,6 +64,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
    Route::get('master-regional-council', 'Api\DataMasterApiController@regionalCouncil');
    Route::get('master-country', 'Api\DataMasterApiController@country');
    Route::get('master-marital-status', 'Api\DataMasterApiController@maritalStatus');
+   
   
    Route::post('logout', 'Api\AuthApiController@logout');
    Route::post('logout-all', 'Api\AuthApiController@logoutAll');
