@@ -273,19 +273,21 @@
 								<thead>
 									<tr >
 										<th>No.</th>
-										<th>Personal Name</th>
+										<th>Role</th>
 										<th>Title</th>
+										<th>Name</th>
 										@if(backpack_user()->hasRole(['Super Admin','Editor']))
 										<th class="hidden-print">Action</th>
 										@endif
 									</tr>
 								</thead>
 								<tbody>
-									@foreach($entry->ministry_role_church as $key => $mrc)
+									@foreach($leaderships as $key => $mrc)
 										<tr>
 											<td></td>
-											<td>{{$mrc->personel-> first_name." ".$mrc->personel->last_name}}</td>
-											<td>{{$mrc->ministry_role_church->ministry_role}}</td>
+											<td>{{$mrc->ministry_role}}</td>
+											<td>{{$mrc->short_desc}}</td>
+											<td>{{$mrc->first_name." ".$mrc->last_name}}</td>
 											@if(backpack_user()->hasRole(['Super Admin','Editor']))
 											<td>
 											<a href="{{url('admin/structurechurch/'.$mrc->id.'/edit?churches_id='.$entry->id)}}" class="btn btn-sm btn-link"><i class="la la-edit"></i></a>

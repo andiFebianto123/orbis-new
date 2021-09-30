@@ -537,7 +537,15 @@ class ChurchCrudController extends CrudController
     public function show()
     {
         $this->crud->getCurrentEntry();
+        $leaderships = StructureChurch::join('personels', 'personels.id', 'structure_churches.personel_id')
+                        ->join('ministry_roles', 'ministry_roles.id', 'structure_churches.title_structure_id')
+                        ->join('title_lists', 'title_lists.id', 'personels.title_id')
+                        ->where('structure_churches.churches_id', $this->crud->getCurrentEntry()->id)
+                        ->get(['structure_churches.id as id', 'ministry_roles.ministry_role as ministry_role', 
+                        'title_lists.short_desc', 'title_lists.long_desc','personels.first_name', 'personels.last_name']);
+
         $data['crud'] = $this->crud;
+        $data['leaderships'] = $leaderships;
         return view('vendor.backpack.crud.showchurch',$data);
     }
 

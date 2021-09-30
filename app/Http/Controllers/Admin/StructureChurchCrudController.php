@@ -101,7 +101,7 @@ class StructureChurchCrudController extends CrudController
         ]);
 
         $this->crud->addField([
-            'label'     => 'Title', // Table column heading
+            'label'     => 'Role', // Table column heading
             'type'      => 'select2',
             'name'      => 'title_structure_id', // the column that contains the ID of that connected entity;
             'entity'    => 'ministry_role_church', // the method that defines the relationship in your Model

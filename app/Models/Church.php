@@ -93,6 +93,10 @@ class Church extends Model
         return $this->hasMany('App\Models\StructureChurch', 'churches_id', 'id');
     }
 
+    public function title_list_personel() {
+        return $this->belongsToMany('App\Models\Personel', 'title_lists', 'title_id', 'personel_id');
+    }
+
     public function coordinator_church()
     {
         return $this->hasMany('App\Models\CoordinatorChurch', 'churches_id', 'id');
