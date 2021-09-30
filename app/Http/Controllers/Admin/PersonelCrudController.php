@@ -49,6 +49,7 @@ class PersonelCrudController extends CrudController
         $this->crud->fromPastor = true;
         $this->crud->leftColumns = 4;
         $this->crud->rightColumns = 1;
+        $this->crud->groupBy('id'); 
     }
 
     /**

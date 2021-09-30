@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\LogHubApi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
@@ -181,80 +182,108 @@ class DetailChurchApiController extends Controller
 
     public function update(Request $request){
         $id = $request->id;
+        $personel_id = $request->personel_id;
+
+        $message_log = "Update ";
 
         $update_p = Church::where('id', $id)->first();
 
         if (isset($request->founded_on)) {
             $update_p->founded_on = $request->founded_on;
+            $message_log .= "Founded On from ".$update_p->founded_on." to ".$request->founded_on."<br>";
         }
         if (isset($request->church_type_id)) {
             $update_p->church_type_id = $request->church_type_id;
+            $message_log .= "Church Type ".$update_p->church_type_id." to ".$request->church_type_id."<br>";
         }
         if (isset($request->church_local_id)) {
             $update_p->church_local_id = $request->church_local_id;
+            $message_log .= "Church Local ".$update_p->church_local_id." to ".$request->church_local_id."<br>";
         }
         if (isset($request->rc_dpw_id)) {
             $update_p->rc_dpw_id = $request->rc_dpw_id;
+            $message_log .= "RC/DPW ".$update_p->rc_dpw_id." to ".$request->rc_dpw_id."<br>";
         }
         if (isset($request->church_name)) {
             $update_p->church_name = $request->church_name;
+            $message_log .= "Church Name ".$update_p->church_name." to ".$request->church_name."<br>";
         }
         if (isset($request->contact_person)) {
             $update_p->contact_person = $request->contact_person;
+            $message_log .= "Contact Person ".$update_p->contact_person." to ".$request->contact_person."<br>";
         }
         if (isset($request->building_name)) {
             $update_p->building_name = $request->building_name;
+            $message_log .= "Building Name ".$update_p->building_name." to ".$request->building_name."<br>";
         }
         if (isset($request->church_address)) {
             $update_p->church_address = $request->church_address;
+            $message_log .= "Church Address ".$update_p->church_address." to ".$request->church_address."<br>";
         }
         if (isset($request->office_address)) {
             $update_p->office_address = $request->office_address;
+            $message_log .= "Office Address ".$update_p->office_address." to ".$request->office_address."<br>";
         }
         if (isset($request->city)) {
             $update_p->city = $request->city;
+            $message_log .= "City ".$update_p->city." to ".$request->city."<br>";
         }
         if (isset($request->province)) {
             $update_p->province = $request->province;
+            $message_log .= "Province ".$update_p->province." to ".$request->province."<br>";
         }
         if (isset($request->postal_code)) {
             $update_p->postal_code = $request->postal_code;
+            $message_log .= "Postcode ".$update_p->postal_code." to ".$request->postal_code."<br>";
         }
         if (isset($request->country_id)) {
             $update_p->country_id = $request->country_id;
+            $message_log .= "Country ".$update_p->country_id." to ".$request->country_id."<br>";
         }
         if (isset($request->first_email)) {
             $update_p->first_email = $request->first_email;
+            $message_log .= "First Email ".$update_p->first_email." to ".$request->first_email."<br>";
         }
         if (isset($request->second_email)) {
             $update_p->second_email = $request->second_email;
+            $message_log .= "Second Email ".$update_p->second_email." to ".$request->second_email."<br>";
         }
         if (isset($request->phone)) {
             $update_p->phone = $request->phone;
+            $message_log .= "Phone ".$update_p->phone." to ".$request->phone."<br>";
         }
         if (isset($request->fax)) {
             $update_p->fax = $request->fax;
+            $message_log .= "Fax ".$update_p->fax." to ".$request->fax."<br>";
         }
         if (isset($request->website)) {
             $update_p->website = $request->website;
+            $message_log .= "Website ".$update_p->website." to ".$request->website."<br>";
         }
         if (isset($request->map_url)) {
             $update_p->map_url = $request->map_url;
+            $message_log .= "Map Url ".$update_p->map_url." to ".$request->map_url."<br>";
         }
         if (isset($request->service_time_church)) {
             $update_p->service_time_church = $request->service_time_church;
+            $message_log .= "Service Time Church ".$update_p->service_time_church." to ".$request->service_time_church."<br>";
         }
         if (isset($request->certificate)) {
             $update_p->certificate = $request->certificate;
+            $message_log .= "Certificate<br>";
         }
         if (isset($request->date_of_certificate)) {
             $update_p->date_of_certificate = $request->date_of_certificate;
+            $message_log .= "Date of Certificate ".$update_p->date_of_certificate." to ".$request->date_of_certificate."<br>";
         }
         if (isset($request->notes)) {
             $update_p->notes = $request->notes;
+            $message_log .= "Notes ".$update_p->notes." to ".$request->notes."<br>";
         }
 
         $update_p->save();
+
+        (new LogHubApi())->save($personel_id, $message_log);
 
         $response = [
             'status' => true,

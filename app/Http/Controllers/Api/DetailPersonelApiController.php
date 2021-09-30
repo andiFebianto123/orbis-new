@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\LogHubApi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
@@ -191,90 +192,120 @@ class DetailPersonelApiController extends Controller
         $id = $request->id;
 
         $update_p = Personel::where('id', $id)->first();
+        $message_log = "Update ";
 
         if (isset($request->rc_dpw_id)) {
             $update_p->rc_dpw_id = $request->rc_dpw_id;
+            $message_log .= "RC/DPW ".$update_p->rc_dpw_id." to ".$request->rc_dpw_id."<br>";
         }
         if (isset($request->title_id)) {
             $update_p->title_id = $request->title_id;
+            $message_log .= "Title ".$update_p->title_id." to ".$request->title_id."<br>";
         }
         if (isset($request->first_name)) {
             $update_p->first_name = $request->first_name;
+            $message_log .= "First ".$update_p->first_name." to ".$request->first_name."<br>";
         }
         if (isset($request->last_name)) {
             $update_p->last_name = $request->last_name;
+            $message_log .= "Last ".$update_p->last_name." to ".$request->last_name."<br>";
         }
         if (isset($request->church_name)) {
             $update_p->church_name = $request->church_name;
+            $message_log .= "Church Name ".$update_p->church_name." to ".$request->church_name."<br>";
         }
         if (isset($request->gender)) {
             $update_p->gender = $request->gender;
+            $message_log .= "Gender ".$update_p->gender." to ".$request->gender."<br>";
         }
         if (isset($request->date_of_birth)) {
             $update_p->date_of_birth = $request->date_of_birth;
+            $message_log .= "Date of Birth ".$update_p->date_of_birth." to ".$request->date_of_birth."<br>";
         }
         if (isset($request->marital_status)) {
             $update_p->marital_status = $request->marital_status;
+            $message_log .= "Marital Status ".$update_p->marital_status." to ".$request->marital_status."<br>";
         }
         if (isset($request->spouse_name)) {
             $update_p->spouse_name = $request->spouse_name;
+            $message_log .= "Spouse Name ".$update_p->spouse_name." to ".$request->spouse_name."<br>";
         }
         if (isset($request->spouse_date_of_birth)) {
             $update_p->spouse_date_of_birth = $request->spouse_date_of_birth;
+            $message_log .= "Spouse Date of Birth ".$update_p->spouse_date_of_birth." to ".$request->spouse_date_of_birth."<br>";
         }
         if (isset($request->anniversary)) {
             $update_p->anniversary = $request->anniversary;
+            $message_log .= "Anniversary ".$update_p->anniversary." to ".$request->anniversary."<br>";
         }
         if (isset($request->street_address)) {
             $update_p->street_address = $request->street_address;
+            $message_log .= "Street Address ".$update_p->street_address." to ".$request->street_address."<br>";
         }
         if (isset($request->city)) {
             $update_p->city = $request->city;
+            $message_log .= "City ".$update_p->city." to ".$request->city."<br>";
         }
         if (isset($request->province)) {
             $update_p->province = $request->province;
+            $message_log .= "Province ".$update_p->province." to ".$request->province."<br>";
         }
         if (isset($request->postal_code)) {
             $update_p->postal_code = $request->postal_code;
+            $message_log .= "Postcode ".$update_p->postal_code." to ".$request->postal_code."<br>";
         }
         if (isset($request->country_id)) {
             $update_p->country_id = $request->country_id;
+            $message_log .= "Country ".$update_p->country_id." to ".$request->country_id."<br>";
         }
         if (isset($request->email)) {
             $update_p->email = $request->email;
+            $message_log .= "Email ".$update_p->email." to ".$request->email."<br>";
         }
         if (isset($request->second_email)) {
             $update_p->second_email = $request->second_email;
+            $message_log .= "Email Secondary ".$update_p->second_email." to ".$request->second_email."<br>";
         }
         if (isset($request->phone)) {
             $update_p->phone = $request->phone;
+            $message_log .= "Phone ".$update_p->phone." to ".$request->phone."<br>";
         }
         if (isset($request->fax)) {
             $update_p->fax = $request->fax;
+            $message_log .= "Mobile Phone ".$update_p->fax." to ".$request->fax."<br>";
         }
         if (isset($request->first_licensed_on)) {
             $update_p->first_licensed_on = $request->first_licensed_on;
+            $message_log .= "First Licensed on ".$update_p->first_licensed_on." to ".$request->first_licensed_on."<br>";
         }
         if (isset($request->card)) {
             $update_p->card = $request->card;
+            $message_log .= "Card <br>";
         }
         if (isset($request->valid_card_start)) {
             $update_p->valid_card_start = $request->valid_card_start;
+            $message_log .= "Valid Card Start ".$update_p->valid_card_start." to ".$request->valid_card_start."<br>";
         }
         if (isset($request->valid_card_end)) {
             $update_p->valid_card_end = $request->valid_card_end;
+            $message_log .= "Valid Card End ".$update_p->valid_card_end." to ".$request->valid_card_end."<br>";
         }
         if (isset($request->password)) {
             $update_p->password = $request->password;
+            $message_log .= "Password <br>";
         }
         if (isset($request->profile_image)) {
             $update_p->profile_image = $request->profile_image;
+            $message_log .= "Profile Image";
         }
         if (isset($request->family_image)) {
             $update_p->family_image = $request->family_image;
+            $message_log .= "Family Image";
         }
 
         $update_p->save();
+
+        (new LogHubApi())->save($id, $message_log);
 
         $response = [
             'status' => true,

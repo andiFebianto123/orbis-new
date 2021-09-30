@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\LogHubApi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
@@ -49,6 +50,8 @@ class AuthApiController extends Controller
                         ->exists();
             $can_crud = $leaderships_exist;
 
+            (new LogHubApi())->save($valid_personel->id, 'Login');
+            
             $response = [
                 'status' => true,
                 'message' => 'Success Login',
