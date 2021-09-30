@@ -273,9 +273,9 @@
 								<thead>
 									<tr >
 										<th>No.</th>
-										<th>Role</th>
 										<th>Title</th>
 										<th>Name</th>
+										<th>Role</th>
 										@if(backpack_user()->hasRole(['Super Admin','Editor']))
 										<th class="hidden-print">Action</th>
 										@endif
@@ -285,9 +285,9 @@
 									@foreach($leaderships as $key => $mrc)
 										<tr>
 											<td></td>
-											<td>{{$mrc->ministry_role}}</td>
 											<td>{{$mrc->short_desc}}</td>
 											<td>{{$mrc->first_name." ".$mrc->last_name}}</td>
+											<td>{{$mrc->ministry_role}}</td>
 											@if(backpack_user()->hasRole(['Super Admin','Editor']))
 											<td>
 											<a href="{{url('admin/structurechurch/'.$mrc->id.'/edit?churches_id='.$entry->id)}}" class="btn btn-sm btn-link"><i class="la la-edit"></i></a>
