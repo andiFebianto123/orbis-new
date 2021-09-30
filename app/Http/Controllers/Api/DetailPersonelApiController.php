@@ -11,12 +11,7 @@ use App\Models\Appointment_history;
 use App\Models\StatusHistory;
 use App\Models\SpecialRolePersonel;
 use App\Models\Relatedentity;
-use App\Models\EducationBackground;
-use App\Models\ChildNamePastors;
-use App\Models\MinistryBackgroundPastor;
-use App\Models\CareerBackgroundPastors;
 use App\Models\StructureChurch;
-use Illuminate\Support\Facades\Hash;
 
 class DetailPersonelApiController extends Controller
 {
@@ -28,9 +23,15 @@ class DetailPersonelApiController extends Controller
                     ->leftJoin('title_lists', 'title_lists.id', 'personels.title_id')
                     ->get(['personels.id as id', 'rc_dpwlists.rc_dpw_name', 'title_lists.short_desc as short_title', 'first_name', 'last_name', 'gender', 'profile_image', 'misc_image', 'date_of_birth', 'marital_status', 'spouse_name', 'spouse_date_of_birth', 'anniversary', 'notes', 'family_image'])
                     ->first();
-
+        
+        $current_status_history = StatusHistory::where('personel_id', $personel->id)
+                            ->leftJoin('account_status', 'account_status.id', 'status_histories.status_histories_id')
+                            ->orderBy('date_status','desc')
+                            ->orderBy('status_histories.created_at','desc')
+                            ->first();
+                            
         $arr_personel = [];
-        $arr_personel['status'] = 'Active';
+        $arr_personel['status'] = (isset($current_status_history))?$current_status_history->acc_status:"-";
         $arr_personel['regional_council'] = $personel->rc_dpw_name;
         $arr_personel['short_title'] = $personel->short_title;
         $arr_personel['first_name'] = $personel->first_name;
