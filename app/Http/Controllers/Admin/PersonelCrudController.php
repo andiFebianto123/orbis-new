@@ -118,12 +118,12 @@ class PersonelCrudController extends CrudController
 
         $this->crud->addColumn([
             'name' => 'email', // The db column name
-            'label' => "Email 1", // Table column heading
+            'label' => "Email", // Table column heading
             'type' => 'text',
         ]);
 
         $this->crud->addColumn([
-            'name' => 'Second_email', // The db column name
+            'name' => 'second_email', // The db column name
             'label' => "Email (Secondary)", // Table column heading
             'type' => 'text',
         ]);
@@ -399,7 +399,7 @@ class PersonelCrudController extends CrudController
 
         $this->crud->addField([
             'name' => 'email',
-            'label' => "Email 1",
+            'label' => "Email",
             'type' => 'text',
             'tab' => 'Contact Information',
         ]);

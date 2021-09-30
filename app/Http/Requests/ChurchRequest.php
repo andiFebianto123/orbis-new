@@ -44,6 +44,7 @@ class ChurchRequest extends FormRequest
         'first_email' => 'required|email' ,
         'phone' => 'required',
         'fax' => 'required',
+        "date_of_certificate" => "required_if:check_certificate,==,1",
         "certificate" => "required_if:check_certificate,==,1",
         ];
     }

@@ -137,13 +137,13 @@ class ChurchCrudController extends CrudController
 
         $this->crud->addColumn([
             'name' => 'province', // The db column name
-            'label' => "Province / State", // Table column heading
+            'label' => "State", // Table column heading
             'type' => 'text'
         ]);
 
         $this->crud->addColumn([
             'name' => 'postal_code', // The db column name
-            'label' => "Postal Code", // Table column heading
+            'label' => "Postcode", // Table column heading
             'type' => 'text'
         ]);
 
@@ -299,14 +299,14 @@ class ChurchCrudController extends CrudController
 
         $this->crud->addField([
             'name'            => 'first_email',
-            'label'           => "Email 1",
+            'label'           => "Email",
             'type'            => 'text',
             'tab'             => 'Church / Office Information',
         ]);
 
         $this->crud->addField([
             'name'            => 'second_email',
-            'label'           => "Email 2",
+            'label'           => "Email (Secondary)",
             'type'            => 'text',
             'tab'             => 'Church / Office Information',
         ]);
@@ -346,21 +346,6 @@ class ChurchCrudController extends CrudController
             'tab'             => 'Church / Office Information',
         ]);
 
-
-        $this->crud->addField([
-            'name'  => 'date_of_certificate',
-            'type'  => 'date_picker',
-            'label' => 'Date of Certificate',
-            'tab'   => 'Church / Office Information',
-
-            // optional:
-            'date_picker_options' => [
-                'todayBtn' => 'linked',
-                'format'   => 'dd-mm-yyyy',
-                'language' => 'en'
-            ],
-        ]);
-
         $this->crud->addField([
             'name'            => 'notes',
             'label'           => "Notes",
@@ -379,6 +364,22 @@ class ChurchCrudController extends CrudController
             'type'  => 'checkbox_certificate',
              'default' => $is_certificate_available,
             'tab' => 'Church / Office Information',
+        ]);
+
+        $this->crud->addField([
+            'name'  => 'date_of_certificate',
+            'type'  => 'date_picker',
+            'label' => 'Date of Certificate',
+            'tab'   => 'Church / Office Information',
+            'wrapper'   => [ 
+                'class'      => 'form-group col-sm-12 rect-image-certificate'
+             ],
+            // optional:
+            'date_picker_options' => [
+                'todayBtn' => 'linked',
+                'format'   => 'dd-mm-yyyy',
+                'language' => 'en'
+            ],
         ]);
 
         $this->crud->addField([
