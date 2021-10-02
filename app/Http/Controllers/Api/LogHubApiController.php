@@ -12,7 +12,7 @@ class LogHubApiController extends Controller
             $filters[] = ['personel_id', '=', request('personel_id')];
         }
 
-        return LogHub::where($filters)->orderBy('id', 'desc')->paginate(100);
+        return LogHub::where($filters)->orderBy('id', 'desc')->paginate(1);
     }
 
 

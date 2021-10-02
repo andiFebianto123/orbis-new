@@ -603,9 +603,9 @@
 									</tr>
 								</thead>
 								<tbody>
-									@foreach($entry->status_history as $key => $sh)
+									@foreach($current_statuses as $key => $sh)
 										<tr>
-											<td>{{$sh->accountstatushistories->acc_status ?? '-'}}</td>
+											<td>{{$sh->acc_status ?? '-'}}</td>
 											<td>{{$sh->reason}}</td>
 											<td>{{$sh->date_status}}</td>
 											@if(backpack_user()->hasRole(['Super Admin','Editor']))
