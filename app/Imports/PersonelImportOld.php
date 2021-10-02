@@ -22,7 +22,7 @@ use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
 use Maatwebsite\Excel\Row;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 
-class PersonelImport implements OnEachRow, WithHeadingRow, WithValidation, SkipsOnFailure, WithCalculatedFormulas
+class PersonelImportOld implements OnEachRow, WithHeadingRow, WithValidation, SkipsOnFailure, WithCalculatedFormulas
 
 {
     use Importable, SkipsFailures;
