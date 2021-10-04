@@ -36,7 +36,7 @@ function remove_bs($Str)
                         $realColumnData = preg_match("/\r|\n/", $data[$indexColumn]) ? remove_bs($data[$indexColumn]) : $data[$indexColumn];
                     @endphp
                     <td>
-                        {{$realColumnData ?? '-'}}
+                        {{($realColumnData == "-") ? "" : $realColumnData}}
                     </td>
                 @endforeach
             </tr>
