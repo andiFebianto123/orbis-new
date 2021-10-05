@@ -239,6 +239,9 @@
 				<div class="card-body">
 					<div class = "row">
 						<div class="col-md-12">
+						@if(backpack_user()->hasRole(['Super Admin','Editor']))
+							<a href ="{{url('admin/structurechurch/create?personel_id='.$entry->id)}}" class = 'mb-4 btn btn-primary btn-sm'>Add Structure</a>
+						@endif
 							@if(sizeof($churches)>1)
 							<div id="prev-next-section" class="mb-4" max-key="{{sizeof($churches)-1}}">
 								<button id="btn-prev" class="btn btn-sm btn-outline-primary" type="button"><i class="las la-angle-left"></i></button>
@@ -247,11 +250,10 @@
 							@endif
 							
 							@foreach($churches as $key => $church)
-							
 							<table class = "table table-striped church-informations church-info-{{$key}}">
 								<tr>
-									<td>RC / DPW</td>
-									<td style="white-space: pre-line;" > :  {{ $church->rc_dpw_name }} </td>
+									<td>Role</td>
+									<td style="white-space: pre-line;" > :  {{ $church->ministry_role }} </td>
 								</tr>
 								<tr>
 									<td>Church Name</td>
@@ -262,6 +264,12 @@
 									<td> :  {{ $church->church_address }}</td>
 								</tr>
 							</table>
+
+							<div class="church-informations church-info-{{$key}}">
+								<a href="{{url('admin/structurechurch/'.$church->id.'/edit?personel_id='.$entry->id)}}"  class="btn btn-sm btn-link" ><i class="la la-edit"></i> Edit</a>
+								<a href="javascript:void(0)" onclick="deleteEntry(this, 'table')" 
+											data-route="{{ url('admin/structurechurch/'.$church->id.'?personel_id='.$entry->id ) }}" class="btn btn-sm btn-link" data-button-type="delete"><i class="la la-trash"></i> Delete</a>		
+							</div>
 							@endforeach
 						</div>
 					</div>

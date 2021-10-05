@@ -50,6 +50,7 @@ class PersonelCrudController extends CrudController
         $this->crud->leftColumns = 4;
         $this->crud->rightColumns = 1;
         $this->crud->groupBy('id'); 
+        $this->crud->addClause('where', 'country_id', 101);
     }
 
     /**
@@ -816,10 +817,18 @@ class PersonelCrudController extends CrudController
     function show()
     {
         $this->crud->getCurrentEntry();
-        $churches = StructureChurch::where('personel_id', $this->crud->getCurrentEntry()->id)
+        // $churches = StructureChurch::where('personel_id', $this->crud->getCurrentEntry()->id)
+        //             ->join('churches', 'churches.id', 'structure_churches.churches_id')
+        //             ->join('churches', 'churches.id', 'structure_churches.churches_id')
+        //             ->join('rc_dpwlists', 'rc_dpwlists.id', 'churches.rc_dpw_id')
+        //             ->get(['churches.*', 'rc_dpwlists.rc_dpw_name', 'structure_churches.']);
+        $churches = StructureChurch::join('personels', 'personels.id', 'structure_churches.personel_id')
+                    ->join('ministry_roles', 'ministry_roles.id', 'structure_churches.title_structure_id')
+                    ->join('title_lists', 'title_lists.id', 'personels.title_id')
                     ->join('churches', 'churches.id', 'structure_churches.churches_id')
-                    ->join('rc_dpwlists', 'rc_dpwlists.id', 'churches.rc_dpw_id')
-                    ->get(['churches.*', 'rc_dpwlists.rc_dpw_name']);
+                    ->where('structure_churches.personel_id', $this->crud->getCurrentEntry()->id)
+                    ->get(['structure_churches.id as id', 'ministry_roles.ministry_role as ministry_role', 
+                    'title_lists.short_desc','churches.church_name', 'churches.id as church_id', 'churches.church_address','title_lists.long_desc','personels.first_name', 'personels.last_name']);
 
         $current_statuses = StatusHistory::where('personel_id', $this->crud->getCurrentEntry()->id)
                             ->leftJoin('account_status', 'account_status.id', 'status_histories.status_histories_id')

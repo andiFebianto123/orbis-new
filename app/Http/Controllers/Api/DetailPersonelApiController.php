@@ -193,87 +193,87 @@ class DetailPersonelApiController extends Controller
 
         if (isset($request->rc_dpw_id)) {
             $update_p->rc_dpw_id = $request->rc_dpw_id;
-            $message_log .= "RC/DPW ".$pesonel->rc_dpw_id." to ".$request->rc_dpw_id."<br>";
+            $message_log .= "RC/DPW ".$pesonel->rc_dpw_id." to ".$request->rc_dpw_id;
         }
         if (isset($request->title_id)) {
             $update_p->title_id = $request->title_id;
-            $message_log .= "Title ".$pesonel->title_id." to ".$request->title_id."<br>";
+            $message_log .= "Title ".$pesonel->title_id." to ".$request->title_id;
         }
         if (isset($request->first_name)) {
             $update_p->first_name = $request->first_name;
-            $message_log .= "First ".$pesonel->first_name." to ".$request->first_name."<br>";
+            $message_log .= "First ".$pesonel->first_name." to ".$request->first_name;
         }
         if (isset($request->last_name)) {
             $update_p->last_name = $request->last_name;
-            $message_log .= "Last ".$pesonel->last_name." to ".$request->last_name."<br>";
+            $message_log .= "Last ".$pesonel->last_name." to ".$request->last_name;
         }
         if (isset($request->church_name)) {
             $update_p->church_name = $request->church_name;
-            $message_log .= "Church Name ".$pesonel->church_name." to ".$request->church_name."<br>";
+            $message_log .= "Church Name ".$pesonel->church_name." to ".$request->church_name;
         }
         if (isset($request->gender)) {
             $update_p->gender = $request->gender;
-            $message_log .= "Gender ".$pesonel->gender." to ".$request->gender."<br>";
+            $message_log .= "Gender ".$pesonel->gender." to ".$request->gender;
         }
         if (isset($request->date_of_birth)) {
             $update_p->date_of_birth = $request->date_of_birth;
-            $message_log .= "Date of Birth ".$pesonel->date_of_birth." to ".$request->date_of_birth."<br>";
+            $message_log .= "Date of Birth ".$pesonel->date_of_birth." to ".$request->date_of_birth;
         }
         if (isset($request->marital_status)) {
             $update_p->marital_status = $request->marital_status;
-            $message_log .= "Marital Status ".$pesonel->marital_status." to ".$request->marital_status."<br>";
+            $message_log .= "Marital Status ".$pesonel->marital_status." to ".$request->marital_status;
         }
         if (isset($request->spouse_name)) {
             $update_p->spouse_name = $request->spouse_name;
-            $message_log .= "Spouse Name ".$pesonel->spouse_name." to ".$request->spouse_name."<br>";
+            $message_log .= "Spouse Name ".$pesonel->spouse_name." to ".$request->spouse_name;
         }
         if (isset($request->spouse_date_of_birth)) {
             $update_p->spouse_date_of_birth = $request->spouse_date_of_birth;
-            $message_log .= "Spouse Date of Birth ".$pesonel->spouse_date_of_birth." to ".$request->spouse_date_of_birth."<br>";
+            $message_log .= "Spouse Date of Birth ".$pesonel->spouse_date_of_birth." to ".$request->spouse_date_of_birth;
         }
         if (isset($request->anniversary)) {
             $update_p->anniversary = $request->anniversary;
-            $message_log .= "Anniversary ".$pesonel->anniversary." to ".$request->anniversary."<br>";
+            $message_log .= "Anniversary ".$pesonel->anniversary." to ".$request->anniversary;
         }
         if (isset($request->street_address)) {
             $update_p->street_address = $request->street_address;
-            $message_log .= "Street Address ".$pesonel->street_address." to ".$request->street_address."<br>";
+            $message_log .= "Street Address ".$pesonel->street_address." to ".$request->street_address;
         }
         if (isset($request->city)) {
             $update_p->city = $request->city;
-            $message_log .= "City ".$pesonel->city." to ".$request->city."<br>";
+            $message_log .= "City ".$pesonel->city." to ".$request->city;
         }
         if (isset($request->province)) {
             $update_p->province = $request->province;
-            $message_log .= "Province ".$pesonel->province." to ".$request->province."<br>";
+            $message_log .= "Province ".$pesonel->province." to ".$request->province;
         }
         if (isset($request->postal_code)) {
             $update_p->postal_code = $request->postal_code;
-            $message_log .= "Postcode ".$pesonel->postal_code." to ".$request->postal_code."<br>";
+            $message_log .= "Postcode ".$pesonel->postal_code." to ".$request->postal_code;
         }
         if (isset($request->country_id)) {
             $update_p->country_id = $request->country_id;
-            $message_log .= "Country ".$pesonel->country_id." to ".$request->country_id."<br>";
+            $message_log .= "Country ".$pesonel->country_id." to ".$request->country_id;
         }
         if (isset($request->email)) {
             $update_p->email = $request->email;
-            $message_log .= "Email ".$pesonel->email." to ".$request->email."<br>";
+            $message_log .= "Email ".$pesonel->email." to ".$request->email;
         }
         if (isset($request->second_email)) {
             $update_p->second_email = $request->second_email;
-            $message_log .= "Email Secondary ".$pesonel->second_email." to ".$request->second_email."<br>";
+            $message_log .= "Email Secondary ".$pesonel->second_email." to ".$request->second_email;
         }
         if (isset($request->phone)) {
             $update_p->phone = $request->phone;
-            $message_log .= "Phone ".$pesonel->phone." to ".$request->phone."<br>";
+            $message_log .= "Phone ".$pesonel->phone." to ".$request->phone;
         }
         if (isset($request->fax)) {
             $update_p->fax = $request->fax;
-            $message_log .= "Mobile Phone ".$pesonel->fax." to ".$request->fax."<br>";
+            $message_log .= "Mobile Phone ".$pesonel->fax." to ".$request->fax;
         }
         if (isset($request->first_licensed_on)) {
             $update_p->first_licensed_on = $request->first_licensed_on;
-            $message_log .= "First Licensed on ".$pesonel->first_licensed_on." to ".$request->first_licensed_on."<br>";
+            $message_log .= "First Licensed on ".$pesonel->first_licensed_on." to ".$request->first_licensed_on;
         }
         if (isset($request->card)) {
             $update_p->card = $request->card;
@@ -281,11 +281,11 @@ class DetailPersonelApiController extends Controller
         }
         if (isset($request->valid_card_start)) {
             $update_p->valid_card_start = $request->valid_card_start;
-            $message_log .= "Valid Card Start ".$pesonel->valid_card_start." to ".$request->valid_card_start."<br>";
+            $message_log .= "Valid Card Start ".$pesonel->valid_card_start." to ".$request->valid_card_start;
         }
         if (isset($request->valid_card_end)) {
             $update_p->valid_card_end = $request->valid_card_end;
-            $message_log .= "Valid Card End ".$pesonel->valid_card_end." to ".$request->valid_card_end."<br>";
+            $message_log .= "Valid Card End ".$pesonel->valid_card_end." to ".$request->valid_card_end;
         }
         if (isset($request->password)) {
             $update_p->password = $request->password;
@@ -302,7 +302,7 @@ class DetailPersonelApiController extends Controller
 
         $update_p->save();
 
-        (new LogHubApi())->save($id, $message_log);
+        (new LogHubApi())->save($id, $message_log, 'personel');
 
         $response = [
             'status' => true,

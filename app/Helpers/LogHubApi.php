@@ -6,7 +6,7 @@ use App\Models\Personel;
 
 class LogHubApi
 {
-    public function save($personel_id, $action)
+    public function save($personel_id, $action, $category)
     {
         if(Personel::where('id', $personel_id)->exists()){
             $personel = Personel::where('id', $personel_id)->first();
@@ -14,6 +14,7 @@ class LogHubApi
             $log_hub->personel_id = $personel->id;
             $log_hub->name = $personel->first_name. " ".$personel->last_name;
             $log_hub->email = $personel->email;
+            $log_hub->category = $category;
             $log_hub->user_agent =  isset($_SERVER['HTTP_USER_AGENT'])?$_SERVER['HTTP_USER_AGENT']:"unkown";
             $log_hub->ip = $this->getClientIp();
             $log_hub->action =  $action;

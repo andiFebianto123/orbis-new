@@ -25,18 +25,31 @@ class StructureChurchCrudController extends CrudController
      * 
      * @return void
      */
+
     public function setup()
     {
         CRUD::setModel(\App\Models\StructureChurch::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/structurechurch');
         CRUD::setEntityNameStrings('Leadership Structure', 'Leadership Structure');
-        $this->crud->currentId = request()->churches_id;
-        $this->crud->redirectTo = backpack_url('church/'.$this->crud->currentId.'/show');
-        $isChurchExists =  Church::where('id',$this->crud->currentId)->first();
-        if($isChurchExists == null){
-            abort(404);
+        // $this->crud->currentId = request()->churches_id;
+        if (request()->churches_id) {
+            $this->crud->currentId = request()->churches_id;
+            $this->crud->redirectTo = backpack_url('church/'.$this->crud->currentId.'/show');
+            $isChurchExists =  Church::where('id',$this->crud->currentId)->first();
+            if($isChurchExists == null){
+                abort(404);
+            }
+            $this->crud->saveOnly=true;
+        }else if(request()->personel_id){
+            $this->crud->currentId = request()->personel_id;
+            $this->crud->redirectTo = backpack_url('personel/'.$this->crud->currentId.'/show');
+            $isPersonelExists =  Personel::where('id',$this->crud->currentId)->first();
+            if($isPersonelExists == null){
+                abort(404);
+            }
+            $this->crud->saveOnly=true;
         }
-        $this->crud->saveOnly=true;
+        
     }
 
     public function index()
@@ -57,15 +70,21 @@ class StructureChurchCrudController extends CrudController
             'label' => "ID", // Table column heading
             'type' => 'number'
         ]);
-
+        
         $this->crud->addColumn([
-            'name'        => 'personel_id',
-            'label'       => "Template",
-            'type'        => 'select2_from_array',
-            'options'   => $this->getPersonels(),
-            'allows_null' => false,
-        ]);
-
+                'name'        => 'personel_id',
+                'label'       => "Template",
+                'type'        => 'select2_from_array',
+                'options'   => $this->getPersonels(),
+                'allows_null' => false,
+            ]);   
+            
+            $this->crud->addColumn([
+                'name' => 'churches_id', // The db column name
+                'label' => "Church", // Table column heading
+                'type' => 'relationship',
+                'attribute' => 'church_name',
+            ]);
         
         $this->crud->addColumn([
             'name' => 'ministry_role_church', // The db column name
@@ -74,12 +93,6 @@ class StructureChurchCrudController extends CrudController
             'attribute' => 'ministry_role',
         ]);
 
-        $this->crud->addColumn([
-            'name' => 'churches_id', // The db column name
-            'label' => "Church", // Table column heading
-            'type' => 'relationship',
-            'attribute' => 'church_name',
-        ]);
     }
 
     /**
@@ -92,13 +105,40 @@ class StructureChurchCrudController extends CrudController
     {
         CRUD::setValidation(StructureChurchRequest::class);
 
-        $this->crud->addField([
-            'label'     => "Pastor Name",
-            'type'      => 'select2_from_array',
-            'name'      => 'personel_id', // the column that contains the ID of that connected entity;
-            'options'   => $this->getPersonels(),
-            'allows_null' => false,
-        ]);
+        if(request()->churches_id){
+            $this->crud->addField([
+                'label'     => "Pastor Name",
+                'type'      => 'select2_from_array',
+                'name'      => 'personel_id', // the column that contains the ID of that connected entity;
+                'options'   => $this->getPersonels(),
+                'allows_null' => false,
+            ]);
+            
+            $this->crud->addField([
+                'label'     => 'Church', // Table column heading
+                'type'      => 'hidden',
+                'name'      => 'churches_id', // the column that contains the ID of that connected entity;
+                'default'   => request('churches_id')
+            ]);
+        }
+
+        if(request()->personel_id){
+            $this->crud->addField([
+                'label'     => "Church Name",
+                'type'      => 'select2_from_array',
+                'name'      => 'church_id', // the column that contains the ID of that connected entity;
+                'options'   => $this->getChurch(),
+                'value'     => ($this->crud->getCurrentEntry())? StructureChurch::where('id', $this->crud->getCurrentEntry()->id)->first()->churches_id:0,
+                'allows_null' => false,
+            ]);
+            
+            $this->crud->addField([
+                'label'     => 'Personel', // Table column heading
+                'type'      => 'hidden',
+                'name'      => 'personel_id', // the column that contains the ID of that connected entity;
+                'default'   => request('personel_id')
+            ]);
+        }
 
         $this->crud->addField([
             'label'     => 'Role', // Table column heading
@@ -109,12 +149,7 @@ class StructureChurchCrudController extends CrudController
             'model'     => "App\Models\MinistryRole",
         ]);
 
-        $this->crud->addField([
-            'label'     => 'Church', // Table column heading
-            'type'      => 'hidden',
-            'name'      => 'churches_id', // the column that contains the ID of that connected entity;
-            'default'   => request('churches_id')
-        ]);
+       
     }
 
     /**
@@ -142,7 +177,13 @@ class StructureChurchCrudController extends CrudController
         // show a success message
         \Alert::success(trans('backpack::crud.insert_success'))->flash();
 
-        return redirect(backpack_url('church/'.$item->churches_id.'/show'));
+        $url_redirect = "";
+        if (request()->churches_id) {
+            $url_redirect = 'church/'.request()->churches_id.'/show';
+        }else if (request()->personel_id) {
+            $url_redirect = 'personel/'.request()->personel_id.'/show';
+        }
+        return redirect(backpack_url($url_redirect ));
     }
 
     public function update()
@@ -159,7 +200,13 @@ class StructureChurchCrudController extends CrudController
         // show a success message
         \Alert::success(trans('backpack::crud.update_success'))->flash();
 
-        return redirect(backpack_url('church/'.$item->churches_id.'/show'));    
+        $url_redirect = "";
+        if (request()->churches_id) {
+            $url_redirect = 'church/'.request()->churches_id.'/show';
+        }else if (request()->personel_id) {
+            $url_redirect = 'personel/'.request()->personel_id.'/show';
+        }
+        return redirect(backpack_url($url_redirect));   
     }
 
     private function getPersonels(){
@@ -173,5 +220,15 @@ class StructureChurchCrudController extends CrudController
         }
 
         return $arr_personels;
+    }
+
+    private function getChurch(){
+        $churches = Church::get();
+        $arr_churches = [];
+        foreach ($churches as $key => $value) {
+            $arr_churches[$value->id] = $value->church_name;
+        }
+
+        return $arr_churches;
     }
 }
