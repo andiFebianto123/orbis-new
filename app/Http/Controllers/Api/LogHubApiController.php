@@ -15,7 +15,7 @@ class LogHubApiController extends Controller
             $filters[] = ['category', '=', request('category')];
         }
 
-        return LogHub::where($filters)->orderBy('id', 'desc')->paginate(1);
+        return LogHub::where($filters)->orderBy('id', 'desc')->paginate(5);
     }
 
 
