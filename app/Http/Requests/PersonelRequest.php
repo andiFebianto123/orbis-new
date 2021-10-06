@@ -53,7 +53,7 @@ class PersonelRequest extends FormRequest
         'first_licensed_on' => 'required',
         'card' => 'required',
         'valid_card_start' => 'required',
-        'valid_card_end'=> 'required',
+        "valid_card_end" => "required_if:is_lifetime,==,0",
         'current_certificate_number'=> 'required',
         'certificate' => ['nullable', new Base64Rule(3, ['png', 'jpg', 'jpeg'])],
         'id_card' => ['nullable', new Base64Rule(3, ['png', 'jpg', 'jpeg'])],

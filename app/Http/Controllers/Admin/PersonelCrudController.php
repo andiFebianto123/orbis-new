@@ -531,14 +531,14 @@ class PersonelCrudController extends CrudController
                     'type'      => 'select2_from_array',
                     'name'      => 'church_id', // the column that contains the ID of that connected entity;
                     'options'   => $this->getChurch(),
-                    'allows_null' => false,
+                    'allows_null' => true,
                 ],
                 [
                     'label'     => "Role",
                     'type'      => 'select2_from_array',
                     'name'      => 'title_structure_id', // the column that contains the ID of that connected entity;
                     'options'   => $this->getMinistryRole(),
-                    'allows_null' => false,
+                    'allows_null' => true,
                 ],
             ],
         
