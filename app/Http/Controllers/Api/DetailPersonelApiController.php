@@ -170,11 +170,19 @@ class DetailPersonelApiController extends Controller
     }
 
     public function churches($id){
-        $churches = StructureChurch::where('personel_id', $id)
+        // $churches = StructureChurch::where('personel_id', $id)
+        //             ->join('churches', 'churches.id', 'structure_churches.churches_id')
+        //             ->join('rc_dpwlists', 'rc_dpwlists.id', 'churches.rc_dpw_id')
+        //             ->get(['churches.*', 'rc_dpwlists.rc_dpw_name']);
+
+        $churches = StructureChurch::join('personels', 'personels.id', 'structure_churches.personel_id')
+                    ->join('ministry_roles', 'ministry_roles.id', 'structure_churches.title_structure_id')
+                    ->join('title_lists', 'title_lists.id', 'personels.title_id')
                     ->join('churches', 'churches.id', 'structure_churches.churches_id')
-                    ->join('rc_dpwlists', 'rc_dpwlists.id', 'churches.rc_dpw_id')
-                    ->get(['churches.*', 'rc_dpwlists.rc_dpw_name']);
-        
+                    ->where('structure_churches.personel_id', $id)
+                    ->get(['structure_churches.id as id', 'ministry_roles.ministry_role as ministry_role', 
+                    'title_lists.short_desc','churches.church_name', 'churches.id as church_id', 'churches.church_address','title_lists.long_desc','personels.first_name', 'personels.last_name']);
+
         $response = [
             'status' => true,
             'title' => 'Church Information',

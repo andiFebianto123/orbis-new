@@ -58,11 +58,18 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
    Route::post('career-backgrounds-create', 'Api\CareerBackgroundApiController@create');
    Route::post('career-backgrounds-delete', 'Api\CareerBackgroundApiController@delete');
 
+   Route::get('structure-churches-show/{id}', 'Api\LeadershipStructureApiController@show');
+   Route::post('structure-churches-update', 'Api\LeadershipStructureApiController@update');
+   Route::post('structure-churches-create', 'Api\LeadershipStructureApiController@create');
+   Route::post('structure-churches-delete', 'Api\LeadershipStructureApiController@delete');
+
    Route::get('master-title', 'Api\DataMasterApiController@title');
    Route::get('master-regional-council', 'Api\DataMasterApiController@regionalCouncil');
    Route::get('master-country', 'Api\DataMasterApiController@country');
    Route::get('master-marital-status', 'Api\DataMasterApiController@maritalStatus');
    Route::get('master-gender', 'Api\DataMasterApiController@gender');
+   Route::get('master-church', 'Api\DataMasterApiController@church');
+   Route::get('master-ministry-role', 'Api\DataMasterApiController@ministryRole');
    
    Route::get('log-hub-list', 'Api\LogHubApiController@list');
 

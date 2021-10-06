@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Models\Church;
 use App\Models\CountryList;
+use App\Models\MinistryRole;
 use App\Models\RcDpwList;
 use App\Models\TitleList;
 
@@ -85,6 +87,40 @@ class DataMasterApiController extends Controller
         $arr_master[] = ['id' => 'Married', 'text' => 'Married'];
         $arr_master[] = ['id' => 'Divorce', 'text' => 'Divorce'];
         $arr_master[] = ['id' => 'Widower', 'text' => 'Widower'];
+       
+        $response = [
+            'status' => true,
+            'data' => $arr_master,
+        ];
+
+        return response()->json($response, 200); 
+    }
+
+    public function ministryRole()
+    {
+        $masters = MinistryRole::get();
+
+        $arr_master = [];
+        foreach ($masters as $key => $master) {
+            $arr_master[] = ['id' => $master->id, 'text' => $master->ministry_role];
+        }
+       
+        $response = [
+            'status' => true,
+            'data' => $arr_master,
+        ];
+
+        return response()->json($response, 200); 
+    }
+
+    public function church()
+    {
+        $masters = Church::get();
+
+        $arr_master = [];
+        foreach ($masters as $key => $master) {
+            $arr_master[] = ['id' => $master->id, 'text' => $master->church_name];
+        }
        
         $response = [
             'status' => true,
