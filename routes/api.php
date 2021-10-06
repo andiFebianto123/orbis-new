@@ -62,6 +62,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
    Route::get('master-regional-council', 'Api\DataMasterApiController@regionalCouncil');
    Route::get('master-country', 'Api\DataMasterApiController@country');
    Route::get('master-marital-status', 'Api\DataMasterApiController@maritalStatus');
+   Route::get('master-gender', 'Api\DataMasterApiController@gender');
    
    Route::get('log-hub-list', 'Api\LogHubApiController@list');
 
