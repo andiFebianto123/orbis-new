@@ -165,14 +165,25 @@ class DetailChurchApiController extends Controller
                         ->join('title_lists', 'title_lists.id', 'personels.title_id')
                         ->where('structure_churches.churches_id', $id)
                         ->get(['structure_churches.id as id', 'ministry_roles.ministry_role as ministry_role', 
-                        'title_lists.short_desc', 'title_lists.long_desc','personels.first_name', 'personels.last_name']);
+                        'title_lists.short_desc', 'title_lists.long_desc','personels.id as personel_id','personels.first_name', 'personels.last_name']);
         
         if(!StructureChurch::where('churches_id', $id)->where('personel_id', request('personel_id'))->exists()){
             $leaderships = [];
         }
+        $leaderships_exist = StructureChurch::join('personels', 'personels.id', 'structure_churches.personel_id')
+                        ->join('ministry_roles', 'ministry_roles.id', 'structure_churches.title_structure_id')
+                        ->where('structure_churches.personel_id', request('personel_id'))
+                        ->where(function ($query) {
+                            $query->where('ministry_roles.ministry_role', 'Lead Pastor')
+                                  ->orWhere('ministry_roles.ministry_role', 'Senior Pastor');
+                        })
+                        ->exists();
+        $can_crud = $leaderships_exist;
+        
         $response = [
             'status' => true,
             'title' => 'Leadership',
+            'can_crud' => $can_crud,
             'data' => $leaderships,
         ];
 
