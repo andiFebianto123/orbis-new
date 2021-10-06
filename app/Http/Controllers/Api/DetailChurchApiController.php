@@ -34,7 +34,7 @@ class DetailChurchApiController extends Controller
                     ->leftJoin('rc_dpwlists', 'rc_dpwlists.id', 'churches.rc_dpw_id')
                     ->leftJoin('church_types', 'church_types.id', 'churches.church_type_id')
                     ->leftJoin('country_lists', 'country_lists.id', 'churches.country_id')
-                    ->get(['churches.id', 'churches.church_address', 'church_name', 'city', 'phone', 'map_url', 'website', 'service_time_church', 'first_email']);
+                    ->get(['churches.id', 'churches.church_address', 'church_name', 'city', 'phone', 'map_url', 'website', 'service_time_church', 'first_email', 'churches.created_at']);
 
         $arr_res = [];
         foreach ($churches as $key => $church) {
@@ -44,7 +44,7 @@ class DetailChurchApiController extends Controller
                 $leaderships = StructureChurch::join('personels', 'personels.id', 'structure_churches.personel_id')
                         ->join('title_lists', 'title_lists.id', 'structure_churches.title_structure_id')
                         ->where('structure_churches.churches_id', $church->id)
-                        ->get(['structure_churches.churches_id as id', 'title_lists.long_desc', 'personels.first_name', 'personels.last_name']);
+                        ->get(['structure_churches.churches_id as id', 'title_lists.long_desc', 'personels.first_name', 'personels.last_name', 'structure_churches.created_at']);
                 $arr_personel = $leaderships;
             }
             $arr_res[] = [
@@ -57,7 +57,7 @@ class DetailChurchApiController extends Controller
                 'website' => $church->website,
                 'service_time_church' => $church->service_time_church,
                 'first_email' => $church->first_email,
-                'personels' => $arr_personel
+                'personels' => $arr_personel,
             ];
         }
 
@@ -305,7 +305,8 @@ class DetailChurchApiController extends Controller
         return response()->json($response, 200); 
     }
 
-
-    
+    public function cekLog(){
+        (new LogHubApi())->save(1, "Cek", 'church');
+    }
 
 }

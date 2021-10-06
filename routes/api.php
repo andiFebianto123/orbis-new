@@ -18,6 +18,7 @@ Route::post('login', 'Api\AuthApiController@login');
 
 
 Route::get('church-list', 'Api\DetailChurchApiController@list');
+Route::get('cek-log', 'Api\DetailChurchApiController@cekLog');
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
    Route::get('profile-biodata/{id}', 'Api\DetailPersonelApiController@biodata');

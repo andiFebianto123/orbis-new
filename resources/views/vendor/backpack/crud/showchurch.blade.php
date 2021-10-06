@@ -85,10 +85,6 @@
 									<td> :  {{ $entry->rc_dpw->rc_dpw_name }}</td>
 								</tr>
 								<tr>
-									<td>Church Name</td>
-									<td> :  {{ $entry->church_name }}</td>
-								</tr>
-								<tr>
 									<td>Contact Person</td>
 									<td> :  {{ $entry->contact_person }}</td>
 								</tr>

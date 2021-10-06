@@ -14,8 +14,10 @@ use App\Http\Requests\PersonelUpdateRequest;
 use App\Models\Appointment_history;
 use App\Models\CareerBackgroundPastors;
 use App\Models\ChildNamePastors;
+use App\Models\Church;
 use App\Models\EducationBackground;
 use App\Models\MinistryBackgroundPastor;
+use App\Models\MinistryRole;
 use App\Models\Relatedentity;
 use App\Models\SpecialRolePersonel;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -111,11 +113,11 @@ class PersonelCrudController extends CrudController
             'attribute' => 'rc_dpw_name',
         ]);
 
-        $this->crud->addColumn([
-            'name' => 'church_name', // The db column name
-            'label' => "Church Name", // Table column heading
-            'type' => 'text',
-        ]);
+        // $this->crud->addColumn([
+        //     'name' => 'church_name', // The db column name
+        //     'label' => "Church Name", // Table column heading
+        //     'type' => 'text',
+        // ]);
 
         $this->crud->addColumn([
             'name' => 'email', // The db column name
@@ -252,12 +254,12 @@ class PersonelCrudController extends CrudController
             'tab' => 'Biodata',
         ]);
 
-        $this->crud->addField([
-            'name' => 'church_name',
-            'label' => "Church Name",
-            'type' => 'text',
-            'tab' => 'Biodata',
-        ]);
+        // $this->crud->addField([
+        //     'name' => 'church_name',
+        //     'label' => "Church Name",
+        //     'type' => 'text',
+        //     'tab' => 'Biodata',
+        // ]);
 
         $this->crud->addField([
             'name' => 'gender',
@@ -517,6 +519,33 @@ class PersonelCrudController extends CrudController
             'type' => 'textarea',
             'tab' => 'Licensing Information',
         ]);
+
+        $this->crud->addField([   // repeatable
+            'name'  => 'leaderships',
+            'label' => 'Leadership',
+            'type'  => 'repeatable',
+            'tab' => 'Leadership Structure',
+            'fields' => [
+                [
+                    'label'     => "Church Name",
+                    'type'      => 'select2_from_array',
+                    'name'      => 'church_id', // the column that contains the ID of that connected entity;
+                    'options'   => $this->getChurch(),
+                    'allows_null' => false,
+                ],
+                [
+                    'label'     => "Role",
+                    'type'      => 'select2_from_array',
+                    'name'      => 'title_structure_id', // the column that contains the ID of that connected entity;
+                    'options'   => $this->getMinistryRole(),
+                    'allows_null' => false,
+                ],
+            ],
+        
+            // optional
+            'new_item_label'  => 'Add Leadership', // customize the text of the button
+            'init_rows' => 1, // number of empty rows to be initialized, by default 1
+        ]);
     }
 
     public function store(Request $request)
@@ -554,12 +583,11 @@ class PersonelCrudController extends CrudController
             } else {
                 $isDuplicate->where('last_name', $request->last_name);
             }
-
-            if (!$request->filled('church_name')) {
-                $isDuplicate->whereNull('church_name');
-            } else {
-                $isDuplicate->where('church_name', $request->church_name);
-            }
+            // if (!$request->filled('church_name')) {
+            //     $isDuplicate->whereNull('church_name');
+            // } else {
+            //     $isDuplicate->where('church_name', $request->church_name);
+            // }
 
             if (!$request->filled('date_of_birth')) {
                 $isDuplicate->whereNull('date_of_birth');
@@ -574,7 +602,7 @@ class PersonelCrudController extends CrudController
                 $errors = [
                     'first_name' => ['The pastor with same First Name, Last Name, Church Name and Date of Birth has already exists.'],
                     'last_name' => ['The pastor with same First Name, Last Name, Church Name and Date of Birth has already exists.'],
-                    'church_name' => ['The pastor with same First Name, Last Name, Church Name and Date of Birth has already exists.'],
+                    // 'church_name' => ['The pastor with same First Name, Last Name, Church Name and Date of Birth has already exists.'],
                     'date_of_birth' => ['The pastor with same First Name, Last Name, Church Name and Date of Birth has already exists.'],
                 ];
                 return redirect($this->crud->route . '/create')
@@ -590,7 +618,17 @@ class PersonelCrudController extends CrudController
             // insert item in the db
             $item = $this->crud->create($this->crud->getStrippedSaveRequest());
             $this->data['entry'] = $this->crud->entry = $item;
+            if ($request->input("leaderships")) {
+                $leaderships = json_decode($request->input("leaderships"));
 
+                foreach ($leaderships as $key => $leadership) {
+                    $insert_p = new StructureChurch();
+                    $insert_p->title_structure_id = $leadership->title_structure_id;
+                    $insert_p->churches_id = $leadership->church_id;
+                    $insert_p->personel_id = $item->id;
+                    $insert_p->save();
+                }
+            }
             // foreach($result['valid_images'] as $index => $validImage){
             //     $personelImage = new PersonelImage;
             //     $path = $personelImage->setImagePersonel('public/images_personel', $validImage['image'], 'image', '_' . $index);
@@ -677,11 +715,11 @@ class PersonelCrudController extends CrudController
                 $isDuplicate->where('last_name', $request->last_name);
             }
 
-            if (!$request->filled('church_name')) {
-                $isDuplicate->whereNull('church_name');
-            } else {
-                $isDuplicate->where('church_name', $request->church_name);
-            }
+            // if (!$request->filled('church_name')) {
+            //     $isDuplicate->whereNull('church_name');
+            // } else {
+            //     $isDuplicate->where('church_name', $request->church_name);
+            // }
 
             if (!$request->filled('date_of_birth')) {
                 $isDuplicate->whereNull('date_of_birth');
@@ -696,7 +734,7 @@ class PersonelCrudController extends CrudController
                 $errors = [
                     'first_name' => ['The pastor with same First Name, Last Name, Church Name and Date of Birth has already exists.'],
                     'last_name' => ['The pastor with same First Name, Last Name, Church Name and Date of Birth has already exists.'],
-                    'church_name' => ['The pastor with same First Name, Last Name, Church Name and Date of Birth has already exists.'],
+                    // 'church_name' => ['The pastor with same First Name, Last Name, Church Name and Date of Birth has already exists.'],
                     'date_of_birth' => ['The pastor with same First Name, Last Name, Church Name and Date of Birth has already exists.'],
                 ];
                 return redirect($this->crud->route . '/'. $id . '/edit')
@@ -930,6 +968,26 @@ class PersonelCrudController extends CrudController
             DB::rollback();
             throw $e;
         }
+    }
+
+    private function getChurch(){
+        $churches = Church::get();
+        $arr_churches = [];
+        foreach ($churches as $key => $value) {
+            $arr_churches[$value->id] = $value->church_name;
+        }
+
+        return $arr_churches;
+    }
+
+    private function getMinistryRole(){
+        $churches = MinistryRole::get();
+        $arr_churches = [];
+        foreach ($churches as $key => $value) {
+            $arr_churches[$value->id] = $value->ministry_role;
+        }
+
+        return $arr_churches;
     }
 
 }
