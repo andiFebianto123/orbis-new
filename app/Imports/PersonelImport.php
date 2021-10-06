@@ -209,7 +209,9 @@ class PersonelImport implements ToCollection, WithHeadingRow, WithValidation
     private function handleChurchName($value){
         $arr_datas = [];
         $count_valid_data = 0;
+        $total_data = 0;
         foreach(explode("\n",$value) as $sc) {
+            $total_data++;
             if (strpos( $sc, " - ") !== false) {
                 $expl_dash = explode(" - ",$sc);
 
@@ -217,13 +219,13 @@ class PersonelImport implements ToCollection, WithHeadingRow, WithValidation
                 $ministry_role = MinistryRole::where('ministry_role','like', '%'.$expl_dash[1].'%')->first();
 
                 if (isset($church_name) && isset($ministry_role)) {
-                    $count_valid_data++;
                     $arr_datas[] = ['church_id' => $church_name->id, 'title_structure_id' => $ministry_role->id];
+                    $count_valid_data++;
                 }
             }  
         }
 
-        return ($count_valid_data > 0) ? $arr_datas :[];
+        return ($count_valid_data == $total_data) ? $arr_datas :[];
     }
 
     function formatDateExcel($dateExcel){
@@ -240,7 +242,7 @@ class PersonelImport implements ToCollection, WithHeadingRow, WithValidation
             'Title' => 'required',
             'Church Name' => function($attribute, $value, $onFailure) {
                 $church_name = $this->handleChurchName($value);
-                if (sizeof($church_name) > 0) {
+                if ($value != "" && sizeof($church_name) == 0) {
                     $onFailure('Not Exist Church - Role or Invalid Format :: Church Name - Role');
                 }
             },
