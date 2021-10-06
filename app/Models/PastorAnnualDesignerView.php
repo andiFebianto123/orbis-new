@@ -44,4 +44,19 @@ class PastorAnnualDesignerView extends Model
         
         return $value == 'all' || $value == null ? $query : $query->whereDate('valid_card_end', '<=', $todayNow->toDateString())->whereDate('valid_card_end', '>=', $maximumValid->toDateString()); 
     }
+
+    public function getChurchNameAttribute($value)
+    {
+        $churhes  = json_decode($value);
+        $str_role_church = "";
+            if (json_last_error() === JSON_ERROR_NONE) {
+                foreach ($churhes as $key => $church) {
+                    $church_name = Church::where('id', $church->church_id)->first()->church_name;
+                    $ministry_role = MinistryRole::where('id', $church->title_structure_id)->first()->ministry_role;
+                    $str_role_church .= $church_name." - ".$ministry_role."<br>";
+                }
+            }
+                
+        return $str_role_church;
+    }
 }

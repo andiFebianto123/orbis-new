@@ -9,6 +9,8 @@ use App\Models\TitleList;
 use App\Models\PastorAnnualDesignerView;
 use Carbon\Carbon;
 use App\Exports\ExportAnnualReport;
+use App\Models\Church;
+use App\Models\MinistryRole;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -73,8 +75,21 @@ class PastorReportAnnualCrudController extends CrudController
                 ],
                 [
                     'label' => 'Church Name',
-                    'type' => 'text',
-                    'name' => 'church_name'
+                    'type' => 'textarea',
+                    'name' => 'church_name',
+                    // 'function' => function($entries){
+                    //     $churhes  = json_decode($entries->church_name);
+                    //     $str_role_church = "";
+                    //     if (json_last_error() === JSON_ERROR_NONE) {
+                    //         foreach ($churhes as $key => $church) {
+                    //             $church_name = Church::where('id', $church->church_id)->first()->church_name;
+                    //             $ministry_role = MinistryRole::where('id', $church->title_structure_id)->first()->ministry_role;
+                    //             $str_role_church .= $church_name." - ".$ministry_role."<br>";
+                    //         }
+                    //     }
+                        
+                    //     return $str_role_church;
+                    // }
                 ],
                 [
                     'label' => 'Address',
