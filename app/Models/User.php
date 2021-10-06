@@ -30,9 +30,9 @@ class User extends Authenticatable
         'status_user',
     ];
 
-    public function setPasswordAttribute($value) {
-        $this->attributes['password'] = Hash::make($value);
-    }
+    // public function setPasswordAttribute($value) {
+    //     $this->attributes['password'] = Hash::make($value);
+    // }
 
     /**
      * The attributes that should be hidden for arrays.
