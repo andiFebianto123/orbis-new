@@ -7,7 +7,10 @@ use App\Models\CountryList;
 use App\Models\RcDpwList;
 use App\Models\TitleList;
 use App\Models\Accountstatus;
+use App\Models\Church;
+use App\Models\MinistryRole;
 use App\Models\StatusHistory;
+use App\Models\StructureChurch;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -78,19 +81,19 @@ class PersonelImport implements ToCollection, WithHeadingRow, WithValidation
         $is_lifetime = strtolower($row_valid_card_end ?? '') == 'lifetime' ? "1" : "0";
         $address = trim(str_replace('_x000D_', "\n", $row_address ?? ''));
         $phone = trim(str_replace('_x000D_', "\n", $row_phone ?? ''));
+        $church_name = trim(str_replace('_x000D_', "\n", $row_church_name ?? ""));
+        $str_json_church = json_encode($this->handleChurchName($church_name));
         $email = (!isset($row_email) || strlen($row_email) == 0) ? null : $row_email;
     
         $check_exist_personel = Personel::where('first_name', $row_first_name)
                                 ->where('last_name', $row_last_name)
                                 ->where('date_of_birth', $date_of_birth)
-                                ->where('church_name', $row_church_name)
                                 ->exists();
 
         if ($check_exist_personel) {
             $update_personel = Personel::where('first_name', $row_first_name)
                                 ->where('last_name', $row_last_name)
                                 ->where('date_of_birth', $date_of_birth)
-                                ->where('church_name', $row_church_name)
                                 ->first();
             // $update_personel->acc_status_id = ($acc_status['id'] ?? null);
             $update_personel->rc_dpw_id = ($rcdpw['id'] ?? null);
@@ -98,7 +101,7 @@ class PersonelImport implements ToCollection, WithHeadingRow, WithValidation
             $update_personel->first_name = $row_first_name;
             $update_personel->last_name = $row_last_name;
             $update_personel->gender = $row_gender;
-            $update_personel->church_name = $row_church_name;
+            $update_personel->church_name = $str_json_church;
             $update_personel->street_address = $address;
             $update_personel->city = $row_city;
             $update_personel->province = $row_province;
@@ -134,6 +137,17 @@ class PersonelImport implements ToCollection, WithHeadingRow, WithValidation
                 ]);
                 $status_history->save();
             }
+
+            if (sizeof($this->handleChurchName($church_name)) > 0) {
+                StructureChurch::where("personel_id", $update_personel->id)->delete();
+                foreach ($this->handleChurchName($church_name) as $key => $cn) {
+                    $insert_p = new StructureChurch();
+                    $insert_p->title_structure_id = $cn['title_structure_id'];
+                    $insert_p->churches_id = $cn['church_id'];
+                    $insert_p->personel_id = $update_personel->id;
+                    $insert_p->save();
+                }
+            }
             
         }else{
             $new_personel = new Personel();
@@ -143,7 +157,7 @@ class PersonelImport implements ToCollection, WithHeadingRow, WithValidation
             $new_personel->first_name = $row_first_name;
             $new_personel->last_name = $row_last_name;
             $new_personel->gender = $row_gender;
-            $new_personel->church_name = $row_church_name;
+            $new_personel->church_name = $str_json_church;
             $new_personel->street_address = $address;
             $new_personel->city = $row_city;
             $new_personel->province = $row_province;
@@ -173,6 +187,16 @@ class PersonelImport implements ToCollection, WithHeadingRow, WithValidation
             ]);
 
             $status_history->save();
+
+            if (sizeof($this->handleChurchName($church_name)) > 0) {
+                foreach ($this->handleChurchName($church_name) as $key => $cn) {
+                    $insert_p = new StructureChurch();
+                    $insert_p->title_structure_id = $cn['title_structure_id'];
+                    $insert_p->churches_id = $cn['church_id'];
+                    $insert_p->personel_id = $new_personel->id;
+                    $insert_p->save();
+                }
+            }
         }
 
     }
@@ -180,6 +204,26 @@ class PersonelImport implements ToCollection, WithHeadingRow, WithValidation
     public function headingRow(): int
     {
         return 2;
+    }
+
+    private function handleChurchName($value){
+        $arr_datas = [];
+        $count_valid_data = 0;
+        foreach(explode("\n",$value) as $sc) {
+            if (strpos( $sc, " - ") !== false) {
+                $expl_dash = explode(" - ",$sc);
+
+                $church_name = Church::where('church_name','like', '%'.$expl_dash[0].'%')->first();
+                $ministry_role = MinistryRole::where('ministry_role','like', '%'.$expl_dash[1].'%')->first();
+
+                if (isset($church_name) && isset($ministry_role)) {
+                    $count_valid_data++;
+                    $arr_datas[] = ['church_id' => $church_name->id, 'title_structure_id' => $ministry_role->id];
+                }
+            }  
+        }
+
+        return ($count_valid_data > 0) ? $arr_datas :[];
     }
 
     function formatDateExcel($dateExcel){
@@ -194,6 +238,12 @@ class PersonelImport implements ToCollection, WithHeadingRow, WithValidation
         return [
             'First Name' => 'required',
             'Title' => 'required',
+            'Church Name' => function($attribute, $value, $onFailure) {
+                $church_name = $this->handleChurchName($value);
+                if (sizeof($church_name) > 0) {
+                    $onFailure('Not Exist Church - Role or Invalid Format :: Church Name - Role');
+                }
+            },
         ];
     }
 
