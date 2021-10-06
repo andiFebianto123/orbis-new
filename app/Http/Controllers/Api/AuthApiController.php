@@ -54,8 +54,6 @@ class AuthApiController extends Controller
                         })
                         ->exists();
             $can_crud = $leaderships_exist;
-
-            (new LogHubApi())->save($valid_personel->id, 'Login');
             
             $response = [
                 'status' => true,
