@@ -173,6 +173,7 @@ class DetailChurchApiController extends Controller
         $leaderships_exist = StructureChurch::join('personels', 'personels.id', 'structure_churches.personel_id')
                         ->join('ministry_roles', 'ministry_roles.id', 'structure_churches.title_structure_id')
                         ->where('structure_churches.personel_id', request('personel_id'))
+                        ->where('structure_churches.churches_id', $id)
                         ->where(function ($query) {
                             $query->where('ministry_roles.ministry_role', 'Lead Pastor')
                                   ->orWhere('ministry_roles.ministry_role', 'Senior Pastor');
