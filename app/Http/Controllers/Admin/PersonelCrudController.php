@@ -521,7 +521,7 @@ class PersonelCrudController extends CrudController
         ]);
 
         $this->crud->addField([   // repeatable
-            'name'  => 'leaderships',
+            'name'  => 'church_name',
             'label' => 'Leadership',
             'type'  => 'repeatable',
             'tab' => 'Leadership Structure',
@@ -618,8 +618,8 @@ class PersonelCrudController extends CrudController
             // insert item in the db
             $item = $this->crud->create($this->crud->getStrippedSaveRequest());
             $this->data['entry'] = $this->crud->entry = $item;
-            if ($request->input("leaderships")) {
-                $leaderships = json_decode($request->input("leaderships"));
+            if ($request->input("church_name")) {
+                $leaderships = json_decode($request->input("church_name"));
 
                 foreach ($leaderships as $key => $leadership) {
                     $insert_p = new StructureChurch();
@@ -727,6 +727,19 @@ class PersonelCrudController extends CrudController
                 $isDuplicate->where('date_of_birth', $request->date_of_birth);
             }
 
+            if ($model->church_name != $request->input("church_name")) {
+                StructureChurch::where('personel_id', $model->id)->delete();
+                
+                $leaderships = json_decode($request->input("church_name"));
+
+                foreach ($leaderships as $key => $leadership) {
+                    $insert_p = new StructureChurch();
+                    $insert_p->title_structure_id = $leadership->title_structure_id;
+                    $insert_p->churches_id = $leadership->church_id;
+                    $insert_p->personel_id = $model->id;
+                    $insert_p->save();
+                }
+            }
             $isDuplicate = $isDuplicate->select('id')->first();
 
             if ($isDuplicate != null && $isDuplicate->id != $id) {
