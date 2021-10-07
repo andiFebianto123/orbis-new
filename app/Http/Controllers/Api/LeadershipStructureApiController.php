@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\LeadershipSyncHelper;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\CareerBackgroundPastors;
+use App\Models\Personel;
 use App\Models\StructureChurch;
 
 class LeadershipStructureApiController extends Controller
@@ -36,6 +38,9 @@ class LeadershipStructureApiController extends Controller
         $insert_p->churches_id = $request->churches_id;
         $insert_p->personel_id = $request->personel_id;
         $insert_p->save();
+
+        (new LeadershipSyncHelper())->sync($insert_p->personel_id);
+
         $response = [
             'status' => true,
             'title' => 'Successfully',
@@ -59,6 +64,8 @@ class LeadershipStructureApiController extends Controller
 
         $update_p->save();
 
+        (new LeadershipSyncHelper())->sync($update_p->personel_id);
+
         $response = [
             'status' => true,
             'title' => 'Successfully',
@@ -79,5 +86,26 @@ class LeadershipStructureApiController extends Controller
         
         return response()->json($response, 200); 
     }
+
+    // private function updateChurchNameJson($personel_id){
+    //     $churches = StructureChurch::join('personels', 'personels.id', 'structure_churches.personel_id')
+    //         ->join('ministry_roles', 'ministry_roles.id', 'structure_churches.title_structure_id')
+    //         ->join('title_lists', 'title_lists.id', 'personels.title_id')
+    //         ->join('churches', 'churches.id', 'structure_churches.churches_id')
+    //         ->where('structure_churches.personel_id', $personel_id)
+    //         ->get(['structure_churches.id as id', 'ministry_roles.ministry_role as ministry_role', 'structure_churches.personel_id','structure_churches.title_structure_id','structure_churches.churches_id',
+    //         'title_lists.short_desc','churches.church_name', 'churches.id as church_id', 'churches.church_address','title_lists.long_desc','personels.first_name', 'personels.last_name']);
+    //     $arr_unit = [];
+
+    //     foreach ($churches as $key => $churche) {
+    //         $arr_unit[] = ['title_structure_id' => $churche->title_structure_id, 'church_id' =>$churche->churches_id];
+    //     }
+
+    //     $prs = Personel::where("id", $personel_id)->first();
+    //     if (isset($prs)) {
+    //         $prs->church_name = json_encode($arr_unit);   
+    //         $prs->save();       
+    //     }
+    // }
 
 }

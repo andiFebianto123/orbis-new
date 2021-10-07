@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\LeadershipSyncHelper;
 use App\Http\Requests\StructureChurchRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use App\Models\Personel;
 use App\Models\Church;
 use App\Models\StructureChurch;
+use Prologue\Alerts\Facades\Alert;
 
 /**
  * Class StructureChurchCrudController
@@ -175,12 +177,18 @@ class StructureChurchCrudController extends CrudController
         $this->data['entry'] = $this->crud->entry = $item;
 
         // show a success message
-        \Alert::success(trans('backpack::crud.insert_success'))->flash();
+        Alert::success(trans('backpack::crud.insert_success'))->flash();
 
         $url_redirect = "";
         if (request()->churches_id) {
+            $sc_by_church = StructureChurch::where('churches_id', request()->churches_id)->get();
+            foreach ($sc_by_church as $key => $sc) {
+                (new LeadershipSyncHelper())->sync($sc->personel_id);
+            }
             $url_redirect = 'church/'.request()->churches_id.'/show';
         }else if (request()->personel_id) {
+            (new LeadershipSyncHelper())->sync(request()->personel_id);
+
             $url_redirect = 'personel/'.request()->personel_id.'/show';
         }
         return redirect(backpack_url($url_redirect ));
@@ -198,12 +206,18 @@ class StructureChurchCrudController extends CrudController
         $this->data['entry'] = $this->crud->entry = $item;
 
         // show a success message
-        \Alert::success(trans('backpack::crud.update_success'))->flash();
+        Alert::success(trans('backpack::crud.update_success'))->flash();
 
         $url_redirect = "";
         if (request()->churches_id) {
+            $sc_by_church = StructureChurch::where('churches_id', request()->churches_id)->get();
+            foreach ($sc_by_church as $key => $sc) {
+                (new LeadershipSyncHelper())->sync($sc->personel_id);
+            }
             $url_redirect = 'church/'.request()->churches_id.'/show';
         }else if (request()->personel_id) {
+            (new LeadershipSyncHelper())->sync(request()->personel_id);
+
             $url_redirect = 'personel/'.request()->personel_id.'/show';
         }
         return redirect(backpack_url($url_redirect));   

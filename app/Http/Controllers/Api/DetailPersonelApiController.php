@@ -192,6 +192,34 @@ class DetailPersonelApiController extends Controller
         return response()->json($response, 200); 
     }
 
+    public function personelChurch(){
+        $personel_groupeds = StructureChurch::groupBy("personel_id")->get();
+        foreach ($personel_groupeds as $key => $personel_grouped) {
+            $this->updateChurchNameJson($personel_grouped->personel_id);
+        }        
+    }
+
+    private function updateChurchNameJson($personel_id){
+        $churches = StructureChurch::join('personels', 'personels.id', 'structure_churches.personel_id')
+            ->join('ministry_roles', 'ministry_roles.id', 'structure_churches.title_structure_id')
+            ->join('title_lists', 'title_lists.id', 'personels.title_id')
+            ->join('churches', 'churches.id', 'structure_churches.churches_id')
+            ->where('structure_churches.personel_id', $personel_id)
+            ->get(['structure_churches.id as id', 'ministry_roles.ministry_role as ministry_role', 'structure_churches.personel_id','structure_churches.title_structure_id','structure_churches.churches_id',
+            'title_lists.short_desc','churches.church_name', 'churches.id as church_id', 'churches.church_address','title_lists.long_desc','personels.first_name', 'personels.last_name']);
+        $arr_unit = [];
+
+        foreach ($churches as $key => $churche) {
+            $arr_unit[] = ['title_structure_id' => $churche->title_structure_id, 'church_id' =>$churche->churches_id];
+        }
+
+        $prs = Personel::where("id", $personel_id)->first();
+        if (isset($prs)) {
+            $prs->church_name = json_encode($arr_unit);   
+            $prs->save();       
+        }
+    }
+
     public function update(Request $request){
         $id = $request->id;
 
