@@ -20,7 +20,7 @@ Route::post('login', 'Api\AuthApiController@login');
 Route::get('church-list', 'Api\DetailChurchApiController@list');
 // Route::get('personel-church', 'Api\DetailPersonelApiController@personelChurch');
 
-Route::group(['middleware' => ['auth:sanctum']], function () {
+Route::group(['middleware' => ['auth:sanctum', 'checkMaintenanceMode']], function () {
    Route::get('profile-biodata/{id}', 'Api\DetailPersonelApiController@biodata');
    Route::get('profile-contact-information/{id}', 'Api\DetailPersonelApiController@contactInformation');
    Route::get('profile-licensing-information/{id}', 'Api\DetailPersonelApiController@licensingInformation');

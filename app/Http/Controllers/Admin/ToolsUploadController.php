@@ -12,6 +12,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Imports\ChurchImport;
 use App\Imports\PersonelImport;
+use App\Models\Configuration;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\HeadingRowImport;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -25,6 +27,37 @@ class ToolsUploadController extends Controller
     public function importchurch()
     {
         return view('vendor.backpack.base.importchurch');
+    }
+
+    public function maintenanceMode()
+    {
+        $config = Configuration::where('name', 'maintenance')->first();
+        $mode = ["OFF", "ON"];
+
+        if (!isset($config)) {
+            $insert = new Configuration();
+            $insert->name = 'maintenance';
+            $insert->value = 0;
+            $insert->save();
+        }
+
+        $data['modes'] = $mode;
+        $data['config'] = $config;
+        return view('vendor.backpack.base.maintenancemode', $data);
+    }
+
+    public function maintenanceModeUpdate(Request $request)
+    {
+        $config = Configuration::where('name', 'maintenance')->first();
+        $config->value = $request->maintenance_mode;
+        $config->updated_by = backpack_user()->id;
+        $config->save();
+        $mode = ["OFF", "ON"];
+
+        session()->flash('message', 'Successfully Set Mainenance Mode to '.$mode[$request->maintenance_mode]);
+        session()->flash('status', 'success');
+
+        return redirect()->back();
     }
 
     public function uploadchurchold(Request $request)

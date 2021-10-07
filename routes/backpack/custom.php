@@ -58,6 +58,8 @@ Route::group([
     Route::post('church-upload', 'ToolsUploadController@uploadchurch');
     Route::get('import-personel', 'ToolsUploadController@importpersonel');
     Route::post('personel-upload', 'ToolsUploadController@uploadpersonel');
+    Route::get('maintenance-mode', 'ToolsUploadController@maintenanceMode');
+    Route::post('maintenance-mode-update', 'ToolsUploadController@maintenanceModeUpdate');
 
     Route::get('import-country', 'ToolsUploadController@importcountry');
     Route::post('country-upload', 'CountryListCrudController@uploadcountry');

@@ -18,6 +18,7 @@
 	<ul class="nav-dropdown-items">
         <li class='nav-item'><a class='nav-link' href='{{ backpack_url('import-church') }}'><i class='nav-icon la la-church'></i> Import Data Church</a></li>
         <li class='nav-item'><a class='nav-link' href='{{ backpack_url('import-personel') }}'><i class='nav-icon la la-users'></i> Import Data Pastor</a></li>
+        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('maintenance-mode') }}'><i class='nav-icon la la-link'></i> Maintenance Mode</a></li>
 	</ul>
 </li>
 <li class="nav-item nav-dropdown">
