@@ -64,6 +64,10 @@
 									<td> : {{ $entry->founded_on }}</td>
 								</tr>
 								<tr>
+									<td>Church Name</td>
+									<td> : {{ $entry->church_name }}</td>
+								</tr>
+								<tr>
 									<td> Church Type</td>
 									<td> :  
 									@if(isset($entry->church_type->entities_type))
