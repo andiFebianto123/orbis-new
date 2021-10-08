@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Helpers\LeadershipSyncHelper;
 use App\Models\Church;
 use App\Models\CountryList;
 use App\Models\RcDpwList;
@@ -43,6 +44,7 @@ class ChurchImport implements ToCollection,  WithValidation, WithHeadingRow
         $row_church_name = $row['Church Name'];
         $row_church_type = $row['Church Type'];
         $row_lead_pastor_name = $row['Lead Pastor Name'];
+        $row_leadership_structure = $row['Leadership Structure'];
         $row_coordinator = $row['Coordinator'];
         $row_contact_person = $row['Contact Person'];
         $row_church_address = $row['Church Address'];
@@ -94,6 +96,8 @@ class ChurchImport implements ToCollection,  WithValidation, WithHeadingRow
         $postal_code = $row_postal_code == '-' || $row_postal_code == '' ? NULL : $row_postal_code;
         $first_email = trim(str_replace('_x000D_', "\n", $row_email ?? ''));
         $service_time_church = $row_service_time_church == ',' ? NULL : $row_service_time_church;
+        $leadership_structure = trim(str_replace('_x000D_', "\n", $row_leadership_structure ?? ""));
+        $str_json_leadership = json_encode($this->handleLeadershipName($leadership_structure));
 
         $exists_church = Church::where('church_name', $row_church_name)
                             ->where('phone', $phone)
@@ -141,6 +145,19 @@ class ChurchImport implements ToCollection,  WithValidation, WithHeadingRow
                         'churches_id' => $update_church->id,
                     ]);
                     $coordinator_church->save();
+                }
+            }
+
+            if (sizeof($this->handleLeadershipName($leadership_structure)) > 0) {
+                StructureChurch::where("churches_id", $update_church->id)->delete();
+                foreach ($this->handleLeadershipName($leadership_structure) as $key => $cn) {
+                    $insert_p = new StructureChurch();
+                    $insert_p->title_structure_id = $cn['title_structure_id'];
+                    $insert_p->churches_id = $update_church->id;
+                    $insert_p->personel_id = $cn['personel_id'];
+                    $insert_p->save();
+
+                    (new LeadershipSyncHelper())->sync($cn['personel_id']);
                 }
             }
 
@@ -192,6 +209,19 @@ class ChurchImport implements ToCollection,  WithValidation, WithHeadingRow
                 }
             }
 
+            if (sizeof($this->handleLeadershipName($leadership_structure)) > 0) {
+                StructureChurch::where("churches_id", $new_church->id)->delete();
+                foreach ($this->handleLeadershipName($leadership_structure) as $key => $cn) {
+                    $insert_p = new StructureChurch();
+                    $insert_p->title_structure_id = $cn['title_structure_id'];
+                    $insert_p->churches_id = $new_church->id;
+                    $insert_p->personel_id = $cn['personel_id'];
+                    $insert_p->save();
+
+                    (new LeadershipSyncHelper())->sync($cn['personel_id']);
+                }
+            }
+
             $status_history = new StatusHistoryChurch([
                 'status'  => $row_church_status,
                 'date_status' => Carbon::now(),
@@ -213,6 +243,12 @@ class ChurchImport implements ToCollection,  WithValidation, WithHeadingRow
                 $lead_pastor_name = $this->handlePastorName($value);
                 if (sizeof($lead_pastor_name) == 0) {
                     $onFailure('Not Exist Pastor or Invalid Lead Pastor Format :: Firstname Lastname (Title)');
+                }
+            },
+            'Leadership Structure' => function($attribute, $value, $onFailure) {
+                $leadership_name = $this->handleLeadershipName($value);
+                if ($value != "" && sizeof($leadership_name) == 0) {
+                    $onFailure('Not Exist Name - Role or Invalid Format :: Pastor Name - Role');
                 }
             },
         ];
@@ -331,5 +367,40 @@ class ChurchImport implements ToCollection,  WithValidation, WithHeadingRow
             }
         } 
         return $arr_coordinator;
+    }
+
+    private function handleLeadershipName($value){
+        $arr_datas = [];
+        $count_valid_data = 0;
+        $total_data = 0;
+        foreach(explode("\n",$value) as $sc) {
+            $total_data++;
+            if (strpos( $sc, "-") !== false) {
+                $expl_dash = explode("-",$sc);
+                $last_dash = substr_count($sc, "-");
+    
+                $per_name = rtrim($expl_dash[0]);
+                $first_name = $per_name;
+                $last_name = "";
+                if (strpos( $per_name, " ") !== false) {
+                    $expl_space = explode(" ",$per_name);
+                    $first_name = $expl_space[0];
+                    $last_space = substr_count($per_name, " ");
+                    $last_name = trim($expl_space[$last_space]);
+                }
+    
+                $personel_name = Personel::where('first_name','like', '%'.$first_name.'%')
+                                 ->where("last_name",'like', '%'.$last_name.'%')->first();
+    
+                $ministry_role = MinistryRole::where('ministry_role','like', '%'.trim($expl_dash[$last_dash]).'%')->first();
+    
+                if (isset($personel_name) && isset($ministry_role)) {
+                    $count_valid_data++;
+                    $arr_datas[] = ['personel_id' => $personel_name->id, 'title_structure_id' => $ministry_role->id];
+                }
+            }  
+        }
+
+        return ($count_valid_data == $total_data) ? $arr_datas :[];
     }
 }

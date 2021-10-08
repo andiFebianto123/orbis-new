@@ -212,15 +212,17 @@ class PersonelImport implements ToCollection, WithHeadingRow, WithValidation
         $total_data = 0;
         foreach(explode("\n",$value) as $sc) {
             $total_data++;
-            if (strpos( $sc, " - ") !== false) {
-                $expl_dash = explode(" - ",$sc);
+            if (strpos( $sc, "-") !== false) {
+                $expl_dash = explode("-",$sc);
+                $last_dash = substr_count($sc, "-");
+                $last_dash = substr_count($sc, "-");
 
-                $church_name = Church::where('church_name','like', '%'.$expl_dash[0].'%')->first();
-                $ministry_role = MinistryRole::where('ministry_role','like', '%'.$expl_dash[1].'%')->first();
+                $church_name = Church::where('church_name','like', '%'.rtrim($expl_dash[0]).'%')->first();
+                $ministry_role = MinistryRole::where('ministry_role','like', '%'.trim($expl_dash[$last_dash]).'%')->first();
 
                 if (isset($church_name) && isset($ministry_role)) {
-                    $arr_datas[] = ['church_id' => $church_name->id, 'title_structure_id' => $ministry_role->id];
                     $count_valid_data++;
+                    $arr_datas[] = ['church_id' => $church_name->id, 'title_structure_id' => $ministry_role->id];
                 }
             }  
         }

@@ -44,7 +44,6 @@ class ExportAnnualReport implements FromView,WithEvents
         else if ($type == 'church_designer'){
             $title = 'Church Report';
             $dataColumn = ChurchAnnualDesignerView::rcDpw($this->filterBy['rc_dpw_name'] ?? null)->type($this->filterBy['entities_type'] ?? null)->country($this->filterBy['country_name'] ?? null)->status($this->filterBy['status'] ?? null)->get()->toArray();
-            
         }
         else if($type == 'pastor_annual'){
             $title = 'Pastor Annual Report';
@@ -100,6 +99,12 @@ class ExportAnnualReport implements FromView,WithEvents
                 $formatedListNameValue = function($string){
                     return preg_replace("/,+/", "\n", $string );
                 };
+                $formatedListLeadershipNameValue = function($string){
+                    return str_replace('<br>', "\n", $string );
+                };
+                $formatedListChurchNameValue = function($string){
+                    return str_replace('<br>', "\n", $string );
+                };
                 $formatedListPhoneValue = function($string){
                     return preg_replace_callback("/\+62|;08+|;+/", function ($s) use (&$counter) {
                         if($s[0] == ";08" || $s[0] == ";"){
@@ -121,12 +126,20 @@ class ExportAnnualReport implements FromView,WithEvents
                     }, $string );
                 };
                 $pastorNameHeader = "";
+                $churchNameHeader = "";
+                $leadPastorNameHeader = "";
                 $phoneHeader = "";
                 $emailHeader = "";
                 foreach(range('A',$lastColumn) as $column){
                     $valueCell = $event->sheet->getCell($column."2")->getValue();
                     if($valueCell == 'Lead Pastor Name'){
                         $pastorNameHeader = $column;
+                    }
+                    if($valueCell == 'Leadership Structure'){
+                        $leadPastorNameHeader = $column;
+                    }
+                    if($valueCell == 'Church Name'){
+                        $churchNameHeader = $column;
                     }
                     if($valueCell == "Phone"){
                         $phoneHeader = $column;
@@ -146,7 +159,7 @@ class ExportAnnualReport implements FromView,WithEvents
                     if($valueCell == 'Church Name' || $valueCell == 'Contact Person' || $valueCell == 'Phone' || $valueCell == 'Fax' || $valueCell == 'Email'  || $valueCell == 'Founded On' || $valueCell == 'Service Time Church' || $valueCell == 'Notes'){
                         $event->sheet->getColumnDimension($column)->setWidth(35);
                     }
-                    if($valueCell == 'Lead Pastor Name' || $valueCell == "Church Address" || $valueCell == 'Office Address' || $valueCell == "Address"){
+                    if($valueCell == 'Leadership Structure' || $valueCell == 'Lead Pastor Name' || $valueCell == "Church Address" || $valueCell == 'Office Address' || $valueCell == "Address"){
                         $event->sheet->getColumnDimension($column)->setWidth(40);
                     }
                 }
@@ -155,6 +168,25 @@ class ExportAnnualReport implements FromView,WithEvents
                         $unFormattedNameList = $event->sheet->getCell($pastorNameHeader . $i)->getValue();
                         $event->sheet->setCellValue($pastorNameHeader . $i, $formatedListNameValue($unFormattedNameList));
                         if(strpos($formatedListNameValue($unFormattedNameList),"\n") !== false){
+                            $event->sheet->getRowDimension($i)->setRowHeight(45);  
+                        }
+                    }
+                }
+                if($churchNameHeader != ""){
+                    for($i=3;$i <= $lastRow; $i++){
+                        $unFormattedNameList = $event->sheet->getCell($churchNameHeader . $i)->getValue();
+                        $event->sheet->setCellValue($churchNameHeader . $i, $formatedListChurchNameValue($unFormattedNameList));
+                        if(strpos($formatedListChurchNameValue($unFormattedNameList),"\n") !== false){
+                            $event->sheet->getRowDimension($i)->setRowHeight(45);  
+                        }
+                    }
+                }
+                
+                if($leadPastorNameHeader != ""){
+                    for($i=3;$i <= $lastRow; $i++){
+                        $unFormattedNameList = $event->sheet->getCell($leadPastorNameHeader . $i)->getValue();
+                        $event->sheet->setCellValue($leadPastorNameHeader . $i, $formatedListLeadershipNameValue($unFormattedNameList));
+                        if(strpos($formatedListLeadershipNameValue($unFormattedNameList),"\n") !== false){
                             $event->sheet->getRowDimension($i)->setRowHeight(45);  
                         }
                     }

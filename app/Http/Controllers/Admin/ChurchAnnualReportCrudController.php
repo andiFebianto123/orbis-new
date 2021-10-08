@@ -10,6 +10,7 @@ use App\Models\RcDpwList;
 use App\Models\ChurchEntityType;
 use App\Models\CountryList;
 use App\Exports\ExportAnnualReport;
+use App\Models\StructureChurch;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -67,6 +68,24 @@ class ChurchAnnualReportCrudController extends CrudController
                     'label' => 'Lead Pastor Name',
                     'type' => 'text',
                     'name' => 'lead_pastor_name'
+                ],
+                [
+                    'label' => 'Leadership Structure',
+                    'type' => 'closure',
+                    'name' => 'leadership_structure',
+                    'function' => function($entries){
+                        $leaderships = StructureChurch::join('personels', 'personels.id', 'structure_churches.personel_id')
+                            ->join('ministry_roles', 'ministry_roles.id', 'structure_churches.title_structure_id')
+                            ->join('title_lists', 'title_lists.id', 'personels.title_id')
+                            ->where('structure_churches.churches_id', $entries->id)
+                            ->get(['structure_churches.id as id', 'ministry_roles.ministry_role as ministry_role', 
+                            'title_lists.short_desc', 'title_lists.long_desc','personels.first_name', 'personels.last_name']);
+                        $str_leadership = "";    
+                        foreach ($leaderships as $key => $leadership) {
+                            $str_leadership .= $leadership->first_name." ".$leadership->last_name. " - ".$leadership->ministry_role."<br>";
+                        }
+                        return $str_leadership;
+                    }
                 ],
                 [
                     'label' => 'Coordinator',
