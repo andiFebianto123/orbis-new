@@ -69,6 +69,6 @@ class Kernel extends HttpKernel
 
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('backup:run')->everyMinute();
+        $schedule->command('backup:run')->daily();
     }
 }
