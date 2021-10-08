@@ -51,8 +51,8 @@ class PastorAnnualDesignerView extends Model
         $str_role_church = "";
             if (json_last_error() === JSON_ERROR_NONE) {
                 foreach ($churhes as $key => $church) {
-                    $church_name = Church::where('id', $church->church_id)->first()->church_name;
-                    $ministry_role = MinistryRole::where('id', $church->title_structure_id)->first()->ministry_role;
+                    $church_name = Church::where('id', $church->church_id)->first()->church_name ?? '';
+                    $ministry_role = MinistryRole::where('id', $church->title_structure_id)->first()->ministry_role ?? '';
                     $str_role_church .= $church_name." - ".$ministry_role."<br>";
                 }
             }
