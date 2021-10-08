@@ -17,6 +17,9 @@ function remove_bs($Str)
 }
 @endphp
 <html>
+    <style>
+        br {mso-data-placement:same-cell;}
+    </style>
 <table>
     <thead>
     <tr>
@@ -32,11 +35,18 @@ function remove_bs($Str)
         @foreach($dataColumn as $index => $data)
             <tr>
                 @foreach($columnHeader as $indexColumn => $headerColumn)
+                        @php
+                            $realColumnData = preg_match("/\r|\n/", $data[$indexColumn]) ? remove_bs($data[$indexColumn]) : $data[$indexColumn];
+                        @endphp
+                    {{--
+
                     @php
-                        $realColumnData = preg_match("/\r|\n/", $data[$indexColumn]) ? remove_bs($data[$indexColumn]) : $data[$indexColumn];
+                    $realColumnData = $data[$indexColumn];
                     @endphp
+                    --}}
+
                     <td>
-                        {{($realColumnData == "-") ? "" : str_replace('<br>','_x000D_', $realColumnData)}}
+                        {{($realColumnData == "-") ? "" : $realColumnData}}
                     </td>
                 @endforeach
             </tr>
