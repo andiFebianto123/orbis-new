@@ -143,6 +143,11 @@ class ChurchAnnualReportCrudController extends CrudController
                     'name' => 'first_email'
                 ],
                 [
+                    'label' => 'Secondary Email',
+                    'type' => 'text',
+                    'name' => 'second_email'
+                ],
+                [
                     'label' => 'Church Status',
                     'type' => 'closure',
                     'name' => 'status',

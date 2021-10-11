@@ -53,6 +53,7 @@ class PersonelImport implements ToCollection, WithHeadingRow, WithValidation
         $row_phone = $row['Phone'];
         $row_fax = $row['Mobile Phone'];
         $row_email = $row['Email'];
+        $row_secondary_email = $row['Secondary Email'];
         $row_marital_status = $row['Marital Status'];
         $row_date_of_birth = $row['Date of Birth'];
         $row_spouse_name = $row['Spouse Name'];
@@ -84,6 +85,7 @@ class PersonelImport implements ToCollection, WithHeadingRow, WithValidation
         $church_name = trim(str_replace('_x000D_', "\n", $row_church_name ?? ""));
         $str_json_church = json_encode($this->handleChurchName($church_name));
         $email = (!isset($row_email) || strlen($row_email) == 0) ? null : $row_email;
+        $secondary_email = (!isset($row_secondary_email) || strlen($row_secondary_email) == 0) ? null : $row_secondary_email;
     
         $check_exist_personel = Personel::where('first_name', $row_first_name)
                                 ->where('last_name', $row_last_name)
@@ -110,6 +112,7 @@ class PersonelImport implements ToCollection, WithHeadingRow, WithValidation
             $update_personel->phone = $phone;
             $update_personel->fax = $row_fax;
             $update_personel->email = $email;
+            $update_personel->second_email = $secondary_email;
             $update_personel->marital_status = $row_marital_status;
             $update_personel->date_of_birth = $date_of_birth;
             $update_personel->spouse_name = $row_spouse_name;
@@ -166,6 +169,7 @@ class PersonelImport implements ToCollection, WithHeadingRow, WithValidation
             $new_personel->phone = $phone;
             $new_personel->fax = $row_fax;
             $new_personel->email = $email;
+            $new_personel->second_email = $secondary_email;
             $new_personel->marital_status = $row_marital_status;
             $new_personel->date_of_birth = $date_of_birth;
             $new_personel->spouse_name = $row_spouse_name;

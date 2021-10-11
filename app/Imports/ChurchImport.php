@@ -56,6 +56,7 @@ class ChurchImport implements ToCollection,  WithValidation, WithHeadingRow
         $row_phone = $row['Phone'];
         $row_fax = $row['Fax'];
         $row_email = $row['Email'];
+        $row_secondary_email = $row['Secondary Email'];
         $row_church_status = $row['Church Status'];
         $row_founded_on = $row['Founded On'];
         $row_service_time_church = $row['Service Time Church'];
@@ -98,6 +99,7 @@ class ChurchImport implements ToCollection,  WithValidation, WithHeadingRow
         $service_time_church = $row_service_time_church == ',' ? NULL : $row_service_time_church;
         $leadership_structure = trim(str_replace('_x000D_', "\n", $row_leadership_structure ?? ""));
         $str_json_leadership = json_encode($this->handleLeadershipName($leadership_structure));
+        $secondary_email = (!isset($row_secondary_email) || strlen($row_secondary_email) == 0) ? null : $row_secondary_email;
 
         $exists_church = Church::where('church_name', $row_church_name)
                             ->where('phone', $phone)
@@ -120,6 +122,7 @@ class ChurchImport implements ToCollection,  WithValidation, WithHeadingRow
             $update_church->postal_code = $postal_code;
             $update_church->country_id = ($country->id ?? null);
             $update_church->first_email = $first_email;
+            $update_church->second_email = $secondary_email;
             $update_church->phone = $phone;
             $update_church->fax = $fax;
             $update_church->service_time_church = $service_time_church;
@@ -180,6 +183,7 @@ class ChurchImport implements ToCollection,  WithValidation, WithHeadingRow
             $new_church->postal_code = $postal_code;
             $new_church->country_id = ($country->id ?? null);
             $new_church->first_email = $first_email;
+            $new_church->second_email = $secondary_email;
             $new_church->phone = $phone;
             $new_church->fax = $fax;
             $new_church->service_time_church = $service_time_church;

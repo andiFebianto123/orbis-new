@@ -132,6 +132,11 @@ class PastorReportAnnualCrudController extends CrudController
                     'name' => 'email'
                 ],
                 [
+                    'label' => 'Secondary Email',
+                    'type' => 'text',
+                    'name' => 'second_email'
+                ],
+                [
                     'label' => 'Marital Status',
                     'type' => 'text',
                     'name' => 'marital_status'
