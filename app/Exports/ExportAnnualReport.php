@@ -2,8 +2,10 @@
 
 namespace App\Exports;
 
+use App\Models\Church;
 use App\Models\ChurchAnnualView;
 use App\Models\ChurchAnnualDesignerView;
+use App\Models\MinistryRole;
 use App\Models\PastorAnnualView;
 use App\Models\PastorAnnualDesignerView;
 use Carbon\Carbon;
@@ -13,7 +15,6 @@ use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
-
 
 class ExportAnnualReport implements FromView,WithEvents
 {
@@ -96,12 +97,15 @@ class ExportAnnualReport implements FromView,WithEvents
             AfterSheet::class => function(AfterSheet $event) {
                 $lastColumn = $event->sheet->getHighestColumn();
                 $lastRow = $event->sheet->getHighestRow();
+                
                 $formatedListNameValue = function($string){
                     return preg_replace("/,+/", "\n", $string );
                 };
+                
                 $formatedListLeadershipNameValue = function($string){
                     return str_replace('<br>', "\n", $string );
                 };
+
                 $formatedListChurchNameValue = function($string){
                     return str_replace('<br>', "\n", $string );
                 };
@@ -115,8 +119,6 @@ class ExportAnnualReport implements FromView,WithEvents
                                 return "\n$s[0]";
                            }
                         }
-                        
-
                         return $s[0];
                    }, $string );
                 };
@@ -130,15 +132,18 @@ class ExportAnnualReport implements FromView,WithEvents
                 $leadPastorNameHeader = "";
                 $phoneHeader = "";
                 $emailHeader = "";
-                foreach(range('A',$lastColumn) as $column){
+                $after_last_col = $lastColumn;
+                $after_last_col++;
+                for ($column="A"; $column != $after_last_col; $column++) { 
                     $valueCell = $event->sheet->getCell($column."2")->getValue();
+
                     if($valueCell == 'Lead Pastor Name'){
                         $pastorNameHeader = $column;
                     }
                     if($valueCell == 'Leadership Structure'){
                         $leadPastorNameHeader = $column;
                     }
-                    if($valueCell == 'Church Name'){
+                    if($valueCell == "Church Name"){
                         $churchNameHeader = $column;
                     }
                     if($valueCell == "Phone"){
@@ -156,13 +161,15 @@ class ExportAnnualReport implements FromView,WithEvents
                     if($valueCell == 'First Name' || $valueCell == 'Last Name' || $valueCell == "Current Certificate Number" || $valueCell =='Coordinator'){
                         $event->sheet->getColumnDimension($column)->setWidth(30);
                     }
-                    if($valueCell == 'Church Name' || $valueCell == 'Contact Person' || $valueCell == 'Phone' || $valueCell == 'Fax' || $valueCell == 'Email'  || $valueCell == 'Founded On' || $valueCell == 'Service Time Church' || $valueCell == 'Notes'){
+                    if($valueCell == 'Contact Person' || $valueCell == 'Phone' || $valueCell == 'Fax' || $valueCell == 'Email'  || $valueCell == 'Founded On' || $valueCell == 'Service Time Church' || $valueCell == 'Notes'){
                         $event->sheet->getColumnDimension($column)->setWidth(35);
                     }
-                    if($valueCell == 'Leadership Structure' || $valueCell == 'Lead Pastor Name' || $valueCell == "Church Address" || $valueCell == 'Office Address' || $valueCell == "Address"){
+                    if($valueCell == 'Leadership Structure' || $valueCell == 'Church Name' || $valueCell == 'Lead Pastor Name' || $valueCell == "Church Address" || $valueCell == 'Office Address' || $valueCell == "Address"){
                         $event->sheet->getColumnDimension($column)->setWidth(40);
                     }
                 }
+
+
                 if($pastorNameHeader != ""){
                     for($i=3;$i <= $lastRow; $i++){
                         $unFormattedNameList = $event->sheet->getCell($pastorNameHeader . $i)->getValue();
@@ -174,9 +181,9 @@ class ExportAnnualReport implements FromView,WithEvents
                 }
                 if($churchNameHeader != ""){
                     for($i=3;$i <= $lastRow; $i++){
-                        $unFormattedNameList = $event->sheet->getCell($churchNameHeader . $i)->getValue();
-                        $event->sheet->setCellValue($churchNameHeader . $i, $formatedListChurchNameValue($unFormattedNameList));
-                        if(strpos($formatedListChurchNameValue($unFormattedNameList),"\n") !== false){
+                        $unFormattedChurchNameList = $event->sheet->getCell($churchNameHeader . $i)->getValue();
+                        $event->sheet->setCellValue($churchNameHeader . $i, $formatedListChurchNameValue($unFormattedChurchNameList));
+                        if(strpos($formatedListChurchNameValue($unFormattedChurchNameList),"\n") !== false){
                             $event->sheet->getRowDimension($i)->setRowHeight(45);  
                         }
                     }
@@ -184,9 +191,9 @@ class ExportAnnualReport implements FromView,WithEvents
                 
                 if($leadPastorNameHeader != ""){
                     for($i=3;$i <= $lastRow; $i++){
-                        $unFormattedNameList = $event->sheet->getCell($leadPastorNameHeader . $i)->getValue();
-                        $event->sheet->setCellValue($leadPastorNameHeader . $i, $formatedListLeadershipNameValue($unFormattedNameList));
-                        if(strpos($formatedListLeadershipNameValue($unFormattedNameList),"\n") !== false){
+                        $unFormattedLeadPastorNameList = $event->sheet->getCell($leadPastorNameHeader . $i)->getValue();
+                        $event->sheet->setCellValue($leadPastorNameHeader . $i, $formatedListLeadershipNameValue($unFormattedLeadPastorNameList));
+                        if(strpos($formatedListLeadershipNameValue($unFormattedLeadPastorNameList),"\n") !== false){
                             $event->sheet->getRowDimension($i)->setRowHeight(45);  
                         }
                     }

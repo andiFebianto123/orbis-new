@@ -47,18 +47,46 @@ class PastorAnnualDesignerView extends Model
 
     public function getChurchNameAttribute($value)
     {
-        $churhes  = json_decode($value);
         $str_role_church = "";
+        $churhes  = json_decode($value);
             if (json_last_error() === JSON_ERROR_NONE) {
+                $total = sizeof($churhes) - 1;
                 foreach ($churhes as $key => $church) {
                     $church_name = Church::where('id', $church->church_id)->first();
                     $ministry_role = MinistryRole::where('id', $church->title_structure_id)->first();
-                    if (isset($church_name) && isset($ministry_role )) {
-                        $str_role_church .= $church_name->church_name." - ".$ministry_role->ministry_role."<br>";
+                    if ( isset($church_name) && isset($ministry_role) ) {
+                        $str_role_church .= $church_name->church_name." - ".$ministry_role->ministry_role;
+                        if ($key < $total) {
+                            $str_role_church .= "<br>";
+                        }
                     }
                 }
             }
                 
         return $str_role_church;
     }
+
+    // public function getChurchNameLAttribute()
+    // {
+    //     $value = $this->attributes['church_name'];
+
+    //     $churhes  = json_decode($value);
+    //     $str_role_church = "";
+    //         if (json_last_error() === JSON_ERROR_NONE) {
+    //             $total = sizeof($churhes) - 1;
+    //             foreach ($churhes as $key => $church) {
+    //                 $church_name = Church::where('id', $church->church_id)->first();
+    //                 $ministry_role = MinistryRole::where('id', $church->title_structure_id)->first();
+    //                 if ( isset($church_name) && isset($ministry_role) ) {
+    //                     $str_role_church .= $church_name->church_name." - ".$ministry_role->ministry_role;
+    //                     if ($key < $total) {
+    //                         $str_role_church .= "<br>";
+    //                     }
+    //                 }
+    //             }
+    //         }
+                
+    //     return $value;
+    // }
+
 }
