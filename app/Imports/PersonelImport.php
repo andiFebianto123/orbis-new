@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Helpers\LeadershipSyncHelper;
 use App\Models\Personel;
 use App\Models\CountryList;
 use App\Models\RcDpwList;
@@ -150,6 +151,7 @@ class PersonelImport implements ToCollection, WithHeadingRow, WithValidation
                     $insert_p->personel_id = $update_personel->id;
                     $insert_p->save();
                 }
+                (new LeadershipSyncHelper())->sync($update_personel->id);
             }
             
         }else{
@@ -200,6 +202,7 @@ class PersonelImport implements ToCollection, WithHeadingRow, WithValidation
                     $insert_p->personel_id = $new_personel->id;
                     $insert_p->save();
                 }
+                (new LeadershipSyncHelper())->sync($new_personel->id);
             }
         }
 
