@@ -620,8 +620,10 @@ class PersonelCrudController extends CrudController
             $this->data['entry'] = $this->crud->entry = $item;
             if ($request->input("church_name")) {
                 $leaderships = json_decode($request->input("church_name"));
+                // dd($leaderships);
+
                 foreach ($leaderships as $key => $leadership) {
-                    if ( isset($leadership->title_structure_id) && isset($leadership->church_id)) {
+                    if ( $leadership->title_structure_id && $leadership->church_id) {
                         $insert_p = new StructureChurch();
                         $insert_p->title_structure_id = $leadership->title_structure_id;
                         $insert_p->churches_id = $leadership->church_id;
@@ -732,7 +734,7 @@ class PersonelCrudController extends CrudController
                 StructureChurch::where('personel_id', $model->id)->delete();
                 $leaderships = json_decode($request->input("church_name"));
                 foreach ($leaderships as $key => $leadership) {
-                    if ( isset($leadership->title_structure_id) && isset($leadership->church_id)) {
+                    if ( $leadership->title_structure_id && $leadership->church_id) {
                         $insert_p = new StructureChurch();
                         $insert_p->title_structure_id = $leadership->title_structure_id;
                         $insert_p->churches_id = $leadership->church_id;
