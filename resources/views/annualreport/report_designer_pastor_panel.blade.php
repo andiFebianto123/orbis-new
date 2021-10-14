@@ -55,12 +55,22 @@
                         <div class="form-check mb-4 mt-2">
                             <div class="form-check-inline col-sm-5">
                                 <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" id="filter_type" name="filter_type" value="all" checked>All
+                                    <input type="radio" class="form-check-input filter_type" name="filter_type" value="all" checked>All
                                 </label>
                             </div>
                             <div class="form-check-inline col-sm-5">
                                 <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" id="filter_type" name="filter_type"  value="d90">Valid by D-90
+                                    <input type="radio" class="form-check-input filter_type" name="filter_type"  value="d90">Valid by D-90
+                                </label>
+                            </div>
+                            <div class="form-check-inline col-sm-5">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input filter_type" name="filter_type"  value="expired">Expired
+                                </label>
+                            </div>
+                            <div class="form-check-inline col-sm-5">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input filter_type" name="filter_type"  value="d90andexpired">D-90 and Expired
                                 </label>
                             </div>
                         </div>
@@ -206,7 +216,7 @@
                 var new_url = addOrUpdateUriParameterCustom(new_url, 'country_id', $('#country-filter-select').val());
                 var new_url = addOrUpdateUriParameterCustom(new_url, 'pastor_status_id', $('#pastor-status-filter-select').val());
                 var new_url = addOrUpdateUriParameterCustom(new_url, 'card_id', $('#card-filter-select').val());
-                var new_url = addOrUpdateUriParameterCustom(new_url, 'filter_type', $('#filter_type:checked').val());
+                var new_url = addOrUpdateUriParameterCustom(new_url, 'filter_type', $('.filter_type:checked').val());
                 new_url = normalizeAmpersandCustom(new_url.toString());
                 realSearchUrl = normalizeAmpersandCustom(new_url.toString());
 				ajax_table.ajax.url(new_url).load();

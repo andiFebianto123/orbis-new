@@ -291,6 +291,16 @@ class PastorReportAnnualCrudController extends CrudController
                         $maximumDateValid = $realDateNow->copy()->subDays(90);
                         $this->crud->addClause('whereDate', 'valid_card_end', '<=', $realDateNow->toDateString());
                         $this->crud->addClause('whereDate', 'valid_card_end', '>=', $maximumDateValid->toDateString());
+                    }  
+                    if($this->crud->getRequest()->filter_type == 'expired'){
+                        $realDateNow = Carbon::now();
+                        $this->crud->addClause('whereDate', 'valid_card_end', '<=', $realDateNow->toDateString());
+                    }  
+                    if($this->crud->getRequest()->filter_type == 'd90andexpired'){
+                        $realDateNow = Carbon::now();
+                        $maximumDateValid = $realDateNow->copy()->subDays(90);
+                        $this->crud->addClause('whereDate', 'valid_card_end', '<=', $realDateNow->toDateString());
+                        $this->crud->addClause('orWhereDate', 'valid_card_end', '>=', $maximumDateValid->toDateString());
                     }                    
                 }
                 catch(Exception $e){
