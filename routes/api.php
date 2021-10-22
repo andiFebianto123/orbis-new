@@ -14,10 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('login', 'Api\AuthApiController@login');
+Route::group(['middleware' => ['checkMaintenanceMode']], function () {
+   Route::get('church-list', 'Api\DetailChurchApiController@list');
+   Route::post('login', 'Api\AuthApiController@login');
+});
 
-
-Route::get('church-list', 'Api\DetailChurchApiController@list');
 // Route::get('personel-church', 'Api\DetailPersonelApiController@personelChurch');
 
 Route::group(['middleware' => ['auth:sanctum', 'checkMaintenanceMode']], function () {
