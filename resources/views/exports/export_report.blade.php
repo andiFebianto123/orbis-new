@@ -46,7 +46,7 @@ function remove_bs($Str)
                     --}}
 
                     <td>
-                        {{($realColumnData == "-") ? "" : $realColumnData}}
+                        {{$realColumnData}}
                     </td>
                 @endforeach
             </tr>
