@@ -18,6 +18,7 @@ class CheckMaintenanceMode
     public function handle(Request $request, Closure $next)
     {
         $config = Configuration::where('name', 'maintenance')->first();
+        $message_err = "Sorry, Pastoral Hub is under maintenance, please try again later. If you need any urgent assistance, please email IFGF Global Team at secretariat@ifgf.global or via Whatsapp to +6281286373437";
 
         if (isset($config)) {
             if($config->value == 0){
@@ -26,7 +27,7 @@ class CheckMaintenanceMode
         }
         return response()->json([
             'status' => false,
-            'message' => "This application is currently under maintenance, please try again later"
+            'message' => $message_err
             ], 200);
         
     }
