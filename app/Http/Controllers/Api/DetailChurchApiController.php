@@ -4,22 +4,13 @@ namespace App\Http\Controllers\Api;
 
 use App\Helpers\LogHubApi;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-use App\Models\Personel;
-use App\Models\Appointment_history;
-use App\Models\StatusHistory;
-use App\Models\SpecialRolePersonel;
-use App\Models\Relatedentity;
-use App\Models\EducationBackground;
-use App\Models\ChildNamePastors;
-use App\Models\MinistryBackgroundPastor;
-use App\Models\CareerBackgroundPastors;
 use App\Models\Church;
 use App\Models\CoordinatorChurch;
 use App\Models\RelatedEntityChurch;
 use App\Models\StatusHistoryChurch;
 use App\Models\StructureChurch;
+use Illuminate\Support\Facades\DB;
 
 class DetailChurchApiController extends Controller
 {
@@ -29,36 +20,39 @@ class DetailChurchApiController extends Controller
         if (request('city')) {
             $filters[] = ['city', 'LIKE', '%'.request('city').'%'];
         }
-
+        
         $churches = Church::where($filters)
                     ->leftJoin('rc_dpwlists', 'rc_dpwlists.id', 'churches.rc_dpw_id')
                     ->leftJoin('church_types', 'church_types.id', 'churches.church_type_id')
                     ->leftJoin('country_lists', 'country_lists.id', 'churches.country_id')
+                    ->with('last_status')
                     ->get(['churches.id', 'churches.church_address', 'church_name', 'city', 'phone', 'map_url', 'website', 'service_time_church', 'first_email', 'churches.created_at']);
-
         $arr_res = [];
         foreach ($churches as $key => $church) {
-
-            $arr_personel = [];
-            if(StructureChurch::where('churches_id', $church->id)->exists()){
-                $leaderships = StructureChurch::join('personels', 'personels.id', 'structure_churches.personel_id')
-                        ->join('title_lists', 'title_lists.id', 'structure_churches.title_structure_id')
-                        ->where('structure_churches.churches_id', $church->id)
-                        ->get(['structure_churches.churches_id as id', 'title_lists.long_desc', 'personels.first_name', 'personels.last_name', 'structure_churches.created_at']);
-                $arr_personel = $leaderships;
+            $status_church = ($church->last_status) ? $church->last_status->status:'-';
+            if ($status_church == 'Active') {
+                $arr_personel = [];
+                if(StructureChurch::where('churches_id', $church->id)->exists()){
+                    $leaderships = StructureChurch::join('personels', 'personels.id', 'structure_churches.personel_id')
+                            ->join('title_lists', 'title_lists.id', 'structure_churches.title_structure_id')
+                            ->where('structure_churches.churches_id', $church->id)
+                            ->get(['structure_churches.churches_id as id', 'title_lists.long_desc', 'personels.first_name', 'personels.last_name', 'structure_churches.created_at']);
+                    $arr_personel = $leaderships;
+                }
+                $arr_res[] = [
+                    'id' => $church->id,
+                    'church_address' => $church->church_address,
+                    'church_name' => $church->church_name,
+                    'city' => $church->city,
+                    'phone' => $church->phone,
+                    'status_church' => $status_church,
+                    'map_url' => $church->map_url,
+                    'website' => $church->website,
+                    'service_time_church' => $church->service_time_church,
+                    'first_email' => $church->first_email,
+                    'personels' => $arr_personel,
+                ];
             }
-            $arr_res[] = [
-                'id' => $church->id,
-                'church_address' => $church->church_address,
-                'church_name' => $church->church_name,
-                'city' => $church->city,
-                'phone' => $church->phone,
-                'map_url' => $church->map_url,
-                'website' => $church->website,
-                'service_time_church' => $church->service_time_church,
-                'first_email' => $church->first_email,
-                'personels' => $arr_personel,
-            ];
         }
 
         return $arr_res;

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Support\Facades\Storage;
@@ -81,6 +82,14 @@ class Church extends Model
     public function status_history_church()
     {
         return $this->hasMany('App\Models\StatusHistoryChurch', 'churches_id', 'id');
+    }
+
+    public function last_status() {
+        return $this->hasOne('App\Models\StatusHistoryChurch', 'churches_id')
+             ->select('*')
+            //  ->orderBy('id', 'desc');
+            ->orderBy(DB::raw("DATE_FORMAT(date_status,'%Y-%m-%d')"), 'DESC');
+
     }
 
     public function related_entity_church()
