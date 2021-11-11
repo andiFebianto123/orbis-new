@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use Backpack\CRUD\app\Models\Traits\CrudTrait;
-use Illuminate\Database\Eloquent\Model;
+use Exception;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
+use Backpack\CRUD\app\Models\Traits\CrudTrait;
 
 class PastorAnnualDesignerView extends Model
 {
@@ -19,30 +20,92 @@ class PastorAnnualDesignerView extends Model
     }
 
     public function scopeRcDpw($query, $value){
-        return $value == null ? $query : $query->where('rc_dpw_name',$value); 
+        if($value != null){
+            try{
+                return $query->whereIn('rc_dpw_name', json_decode($value)); 
+            }
+            catch(Exception $e){
+                return $query->whereRaw(0);
+            }
+        }
+        return $query;
     }
 
     public function scopeCountry($query, $value){
-        return $value == null ? $query : $query->where('country_name',$value); 
+        if($value != null){
+            try{
+                return $query->whereIn('country_name', json_decode($value)); 
+            }
+            catch(Exception $e){
+                return $query->whereRaw(0);
+            }
+        }
+        return $query;
+        // return $value == null ? $query : $query->where('country_name',$value); 
     }
 
     public function scopeShortDesc($query, $value){
-        return $value == null ? $query : $query->where('short_desc',$value); 
+        if($value != null){
+            try{
+                return $query->whereIn('short_desc', json_decode($value)); 
+            }
+            catch(Exception $e){
+                return $query->whereRaw(0);
+            }
+        }
+        return $query;
+        // return $value == null ? $query : $query->where('short_desc',$value); 
     }
 
     public function scopeStatus($query, $value){
-        return $value == null ? $query : $query->where('status',$value); 
+        if($value != null){
+            try{
+                return $query->whereIn('status', json_decode($value)); 
+            }
+            catch(Exception $e){
+                return $query->whereRaw(0);
+            }
+        }
+        return $query;
+        // return $value == null ? $query : $query->where('status',$value); 
     }
 
     public function scopeCard($query, $value){
-        return $value == null ? $query : $query->where('card',$value); 
+        if($value != null){
+            try{
+                return $query->whereIn('card', json_decode($value)); 
+            }
+            catch(Exception $e){
+                return $query->whereRaw(0);
+            }
+        }
+        return $query;
+        // return $value == null ? $query : $query->where('card',$value); 
     }
 
     public function scopeDayValid($query, $value){
         $todayNow = Carbon::now();
-        $maximumValid = $todayNow->copy()->subDays(90);
-        
-        return $value == 'all' || $value == null ? $query : $query->whereDate('valid_card_end', '<=', $todayNow->toDateString())->whereDate('valid_card_end', '>=', $maximumValid->toDateString()); 
+        $maximumValid = $todayNow->copy()->addDays(90);
+
+        if($value == 'd90'){
+            return $query->whereDate('valid_card_end', '>', $todayNow->toDateString())->whereDate('valid_card_end', '<=', $maximumValid->toDateString()); 
+        }
+        else if($value == 'expired'){
+            return $query->whereDate('valid_card_end', '<=', $todayNow->toDateString());
+        }
+        else if($value == 'd90andexpired'){
+            return $query->where(function($innerQuery) use($todayNow, $maximumValid){
+                $innerQuery->whereDate('valid_card_end', '>', $todayNow->toDateString())
+                ->whereDate('valid_card_end', '<=', $maximumValid->toDateString())
+                ->orWhereDate('valid_card_end', '<=', $todayNow->toDateString());
+            });
+        }
+        else if($value == 'all' || $value == null){
+            return $query;
+        }
+        else{
+            return $query->whereRaw(0);
+        }
     }
 
     public function getChurchNameAttribute($value)
