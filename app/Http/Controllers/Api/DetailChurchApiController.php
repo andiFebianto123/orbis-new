@@ -69,8 +69,12 @@ class DetailChurchApiController extends Controller
                     'country_lists.country_name'])
                     ->first();
 
+        $current_status_history = StatusHistoryChurch::where('churches_id', $id)
+                    ->orderBy(DB::raw("DATE_FORMAT(date_status,'%Y-%m-%d')"), 'DESC')
+                    ->first();
+
         $arr_church = null;
-        $arr_church['status'] = (isset($church->active))?$church->active:"-";
+        $arr_church['status'] = (isset($current_status_history))?$current_status_history->status:"-";
         $arr_church['founded_on'] = (isset($church->founded_on))?$church->founded_on:"-";
         $arr_church['church_name'] = (isset($church->church_name))? $church->church_name:"-";
         $arr_church['contact_person'] = (isset($church->contact_person))? $church->contact_person:"-";
