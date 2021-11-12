@@ -50,7 +50,18 @@ class SyncUserToMailchimp extends Command
                 'apiKey' => config('app.mailchimp_api_key'),
                 'server' => config('app.mailchimp_server_prefix'),
             ]);
+
             $listId = config('app.mailchimp_list_id');
+
+            // $response = $mailchimp->lists->getListInterestCategories($listId);
+            // print_r($response);
+
+            // $response = $mailchimp->lists->listInterestCategoryInterests(
+            //     $listId,
+            //     // TO DO
+            // );
+            // print_r($response);
+
             $pastoralGroupId = config('app.mailchimp_pastoral_group_id');
             
             $chunkPersonels = Personel::select('first_name', 'last_name', 'email', 'date_of_birth')->cursor()->chunk(400);
