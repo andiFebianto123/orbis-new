@@ -231,4 +231,10 @@ return [
 
     ],
 
+    'mailchimp_server_prefix' => env('MAILCHIMP_SERVER_PREFIX', 'us20'),
+    'mailchimp_list_id' => env('MAILCHIMP_LIST_ID', '56da43c0c2'),
+    'mailchimp_pastoral_group_id' => env('MAILCHIMP_PASTORAL_GROUP_ID', '4dc229539d'),
+    'mailchimp_api_key' => env('MAILCHIMP_API_KEY', 'abd11b44d04257307f2b0344ce2065bc-us20'),
+
+    'email_developer' => env('EMAIL_DEVELOPER', 'kevin@rectmedia.id')
 ];

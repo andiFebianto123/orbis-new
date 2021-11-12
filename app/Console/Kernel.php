@@ -25,6 +25,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        $schedule->command('sync:user-to-mailchimp')->cron('0 */12 * * *')->withoutOverlapping();
     }
 
     /**
