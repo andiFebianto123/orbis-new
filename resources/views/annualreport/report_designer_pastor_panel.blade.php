@@ -36,6 +36,9 @@
                         <label>Pastor Status</label>
                         <select id="pastor-status-filter-select" name="pastor_status_id_filter" class="form-control" style="width:100%">
                             @foreach ($crud->pastorStatus as $pastorStatus)
+                                @if (strlen($pastorStatus->status) == 0)
+                                    @continue
+                                @endif
                                 <option value="{{$pastorStatus->status}}">{{$pastorStatus->status}}</option>
                             @endforeach
                         </select>
@@ -46,6 +49,9 @@
                         <label>Card</label>
                         <select id="card-filter-select" name="card_id_filter" class="form-control" style="width:100%">
                             @foreach ($crud->card as $card)
+                                @if (strlen($card->card) == 0)
+                                    @continue
+                                @endif
                                 <option value="{{$card->card}}">{{$card->card}}</option>
                             @endforeach
                         </select>
@@ -70,7 +76,7 @@
                             </div>
                             <div class="form-check-inline col-sm-5">
                                 <label class="form-check-label">
-                                    <input type="radio" class="form-check-input filter_type" name="filter_type"  value="d90andexpired">D-90 and Expired
+                                    <input type="radio" class="form-check-input filter_type" name="filter_type"  value="d90andexpired">D-90 / Expired
                                 </label>
                             </div>
                         </div>
@@ -185,37 +191,107 @@
             $('#rc-dpw-filter-select').select2({
                 theme: "bootstrap",
                 placeholder:"",
+                multiple:true,
                 allowClear: true,
             });
+            $('#rc-dpw-filter-select').val(null).trigger('change');
+
             $('#title-filter-select').select2({
                 theme: "bootstrap",
                 placeholder:"",
+                multiple:true,
                 allowClear: true
             });
+            $('#title-filter-select').val(null).trigger('change');
+
             $('#country-filter-select').select2({
                 theme: "bootstrap",
                 placeholder:"",
+                multiple:true,
                 allowClear:true
             });
+            $('#country-filter-select').val(null).trigger('change');
+
             $('#pastor-status-filter-select').select2({
                 theme: "bootstrap",
                 placeholder:"",
+                multiple:true,
                 allowClear:true
             });
+            $('#pastor-status-filter-select').val(null).trigger('change');
+
             $('#card-filter-select').select2({
                 theme: "bootstrap",
                 placeholder: "",
+                multiple:true,
                 allowClear: true
             });
+            $('#card-filter-select').val(null).trigger('change');
 
             $('#btn-search').click(function(){
                 var ajax_table = $("#crudTable").DataTable();
                 var current_url = ajax_table.ajax.url();
-                var new_url = addOrUpdateUriParameterCustom(current_url, 'rc_dpw_id', $('#rc-dpw-filter-select').val());
-                var new_url = addOrUpdateUriParameterCustom(new_url, 'title_id', $('#title-filter-select').val());
-                var new_url = addOrUpdateUriParameterCustom(new_url, 'country_id', $('#country-filter-select').val());
-                var new_url = addOrUpdateUriParameterCustom(new_url, 'pastor_status_id', $('#pastor-status-filter-select').val());
-                var new_url = addOrUpdateUriParameterCustom(new_url, 'card_id', $('#card-filter-select').val());
+                var rcDpw = $('#rc-dpw-filter-select').val();
+                if (Array.isArray(rcDpw)) {
+                    // clean array from undefined, null, "".
+                    rcDpw = rcDpw.filter(function(e){ return e === 0 || e });
+                    // stringify only if values is not empty. otherwise it will be '[]'.
+                    rcDpw = rcDpw.length ? JSON.stringify(rcDpw) : '';
+                }
+                else{
+                    rcDpw = '';
+                }
+                var new_url = addOrUpdateUriParameterCustom(current_url, 'rc_dpw_id', rcDpw);
+
+                var title = $('#title-filter-select').val();
+                if (Array.isArray(title)) {
+                    // clean array from undefined, null, "".
+                    title = title.filter(function(e){ return e === 0 || e });
+                    // stringify only if values is not empty. otherwise it will be '[]'.
+                    title = title.length ? JSON.stringify(title) : '';
+                }
+                else{
+                    title = '';
+                }
+                var new_url = addOrUpdateUriParameterCustom(new_url, 'title_id', title);
+
+
+                var country = $('#country-filter-select').val();
+                if (Array.isArray(country)) {
+                    // clean array from undefined, null, "".
+                    country = country.filter(function(e){ return e === 0 || e });
+                    // stringify only if values is not empty. otherwise it will be '[]'.
+                    country = country.length ? JSON.stringify(country) : '';
+                }
+                else{
+                    country = '';
+                }
+                var new_url = addOrUpdateUriParameterCustom(new_url, 'country_id', country);
+
+                var status = $('#pastor-status-filter-select').val();
+                if (Array.isArray(status)) {
+                    // clean array from undefined, null, "".
+                    status = status.filter(function(e){ return e === 0 || e });
+                    // stringify only if values is not empty. otherwise it will be '[]'.
+                    status = status.length ? JSON.stringify(status) : '';
+                }
+                else{
+                    status = '';
+                }
+                var new_url = addOrUpdateUriParameterCustom(new_url, 'pastor_status_id', status);
+
+                var card = $('#card-filter-select').val();
+                if (Array.isArray(card)) {
+                    // clean array from undefined, null, "".
+                    card = card.filter(function(e){ return e === 0 || e });
+                    // stringify only if values is not empty. otherwise it will be '[]'.
+                    card = card.length ? JSON.stringify(card) : '';
+                }
+                else{
+                    card = '';
+                }
+                var new_url = addOrUpdateUriParameterCustom(new_url, 'card_id', card);
+
                 var new_url = addOrUpdateUriParameterCustom(new_url, 'filter_type', $('.filter_type:checked').val());
                 new_url = normalizeAmpersandCustom(new_url.toString());
                 realSearchUrl = normalizeAmpersandCustom(new_url.toString());

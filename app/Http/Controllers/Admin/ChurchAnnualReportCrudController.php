@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\ChurchAnnualReportRequest;
-use Illuminate\Support\Facades\Route;
+use Exception;
 use Carbon\Carbon;
-use App\Models\ChurchAnnualDesignerView;
 use App\Models\RcDpwList;
-use App\Models\ChurchEntityType;
 use App\Models\CountryList;
-use App\Exports\ExportAnnualReport;
-use App\Models\StructureChurch;
 use Illuminate\Http\Request;
+use App\Models\StructureChurch;
+use App\Models\ChurchEntityType;
+use App\Exports\ExportAnnualReport;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Route;
+use App\Models\ChurchAnnualDesignerView;
+use App\Http\Requests\ChurchAnnualReportRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
@@ -221,34 +222,63 @@ class ChurchAnnualReportCrudController extends CrudController
             }
             if ($this->crud->getRequest()->filled('rc_dpw_id')) {
                 try{
-                    $this->crud->addClause('where', 'rc_dpw_name', $this->crud->getRequest()->rc_dpw_id);
+                    $value = json_decode($this->crud->getRequest()->rc_dpw_id);
+                    if(is_array($value)){
+                        $this->crud->addClause('whereIn', 'rc_dpw_name', $value);
+                    }
+                    else{
+                        $this->crud->addClause('whereRaw', 0);
+                    }
                 }
                 catch(Exception $e){
-    
+                    $this->crud->addClause('whereRaw', 0);
+                    throw $e;
                 }
             }
             if ($this->crud->getRequest()->filled('church_type_id')) {
                 try{
-                    $this->crud->addClause('where', 'entities_type', $this->crud->getRequest()->church_type_id);
+                    $value = json_decode($this->crud->getRequest()->church_type_id);
+                    if(is_array($value)){
+                        $this->crud->addClause('whereIn', 'entities_type', $value);
+                    }
+                    else{
+                        $this->crud->addClause('whereRaw', 0);
+                    }
                 }
                 catch(Exception $e){
-    
+                    $this->crud->addClause('whereRaw', 0);
+                    throw $e;
                 }
             }
             if ($this->crud->getRequest()->filled('country_id')) {
                 try{
-                    $this->crud->addClause('where', 'country_name', $this->crud->getRequest()->country_id);
+                    $value = json_decode($this->crud->getRequest()->country_id);
+                    if(is_array($value)){
+                        $this->crud->addClause('whereIn', 'country_name', $value);
+                    }
+                    else{
+                        $this->crud->addClause('whereRaw', 0);
+                    }
                 }
                 catch(Exception $e){
-    
+                    $this->crud->addClause('whereRaw', 0);
+                    throw $e;
                 }
             }
             if ($this->crud->getRequest()->filled('church_status_id')) {
                 try{
-                    $this->crud->addClause('where', 'status', $this->crud->getRequest()->church_status_id);
+                    $value = json_decode($this->crud->getRequest()->church_status_id);
+                    if(is_array($value)){
+                        $this->crud->addClause('whereIn', 'status', $value);
+                    }
+                    else{
+                        $this->crud->addClause('whereRaw', 0);
+                    }
+                    // $this->crud->addClause('where', 'status', $this->crud->getRequest()->pastor_status_id);
                 }
                 catch(Exception $e){
-    
+                    $this->crud->addClause('whereRaw', 0);
+                    throw $e;
                 }
             }
             $this->crud->viewBeforeContent = ['annualreport.report_designer_panel'];

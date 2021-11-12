@@ -36,6 +36,9 @@
                         <label>Church Status</label>
                         <select id="church-status-filter-select" name="church_status_id_filter" class="form-control" style="width:100%">
                             @foreach ($crud->churchStatus as $churchStatus)
+                                @if (strlen($churchStatus->status) == 0)
+                                    @continue
+                                @endif
                                 <option value="{{$churchStatus->status}}">{{$churchStatus->status}}</option>
                             @endforeach
                         </select>
@@ -151,30 +154,85 @@
                 theme: "bootstrap",
                 placeholder:"",
                 allowClear: true,
+                multiple:true,
             });
+            $('#rc-dpw-filter-select').val(null).trigger('change');
+
             $('#church-type-filter-select').select2({
                 theme: "bootstrap",
                 placeholder:"",
-                allowClear: true
+                allowClear: true,
+                multiple:true,
             });
+            $('#church-type-filter-select').val(null).trigger('change');
+
             $('#country-filter-select').select2({
                 theme: "bootstrap",
                 placeholder:"",
-                allowClear:true
+                allowClear:true,
+                multiple:true,
             });
+            $('#country-filter-select').val(null).trigger('change');
+
             $('#church-status-filter-select').select2({
                 theme: "bootstrap",
                 placeholder:"",
-                allowClear:true
+                allowClear:true,
+                multiple:true,
             });
+            $('#church-status-filter-select').val(null).trigger('change');
 
             $('#btn-search').click(function(){
                 var ajax_table = $("#crudTable").DataTable();
                 var current_url = ajax_table.ajax.url();
-                var new_url = addOrUpdateUriParameterCustom(current_url, 'rc_dpw_id', $('#rc-dpw-filter-select').val());
-                var new_url = addOrUpdateUriParameterCustom(new_url, 'church_type_id', $('#church-type-filter-select').val());
-                var new_url = addOrUpdateUriParameterCustom(new_url, 'country_id', $('#country-filter-select').val());
-                var new_url = addOrUpdateUriParameterCustom(new_url, 'church_status_id', $('#church-status-filter-select').val());
+
+                var rcDpw = $('#rc-dpw-filter-select').val();
+                if (Array.isArray(rcDpw)) {
+                    // clean array from undefined, null, "".
+                    rcDpw = rcDpw.filter(function(e){ return e === 0 || e });
+                    // stringify only if values is not empty. otherwise it will be '[]'.
+                    rcDpw = rcDpw.length ? JSON.stringify(rcDpw) : '';
+                }
+                else{
+                    rcDpw = '';
+                }
+                var new_url = addOrUpdateUriParameterCustom(current_url, 'rc_dpw_id', rcDpw);
+
+                var churchType = $('#church-type-filter-select').val();
+                if (Array.isArray(churchType)) {
+                    // clean array from undefined, null, "".
+                    churchType = churchType.filter(function(e){ return e === 0 || e });
+                    // stringify only if values is not empty. otherwise it will be '[]'.
+                    churchType = churchType.length ? JSON.stringify(churchType) : '';
+                }
+                else{
+                    churchType = '';
+                }
+                var new_url = addOrUpdateUriParameterCustom(new_url, 'church_type_id', churchType);
+
+                var country = $('#country-filter-select').val();
+                if (Array.isArray(country)) {
+                    // clean array from undefined, null, "".
+                    country = country.filter(function(e){ return e === 0 || e });
+                    // stringify only if values is not empty. otherwise it will be '[]'.
+                    country = country.length ? JSON.stringify(country) : '';
+                }
+                else{
+                    country = '';
+                }
+                var new_url = addOrUpdateUriParameterCustom(new_url, 'country_id', country);
+
+                var status = $('#church-status-filter-select').val()
+                if (Array.isArray(status)) {
+                    // clean array from undefined, null, "".
+                    status = status.filter(function(e){ return e === 0 || e });
+                    // stringify only if values is not empty. otherwise it will be '[]'.
+                    status = status.length ? JSON.stringify(status) : '';
+                }
+                else{
+                    status = '';
+                }
+                var new_url = addOrUpdateUriParameterCustom(new_url, 'church_status_id', status);
                 new_url = normalizeAmpersandCustom(new_url.toString());
                 realSearchUrl = normalizeAmpersandCustom(new_url.toString());
 				ajax_table.ajax.url(new_url).load();

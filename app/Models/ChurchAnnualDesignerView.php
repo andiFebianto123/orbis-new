@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Backpack\CRUD\app\Models\Traits\CrudTrait;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
+use Backpack\CRUD\app\Models\Traits\CrudTrait;
 
 class ChurchAnnualDesignerView extends Model
 {
@@ -20,7 +21,15 @@ class ChurchAnnualDesignerView extends Model
     }
 
     public function scopeRcDpw($query, $value){
-        return $value == null ? $query : $query->where('rc_dpw_name',$value); 
+        if($value != null){
+            try{
+                return $query->whereIn('rc_dpw_name', json_decode($value)); 
+            }
+            catch(Exception $e){
+                return $query->whereRaw(0);
+            }
+        }
+        return $query;
     }
 
     public function getLeadershipStructureAttribute(){
@@ -44,15 +53,39 @@ class ChurchAnnualDesignerView extends Model
     
 
     public function scopeType($query, $value){
-        return $value == null ? $query : $query->where('entities_type',$value); 
+        if($value != null){
+            try{
+                return $query->whereIn('entities_type', json_decode($value)); 
+            }
+            catch(Exception $e){
+                return $query->whereRaw(0);
+            }
+        }
+        return $query;
     }
 
     public function scopeCountry($query, $value){
-        return $value == null ? $query : $query->where('country_name',$value); 
+        if($value != null){
+            try{
+                return $query->whereIn('country_name', json_decode($value)); 
+            }
+            catch(Exception $e){
+                return $query->whereRaw(0);
+            }
+        }
+        return $query;
     }
 
     public function scopeStatus($query, $value){
-        return $value == null ? $query : $query->where('status',$value); 
+        if($value != null){
+            try{
+                return $query->whereIn('status', json_decode($value)); 
+            }
+            catch(Exception $e){
+                return $query->whereRaw(0);
+            }
+        }
+        return $query;
     }
 }
 

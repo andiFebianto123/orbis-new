@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\PastorReportAnnualRequest;
-use App\Models\RcDpwList;
-use App\Models\CountryList;
-use App\Models\TitleList;
-use App\Models\PastorAnnualDesignerView;
+use Exception;
 use Carbon\Carbon;
-use App\Exports\ExportAnnualReport;
 use App\Models\Church;
+use App\Models\RcDpwList;
+use App\Models\TitleList;
+use App\Models\CountryList;
 use App\Models\MinistryRole;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use App\Exports\ExportAnnualReport;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Route;
+use App\Models\PastorAnnualDesignerView;
+use App\Http\Requests\PastorReportAnnualRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
@@ -246,65 +247,113 @@ class PastorReportAnnualCrudController extends CrudController
             }
             if ($this->crud->getRequest()->filled('rc_dpw_id')) {
                 try{
-                    $this->crud->addClause('where', 'rc_dpw_name', $this->crud->getRequest()->rc_dpw_id);
+                    $value = json_decode($this->crud->getRequest()->rc_dpw_id);
+                    if(is_array($value)){
+                        $this->crud->addClause('whereIn', 'rc_dpw_name', $value);
+                    }
+                    else{
+                        $this->crud->addClause('whereRaw', 0);
+                    }
                 }
                 catch(Exception $e){
-    
+                    $this->crud->addClause('whereRaw', 0);
+                    throw $e;
                 }
             }
             if ($this->crud->getRequest()->filled('title_id')) {
                 try{
-                    $this->crud->addClause('where', 'short_desc', $this->crud->getRequest()->title_id);
+                    $value = json_decode($this->crud->getRequest()->title_id);
+                    if(is_array($value)){
+                        $this->crud->addClause('whereIn', 'short_desc', $value);
+                    }
+                    else{
+                        $this->crud->addClause('whereRaw', 0);
+                    }
+                    // $this->crud->addClause('where', 'short_desc', $this->crud->getRequest()->title_id);
                 }
                 catch(Exception $e){
-    
+                    $this->crud->addClause('whereRaw', 0);
+                    throw $e;
                 }
             }
             if ($this->crud->getRequest()->filled('country_id')) {
                 try{
-                    $this->crud->addClause('where', 'country_name', $this->crud->getRequest()->country_id);
+                    $value = json_decode($this->crud->getRequest()->country_id);
+                    if(is_array($value)){
+                        $this->crud->addClause('whereIn', 'country_name', $value);
+                    }
+                    else{
+                        $this->crud->addClause('whereRaw', 0);
+                    }
+                   //  $this->crud->addClause('where', 'country_name', $this->crud->getRequest()->country_id);
                 }
                 catch(Exception $e){
-    
+                    $this->crud->addClause('whereRaw', 0);
+                    throw $e;
                 }
             }
             if ($this->crud->getRequest()->filled('pastor_status_id')) {
                 try{
-                    $this->crud->addClause('where', 'status', $this->crud->getRequest()->pastor_status_id);
+                    $value = json_decode($this->crud->getRequest()->pastor_status_id);
+                    if(is_array($value)){
+                        $this->crud->addClause('whereIn', 'status', $value);
+                    }
+                    else{
+                        $this->crud->addClause('whereRaw', 0);
+                    }
+                    // $this->crud->addClause('where', 'status', $this->crud->getRequest()->pastor_status_id);
                 }
                 catch(Exception $e){
-    
+                    $this->crud->addClause('whereRaw', 0);
+                    throw $e;
                 }
             }
             if ($this->crud->getRequest()->filled('card_id')) {
                 try{
-                    $this->crud->addClause('where', 'card', $this->crud->getRequest()->card_id);
+                    $value = json_decode($this->crud->getRequest()->card_id);
+                    if(is_array($value)){
+                        $this->crud->addClause('whereIn', 'card', $value);
+                    }
+                    else{
+                        $this->crud->addClause('whereRaw', 0);
+                    }
+                    // $this->crud->addClause('where', 'card', $this->crud->getRequest()->card_id);
                 }
                 catch(Exception $e){
-    
+                    $this->crud->addClause('whereRaw', 0);
+                    throw $e;
                 }
             }
             if ($this->crud->getRequest()->filled('filter_type')) {
                 try{
                     if($this->crud->getRequest()->filter_type == 'd90'){
                         $realDateNow = Carbon::now();
-                        $maximumDateValid = $realDateNow->copy()->subDays(90);
-                        $this->crud->addClause('whereDate', 'valid_card_end', '<=', $realDateNow->toDateString());
-                        $this->crud->addClause('whereDate', 'valid_card_end', '>=', $maximumDateValid->toDateString());
+                        $maximumDateValid = $realDateNow->copy()->addDays(90);
+                        $this->crud->addClause('whereDate', 'valid_card_end', '>', $realDateNow->toDateString());
+                        $this->crud->addClause('whereDate', 'valid_card_end', '<=', $maximumDateValid->toDateString());
                     }  
-                    if($this->crud->getRequest()->filter_type == 'expired'){
+                    else if($this->crud->getRequest()->filter_type == 'expired'){
                         $realDateNow = Carbon::now();
                         $this->crud->addClause('whereDate', 'valid_card_end', '<=', $realDateNow->toDateString());
                     }  
-                    if($this->crud->getRequest()->filter_type == 'd90andexpired'){
-                        $realDateNow = Carbon::now();
-                        $maximumDateValid = $realDateNow->copy()->subDays(90);
-                        $this->crud->addClause('whereDate', 'valid_card_end', '<=', $realDateNow->toDateString());
-                        $this->crud->addClause('orWhereDate', 'valid_card_end', '>=', $maximumDateValid->toDateString());
-                    }                    
+                    else if($this->crud->getRequest()->filter_type == 'd90andexpired'){
+                        $this->crud->addClause('where', function($query){
+                            $realDateNow = Carbon::now();
+                            $maximumDateValid = $realDateNow->copy()->addDays(90);
+                            $query->whereDate('valid_card_end', '>', $realDateNow->toDateString())
+                            ->whereDate('valid_card_end', '<=', $maximumDateValid->toDateString())
+                            ->orWhereDate('valid_card_end', '<=', $realDateNow->toDateString());
+                        });
+                        // $this->crud->addClause('whereDate', 'valid_card_end', '<=', $realDateNow->toDateString());
+                        // $this->crud->addClause('orWhereDate', 'valid_card_end', '>=', $maximumDateValid->toDateString());
+                    }     
+                    else if($this->crud->getRequest()->filter_type != 'all'){
+                        $this->crud->addClause('whereRaw', 0);
+                    }              
                 }
                 catch(Exception $e){
-    
+                    $this->crud->addClause('whereRaw', 0);
+                    throw $e;
                 }
             }
             $this->crud->viewBeforeContent = ['annualreport.report_designer_pastor_panel'];
