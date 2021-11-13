@@ -98,8 +98,8 @@ class SyncUserToMailchimp extends Command
                             "email_address" => $personel->email,
                             "status" => ($emails[strtolower($personel->email)] ?? 'subscribed'),
                             "merge_fields" => [
-                                "FNAME" => $personel->first_name,
-                                "LNAME" => $personel->last_name,
+                                "FNAME" => $personel->first_name ?? '',
+                                "LNAME" => $personel->last_name ?? '',
                                 "BIRTHDAY" => $dateOfBirth,
                             ],
                             "interests" => [
