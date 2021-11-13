@@ -116,15 +116,14 @@ class SyncUserToMailchimp extends Command
             Log::channel('mailchimp')->info('Sync DTBS user to Mailchimp success.');
         }
         catch(Exception $exception){
-            print_r($exception);
             Log::channel('mailchimp')->error('Sync DTBS user to Mailchimp failed. Error : ' . $exception);
-            // Mail::send([], [], function ($message) use ($exception) {
-            //     $text = '<h4>ERROR</h4>';
-            //     $text .= '<p>' . ($exception->getMessage() ?? 'Unknown error') . '</p>';
-            //     $message->subject('ERROR SYNC DTBS USER TO MAILCHIMP')
-            //         ->to(config('app.email_developer'))
-            //         ->setBody($text, 'text/html');
-            // });
+            Mail::send([], [], function ($message) use ($exception) {
+                $text = '<h4>ERROR</h4>';
+                $text .= '<p>' . ($exception->getMessage() ?? 'Unknown error') . '</p>';
+                $message->subject('ERROR SYNC DTBS USER TO MAILCHIMP')
+                    ->to(config('app.email_developer'))
+                    ->setBody($text, 'text/html');
+            });
         }
     }
 }
