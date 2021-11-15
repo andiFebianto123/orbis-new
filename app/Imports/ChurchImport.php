@@ -100,7 +100,7 @@ class ChurchImport implements ToCollection,  WithValidation, WithHeadingRow
             $update_church->church_name = $row_church_name;
             $update_church->contact_person = $contact_person;
             $update_church->church_address = $church_address;
-            $update_church->church_local_id = ($church_local)? $church_local->id : '-';
+            $update_church->church_local_id = ($church_local)? $church_local->id : null;
             $update_church->office_address = $office_address;
             $update_church->city = $city;
             $update_church->province = $province;
@@ -163,7 +163,7 @@ class ChurchImport implements ToCollection,  WithValidation, WithHeadingRow
             $new_church->contact_person = $contact_person;
             $new_church->church_address = $church_address;
             $new_church->office_address = $office_address;
-            $new_church->church_local_id = ($church_local)? $church_local->id : '-';
+            $new_church->church_local_id = ($church_local)? $church_local->id : null;
             $new_church->city = $city;
             $new_church->province = $province;
             $new_church->postal_code = $postal_code;

@@ -71,7 +71,7 @@ class ChurchAnnualReportCrudController extends CrudController
                     'type' => 'closure',
                     'name' => 'local_church',
                     'function' => function($entries){
-                        $lc = "-";
+                        $lc = null;
                         $church = Church::where('id' , $entries->church_local_id)->first();
                         if ($church) {
                             $lc = $church->church_name;

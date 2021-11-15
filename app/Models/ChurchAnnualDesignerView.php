@@ -34,7 +34,7 @@ class ChurchAnnualDesignerView extends Model
 
     public function getLocalChurchAttribute()
     {
-        $lc = "-";
+        $lc = null;
         $church = Church::where('id' , $this->church_local_id)->first();
         if ($church) {
             $lc = $church->church_name;
