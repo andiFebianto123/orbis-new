@@ -10,7 +10,7 @@ class ChurchAnnualDesignerView extends Model
 {
     use CrudTrait;
             
-    protected $appends = ['leadership_structure'];
+    protected $appends = ['leadership_structure', 'local_church'];
 
     public function ExportExcelButton(){
         return '<a href="javascript:void(0)"  onclick="exportReport()" class="btn btn-xs btn-success"><i class="la la-file-excel-o"></i> Export Button</a>';
@@ -30,6 +30,16 @@ class ChurchAnnualDesignerView extends Model
             }
         }
         return $query;
+    }
+
+    public function getLocalChurchAttribute()
+    {
+        $lc = "-";
+        $church = Church::where('id' , $this->church_local_id)->first();
+        if ($church) {
+            $lc = $church->church_name;
+        }
+        return $lc;
     }
 
     public function getLeadershipStructureAttribute(){

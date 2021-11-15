@@ -44,6 +44,7 @@ class ChurchImport implements ToCollection,  WithValidation, WithHeadingRow
         $row_church_name = $row['Church Name'];
         $row_church_type = $row['Church Type'];
         $row_lead_pastor_name = $row['Lead Pastor Name'];
+        $row_local_church = $row['Local Church'];
         $row_leadership_structure = $row['Leadership Structure'];
         $row_coordinator = $row['Coordinator'];
         $row_contact_person = $row['Contact Person'];
@@ -61,25 +62,6 @@ class ChurchImport implements ToCollection,  WithValidation, WithHeadingRow
         $row_founded_on = $row['Founded On'];
         $row_service_time_church = $row['Service Time Church'];
         $row_notes = $row['Notes'];
-
-        // $row_rc_dpw = $row[0];
-        // $row_church_name = $row[1];
-        // $row_church_type = $row[2];
-        // $row_lead_pastor_name = $row[3];
-        // $row_contact_person = $row[4];
-        // $row_church_address = $row[5];
-        // $row_office_address = $row[6];
-        // $row_city = $row[7];
-        // $row_province = $row[8];
-        // $row_postal_code = $row[9];
-        // $row_country = $row[10];
-        // $row_phone = $row[11];
-        // $row_fax = $row[12];
-        // $row_email = $row[13];
-        // $row_church_status = $row[14];
-        // $row_founded_on = $row[15];
-        // $row_service_time_church = $row[16];
-        // $row_notes = $row[17];
         
         $country  = CountryList::where('country_name', $row_country)->first();
         $church_type  =  ChurchEntityType::where('entities_type', $row_church_type)->first();
@@ -105,7 +87,9 @@ class ChurchImport implements ToCollection,  WithValidation, WithHeadingRow
                             ->where('phone', $phone)
                             ->where('postal_code', $postal_code)
                             ->exists();
-
+        
+        $church_local = Church::where('church_name', $row_local_church)
+                                ->first();
         if ($exists_church) {
             $update_church = Church::where('church_name', $row_church_name)
                         ->where('phone', $phone)
@@ -116,6 +100,7 @@ class ChurchImport implements ToCollection,  WithValidation, WithHeadingRow
             $update_church->church_name = $row_church_name;
             $update_church->contact_person = $contact_person;
             $update_church->church_address = $church_address;
+            $update_church->church_local_id = ($church_local)? $church_local->id : '-';
             $update_church->office_address = $office_address;
             $update_church->city = $city;
             $update_church->province = $province;
@@ -178,6 +163,7 @@ class ChurchImport implements ToCollection,  WithValidation, WithHeadingRow
             $new_church->contact_person = $contact_person;
             $new_church->church_address = $church_address;
             $new_church->office_address = $office_address;
+            $new_church->church_local_id = ($church_local)? $church_local->id : '-';
             $new_church->city = $city;
             $new_church->province = $province;
             $new_church->postal_code = $postal_code;
