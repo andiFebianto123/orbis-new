@@ -35,6 +35,12 @@ return [
     */
 
     'channels' => [
+        'mailchimp' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/cron/mailchimp.log'),
+            'level' => 'debug',
+            'days' => 90,
+        ],
         'stack' => [
             'driver' => 'stack',
             'channels' => ['daily'],
