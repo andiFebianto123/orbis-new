@@ -14,6 +14,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Route;
 use App\Models\ChurchAnnualDesignerView;
 use App\Http\Requests\ChurchAnnualReportRequest;
+use App\Models\Church;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
@@ -64,6 +65,19 @@ class ChurchAnnualReportCrudController extends CrudController
                     'label' => 'Church Type',
                     'type' => 'text',
                     'name' => 'entities_type'
+                ],
+                [
+                    'label' => 'Local Church',
+                    'type' => 'closure',
+                    'name' => 'local_church',
+                    'function' => function($entries){
+                        $lc = null;
+                        $church = Church::where('id' , $entries->church_local_id)->first();
+                        if ($church) {
+                            $lc = $church->church_name;
+                        }
+                        return $lc;
+                    }
                 ],
                 [
                     'label' => 'Lead Pastor Name',

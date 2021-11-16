@@ -164,7 +164,7 @@ class ExportAnnualReport implements FromView,WithEvents
                     if($valueCell == 'Contact Person' || $valueCell == 'Phone' || $valueCell == 'Fax' || $valueCell == 'Email'  || $valueCell == 'Founded On' || $valueCell == 'Service Time Church' || $valueCell == 'Notes'){
                         $event->sheet->getColumnDimension($column)->setWidth(35);
                     }
-                    if($valueCell == 'Leadership Structure' || $valueCell == 'Church Name' || $valueCell == 'Lead Pastor Name' || $valueCell == "Church Address" || $valueCell == 'Office Address' || $valueCell == "Address"){
+                    if($valueCell == 'Leadership Structure' || $valueCell == 'Church Name' ||$valueCell == 'Local Church'|| $valueCell == 'Lead Pastor Name' || $valueCell == "Church Address" || $valueCell == 'Office Address' || $valueCell == "Address"){
                         $event->sheet->getColumnDimension($column)->setWidth(40);
                     }
                 }
