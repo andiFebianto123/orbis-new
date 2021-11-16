@@ -5,8 +5,10 @@ namespace App\Console\Commands;
 use Exception;
 use Carbon\Carbon;
 use App\Models\Personel;
+use App\Models\StatusHistory;
 use Illuminate\Console\Command;
 use MailchimpMarketing\ApiClient;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
@@ -64,7 +66,23 @@ class SyncUserToMailchimp extends Command
 
             $pastoralGroupId = config('app.mailchimp_pastoral_group_id');
             
-            $chunkPersonels = Personel::select('first_name', 'last_name', 'email', 'date_of_birth')->cursor()->chunk(400);
+            $subQuery = StatusHistory::leftJoin('status_histories as temps', function ($leftJoin) {
+                $leftJoin->on('temps.personel_id', 'status_histories.personel_id')
+                    ->where(function ($innerQuery) {
+                        $innerQuery->whereRaw('status_histories.date_status < temps.date_status')
+                            ->orWhere(function ($deepestQuery) {
+                                $deepestQuery->whereRaw('status_histories.date_status = temps.date_status')
+                                    ->where('status_histories.id', '<', 'temps.id');
+                            });
+                    });
+            })->whereNull('temps.id')
+                ->join('account_status', 'account_status.id', 'status_histories.status_histories_id')
+                ->select('status_histories.personel_id', 'account_status.acc_status');
+            $chunkPersonels = Personel::leftJoinSub($subQuery, 'status_histories', function ($leftJoinSub) {
+                $leftJoinSub->on('personels.id', 'status_histories.personel_id');
+            })
+            ->select('first_name', 'last_name', 'email', 'date_of_birth', DB::raw('IFNULL(status_histories.acc_status, "-") as acc_status'))
+            ->cursor()->chunk(400);
 
             $emails = [];
             $offset = 0;
@@ -96,7 +114,8 @@ class SyncUserToMailchimp extends Command
                         }
                         $members[] = [
                             "email_address" => $personel->email,
-                            "status" => ($emails[strtolower($personel->email)] ?? 'subscribed'),
+                            "status" => (strtolower($personel->acc_status) != 'active' ? "unsubscribed" : "subscribed"),
+                            // ($emails[strtolower($personel->email)] ?? 'subscribed')),
                             "merge_fields" => [
                                 "FNAME" => $personel->first_name ?? '',
                                 "LNAME" => $personel->last_name ?? '',
@@ -109,7 +128,7 @@ class SyncUserToMailchimp extends Command
                     }
                 }
                 if(count($members) > 0){
-                    $response = $mailchimp->lists->batchListMembers($listId, ["members" => $members, "update_existing" => true]);
+                   $response = $mailchimp->lists->batchListMembers($listId, ["members" => $members, "update_existing" => true]);
                 }
             }
        
