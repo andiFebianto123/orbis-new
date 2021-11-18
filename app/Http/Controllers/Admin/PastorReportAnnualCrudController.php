@@ -128,6 +128,11 @@ class PastorReportAnnualCrudController extends CrudController
                     'name' => 'fax'
                 ],
                 [
+                    'label' => 'Language',
+                    'type' => 'text',
+                    'name' => 'language'
+                ],
+                [
                     'label' => 'Email',
                     'type' => 'text',
                     'name' => 'email'

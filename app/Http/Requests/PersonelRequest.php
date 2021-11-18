@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Personel;
 use App\Rules\Base64Rule;
 use App\Models\PersonelImage;
 use App\Http\Requests\Request;
@@ -49,6 +50,7 @@ class PersonelRequest extends FormRequest
         'province' => 'nullable',
         'postal_code' => 'nullable',
         'country_id' => 'nullable',
+        'language' => ['nullable', Rule::in(Personel::$arrayLanguage)],
         'email' => 'nullable|email',
         'first_licensed_on' => 'required',
         'card' => 'required',

@@ -429,6 +429,16 @@ class PersonelCrudController extends CrudController
         ]);
 
         $this->crud->addField([
+            'name' => 'language',
+            'label' => "Language",
+            'type' => 'select2_from_array',
+            'options' => collect(Personel::$arrayLanguage)->mapWithKeys(function($lang){
+                return [$lang => $lang];
+            }),
+            'tab' => 'Contact Information',
+        ]);
+
+        $this->crud->addField([
             'name' => 'is_lifetime',
             'label' => 'Lifetime',
             'type' => 'checkbox_lifetime',

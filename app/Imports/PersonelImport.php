@@ -2,25 +2,26 @@
 
 namespace App\Imports;
 
-use App\Helpers\LeadershipSyncHelper;
+use Carbon\Carbon;
+use App\Models\Church;
 use App\Models\Personel;
-use App\Models\CountryList;
 use App\Models\RcDpwList;
 use App\Models\TitleList;
-use App\Models\Accountstatus;
-use App\Models\Church;
+use Maatwebsite\Excel\Row;
+use App\Models\CountryList;
 use App\Models\MinistryRole;
+use App\Models\Accountstatus;
 use App\Models\StatusHistory;
 use App\Models\StructureChurch;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Hash;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Maatwebsite\Excel\Concerns\Importable;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Hash;
+use App\Helpers\LeadershipSyncHelper;
+use Maatwebsite\Excel\Concerns\Importable;
+use Maatwebsite\Excel\Concerns\ToCollection;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
-use Maatwebsite\Excel\Row;
-use Maatwebsite\Excel\Concerns\ToCollection;
 HeadingRowFormatter::default('none');
 
 class PersonelImport implements ToCollection, WithHeadingRow, WithValidation
@@ -53,6 +54,7 @@ class PersonelImport implements ToCollection, WithHeadingRow, WithValidation
         $row_country = $row['Country'];
         $row_phone = $row['Phone'];
         $row_fax = $row['Mobile Phone'];
+        $language = $row['Language'];
         $row_email = $row['Email'];
         $row_secondary_email = $row['Secondary Email'];
         $row_marital_status = $row['Marital Status'];
@@ -112,6 +114,7 @@ class PersonelImport implements ToCollection, WithHeadingRow, WithValidation
             $update_personel->country_id = ($country['id'] ?? null);
             $update_personel->phone = $phone;
             $update_personel->fax = $row_fax;
+            $update_personel->language = $language;
             $update_personel->email = $email;
             $update_personel->second_email = $secondary_email;
             $update_personel->marital_status = $row_marital_status;
@@ -170,6 +173,7 @@ class PersonelImport implements ToCollection, WithHeadingRow, WithValidation
             $new_personel->country_id = ($country['id'] ?? null);
             $new_personel->phone = $phone;
             $new_personel->fax = $row_fax;
+            $new_personel->language = $language;
             $new_personel->email = $email;
             $new_personel->second_email = $secondary_email;
             $new_personel->marital_status = $row_marital_status;
@@ -255,6 +259,7 @@ class PersonelImport implements ToCollection, WithHeadingRow, WithValidation
                     $onFailure('Not Exist Church - Role or Invalid Format :: Church Name - Role');
                 }
             },
+            'Language' => ['nullable', Rule::in(Personel::$arrayLanguage)]
         ];
     }
 

@@ -182,6 +182,10 @@
 									<td>Mobile Phone</td>
 									<td> :  {{ $entry->fax }}</td>
 								</tr>
+								<tr>
+									<td>Language</td>
+									<td> :  {{ $entry->language }}</td>
+								</tr>
 							</table>
 						</div>
 					</div>

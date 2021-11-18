@@ -46,6 +46,7 @@ class Personel extends Authenticatable
         'province',
         'postal_code',
         'country_id',
+        'language',
         'email',
         'second_email',
         'phone',
@@ -61,6 +62,7 @@ class Personel extends Authenticatable
         'is_lifetime',
         'password',
     ];
+    public static $arrayLanguage = ['EN', 'ID'];
 
     public function setPasswordAttribute($value) {
         $this->attributes['password'] = Hash::make($value);

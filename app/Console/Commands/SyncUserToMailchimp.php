@@ -81,7 +81,7 @@ class SyncUserToMailchimp extends Command
             $chunkPersonels = Personel::leftJoinSub($subQuery, 'status_histories', function ($leftJoinSub) {
                 $leftJoinSub->on('personels.id', 'status_histories.personel_id');
             })
-            ->select('first_name', 'last_name', 'email', 'date_of_birth', DB::raw('IFNULL(status_histories.acc_status, "-") as acc_status'))
+            ->select('first_name', 'last_name', 'email', 'date_of_birth', 'language', DB::raw('IFNULL(status_histories.acc_status, "-") as acc_status'))
             ->cursor()->chunk(400);
 
             $emails = [];
@@ -121,6 +121,7 @@ class SyncUserToMailchimp extends Command
                                 "LNAME" => $personel->last_name ?? '',
                                 "BIRTHDAY" => $dateOfBirth,
                             ],
+                            'language' => isset($personel->language) ? strtolower($personel->language) : '',
                             "interests" => [
                                 $pastoralGroupId => true
                             ]
