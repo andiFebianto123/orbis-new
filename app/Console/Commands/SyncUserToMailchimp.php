@@ -97,7 +97,6 @@ class SyncUserToMailchimp extends Command
                 }
             }
             while($countMembers > 0);
-            print_r($members);
 
             $memberTags = [];
             foreach($chunkPersonels as $personels){
@@ -141,7 +140,6 @@ class SyncUserToMailchimp extends Command
                    foreach($response->errors as $error){
                         unset($memberTags[md5($error->email_address)]);
                    }
-                   print_r($response);
                 }
             }
 
