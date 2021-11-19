@@ -98,6 +98,7 @@ class SyncUserToMailchimp extends Command
             }
             while($countMembers > 0);
 
+            $memberTags = [];
             foreach($chunkPersonels as $personels){
                 $members = [];
                 foreach($personels as $personel){
@@ -126,10 +127,27 @@ class SyncUserToMailchimp extends Command
                                 $pastoralGroupId => true
                             ]
                         ];
+                        $memberTags[md5(strtolower($personel->email))] = collect(Personel::$arrayLanguage)->map(function($lang) use($personel){
+                            return [
+                                'name' => $lang,
+                                'status' => isset($personel->language) && $personel->language == $lang ? 'active' : 'inactive'
+                            ];
+                        })->toArray();
                     }
                 }
                 if(count($members) > 0){
                    $response = $mailchimp->lists->batchListMembers($listId, ["members" => $members, "update_existing" => true]);
+                   foreach($response->errors as $error){
+                        unset($memberTags[md5($error->email_address)]);
+                   }
+                }
+            }
+
+            if(count($memberTags) > 0){
+                foreach($memberTags as $hash => $tags){
+                    $mailchimp->lists->updateListMemberTags($listId, $hash, [
+                        "tags" => $tags
+                    ]);
                 }
             }
        
