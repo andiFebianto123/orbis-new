@@ -140,6 +140,7 @@ class SyncUserToMailchimp extends Command
                    foreach($response->errors as $error){
                         unset($memberTags[md5($error->email_address)]);
                    }
+                   print_r($response);
                 }
             }
 
