@@ -97,6 +97,7 @@ class SyncUserToMailchimp extends Command
                 }
             }
             while($countMembers > 0);
+            print_r($members);
 
             $memberTags = [];
             foreach($chunkPersonels as $personels){
