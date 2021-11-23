@@ -148,6 +148,7 @@ class SyncUserToMailchimp extends Command
             }
 
             if(count($memberTags) > 0){
+                print_r($memberTags);
                 foreach($memberTags as $hash => $tags){
                     $mailchimp->lists->updateListMemberTags($listId, $hash, [
                         "tags" => $tags
@@ -167,13 +168,13 @@ class SyncUserToMailchimp extends Command
             }
             Log::channel('mailchimp')->error('Sync DTBS user to Mailchimp failed. Error : ' . $exception);
             Log::channel('mailchimp')->error('Sync DTBS user to Mailchimp failed. Error Message : ' . $exceptionMessage);
-            // Mail::send([], [], function ($message) use ($exceptionMessage) {
-            //     $text = '<h4>ERROR</h4>';
-            //     $text .= '<p>' . ($exceptionMessage ?? 'Unknown error') . '</p>';
-            //     $message->subject('ERROR SYNC DTBS USER TO MAILCHIMP')
-            //         ->to(config('app.email_developer'))
-            //         ->setBody($text, 'text/html');
-            // });
+            Mail::send([], [], function ($message) use ($exceptionMessage) {
+                $text = '<h4>ERROR</h4>';
+                $text .= '<p>' . ($exceptionMessage ?? 'Unknown error') . '</p>';
+                $message->subject('ERROR SYNC DTBS USER TO MAILCHIMP')
+                    ->to(config('app.email_developer'))
+                    ->setBody($text, 'text/html');
+            });
         }
     }
 }
