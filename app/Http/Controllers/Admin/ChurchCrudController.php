@@ -164,7 +164,7 @@ class ChurchCrudController extends CrudController
                     $innerQuery->whereRaw('status_history_churches.date_status < temps.date_status')
                         ->orWhere(function ($deepestQuery) {
                             $deepestQuery->whereRaw('status_history_churches.date_status = temps.date_status')
-                                ->where('status_history_churches.id', '<', 'temps.id');
+                                ->whereRaw('status_history_churches.id < temps.id');
                         });
                 });
         })->whereNull('temps.id')

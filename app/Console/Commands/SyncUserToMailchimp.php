@@ -73,17 +73,20 @@ class SyncUserToMailchimp extends Command
                         $innerQuery->whereRaw('status_histories.date_status < temps.date_status')
                             ->orWhere(function ($deepestQuery) {
                                 $deepestQuery->whereRaw('status_histories.date_status = temps.date_status')
-                                    ->where('status_histories.id', '<', 'temps.id');
+                                    ->whereRaw('status_histories.id < temps.id');
                             });
                     });
             })->whereNull('temps.id')
                 ->join('account_status', 'account_status.id', 'status_histories.status_histories_id')
                 ->select('status_histories.personel_id', 'account_status.acc_status');
+                
             $chunkPersonels = Personel::leftJoinSub($subQuery, 'status_histories', function ($leftJoinSub) {
                 $leftJoinSub->on('personels.id', 'status_histories.personel_id');
             })
             ->select('first_name', 'last_name', 'email', 'date_of_birth', 'language', DB::raw('IFNULL(status_histories.acc_status, "-") as acc_status'))
             ->cursor()->chunk(400);
+
+            
 
             $emails = [];
             $offset = 0;

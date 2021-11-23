@@ -196,7 +196,7 @@ class PersonelCrudController extends CrudController
                     $innerQuery->whereRaw('status_histories.date_status < temps.date_status')
                         ->orWhere(function ($deepestQuery) {
                             $deepestQuery->whereRaw('status_histories.date_status = temps.date_status')
-                                ->where('status_histories.id', '<', 'temps.id');
+                                ->whereRaw('status_histories.id < temps.id');
                         });
                 });
         })->whereNull('temps.id')
