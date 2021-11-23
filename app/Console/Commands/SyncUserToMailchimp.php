@@ -154,7 +154,7 @@ class SyncUserToMailchimp extends Command
             Log::channel('mailchimp')->info('Sync DTBS user to Mailchimp success.');
         }
         catch(Exception $exception){
-            print_r($exception);
+            print_r($exception->getMessage());
             Log::channel('mailchimp')->error('Sync DTBS user to Mailchimp failed. Error : ' . $exception);
             // Mail::send([], [], function ($message) use ($exception) {
             //     $text = '<h4>ERROR</h4>';
