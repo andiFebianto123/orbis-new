@@ -11,6 +11,7 @@ use MailchimpMarketing\ApiClient;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use GuzzleHttp\Exception\ClientException;
 
 class SyncUserToMailchimp extends Command
 {
@@ -99,11 +100,13 @@ class SyncUserToMailchimp extends Command
             while($countMembers > 0);
 
             $memberTags = [];
+            $memberKeys = [];
             foreach($chunkPersonels as $personels){
                 $members = [];
                 foreach($personels as $personel){
                     if(filter_var($personel->email, FILTER_VALIDATE_EMAIL) && (!isset($emails[strtolower($personel->email)])
-                     || $emails[strtolower($personel->email)] == "unsubscribed" || $emails[strtolower($personel->email)] == "cleaned" || $emails[strtolower($personel->email)] == "pending")){
+                     || $emails[strtolower($personel->email)] == "unsubscribed" || $emails[strtolower($personel->email)] == "cleaned" || $emails[strtolower($personel->email)] == "pending") 
+                     && !isset($memberKeys[strtolower($personel->email)])){
                         $dateOfBirth = '';
                         if($personel->date_of_birth != null){
                             try{
@@ -133,6 +136,7 @@ class SyncUserToMailchimp extends Command
                                 'status' => isset($personel->language) && $personel->language == $lang ? 'active' : 'inactive'
                             ];
                         })->toArray();
+                        $memberKeys[strtolower($personel->email)] = true;
                     }
                 }
                 if(count($members) > 0){
@@ -154,11 +158,18 @@ class SyncUserToMailchimp extends Command
             Log::channel('mailchimp')->info('Sync DTBS user to Mailchimp success.');
         }
         catch(Exception $exception){
-            print_r($exception->getMessage());
+            if($exception instanceof ClientException){
+                $exceptionMessage = $exception->getResponse();
+                $exceptionMessage = $exceptionMessage->getBody()->getContents();
+            }
+            else{
+                $exceptionMessage = $exception->getMessage();
+            }
             Log::channel('mailchimp')->error('Sync DTBS user to Mailchimp failed. Error : ' . $exception);
-            // Mail::send([], [], function ($message) use ($exception) {
+            Log::channel('mailchimp')->error('Sync DTBS user to Mailchimp failed. Error Message : ' . $exceptionMessage);
+            // Mail::send([], [], function ($message) use ($exceptionMessage) {
             //     $text = '<h4>ERROR</h4>';
-            //     $text .= '<p>' . ($exception->getMessage() ?? 'Unknown error') . '</p>';
+            //     $text .= '<p>' . ($exceptionMessage ?? 'Unknown error') . '</p>';
             //     $message->subject('ERROR SYNC DTBS USER TO MAILCHIMP')
             //         ->to(config('app.email_developer'))
             //         ->setBody($text, 'text/html');
