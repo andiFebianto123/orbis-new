@@ -140,6 +140,7 @@ class SyncUserToMailchimp extends Command
                     }
                 }
                 if(count($members) > 0){
+                   print_r($members);
                    $response = $mailchimp->lists->batchListMembers($listId, ["members" => $members, "update_existing" => true]);
                    foreach($response->errors as $error){
                         unset($memberTags[md5($error->email_address)]);
@@ -148,7 +149,6 @@ class SyncUserToMailchimp extends Command
             }
 
             if(count($memberTags) > 0){
-                print_r($memberTags);
                 foreach($memberTags as $hash => $tags){
                     $mailchimp->lists->updateListMemberTags($listId, $hash, [
                         "tags" => $tags
