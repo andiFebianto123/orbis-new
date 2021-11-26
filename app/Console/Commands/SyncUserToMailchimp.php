@@ -101,6 +101,7 @@ class SyncUserToMailchimp extends Command
                 }
             }
             while($countMembers > 0);
+            print_r($emails);
 
             $memberTags = [];
             $memberKeys = [];
@@ -140,6 +141,9 @@ class SyncUserToMailchimp extends Command
                             ];
                         })->toArray();
                         $memberKeys[strtolower($personel->email)] = true;
+                    }
+                    else{
+                        print_r($personel);
                     }
                 }
                 if(count($members) > 0){
