@@ -145,6 +145,7 @@ class SyncUserToMailchimp extends Command
                 if(count($members) > 0){
                    // print_r($members);
                    $response = $mailchimp->lists->batchListMembers($listId, ["members" => $members, "update_existing" => true]);
+                   print_r($response->errors);
                    foreach($response->errors as $error){
                         unset($memberTags[md5($error->email_address)]);
                    }
