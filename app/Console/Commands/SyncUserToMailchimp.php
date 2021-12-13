@@ -83,10 +83,9 @@ class SyncUserToMailchimp extends Command
             $chunkPersonels = Personel::leftJoinSub($subQuery, 'status_histories', function ($leftJoinSub) {
                 $leftJoinSub->on('personels.id', 'status_histories.personel_id');
             })
-            ->select('first_name', 'last_name', 'email', 'date_of_birth', 'language', DB::raw('IFNULL(status_histories.acc_status, "-") as acc_status'))
+            ->join('title_lists as title', 'title.id', 'personels.title_id')
+            ->select('first_name', 'last_name', 'email', 'short_desc', 'date_of_birth', 'language', DB::raw('IFNULL(status_histories.acc_status, "-") as acc_status'))
             ->cursor()->chunk(400);
-
-            
 
             $emails = [];
             $offset = 0;
@@ -125,6 +124,7 @@ class SyncUserToMailchimp extends Command
                             "status" => (strtolower($personel->acc_status) != 'active' ? "unsubscribed" : "subscribed"),
                             // ($emails[strtolower($personel->email)] ?? 'subscribed')),
                             "merge_fields" => [
+                                "TITLE" => $personel->short_desc,
                                 "FNAME" => $personel->first_name ?? '',
                                 "LNAME" => $personel->last_name ?? '',
                                 "BIRTHDAY" => $dateOfBirth,
