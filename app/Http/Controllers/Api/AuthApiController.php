@@ -37,7 +37,7 @@ class AuthApiController extends Controller
                             ->orderBy('status_histories.created_at','desc')
                             ->first();
            
-            if(strtolower($current_status_history->acc_status) == 'active'){
+            if(isset($current_status_history->acc_status) && strtolower($current_status_history->acc_status) == 'active'){
                 $active_email = true;
                 $valid_personel = $personel;
             }
