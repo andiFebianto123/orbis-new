@@ -133,8 +133,6 @@ class AuthApiController extends Controller
            ['email' => $request->email]
         );
 
-        dd($response);
-
         return response()->json(['message' => trans(PasswordBroker::RESET_LINK_SENT)]);
     }
 
