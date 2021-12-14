@@ -238,5 +238,6 @@ return [
 
     'email_developer' => env('EMAIL_DEVELOPER', 'kevin@rectmedia.id'),
 
+    'front_end_url' => env('FRONT_END_URL', 'https://preflight.rectmedia.my.id/hubifgf'),
     'front_end_reset_password_url' => env('FRONT_END_RESET_PASSWORD_URL', 'https://preflight.rectmedia.my.id/hubifgf/reset-password')
 ];

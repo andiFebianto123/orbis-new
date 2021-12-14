@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers\Api;
 
+use Exception;
 use App\Models\Personel;
 use App\Helpers\LogHubApi;
 use Illuminate\Http\Request;
 use App\Models\StatusHistory;
 use App\Models\StructureChurch;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Auth\Passwords\PasswordBroker;
+use Illuminate\Notifications\Messages\MailMessage;
 use Backpack\CRUD\app\Notifications\ResetPasswordNotification;
 
 class AuthApiController extends Controller
@@ -105,18 +109,31 @@ class AuthApiController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        ResetPasswordNotification::createUrlUsing(function($notifiable, $token){
-            $url = config('app.front_end_reset_password_url') . '?token=' . 
-            $token . '&email=' . $notifiable->getEmailForPasswordReset();
-            return $url;
-        });
-
         // We will send the password reset link to this user. Once we have attempted
         // to send the link, we will examine the response then see the message we
         // need to show to the user. Finally, we'll send out a proper response.
+        ResetPasswordNotification::toMailUsing(function($notifiable, $token){
+            $url = config('app.front_end_reset_password_url') . '?token=' . 
+            $token . '&email=' . $notifiable->getEmailForPasswordReset();
+            return (new MailMessage)
+            ->markdown('vendor.notifications.email_reset_password', [
+                'regardsAppName' => 'IFGF',
+                'appUrl' => config('app.front_end_url'),
+                'appName' => 'Pastoral Hub',
+            ])
+            ->from(config('mail.from.address'), 'Pastoral Hub')
+            ->subject(Lang::get('Reset Password Notification'))
+            ->line(Lang::get('You are receiving this email because we received a password reset request for your account.'))
+            ->action(Lang::get('Reset Password'), $url)
+            ->line(Lang::get('This password reset link will expire in :count minutes.', ['count' => config('auth.passwords.'.config('auth.defaults.passwords').'.expire')]))
+            ->line(Lang::get('If you did not request a password reset, no further action is required.'));
+        });
+
         $response = Password::broker('personel')->sendResetLink(
            ['email' => $request->email]
         );
+
+        dd($response);
 
         return response()->json(['message' => trans(PasswordBroker::RESET_LINK_SENT)]);
     }
@@ -135,18 +152,28 @@ class AuthApiController extends Controller
             'email', 'password', 'password_confirmation', 'token'
         );
 
-        $response = Password::broker('personel')->reset(
-            $credentials, function ($user, $password) {
-                $this->resetPasswordUser($user, $password);
+        DB::beginTransaction();
+        try{
+            $response = Password::broker('personel')->reset(
+                $credentials, function ($user, $password) {
+                    $this->resetPasswordUser($user, $password);
+                }
+            );
+    
+            if($response == PasswordBroker::PASSWORD_RESET){
+                DB::commit();
+                return response()->json(['message' => trans(PasswordBroker::PASSWORD_RESET)]);
             }
-        );
-
-        if($response == PasswordBroker::PASSWORD_RESET){
-            return response()->json(['message' => trans(PasswordBroker::PASSWORD_RESET)]);
+            else{
+                DB::rollback();
+                return response()->json(['message' => trans('passwords.token_user')], 403);
+            }
         }
-        else{
-            return response()->json(['message' => trans('passwords.token_user')], 403);
+        catch(Exception $e){
+            DB::rollback();
+            throw $e;
         }
+       
     }
 
     public function resetPasswordUser($user, $password){
