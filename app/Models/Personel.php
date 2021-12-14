@@ -2,17 +2,18 @@
 
 namespace App\Models;
 
-use Backpack\CRUD\app\Models\Traits\CrudTrait;
-use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Str;
-use Intervention\Image\ImageManagerStatic as Image;
-use Illuminate\Support\Facades\Storage;
+use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Notifications\Notifiable;
+use Backpack\CRUD\app\Models\Traits\CrudTrait;
+use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Personel extends Authenticatable
 {
-    use CrudTrait, HasApiTokens;
+    use CrudTrait, HasApiTokens, Notifiable;
 
     /*
     |--------------------------------------------------------------------------

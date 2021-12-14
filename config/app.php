@@ -236,5 +236,7 @@ return [
     'mailchimp_pastoral_group_id' => env('MAILCHIMP_PASTORAL_GROUP_ID', '4dc229539d'),
     'mailchimp_api_key' => env('MAILCHIMP_API_KEY', 'abd11b44d04257307f2b0344ce2065bc-us20'),
 
-    'email_developer' => env('EMAIL_DEVELOPER', 'kevin@rectmedia.id')
+    'email_developer' => env('EMAIL_DEVELOPER', 'kevin@rectmedia.id'),
+
+    'front_end_reset_password_url' => env('FRONT_END_RESET_PASSWORD_URL', 'https://preflight.rectmedia.my.id/hubifgf/reset-password')
 ];

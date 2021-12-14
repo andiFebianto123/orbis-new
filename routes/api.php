@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => ['checkMaintenanceMode']], function () {
    Route::get('church-list', 'Api\DetailChurchApiController@list');
    Route::post('login', 'Api\AuthApiController@login');
+   Route::post('forgot-password', 'Api\AuthApiController@forgotPassword');
+   Route::post('reset-password', 'Api\AuthApiController@resetPassword');
 });
 // Route::get('personel-church', 'Api\DetailPersonelApiController@personelChurch');
 

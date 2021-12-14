@@ -108,6 +108,12 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
+        'personel' => [
+            'provider' => 'personel',
+            'table' => 'password_personel_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ]
     ],
 
     /*

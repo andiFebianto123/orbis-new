@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Personel;
 use App\Helpers\LogHubApi;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Controller;
-use App\Models\Personel;
 use App\Models\StatusHistory;
 use App\Models\StructureChurch;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Auth\Passwords\PasswordBroker;
+use Backpack\CRUD\app\Notifications\ResetPasswordNotification;
 
 class AuthApiController extends Controller
 {
@@ -92,6 +97,63 @@ class AuthApiController extends Controller
             'message' => 'Logout All successfully',
         ];
         return response()->json($response, 200);
+    }
+
+    public function forgotPassword(Request $request){
+        $validator = Validator::make($request->all(), ['email' => 'required|email']);
+        if($validator->fails()){
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        ResetPasswordNotification::createUrlUsing(function($notifiable, $token){
+            $url = config('app.front_end_reset_password_url') . '?token=' . 
+            $token . '&email=' . $notifiable->getEmailForPasswordReset();
+            return $url;
+        });
+
+        // We will send the password reset link to this user. Once we have attempted
+        // to send the link, we will examine the response then see the message we
+        // need to show to the user. Finally, we'll send out a proper response.
+        $response = Password::broker('personel')->sendResetLink(
+           ['email' => $request->email]
+        );
+
+        return response()->json(['message' => trans($response)]);
+    }
+
+    public function resetPassword(Request $request){
+        $validator = Validator::make($request->all(), [
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|confirmed|min:6',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $credentials = $request->only(
+            'email', 'password', 'password_confirmation', 'token'
+        );
+
+        $response = Password::broker('personel')->reset(
+            $credentials, function ($user, $password) {
+                $this->resetPasswordUser($user, $password);
+            }
+        );
+
+        if($response == PasswordBroker::PASSWORD_RESET){
+            return response()->json(['message' => trans(PasswordBroker::PASSWORD_RESET)]);
+        }
+        else{
+            return response()->json(['message' => trans('passwords.token_user')], 403);
+        }
+    }
+
+    public function resetPasswordUser($user, $password){
+        if($user != null){
+            $user->password = $password;
+            $user->save();
+        }
     }
 
 }
