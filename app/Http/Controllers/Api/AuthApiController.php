@@ -118,7 +118,7 @@ class AuthApiController extends Controller
            ['email' => $request->email]
         );
 
-        return response()->json(['message' => trans($response)]);
+        return response()->json(['message' => trans(PasswordBroker::RESET_LINK_SENT)]);
     }
 
     public function resetPassword(Request $request){
