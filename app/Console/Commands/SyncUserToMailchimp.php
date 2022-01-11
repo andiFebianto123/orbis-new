@@ -85,13 +85,13 @@ class SyncUserToMailchimp extends Command
             })
             ->join('title_lists as title', 'title.id', 'personels.title_id')
             ->select('first_name', 'last_name', 'email', 'short_desc', 'date_of_birth', 'language', DB::raw('IFNULL(status_histories.acc_status, "-") as acc_status'))
-            ->cursor()->chunk(400);
+            ->cursor()->chunk(200);
 
             $emails = [];
             $offset = 0;
             $statuses = ["unsubscribed", "cleaned", "pending", "transactional", "archived"];
             do{
-                $members = $mailchimp->lists->getListMembersInfo($listId, ['members.email_address', 'members.status'], null, 500, $offset, null, $statuses);
+                $members = $mailchimp->lists->getListMembersInfo($listId, ['members.email_address', 'members.status'], null, 200, $offset, null, $statuses);
                 $members = $members->members;
                 $countMembers = count($members);
                 $offset += $countMembers;
