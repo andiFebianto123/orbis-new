@@ -59,7 +59,8 @@ class AuthApiController extends Controller
                         ->where('structure_churches.personel_id', $valid_personel->id)
                         ->where(function ($query) {
                             $query->where('ministry_roles.ministry_role', 'Lead Pastor')
-                                  ->orWhere('ministry_roles.ministry_role', 'Senior Pastor');
+                            ->orWhere('ministry_roles.ministry_role', 'Pastoral Team (Editor)')
+                            ->orWhere('ministry_roles.ministry_role', 'Senior Pastor');
                         })
                         ->exists();
             $can_crud = $leaderships_exist;
