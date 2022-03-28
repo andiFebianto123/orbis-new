@@ -66,10 +66,4 @@ class Kernel extends HttpKernel
         'checkMaintenanceMode' => \App\Http\Middleware\CheckMaintenanceMode::class,
 
     ];
-
-    protected function schedule(Schedule $schedule)
-    {
-        $schedule->command('backup:clear')->daily();
-        $schedule->command('backup:run')->daily();
-    }
 }

@@ -162,7 +162,7 @@ class SyncUserToMailchimp extends Command
                     ]);
                 }
             }
-       
+
             Log::channel('mailchimp')->info('Sync DTBS user to Mailchimp success.');
         }
         catch(Exception $exception){
