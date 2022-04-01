@@ -64,16 +64,16 @@
         },
         {
             "name": "backpack/crud",
-            "version": "4.1.47",
+            "version": "4.1.69",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Laravel-Backpack/CRUD.git",
-                "reference": "b2325eedd661adb75c23683aa6ee1d291b3578e7"
+                "reference": "248e2e034cedcffe01732cdce01fb3d1ecad9ffa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Laravel-Backpack/CRUD/zipball/b2325eedd661adb75c23683aa6ee1d291b3578e7",
-                "reference": "b2325eedd661adb75c23683aa6ee1d291b3578e7",
+                "url": "https://api.github.com/repos/Laravel-Backpack/CRUD/zipball/248e2e034cedcffe01732cdce01fb3d1ecad9ffa",
+                "reference": "248e2e034cedcffe01732cdce01fb3d1ecad9ffa",
                 "shasum": ""
             },
             "require": {
@@ -149,7 +149,11 @@
                 "read",
                 "update"
             ],
-            "time": "2021-06-14T08:42:33+00:00"
+            "support": {
+                "issues": "https://github.com/Laravel-Backpack/CRUD/issues",
+                "source": "https://github.com/Laravel-Backpack/CRUD/tree/4.1.69"
+            },
+            "time": "2022-03-30T12:20:48+00:00"
         },
         {
             "name": "backpack/permissionmanager",
@@ -8150,5 +8154,6 @@
     "platform": {
         "php": "^7.3|^8.0"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "2.2.0"
 }
