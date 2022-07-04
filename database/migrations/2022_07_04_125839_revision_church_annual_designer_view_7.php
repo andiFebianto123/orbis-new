@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class RevisionChurchAnnualDesignerView6 extends Migration
+class RevisionChurchAnnualDesignerView7 extends Migration
 {
     /**
      * Run the migrations.
