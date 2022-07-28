@@ -24,6 +24,8 @@ use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Illuminate\Http\Request;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Laravel\Sanctum\PersonalAccessToken;
+use App\Models\PersonelsRcdpw;
+use App\Helpers\HitApi;
 
 /**
  * Class PersonelCrudController
@@ -106,11 +108,28 @@ class PersonelCrudController extends CrudController
             },
         ]);
 
+        // $this->crud->addColumn([
+        //     'name' => 'rc_dpw', // The db column name
+        //     'label' => "RC / DPW", // Table column heading
+        //     'type' => 'relationship',
+        //     'attribute' => 'rc_dpw_name',
+        // ]);
+
         $this->crud->addColumn([
-            'name' => 'rc_dpw', // The db column name
-            'label' => "RC / DPW", // Table column heading
-            'type' => 'relationship',
-            'attribute' => 'rc_dpw_name',
+            
+            // 1-n relationship
+            'label'     => 'RC / DPW', // Table column heading
+            'type'      => 'select',
+            'name'      => 'personels_id', // the column that contains the ID of that connected entity;
+            'entity'    => 'pivod_rcdpw', // the method that defines the relationship in your Model
+            'attribute' => 'rc_dpw_name', // foreign key attribute that is shown to user
+            'model'     => "App\Models\RcDpwList", // foreign key model
+            'searchLogic' => function($query, $collumn, $searchTerm){
+                $query->orWhereHas('pivod_rcdpw', function($query) use($searchTerm){
+                    $query->where('rc_dpw_name', 'LIKE', "%{$searchTerm}%");
+                });
+            }
+             
         ]);
 
         // $this->crud->addColumn([
@@ -220,14 +239,28 @@ class PersonelCrudController extends CrudController
 
         //tab biodata
 
-        $this->crud->addField([
-            'label' => 'Regional Council', // Table column heading
-            'type' => 'select2',
-            'name' => 'rc_dpw_id', // the column that contains the ID of that connected entity;
-            'entity' => 'rc_dpw', // the method that defines the relationship in your Model
+        // $this->crud->addField([
+        //     'label' => 'Regional Council', // Table column heading
+        //     'type' => 'select2',
+        //     'name' => 'rc_dpw_id', // the column that contains the ID of that connected entity;
+        //     'entity' => 'rc_dpw', // the method that defines the relationship in your Model
+        //     'attribute' => 'rc_dpw_name', // foreign key attribute that is shown to user
+        //     'model' => "App\Models\RcDpwList",
+        //     'tab' => 'Biodata',
+        // ]);
+
+        $this->crud->addField([    // Select2Multiple = n-n relationship (with pivot table)
+            'label'     => "Regional Council",
+            'type'      => 'select2_multiple',
+            'name'      => 'pivod_rcdpw', // the method that defines the relationship in your Model
+       
+            // optional
+            'entity'    => 'pivod_rcdpw', // the method that defines the relationship in your Model
+            'model'     => "App\Models\RcDpwList", // foreign key model
             'attribute' => 'rc_dpw_name', // foreign key attribute that is shown to user
-            'model' => "App\Models\RcDpwList",
+            'pivot'     => true, // on create&update, do you need to add/delete pivot table entries?
             'tab' => 'Biodata',
+            // 'select_all' => true, // show Select All and Clear buttons?
         ]);
 
         $this->crud->addField([
@@ -654,6 +687,13 @@ class PersonelCrudController extends CrudController
             // }
             
             DB::commit();
+
+            // hit api for update personel
+            $send = new HitApi;
+            $id = [$item->getKey()];
+            $module = 'personel';
+            $response = $send->action($id, 'create', $module)->json();
+
         } catch (Exception $e) {
             DB::rollback();
             throw $e;
@@ -825,6 +865,11 @@ class PersonelCrudController extends CrudController
             // }
 
             DB::commit();
+             // hit api for update user
+             $send = new HitApi;
+             $id = [$item->getKey()];
+             $module = 'personel';
+             $response = $send->action($id, 'update', $module)->json();
         } catch (Exception $e) {
             DB::rollback();
             throw $e;
@@ -955,6 +1000,9 @@ class PersonelCrudController extends CrudController
 
         DB::beginTransaction();
         try{
+            if(PersonelsRcdpw::where('personels_id', $id)->exists()){
+                PersonelsRcdpw::where('personels_id', $id)->delete();
+            }
             if(Appointment_history::where('personel_id', $id)->exists()){
                 Appointment_history::where('personel_id', $id)->delete();
             }
@@ -988,8 +1036,15 @@ class PersonelCrudController extends CrudController
             if(StructureChurch::where('personel_id', $id)->exists()){
                 StructureChurch::where('personel_id', $id)->delete();
             }
+
             $response = $this->crud->delete($id);
             DB::commit();
+             // hit api for update user
+             $send = new HitApi;
+             $ids = [$id];
+             $module = 'personel';
+             $response = $send->action($ids, 'delete', $module)->json();
+
             return $response;
         }
         catch(Exception $e){

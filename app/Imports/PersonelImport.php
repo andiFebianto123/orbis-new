@@ -8,6 +8,7 @@ use App\Models\Personel;
 use App\Models\RcDpwList;
 use App\Models\TitleList;
 use Maatwebsite\Excel\Row;
+use App\Models\PersonelsRcdpw;
 use App\Models\CountryList;
 use App\Models\MinistryRole;
 use App\Models\Accountstatus;
@@ -22,58 +23,70 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
-HeadingRowFormatter::default('none');
+use Maatwebsite\Excel\Concerns\OnEachRow;
 
-class PersonelImport implements ToCollection, WithHeadingRow, WithValidation
+// HeadingRowFormatter::default('none');
+
+class PersonelImport implements OnEachRow/* ToCollection */, WithHeadingRow, WithValidation
 {
     use Importable;
+    public $ids_update = [];
+    public $ids_create = [];
+
     public function  __construct($attrs)
     {
       $this->filename = $attrs['filename'];
     }
 
-    public function collection(Collection $rows)
-    {
-        foreach ($rows as $key => $row) {
-           $this->singleRow($row);
-        }
+    
+
+    // public function collection(Collection $rows)
+    // {
+    //     foreach ($rows as $key => $row) {
+    //        $this->singleRow($row);
+    //     }
+    // }
+
+    public function onRow(Row $row){
+        $row = $row->toArray();
+        $this->singleRow($row);
     }
     
     private function singleRow($row)
     {
-        $row_rc_dpw = $row['RC / DPW'];
-        $row_title = $row['Title'];
-        $row_first_name = $row['First Name'];
-        $row_last_name = $row['Last Name'];
-        $row_gender = $row['Gender'];
-        $row_church_name = $row['Church Name'];
-        $row_address = $row['Address'];
-        $row_city = $row['City'];
-        $row_province = $row['State'];
-        $row_postal_code = $row['Postcode'];
-        $row_country = $row['Country'];
-        $row_phone = $row['Phone'];
-        $row_fax = $row['Mobile Phone'];
-        $language = $row['Language'];
-        $row_email = $row['Email'];
-        $row_secondary_email = $row['Secondary Email'];
-        $row_marital_status = $row['Marital Status'];
-        $row_date_of_birth = $row['Date of Birth'];
-        $row_spouse_name = $row['Spouse Name'];
-        $row_spouse_date_of_birth = $row['Spouse Date of Birth'];
-        $row_anniversary = $row['Anniversary'];
-        $row_acc_status = $row['Status'];
-        $row_first_licensed_on = $row['First Licensed On'];
-        $row_card = $row['Card'];
-        $row_valid_card_start = $row['Valid Card Start'];
-        $row_valid_card_end = $row['Valid Card End'];
-        $row_current_certificate_number = $row['Current Certificate Number'];
-        $row_notes = $row['Notes'];
+        $row_rc_dpw = $row['rc_dpw']; // $row['RC / DPW'];
+        $row_title = $row['title'];
+        $row_first_name = $row['first_name']; // $row['First Name'];
+        $row_last_name = $row['last_name']; //$row['Last Name'];
+        $row_gender = $row['gender']; // $row['Gender'];
+        $row_church_name = $row['church_name']; // $row['Church Name'];
+        $row_address = $row['address']; // $row['Address'];
+        $row_city = $row['city'];
+        $row_province = $row['state'];
+        $row_postal_code = $row['postcode'];
+        $row_country = $row['country'];
+        $row_phone = $row['phone'];
+        $row_fax = $row['mobile_phone']; //$row['Mobile Phone'];
+        $language = $row['language'];
+        $row_email = $row['email'];
+        $row_secondary_email = $row['secondary_email']; // $row['Secondary Email'];
+        $row_marital_status = $row['marital_status']; // $row['Marital Status'];
+        $row_date_of_birth = $row['date_of_birth']; //$row['Date of Birth'];
+        $row_spouse_name = $row['spouse_name'];// $row['Spouse Name'];
+        $row_spouse_date_of_birth = $row['spouse_date_of_birth']; //$row['Spouse Date of Birth'];
+        $row_anniversary = $row['anniversary'];
+        $row_acc_status = $row['status'];
+        $row_first_licensed_on = $row['first_licensed_on']; // $row['First Licensed On'];
+        $row_card = $row['card'];
+        $row_valid_card_start = $row['valid_card_start']; // $row['Valid Card Start'];
+        $row_valid_card_end = $row['valid_card_end'];// $row['Valid Card End'];
+        $row_current_certificate_number = $row['current_certificate_number']; // $row['Current Certificate Number'];
+        $row_notes = $row['notes'];
         
         
         $acc_status  = Accountstatus::where('acc_status', $row_acc_status)->first();
         $country = CountryList::where('country_name', $row_country)->first();
-        $rcdpw  =  RcDpwList::where('rc_dpw_name', $row_rc_dpw)->first();
+        // $rcdpw  =  RcDpwList::where('rc_dpw_name', $row_rc_dpw)->first();
         $title  =  TitleList::where('short_desc', $row_title)->first();
         $date_of_birth = $row_date_of_birth == '-' || $row_date_of_birth == '' ? NULL : $this->formatDateExcel($row_date_of_birth);
         $spouse_date_of_birth = $row_spouse_date_of_birth == '-' || $row_spouse_date_of_birth == '' ? NULL : $this->formatDateExcel($row_spouse_date_of_birth);
@@ -101,7 +114,7 @@ class PersonelImport implements ToCollection, WithHeadingRow, WithValidation
                                 ->where('date_of_birth', $date_of_birth)
                                 ->first();
             // $update_personel->acc_status_id = ($acc_status['id'] ?? null);
-            $update_personel->rc_dpw_id = ($rcdpw['id'] ?? null);
+            // $update_personel->rc_dpw_id = ($rcdpw['id'] ?? null);
             $update_personel->title_id = $title['id'];
             $update_personel->first_name = $row_first_name;
             $update_personel->last_name = $row_last_name;
@@ -130,6 +143,10 @@ class PersonelImport implements ToCollection, WithHeadingRow, WithValidation
             $update_personel->notes = $row_notes;
             $update_personel->is_lifetime = $is_lifetime;
             $update_personel->save();
+
+            $this->ids_update[] = $update_personel->id;
+
+            $this->handleRcdpw($update_personel->id, $row_rc_dpw, 'update');
 
             if (StatusHistory::where('personel_id', $update_personel->id)->exists()) {
                 $status_history = StatusHistory::where('personel_id', $update_personel->id)->first();
@@ -190,6 +207,10 @@ class PersonelImport implements ToCollection, WithHeadingRow, WithValidation
             $new_personel->is_lifetime = $is_lifetime;
             $new_personel->save();
 
+            $this->ids_create[] = $new_personel->id;
+
+            $this->handleRcdpw($new_personel->id, $row_rc_dpw, 'create');
+
             $status_history = new StatusHistory([
                 'status_histories_id'  => ($acc_status['id'] ?? null),
                 'date_status' => Carbon::now(),
@@ -215,6 +236,35 @@ class PersonelImport implements ToCollection, WithHeadingRow, WithValidation
     public function headingRow(): int
     {
         return 2;
+    }
+
+    private function handleRcdpw($id, $value, $type){
+
+        $rc_dpw = str_replace('\n', "\n", $value ?? '');
+
+        if($type === 'update'){
+            if(PersonelsRcdpw::where('personels_id', $id)->exists()){
+                // hapus semua data churches rcd
+                PersonelsRcdpw::where('personels_id', $id)->delete();
+            }
+        }
+
+        if(strpos($rc_dpw, "\n") !== false){
+            $e = explode("\n", $rc_dpw);
+            foreach($e as $rc_){
+                $id_rcdpw = RcDpwList::where('rc_dpw_name', $rc_)->first();
+                $rc = new PersonelsRcdpw;
+                $rc->personels_id = $id;
+                $rc->rc_dpwlists_id = $id_rcdpw->id;
+                $rc->save();
+            }
+        }else{
+            $id_rcdpw = RcDpwList::where('rc_dpw_name', $rc_dpw)->first();
+            $rc = new PersonelsRcdpw;
+            $rc->personels_id = $id;
+            $rc->rc_dpwlists_id = $id_rcdpw->id;
+            $rc->save();
+        }
     }
 
     private function handleChurchName($value){
@@ -251,15 +301,42 @@ class PersonelImport implements ToCollection, WithHeadingRow, WithValidation
     public function rules(): array
     {
         return [
-            'First Name' => 'required',
-            'Title' => 'required',
-            'Church Name' => function($attribute, $value, $onFailure) {
+            'first_name' => 'required',
+            'title' => 'required',
+            'rc_dpw' => function($attribute, $value, $onFailure){
+                if(strlen($value) > 0){
+                    $rc_dpw = trim($value);
+                    $rc_dpw = str_replace('\n', "\n", $rc_dpw ?? '');
+                    $is_fail = [];
+                    if (strpos( $rc_dpw, "\n") !== false) {
+                        $rc_dpws = explode("\n", $rc_dpw);
+                        foreach($rc_dpws as $data){
+                            $d = RcDpwList::where('rc_dpw_name', $data)->first();
+                            if($d == null){
+                                $is_fail[] = $data;
+                            }
+                        }
+                    }else{
+                        $d = RcDpwList::where('rc_dpw_name', $rc_dpw)->first();
+                        if($d == null){
+                            $is_fail[] = $rc_dpw;
+                        }
+                    }
+    
+                    if(count($is_fail) > 0){
+                        $str_rc_dpw = implode(", ", $is_fail);
+                        $onFailure('RC / DPW are not invalid for ' . $str_rc_dpw);
+                    }
+    
+                }
+            },
+            'church_name' => function($attribute, $value, $onFailure) {
                 $church_name = $this->handleChurchName($value);
                 if ($value != "" && sizeof($church_name) == 0) {
                     $onFailure('Not Exist Church - Role or Invalid Format :: Church Name - Role');
                 }
             },
-            'Language' => ['nullable', Rule::in(Personel::$arrayLanguage)]
+            'language' => ['nullable', Rule::in(Personel::$arrayLanguage)]
         ];
     }
 

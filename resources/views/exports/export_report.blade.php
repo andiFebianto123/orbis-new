@@ -35,8 +35,15 @@ function remove_bs($Str)
         @foreach($dataColumn as $index => $data)
             <tr>
                 @foreach($columnHeader as $indexColumn => $headerColumn)
+                <?php
+                    if(isset($columnHeader['rc_dpw_name']) && ($indexColumn == 'rc_dpw_name')){
+                        $realColumnData = $data['rdpw'];
+                    }else{
+                        $realColumnData = preg_match("/\r|\n/", $data[$indexColumn]) ? remove_bs($data[$indexColumn]) : $data[$indexColumn];
+                    }
+                ?>
                         @php
-                            $realColumnData = preg_match("/\r|\n/", $data[$indexColumn]) ? remove_bs($data[$indexColumn]) : $data[$indexColumn];
+                           // $realColumnData = preg_match("/\r|\n/", $data[$indexColumn]) ? remove_bs($data[$indexColumn]) : $data[$indexColumn];
                         @endphp
                     {{--
 

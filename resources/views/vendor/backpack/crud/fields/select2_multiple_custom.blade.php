@@ -9,6 +9,10 @@
     //build option keys array to use with Select All in javascript.
     $model_instance = new $field['model'];
     $options_ids_array = $field['options']->pluck($model_instance->getKeyName())->toArray();
+    
+    if(isset($field['option_value']) && isset($field['value'])){
+       $field['value'] = $field['value']->pluck('rc_dpwlists_id')->toArray();
+    }
 
     $field['multiple'] = $field['multiple'] ?? true;
     $field['allows_null'] = $field['allows_null'] ?? $crud->model::isColumnNullable($field['name']);
@@ -34,7 +38,8 @@
 
         @if (isset($field['model']))
             @foreach ($field['options'] as $option)
-                @if( (old(square_brackets_to_dots($field["name"])) && in_array($option->getKey(), old($field["name"]))) || (is_null(old(square_brackets_to_dots($field["name"]))) && isset($field['value']) && in_array($option->getKey(), $field['value']->pluck($option->getKeyName(), $option->getKeyName())->toArray())))
+                {{-- @if( (old(square_brackets_to_dots($field["name"])) && in_array($option->getKey(), old($field["name"]))) || (is_null(old(square_brackets_to_dots($field["name"]))) && isset($field['value']) && in_array($option->getKey(), $field['value']->pluck($option->getKeyName(), $option->getKeyName())->toArray()))) --}}
+                @if( ((isset($field['value']) && in_array($option->getKey(), $field['value']))) || (old(square_brackets_to_dots($field["name"])) && in_array($option->getKey(), old($field["name"]))) ) 
                     <option value="{{ $option->getKey() }}" selected>{{ $option->{$field['attribute']} }}</option>
                 @else
                     <option value="{{ $option->getKey() }}">{{ $option->{$field['attribute']} }}</option>

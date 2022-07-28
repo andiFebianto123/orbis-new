@@ -84,10 +84,17 @@ class DashboardCrudController extends CrudController
                  ->select('long_desc', DB::raw('count(long_desc) as total'))
                  ->groupBy('long_desc')
                  ->get();
-        $rcdpw_tables = Church::join('rc_dpwlists','churches.rc_dpw_id','rc_dpwlists.id')
-                 ->select('rc_dpw_name', DB::raw('count(rc_dpw_name) as total'))
-                 ->groupBy('rc_dpw_name')
-                 ->get();
+                 
+        $rcdpw_tables = Church::join('churches_rcdpw', 'churches.id', 'churches_rcdpw.churches_id')
+        ->join('rc_dpwlists', 'churches_rcdpw.rc_dpwlists_id', 'rc_dpwlists.id')
+        ->select('rc_dpwlists.rc_dpw_name', DB::raw('count(rc_dpwlists.rc_dpw_name) as total'))
+        ->groupBy('rc_dpwlists.rc_dpw_name')->get();
+
+        // $rcdpw_tables = Church::join('rc_dpwlists','churches.rc_dpw_id','rc_dpwlists.id')
+        //          ->select('rc_dpw_name', DB::raw('count(rc_dpw_name) as total'))
+        //          ->groupBy('rc_dpw_name')
+        //          ->get();
+        
         $personel_vip_tables = SpecialRolePersonel::join('special_roles','special_role_personels.special_role_id','special_roles.id')
                  ->select('special_role', DB::raw('count(special_role) as total'))
                  ->groupBy('special_role')

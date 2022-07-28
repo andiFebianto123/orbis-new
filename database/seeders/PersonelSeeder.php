@@ -15,7 +15,7 @@ class PersonelSeeder extends Seeder
     public function run()
     {
         Personel::updateOrCreate([
-            'acc_status_id' => '1'
+            'rc_dpw_id' => '1'
         ], 
         ['rc_dpw_id' => '1',
         'title_id' => '1',

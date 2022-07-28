@@ -7,8 +7,11 @@ use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Illuminate\Http\Request;
 use App\Imports\RcdpwListImport;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\HeadingRowImport;
+use App\Helpers\HitApi;
 use Excel;
+use Exception;
 
 /**
  * Class RcDpwListCrudController
@@ -92,7 +95,44 @@ class RcDpwListCrudController extends CrudController
             return redirect ( backpack_url ('import-rcdpw'))->with(['status_error' => $status_error]);
         }
 
-        Excel::import(new RcdpwListImport, request()->file('fileToUpload'));
+        // 
+        DB::beginTransaction();
+        try{
+
+            try{
+
+                $rcdpwlistImport = new RcdpwListImport;
+                $rcdpwlistImport->import(request()->file('fileToUpload'));
+
+                DB::commit();
+
+                if(count($rcdpwlistImport->ids) > 0){
+                    $send = new HitApi;
+                    $ids = $rcdpwlistImport->ids;
+                    $module = 'rec_dpwlist';
+                    $response = $send->action($ids, 'create', $module)->json();
+                }
+
+            }catch(\Maatwebsite\Excel\Validators\ValidationException $e){
+               $failures = $e->failures();
+               $arr_errors = [];
+               foreach ($failures as $failure) {
+                   $arr_errors[] = [
+                       'row' => $failure->row(),
+                       'errormsg' => $failure->errors(),
+                       'values' => $failure->values(),
+                   ];
+               }
+               $error_multiples = collect($arr_errors)->unique('row');
+               DB::rollback();
+            }
+
+        }catch(Exception $e){
+            throw $e;
+            DB::rollback();
+        }
+
+        // Excel::import(new RcdpwListImport, request()->file('fileToUpload'));
 
         return back()->with(['status' => $status]);
     }
@@ -124,4 +164,76 @@ class RcDpwListCrudController extends CrudController
     {
         $this->setupCreateOperation();
     }
+
+    public function store()
+    {
+        $this->crud->hasAccessOrFail('create');
+
+        // execute the FormRequest authorization and validation, if one is required
+        $request = $this->crud->validateRequest();
+
+        // insert item in the db
+        $item = $this->crud->create($this->crud->getStrippedSaveRequest());
+        $this->data['entry'] = $this->crud->entry = $item;
+
+        // show a success message
+        \Alert::success(trans('backpack::crud.insert_success'))->flash();
+
+        // save the redirect choice for next time
+        $this->crud->setSaveAction();
+
+        // hit api for create rcdpwlist
+        $send = new HitApi;
+        $ids = [$item->getKey()];
+        $module = 'rec_dpwlist';
+        $response = $send->action($ids, 'create', $module)->json();
+
+        return $this->crud->performSaveAction($item->getKey());
+    }
+
+    public function update()
+    {
+        $this->crud->hasAccessOrFail('update');
+
+        // execute the FormRequest authorization and validation, if one is required
+        $request = $this->crud->validateRequest();
+        // update the row in the db
+        $item = $this->crud->update($request->get($this->crud->model->getKeyName()),
+                            $this->crud->getStrippedSaveRequest());
+        $this->data['entry'] = $this->crud->entry = $item;
+
+        // show a success message
+        \Alert::success(trans('backpack::crud.update_success'))->flash();
+
+        // save the redirect choice for next time
+        $this->crud->setSaveAction();
+
+        $send = new HitApi;
+        $ids = [$item->getKey()];
+        $module = 'rec_dpwlist';
+        $response = $send->action($ids, 'update', $module)->json();
+
+        return $this->crud->performSaveAction($item->getKey());
+    }
+
+    public function destroy($id)
+    {
+        $this->crud->hasAccessOrFail('delete');
+
+        // get entry ID from Request (makes sure its the last ID for nested resources)
+        $id = $this->crud->getCurrentEntryId() ?? $id;
+
+        $delete = $this->crud->delete($id);
+
+        $send = new HitApi;
+        $ids = [$item->getKey()];
+        $module = 'rec_dpwlist';
+        $response = $send->action($ids, 'delete', $module)->json();
+
+        return $delete;
+    }
+
+
+
+
 }

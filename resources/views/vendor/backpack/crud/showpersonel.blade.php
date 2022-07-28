@@ -61,7 +61,7 @@
 								</tr>
 								<tr>
 									<td>Regional Council</td>
-									<td> :  {{ $entry->rc_dpw->rc_dpw_name ?? '-' }}</td>
+									<td> :  {{ $entry->pivod_rcdpw->implode('rc_dpw_name', ', ') ?? '-' }}</td>
 								</tr>
 								<tr>
 									<td>Title</td>

@@ -7,6 +7,8 @@ use Carbon\Carbon;
 use App\Exports\ExportAnnualReport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\Church;
+use App\Models\Personel;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
@@ -42,13 +44,32 @@ class QuickReportCrudController extends CrudController
     }
 
     protected function setupListOperation()
-    {
+    { 
         if(preg_match('/church+/',$this->crud->requestQuickReport)){
             CRUD::addColumns([
+                // [
+                //     'label' => 'RC / DPW',
+                //     'type' => 'text',
+                //     'name' => 'rc_dpw_name'
+                // ],
                 [
                     'label' => 'RC / DPW',
-                    'type' => 'text',
-                    'name' => 'rc_dpw_name'
+                    'type' => 'closure',
+                    'name' => 'rc_dpw_name',
+                    'function' => function($entries){
+                        $church = Church::where('id', $entries->id)->first();
+                        if($church != null){
+                            return $church->rdpw_pivot->implode('rc_dpw_name', ', ');
+                        }
+                        return '-';
+                    },
+                    'searchLogic' => function ($query, $column, $searchTerm) {
+                        $query->orWhereRaw("EXISTS (
+                                SELECT 1 FROM churches_rcdpw 
+                                INNER JOIN rc_dpwlists ON rc_dpwlists.id = churches_rcdpw.rc_dpwlists_id
+                                WHERE churches_rcdpw.churches_id = church_annual_designer_views.id AND rc_dpwlists.rc_dpw_name LIKE '%{$searchTerm}%'
+                        )");
+                    },
                 ],
                 [
                     'label' => 'Church Name',
@@ -142,10 +163,29 @@ class QuickReportCrudController extends CrudController
         }
         else{
             CRUD::addColumns([
+                // [
+                //     'label' => 'RC / DPW',
+                //     'type' => 'text',
+                //     'name' => 'rc_dpw_name'
+                // ],
                 [
                     'label' => 'RC / DPW',
-                    'type' => 'text',
-                    'name' => 'rc_dpw_name'
+                    'type' => 'closure',
+                    'name' => 'rc_dpw_name',
+                    'function' => function($entries){
+                        $personel = Personel::where('id', $entries->id)->first();
+                        if($personel != null){
+                            return $personel->pivod_rcdpw->implode('rc_dpw_name', ', ');
+                        }
+                        return '-';
+                    },
+                    'searchLogic' => function ($query, $column, $searchTerm) {
+                        $query->orWhereRaw("EXISTS (
+                                SELECT 1 FROM personels_rcdpw 
+                                INNER JOIN rc_dpwlists ON rc_dpwlists.id = personels_rcdpw.rc_dpwlists_id
+                                WHERE personels_rcdpw.personels_id = pastor_annual_designer_views.id AND rc_dpwlists.rc_dpw_name LIKE '%{$searchTerm}%'
+                        )");
+                    },
                 ],
                 [
                     'label' => 'Title',

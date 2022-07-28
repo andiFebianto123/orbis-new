@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class RcDpwList extends Model
 {
-    use CrudTrait;
+    use CrudTrait; 
 
     /*
     |--------------------------------------------------------------------------
@@ -25,6 +25,10 @@ class RcDpwList extends Model
     // protected $fillable = [];
     // protected $hidden = [];
     // protected $dates = [];
+
+    public function churches_rcdpw(){
+        return $this->hasMany('App\Models\ChurchesRcdpw', 'rc_dpwlists_id');
+    }
 
     public function personel()
     {

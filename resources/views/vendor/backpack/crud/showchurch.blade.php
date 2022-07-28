@@ -86,7 +86,7 @@
 								</tr>
 								<tr>
 									<td>RC / DPW</td>
-									<td> :  {{ $entry->rc_dpw->rc_dpw_name }}</td>
+									<td> :  {{ $entry->rdpw_pivot->implode('rc_dpw_name', ', ') }}</td>
 								</tr>
 								<tr>
 									<td>Contact Person</td>
@@ -163,6 +163,18 @@
 								<tr>
 									<td>Notes</td>
 									<td> :  {{ $entry->notes }}</td>
+								</tr>
+								<tr>
+									<td>Task Color</td>
+									<td><div style="width:20px; height: 20px; background-color:{{ $entry->task_color }};"></div></td>
+								</tr>
+								<tr>
+									<td>Latitude</td>
+									<td> : {{ $entry->latitude }}</td>
+								</tr>
+								<tr>
+									<td>Longitude</td>
+									<td> : {{ $entry->longitude }}</td>
 								</tr>
 							</table>
 						</div>

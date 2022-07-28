@@ -6,6 +6,7 @@ use App\Http\Requests\UserRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Illuminate\Support\Facades\Hash;
+use App\Helpers\HitApi;
 /**
  * Class UserCrudController
  * @package App\Http\Controllers\Admin
@@ -162,7 +163,7 @@ class UserCrudController extends CrudController
             $request->request->remove('password');
         }
 
-        $store = $this->traitStore();
+        $store = $this->getStore();
 
         if ($this->crud->getRequest()->role_id) {
             $role_id = $this->crud->getRequest()->role_id;
@@ -185,6 +186,39 @@ class UserCrudController extends CrudController
 
         return $store;
     }
+
+    public function getStore(){
+    
+        $this->crud->hasAccessOrFail('create');
+
+        // execute the FormRequest authorization and validation, if one is required
+        $request = $this->crud->validateRequest();
+
+        // insert item in the db
+        $item = $this->crud->create($this->crud->getStrippedSaveRequest());
+        $this->data['entry'] = $this->crud->entry = $item;
+
+        // show a success message
+        \Alert::success(trans('backpack::crud.insert_success'))->flash();
+
+        // save the redirect choice for next time
+        $this->crud->setSaveAction();
+
+        // hit api for update user
+        $send = new HitApi;
+
+        $id = [$item->getKey()];
+
+        $module = 'user';
+        if($item->role->name === 'Super Admin'){
+            $module = "user_admin";
+        }
+
+        $response = $send->action($id, 'create', $module)->json();
+
+        return $this->crud->performSaveAction($item->getKey());
+    }
+
 
     /**
      * Define what happens when the Update operation is loaded.
@@ -232,7 +266,58 @@ class UserCrudController extends CrudController
         $this->crud->setRequest($request);
         $this->crud->unsetValidation(); // Validation has already been run
 
-        return $this->traitUpdate();
+        // return $this->traitUpdate();
+        return $this->getUpdate();
+    }
+
+    public function getUpdate()
+    {
+        $this->crud->hasAccessOrFail('update');
+
+        // execute the FormRequest authorization and validation, if one is required
+        $request = $this->crud->validateRequest();
+        // update the row in the db
+        $item = $this->crud->update($request->get($this->crud->model->getKeyName()),
+                            $this->crud->getStrippedSaveRequest());
+        $this->data['entry'] = $this->crud->entry = $item;
+
+        // show a success message
+        \Alert::success(trans('backpack::crud.update_success'))->flash();
+
+        // save the redirect choice for next time
+        $this->crud->setSaveAction();
+
+        // hit api for update user
+        $send = new HitApi;
+
+        $id = [$item->getKey()];
+
+        $module = 'user';
+        if($item->role->name === 'Super Admin'){
+            $module = "user_admin";
+        }
+
+        $response = $send->action($id, 'update', $module)->json();
+
+        return $this->crud->performSaveAction($item->getKey());
+    }
+
+    public function destroy($id)
+    {
+        $this->crud->hasAccessOrFail('delete');
+
+        // get entry ID from Request (makes sure its the last ID for nested resources)
+        $id = $this->crud->getCurrentEntryId() ?? $id;
+
+        $delete = $this->crud->delete($id);
+
+        // hit api for update user
+        $send = new HitApi;
+        $ids = [$id];
+        $module = 'user';
+        $response = $send->action($ids, 'delete', $module)->json();
+
+        return $delete;
     }
 
 }

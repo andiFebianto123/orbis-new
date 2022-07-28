@@ -42,6 +42,7 @@ class RevisionChurchAnnualDesignerView6 extends Migration
                 LEFT JOIN church_types ON churches.church_type_id = church_types.id 
                 LEFT JOIN rc_dpwlists ON churches.rc_dpw_id = rc_dpwlists.id 
                 LEFT JOIN country_lists ON churches.country_id = country_lists.id 
+                LEFT JOIN coordinator_churches ON churches.id = coordinator_churches.churches_id
                 LEFT JOIN (
                     SELECT 
                     status_history_churches.churches_id AS churches_id, 

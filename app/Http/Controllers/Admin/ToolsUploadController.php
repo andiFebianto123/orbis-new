@@ -16,6 +16,9 @@ use App\Models\Configuration;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\HeadingRowImport;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\DB;
+use App\Helpers\HitApi;
+use Exception;
 
 class ToolsUploadController extends Controller
 {
@@ -199,47 +202,73 @@ class ToolsUploadController extends Controller
                 'redirect_to' => url('admin/import-church'),
                 'validation_errors' => $message_errors,
             ], 200);
-        }
+        } 
 
-        try {
-            $import = new ChurchImport($attrs);
-            $import->import($file);
+        DB::beginTransaction();
+        try{
 
-            session()->flash('message', 'Data has been successfully import');
-            session()->flash('status', 'success');
+            try {
 
-        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+                $import = new ChurchImport($attrs);
+                $import->import($file); 
+    
+                session()->flash('message', 'Data has been successfully import');
+                session()->flash('status', 'success');
+                DB::commit();
 
-             $failures = $e->failures();
+                if(count($import->ids_update) > 0){
+                    $send = new HitApi;
+                    $ids = $import->ids_update;
+                    $module = 'churchs';
+                    $response = $send->action($ids, 'update', $module)->json();
+                }
 
-             $arr_errors = [];
+                if(count($import->ids_create) > 0){
+                    $send = new HitApi;
+                    $ids = $import->ids_create;
+                    $module = 'churchs';
+                    $response = $send->action($ids, 'create', $module)->json();
+                }
 
-            foreach ($failures as $failure) {
-                $arr_errors[] = [
-                    'row' => $failure->row(),
-                    'errormsg' => $failure->errors(),
-                    'values' => $failure->values(),
-                ];
+                return response()->json([
+                    'status' => true,
+                    'alert' => 'success',
+                    'message' => 'Data has been successfully import',
+                    'redirect_to' => url('admin/import-church'),
+                    'validation_errors' => [],
+                ], 200);
+    
+            } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+    
+                 $failures = $e->failures();
+    
+                 $arr_errors = [];
+    
+                foreach ($failures as $failure) {
+                    $arr_errors[] = [
+                        'row' => $failure->row(),
+                        'errormsg' => $failure->errors(),
+                        'values' => $failure->values(),
+                    ];
+                }
+                $error_multiples = collect($arr_errors)->unique('row');
+                DB::rollback();
+    
+                return response()->json([
+                    'status' => false,
+                    'alert' => 'danger',
+                    'message' => 'Gagal mengimport data',
+                    'redirect_to' => url('admin/import-church'),
+                    'validation_errors' => [],
+                    'mass_errors' => $error_multiples
+                ], 200);
+
             }
-            $error_multiples = collect($arr_errors)->unique('row');
 
-            return response()->json([
-                'status' => false,
-                'alert' => 'danger',
-                'message' => 'Gagal mengimport data',
-                'redirect_to' => url('admin/import-church'),
-                'validation_errors' => [],
-                'mass_errors' => $error_multiples
-            ], 200);
+        }catch(Exception $e){
+            DB::rollback();
+            throw $e;
         }
-
-        return response()->json([
-            'status' => true,
-            'alert' => 'success',
-            'message' => 'Data has been successfully import',
-            'redirect_to' => url('admin/import-church'),
-            'validation_errors' => [],
-        ], 200);
     }
 
 
@@ -264,46 +293,75 @@ class ToolsUploadController extends Controller
                 'validation_errors' => $message_errors,
             ], 200);
         }
+        DB::beginTransaction();
+        try{
 
-        try {
-            $import = new PersonelImport($attrs);
-            $import->import($file);
 
-            session()->flash('message', 'Data has been successfully import');
-            session()->flash('status', 'success');
+            try {
+                $import = new PersonelImport($attrs);
+                $import->import($file);
+    
+                session()->flash('message', 'Data has been successfully import');
+                session()->flash('status', 'success');
+    
+            } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+    
+                 $failures = $e->failures();
+    
+                 $arr_errors = [];
+    
+                foreach ($failures as $failure) {
+                    $arr_errors[] = [
+                        'row' => $failure->row(),
+                        'errormsg' => $failure->errors(),
+                        'values' => $failure->values(),
+                    ];
+                }
+                $error_multiples = collect($arr_errors)->unique('row');
 
-        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
-
-             $failures = $e->failures();
-
-             $arr_errors = [];
-
-            foreach ($failures as $failure) {
-                $arr_errors[] = [
-                    'row' => $failure->row(),
-                    'errormsg' => $failure->errors(),
-                    'values' => $failure->values(),
-                ];
+                DB::rollback();
+    
+                return response()->json([
+                    'status' => false,
+                    'alert' => 'danger',
+                    'message' => 'Failure',
+                    'redirect_to' => url('admin/import-personel'),
+                    'validation_errors' => [],
+                    'mass_errors' => $error_multiples
+                ], 200);
             }
-            $error_multiples = collect($arr_errors)->unique('row');
 
+            DB::commit();
+
+            if(count($import->ids_update) > 0){
+                $send = new HitApi;
+                $ids = $import->ids_update;
+                $module = 'personel';
+                $response = $send->action($ids, 'update', $module)->json();
+            }
+
+            if(count($import->ids_create) > 0){
+                $send = new HitApi;
+                $ids = $import->ids_create;
+                $module = 'personel';
+                $response = $send->action($ids, 'create', $module)->json();
+            }
+    
             return response()->json([
-                'status' => false,
-                'alert' => 'danger',
-                'message' => 'Failure',
+                'status' => true,
+                'alert' => 'success',
+                'message' => 'Data has been successfully import',
                 'redirect_to' => url('admin/import-personel'),
                 'validation_errors' => [],
-                'mass_errors' => $error_multiples
             ], 200);
-        }
 
-        return response()->json([
-            'status' => true,
-            'alert' => 'success',
-            'message' => 'Data has been successfully import',
-            'redirect_to' => url('admin/import-personel'),
-            'validation_errors' => [],
-        ], 200);
+
+        }catch(Exception $e){
+            DB::rollback();
+            throw $e;
+        }   
+
+        
     }
 
     public function importpersonel()

@@ -13,6 +13,8 @@ use App\Models\CoordinatorChurch;
 use App\Models\MinistryRole;
 use App\Models\StatusHistoryChurch;
 use Carbon\Carbon;
+use Maatwebsite\Excel\Row;
+use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\WithValidation;
@@ -20,52 +22,64 @@ use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 use Maatwebsite\Excel\Concerns\WithStartRow;
-HeadingRowFormatter::default('none');
+use App\Models\ChurchesRcdpw;
 
-class ChurchImport implements ToCollection,  WithValidation, WithHeadingRow
+// HeadingRowFormatter::default('none');
+
+class ChurchImport implements OnEachRow, /*ToCollection, */ WithValidation, WithHeadingRow
 {
     use Importable;
+
+    public $ids_create = [];
+    public $ids_update = [];
 
     public function  __construct($attrs)
     {
       $this->filename = $attrs['filename'];
     }
 
-    public function collection(Collection $rows)
-    {
-        foreach ($rows as $key => $row) {
-           $this->singleRow($row);
-        }
+    // public function collection(Collection $rows)
+    // {
+    //     foreach ($rows as $key => $row) {
+    //        $this->singleRow($row);
+    //     }
+    // }
+
+    public function onRow(Row $row){
+        // $rowIndex = $row->getIndex();
+        $row      = $row->toArray();
+        $this->singleRow($row);
     }
 
     private function singleRow($row)
     {
-        $row_rc_dpw = $row['RC / DPW'];
-        $row_church_name = $row['Church Name'];
-        $row_church_type = $row['Church Type'];
-        $row_lead_pastor_name = $row['Lead Pastor Name'];
-        $row_local_church = $row['Local Church'];
-        $row_leadership_structure = $row['Leadership Structure'];
-        $row_coordinator = $row['Coordinator'];
-        $row_contact_person = $row['Contact Person'];
-        $row_church_address = $row['Church Address'];
-        $row_office_address = $row['Office Address'];
-        $row_city = $row['City'];
-        $row_province = $row['State'];
-        $row_postal_code = $row['Postcode'];
-        $row_country = $row['Country'];
-        $row_phone = $row['Phone'];
-        $row_fax = $row['Fax'];
-        $row_email = $row['Email'];
-        $row_secondary_email = $row['Secondary Email'];
-        $row_church_status = $row['Church Status'];
-        $row_founded_on = $row['Founded On'];
-        $row_service_time_church = $row['Service Time Church'];
-        $row_notes = $row['Notes'];
+        $row_rc_dpw = $row['rc_dpw']; // $row['RC / DPW'];
+        $row_church_name = $row['church_name']; // $row['Church Name'];
+        $row_church_type = $row['church_type']; // $row['Church Type'];
+        $row_lead_pastor_name = $row['lead_pastor_name']; // $row['Lead Pastor Name'];
+        $row_local_church = $row['local_church']; // $row['Local Church'];
+        $row_leadership_structure = $row['leadership_structure']; //$row['Leadership Structure'];
+       $row_coordinator = $row['coordinator'];
+        $row_contact_person = $row['contact_person'];// $row['Contact Person'];
+        $row_church_address = $row['church_address']; //$row['Church Address'];
+        $row_office_address = $row['office_address']; // $row['Office Address'];
+        $row_city = $row['city'];
+        $row_province = $row['state'];
+        $row_postal_code = $row['postcode'];
+        $row_country = $row['country'];
+        $row_phone = $row['phone'];
+        $row_fax = $row['fax'];
+        $row_email = $row['email'];
+        $row_secondary_email = $row['secondary_email']; // $row['Secondary Email'];
+        $row_church_status = $row['church_status']; // $row['Church Status'];
+        $row_founded_on = $row['founded_on']; // $row['Founded On'];
+        $row_service_time_church = $row['service_time_church']; // $row['Service Time Church'];
+        $row_notes = $row['notes'];
+
         
         $country  = CountryList::where('country_name', $row_country)->first();
         $church_type  =  ChurchEntityType::where('entities_type', $row_church_type)->first();
-        $rcdpw  =  RcDpwList::where('rc_dpw_name', $row_rc_dpw)->first();
+        // $rcdpw  =  RcDpwList::where('rc_dpw_name', $row_rc_dpw)->first();
         $row_founded_on = trim($row_founded_on ?? '');
         $date =  $row_founded_on == '-' || $row_founded_on == '' ? NULL : $this->formatDateExcel($row_founded_on);
         
@@ -91,11 +105,12 @@ class ChurchImport implements ToCollection,  WithValidation, WithHeadingRow
         $church_local = Church::where('church_name', $row_local_church)
                                 ->first();
         if ($exists_church) {
+            // bila update data
             $update_church = Church::where('church_name', $row_church_name)
                         ->where('phone', $phone)
                         ->where('postal_code', $postal_code)->first();
             $update_church->founded_on = $date;
-            $update_church->rc_dpw_id = ($rcdpw['id'] ?? null);
+            // $update_church->rc_dpw_id = ($rcdpw['id'] ?? null);
             $update_church->church_type_id = ($church_type->id ?? null);
             $update_church->church_name = $row_church_name;
             $update_church->contact_person = $contact_person;
@@ -113,6 +128,15 @@ class ChurchImport implements ToCollection,  WithValidation, WithHeadingRow
             $update_church->service_time_church = $service_time_church;
             $update_church->notes = $row_notes;
             $update_church->save();
+
+            $this->ids_update[] = $update_church->id;
+
+            $id_church = $update_church->id;
+            
+
+            $this->handleRcdpw($id_church, $row_rc_dpw, 'update');
+
+
             StructureChurch::where('churches_id', $update_church->id)->delete();
 
             foreach ($this->handlePastorName($row_lead_pastor_name) as $key => $hpn) {
@@ -175,6 +199,11 @@ class ChurchImport implements ToCollection,  WithValidation, WithHeadingRow
             $new_church->service_time_church = $service_time_church;
             $new_church->notes = $row_notes;
             $new_church->save();
+            
+            $this->ids_create[] = $new_church->id;
+
+            $this->handleRcdpw($new_church->id, $row_rc_dpw, 'create');
+
 
             foreach ($this->handlePastorName($row_lead_pastor_name) as $key => $hpn) {
                 if ($hpn != []) {
@@ -229,13 +258,40 @@ class ChurchImport implements ToCollection,  WithValidation, WithHeadingRow
     public function rules(): array
     {
         return [
-            'Lead Pastor Name' => function($attribute, $value, $onFailure) {
+            'rc_dpw' => function($attribute, $value, $onFailure){
+                if(strlen($value) > 0){
+                    $rc_dpw = trim($value);
+                    $rc_dpw = str_replace('\n', "\n", $rc_dpw ?? '');
+                    $is_fail = [];
+                    if (strpos( $rc_dpw, "\n") !== false) {
+                        $rc_dpws = explode("\n", $rc_dpw);
+                        foreach($rc_dpws as $data){
+                            $d = RcDpwList::where('rc_dpw_name', $data)->first();
+                            if($d == null){
+                                $is_fail[] = $data;
+                            }
+                        }
+                    }else{
+                        $d = RcDpwList::where('rc_dpw_name', $rc_dpw)->first();
+                        if($d == null){
+                            $is_fail[] = $rc_dpw;
+                        }
+                    }
+    
+                    if(count($is_fail) > 0){
+                        $str_rc_dpw = implode(", ", $is_fail);
+                        $onFailure('RC / DPW are not invalid for ' . $str_rc_dpw);
+                    }
+    
+                }
+            },
+            'lead_pastor_name' => function($attribute, $value, $onFailure) {
                 $lead_pastor_name = $this->handlePastorName($value);
                 if (sizeof($lead_pastor_name) == 0) {
                     $onFailure('Not Exist Pastor or Invalid Lead Pastor Format :: Firstname Lastname (Title)');
                 }
             },
-            'Leadership Structure' => function($attribute, $value, $onFailure) {
+            'leadership_structure' => function($attribute, $value, $onFailure) {
                 $leadership_name = $this->handleLeadershipName($value);
                 if ($value != "" && sizeof($leadership_name) == 0) {
                     $onFailure('Not Exist Name - Role or Invalid Format :: Pastor Name - Role');
@@ -254,6 +310,35 @@ class ChurchImport implements ToCollection,  WithValidation, WithHeadingRow
             return Carbon::createFromTimestamp(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToTimestamp($dateExcel))->toDateString();
         }
         return Carbon::parse($dateExcel)->toDateString();
+    }
+
+    private function handleRcdpw($id, $value, $type){
+
+        $rc_dpw = str_replace('\n', "\n", $value ?? '');
+
+        if($type === 'update'){
+            if(ChurchesRcdpw::where('churches_id', $id)->exists()){
+                // hapus semua data churches rcd
+                ChurchesRcdpw::where('churches_id', $id)->delete();
+            }
+        }
+
+        if(strpos($rc_dpw, "\n") !== false){
+            $e = explode("\n", $rc_dpw);
+            foreach($e as $rc_){
+                $id_rcdpw = RcDpwList::where('rc_dpw_name', $rc_)->first();
+                $rc = new ChurchesRcdpw;
+                $rc->churches_id = $id;
+                $rc->rc_dpwlists_id = $id_rcdpw->id;
+                $rc->save();
+            }
+        }else{
+            $id_rcdpw = RcDpwList::where('rc_dpw_name', $rc_dpw)->first();
+            $rc = new ChurchesRcdpw;
+            $rc->churches_id = $id;
+            $rc->rc_dpwlists_id = $id_rcdpw->id;
+            $rc->save();
+        }
     }
 
     private function handlePastorName($value){
@@ -393,4 +478,43 @@ class ChurchImport implements ToCollection,  WithValidation, WithHeadingRow
 
         return ($count_valid_data == $total_data) ? $arr_datas :[];
     }
+
+    // public function withValidator($validator)
+    // {
+    //     $validator->after(function ($validator) {
+    //         // if ($this->somethingElseIsInvalid()) {
+    //         //     // $validator->errors()->add('field', 'Something is wrong with this field!');
+    //         // }
+    //         $dataRb = collect($validator->getData())->first();
+
+    //         if(strlen($dataRb['RC / DPW']) > 0){
+    //             $rc_dpw = trim($dataRb['RC / DPW']);
+    //             $rc_dpw = str_replace('\n', "\n", $rc_dpw ?? '');
+    //             $is_fail = [];
+    //             if (strpos( $rc_dpw, "\n") !== false) {
+    //                 $rc_dpws = explode("\n", $rc_dpw);
+    //                 foreach($rc_dpws as $data){
+    //                     $d = RcDpwList::where('rc_dpw_name', $data)->first();
+    //                     if($d == null){
+    //                         $is_fail[] = $data;
+    //                     }
+    //                 }
+    //             }else{
+    //                 $d = RcDpwList::where('rc_dpw_name', $rc_dpw)->first();
+    //                 if($d == null){
+    //                     $is_fail[] = $rc_dpw;
+    //                 }
+    //             }
+
+    //             if(count($is_fail) > 0){
+    //                 $str_rc_dpw = implode(", ", $is_fail);
+    //                 // $onFailure('RC / DPW are not invalid for ' . $str_rc_dpw);
+    //                 $validator->errors()->add('RC / DPW', 'are not invalid for ' . $str_rc_dpw);
+    //             }
+
+    //         }
+            
+    //     });
+
+    // }
 }

@@ -84,6 +84,10 @@ class Personel extends Authenticatable
     //     return $this->belongsTo('App\Models\Accountstatus', 'acc_status_id', 'id');
     // }
 
+    public function pivod_rcdpw(){
+        return $this->belongsToMany('App\Models\RcDpwList', 'App\Models\PersonelsRcdpw', 'personels_id', 'rc_dpwlists_id');
+    }
+
     public function rc_dpw()
     {
         return $this->belongsTo('App\Models\RcDpwList', 'rc_dpw_id', 'id');

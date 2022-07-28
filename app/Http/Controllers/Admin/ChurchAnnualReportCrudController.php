@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 use App\Models\ChurchAnnualDesignerView;
 use App\Http\Requests\ChurchAnnualReportRequest;
 use App\Models\Church;
+use Illuminate\Support\Facades\DB;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
@@ -32,6 +33,8 @@ class ChurchAnnualReportCrudController extends CrudController
         $this->crud->denyAccess(['create', 'update', 'show']);
         $this->setupListReport();
     }
+
+    
     
     protected function setupListOperation()
     {
@@ -51,10 +54,29 @@ class ChurchAnnualReportCrudController extends CrudController
         }
         else if($this->crud->typeReport == 'detail' || $this->crud->typeReport == 'designer'){
             CRUD::addColumns([
+                // [
+                //     'label' => 'RC / DPW',
+                //     'type' => 'text',
+                //     'name' => 'rc_dpw_name'
+                // ],
                 [
                     'label' => 'RC / DPW',
-                    'type' => 'text',
-                    'name' => 'rc_dpw_name'
+                    'type' => 'closure',
+                    'name' => 'rc_dpw_name',
+                    'function' => function($entries){
+                        $church = Church::where('id', $entries->id)->first();
+                        if($church != null){
+                            return $church->rdpw_pivot->implode('rc_dpw_name', ', ');
+                        }
+                        return '-';
+                    },
+                    'searchLogic' => function ($query, $column, $searchTerm) {
+                        $query->orWhereRaw("EXISTS (
+                                SELECT 1 FROM churches_rcdpw 
+                                INNER JOIN rc_dpwlists ON rc_dpwlists.id = churches_rcdpw.rc_dpwlists_id
+                                WHERE churches_rcdpw.churches_id = church_annual_designer_views.id AND rc_dpwlists.rc_dpw_name LIKE '%{$searchTerm}%'
+                        )");
+                    },
                 ],
                 [
                     'label' => 'Church Name',
@@ -238,7 +260,14 @@ class ChurchAnnualReportCrudController extends CrudController
                 try{
                     $value = json_decode($this->crud->getRequest()->rc_dpw_id);
                     if(is_array($value)){
-                        $this->crud->addClause('whereIn', 'rc_dpw_name', $value);
+                       // $this->crud->addClause('whereIn', 'rc_dpw_name', $value);
+                       $value = array_map(function($d){
+                            return "'$d'";
+                       }, $value);
+                       $value = implode(',', $value);
+                       $this->crud->query->whereRaw("EXISTS (SELECT 1 FROM churches_rcdpw 
+                       INNER JOIN rc_dpwlists ON rc_dpwlists.id = churches_rcdpw.rc_dpwlists_id
+                       WHERE churches_rcdpw.churches_id = church_annual_designer_views.id AND rc_dpwlists.rc_dpw_name IN ({$value}))");
                     }
                     else{
                         $this->crud->addClause('whereRaw', 0);
@@ -299,6 +328,8 @@ class ChurchAnnualReportCrudController extends CrudController
         }
         
     }
+
+
 
     private function getCurrentType()
     {

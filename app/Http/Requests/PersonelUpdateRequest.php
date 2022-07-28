@@ -32,7 +32,7 @@ class PersonelUpdateRequest extends FormRequest
         return [
             // 'name' => 'required|min:5|max:255'
         // 'acc_status_id' => 'required',
-        'rc_dpw_id' => 'required',
+        // 'rc_dpw_id' => 'required',
         'title_id' => 'required',
         'first_name'=> 'required',
         'last_name' => 'required',

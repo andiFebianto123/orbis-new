@@ -127,11 +127,16 @@ class ExportAnnualReport implements FromView,WithEvents
                        return "$s[0]\n";
                     }, $string );
                 };
+                $formatListRcdpw = function($string){
+                    return str_replace('<br>', "\n", $string );
+                };
+
                 $pastorNameHeader = "";
                 $churchNameHeader = "";
                 $leadPastorNameHeader = "";
                 $phoneHeader = "";
                 $emailHeader = "";
+                $rcdpwHeader = "";
                 $after_last_col = $lastColumn;
                 $after_last_col++;
                 for ($column="A"; $column != $after_last_col; $column++) { 
@@ -152,10 +157,13 @@ class ExportAnnualReport implements FromView,WithEvents
                     if($valueCell == "Email"){
                         $emailHeader = $column;
                     }
+                    if($valueCell == 'RC / DPW'){
+                        $rcdpwHeader = $column;
+                    }
                     if($valueCell == "Year" || $valueCell == "Churches" || $valueCell == 'Pastor' || $valueCell == 'Postal Code' || $valueCell == "Anniversary" || $valueCell == 'Gender'){
                         $event->sheet->getColumnDimension($column)->setWidth(10);
                     }
-                    if($valueCell == 'RC / DPW'  || $valueCell == 'Church Type' || $valueCell == 'City' || $valueCell == 'Province' || $valueCell ==  'Country'|| $valueCell == "Church Status"  || $valueCell == "Province / State" || $valueCell == "Marital Status" || $valueCell == "Date of Birth" || $valueCell == "Spouse Name" || $valueCell == "Spouse Date of Birth" || $valueCell == "Status" || $valueCell == "First Licensed On" || $valueCell == "Card" || $valueCell == "Valid Card Start" || $valueCell == "Valid Card End" ){
+                    if($valueCell == 'RC / DPWdlsdksdls'  || $valueCell == 'Church Type' || $valueCell == 'City' || $valueCell == 'Province' || $valueCell ==  'Country'|| $valueCell == "Church Status"  || $valueCell == "Province / State" || $valueCell == "Marital Status" || $valueCell == "Date of Birth" || $valueCell == "Spouse Name" || $valueCell == "Spouse Date of Birth" || $valueCell == "Status" || $valueCell == "First Licensed On" || $valueCell == "Card" || $valueCell == "Valid Card Start" || $valueCell == "Valid Card End" ){
                         $event->sheet->getColumnDimension($column)->setWidth(20);
                     }
                     if($valueCell == 'First Name' || $valueCell == 'Last Name' || $valueCell == "Current Certificate Number" || $valueCell =='Coordinator'){
@@ -164,8 +172,18 @@ class ExportAnnualReport implements FromView,WithEvents
                     if($valueCell == 'Contact Person' || $valueCell == 'Phone' || $valueCell == 'Fax' || $valueCell == 'Email'  || $valueCell == 'Founded On' || $valueCell == 'Service Time Church' || $valueCell == 'Notes'){
                         $event->sheet->getColumnDimension($column)->setWidth(35);
                     }
-                    if($valueCell == 'Leadership Structure' || $valueCell == 'Church Name' ||$valueCell == 'Local Church'|| $valueCell == 'Lead Pastor Name' || $valueCell == "Church Address" || $valueCell == 'Office Address' || $valueCell == "Address"){
+                    if($valueCell == 'RC / DPW' || $valueCell == 'Leadership Structure' || $valueCell == 'Church Name' ||$valueCell == 'Local Church'|| $valueCell == 'Lead Pastor Name' || $valueCell == "Church Address" || $valueCell == 'Office Address' || $valueCell == "Address"){
                         $event->sheet->getColumnDimension($column)->setWidth(40);
+                    }
+                }
+
+                if($rcdpwHeader != ""){ 
+                    for($i=3; $i<=$lastRow; $i++){
+                        $unFormattedRcdpwList = $event->sheet->getCell($rcdpwHeader . $i)->getValue();
+                        $event->sheet->setCellValue($rcdpwHeader . $i, $formatListRcdpw($unFormattedRcdpwList));
+                        if(strpos($formatListRcdpw($unFormattedRcdpwList), "\n") !== false){
+                            $event->sheet->getRowDimension($i)->setRowHeight(45);
+                        }
                     }
                 }
 

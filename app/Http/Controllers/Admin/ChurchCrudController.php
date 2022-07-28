@@ -9,10 +9,13 @@ use App\Models\StatusHistoryChurch;
 use App\Models\Church;
 use App\Models\CoordinatorChurch;
 use App\Models\RelatedEntityChurch;
+use App\Models\RcDpwList;
 use App\Models\StructureChurch;
+use App\Models\ChurchesRcdpw;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Exception;
+use App\Helpers\HitApi;
 
 /**
  * Class ChurchCrudController
@@ -38,7 +41,7 @@ class ChurchCrudController extends CrudController
         CRUD::setRoute(config('backpack.base.route_prefix') . '/church');
         CRUD::setEntityNameStrings('Church / Office', 'Church & Office List');
         $this->crud->leftColumns = 2;
-        $this->crud->rightColumns = 1;
+        $this->crud->rightColumns = 1; 
     }
 
     /**
@@ -79,11 +82,27 @@ class ChurchCrudController extends CrudController
             },
         ]);
 
+        // $this->crud->addColumn([
+        //     'name' => 'rc_dpw', // The db column name
+        //     'label' => "RC / DPW", // Table column heading
+        //     'type' => 'relationship',
+        //     'attribute' => 'rc_dpw_name',
+        // ]);
+
+
         $this->crud->addColumn([
-            'name' => 'rc_dpw', // The db column name
-            'label' => "RC / DPW", // Table column heading
-            'type' => 'relationship',
-            'attribute' => 'rc_dpw_name',
+            'label'     => 'RC / DPW', // Table column heading
+            'type'      => 'select',
+            'name'      => 'rc_dpw_name', // the column that contains the ID of that connected entity;
+            'entity'    => 'churches_rcdpw.rcdpwlists', // the method that defines the relationship in your Model
+            'attribute' => 'rc_dpw_name', // foreign key attribute that is shown to user
+            'model'     => App\Models\ChurchesRcdpw::class, // foreign key model
+            'limit' => 100,
+            'searchLogic' => function ($query, $column, $searchTerm) {
+                $query->orWhereHas('churches_rcdpw.rcdpwlists', function ($q) use ($column, $searchTerm) {
+                    $q->where('rc_dpw_name', 'like', '%'.$searchTerm.'%');
+                });
+            }
         ]);
 
         $this->crud->addColumn([
@@ -154,6 +173,27 @@ class ChurchCrudController extends CrudController
             'attribute' => 'country_name',
         ]);
 
+        $this->crud->addColumn([
+            'name' => 'task_color',
+            'label' => 'Task Color',
+            'type' => 'closure',
+            'function' => function($entry){
+                return '<center><div style="width:15px; height: 15px; background-color:'.$entry->task_color.';"></div></center>';
+            }
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'latitude',
+            'label' => 'Latitude',
+            'type' => 'text',
+        ]);
+
+        $this->crud->addColumn([
+            'name' => 'longitude',
+            'label' => 'Longitude',
+            'type' => 'text'
+        ]);
+
     }
 
     function search()
@@ -173,6 +213,26 @@ class ChurchCrudController extends CrudController
             $leftJoinSub->on('churches.id', 'status_history_churches.churches_id');
         })->select('churches.*', DB::raw('IFNULL(status_history_churches.status, "-") as status'));
         return $this->traitSearch();
+    }
+
+    public function edit($id)
+    {
+        $this->crud->hasAccessOrFail('update');
+        // get entry ID from Request (makes sure its the last ID for nested resources)
+        $id = $this->crud->getCurrentEntryId() ?? $id;
+        $this->crud->setOperationSetting('fields', $this->crud->getUpdateFields());
+        // get the info for that entry
+        $this->data['entry'] = $this->crud->getEntry($id);
+        // dd($this->data['entry']->rdpw);
+
+        $this->data['crud'] = $this->crud;
+        $this->data['saveAction'] = $this->crud->getSaveAction();
+        $this->data['title'] = $this->crud->getTitle() ?? trans('backpack::crud.edit').' '.$this->crud->entity_name;
+
+        $this->data['id'] = $id;
+
+        // load the view from /resources/views/vendor/backpack/crud/ if it exists, otherwise load the one in the package
+        return view($this->crud->getEditView(), $this->data);
     }
 
     /**
@@ -221,14 +281,30 @@ class ChurchCrudController extends CrudController
             'tab' => 'Church / Office Information',
          ]);
 
+        // $this->crud->addField([
+        //     'label'     => 'RC/DPW', // Table column heading
+        //     'type'      => 'select2',
+        //     'name'      => 'rc_dpw_id', // the column that contains the ID of that connected entity;
+
+        //     'entity'    => 'rc_dpw', // the method that defines the relationship in your Model
+        //     'attribute' => 'rc_dpw_name', // foreign key attribute that is shown to user
+        //     'model'     => "App\Models\RcDpwList",
+        //     'tab'       => 'Church / Office Information',
+        // ]);
+
         $this->crud->addField([
             'label'     => 'RC/DPW', // Table column heading
-            'type'      => 'select2',
-            'name'      => 'rc_dpw_id', // the column that contains the ID of that connected entity;
-            'entity'    => 'rc_dpw', // the method that defines the relationship in your Model
+            'type'      => 'select2_multiple_custom',
+            'name'      => 'churches_rcdpw', // the column that contains the ID of that connected entity;
+
+            // 'entity'    => 'churches_rcdpw', // the method that defines the relationship in your Model
             'attribute' => 'rc_dpw_name', // foreign key attribute that is shown to user
-            'model'     => "App\Models\RcDpwList",
+            'multiple'  => true,
+            'model'     => 'App\Models\RcDpwList',
             'tab'       => 'Church / Office Information',
+            'option_value' => function($value){
+                return $value->pluck('rc_dpwlists_id')->toArray();
+            },
         ]);
 
         $this->crud->addField([
@@ -353,6 +429,27 @@ class ChurchCrudController extends CrudController
             'tab'             => 'Church / Office Information',
         ]);
 
+        $this->crud->addField([
+            'name'    => 'task_color',
+            'label'   => 'Task Color',
+            'type'    => 'color',
+            'tab'     => 'Church / Office Information',
+        ]);
+
+        $this->crud->addField([
+            'name' => 'latitude',
+            'label' => 'Latitude',
+            'type' => 'text',
+            'tab'     => 'Church / Office Information',
+        ]);
+
+        $this->crud->addField([
+            'name' => 'longitude',
+            'label' => 'Longitude',
+            'type' => 'text',
+            'tab'     => 'Church / Office Information',
+        ]);
+
         $is_certificate_available = 0;
         if ($this->crud->getCurrentOperation() == 'update') {
             $is_certificate_available = (isset($this->crud->getCurrentEntry()->getAttributes()['certificate']))?1:0;
@@ -428,21 +525,63 @@ class ChurchCrudController extends CrudController
             }
 
             $isDuplicate = $isDuplicate->select('id')->first();
+            $errors = [];
 
             if ($isDuplicate != null) {
-                DB::rollback();
+                // DB::rollback();
                 $errors = [
                     'church_name' => ['The Church with same Church Name, Phone and Postal Code has already exists.'],
                     'phone' => ['The Church with same Church Name, Phone and Postal Code has already exists.'],
                     'postal_code' => ['The Church with same Church Name, Phone and Postal Code has already exists.'],
                 ];
-                return redirect($this->crud->route . '/create')
+                // return redirect($this->crud->route . '/create')
+                 //   ->withInput()->withErrors($errors);
+            }
+
+            $churches_rcdpw = $request->churches_rcdpw;
+            $i = 1;
+            foreach($churches_rcdpw as $id_churches_rcdpw){
+                if(!RcDpwList::where('id', $id_churches_rcdpw)->exists()){
+                    if(array_key_exists('churches_rcdpw', $errors)){
+                        array_push($errors['churches_rcdpw'], "Offset {$i} is not available");
+                    }else{
+                        $errors['churches_rcdpw'] = [
+                            "Offset {$i} is not available"
+                        ];
+                    }
+                }
+                $i++;
+            }
+
+            if(count($errors) != 0){
+                DB::rollback();
+                return redirect($this->crud->route . '/'. $id . '/edit')
                     ->withInput()->withErrors($errors);
             }
+
             $item = $this->crud->create($this->crud->getStrippedSaveRequest());
             $this->data['entry'] = $this->crud->entry = $item;
 
+            $id = $item->id;
+
+            if(ChurchesRcdpw::where('churches_id', $id)->exists()){
+                // hapus semua data churches rcd
+                ChurchesRcdpw::where('churches_id', $id)->delete();
+            }
+
+            foreach($churches_rcdpw as $id_rcdpw){
+                $rc = new ChurchesRcdpw;
+                $rc->churches_id = $id;
+                $rc->rc_dpwlists_id = $id_rcdpw;
+                $rc->save();
+            }
+
             DB::commit();
+            // hit api for update church
+            $send = new HitApi;
+            $id = [$item->getKey()];
+            $module = 'churchs';
+            $response = $send->action($id, 'create', $module)->json();
         } catch (Exception $e) {
             DB::rollback();
             throw $e;
@@ -482,7 +621,6 @@ class ChurchCrudController extends CrudController
 
         DB::beginTransaction();
         try {
-
             $isDuplicate = Church::query();
 
             if (!$request->filled('church_name')) {
@@ -505,13 +643,36 @@ class ChurchCrudController extends CrudController
 
             $isDuplicate = $isDuplicate->select('id')->first();
 
+            $errors = [];
+
             if ($isDuplicate != null && $isDuplicate->id != $id) {
-                DB::rollback();
+                // DB::rollback();
                 $errors = [
                     'church_name' => ['The Church with same Church Name, Phone and Postal Code has already exists.'],
                     'phone' => ['The Church with same Church Name, Phone and Postal Code has already exists.'],
                     'postal_code' => ['The Church with same Church Name, Phone and Postal Code has already exists.'],
                 ];
+                // return redirect($this->crud->route . '/'. $id . '/edit')
+                //     ->withInput()->withErrors($errors);
+            }
+
+            $churches_rcdpw = $request->churches_rcdpw;
+            $i = 1;
+            foreach($churches_rcdpw as $id_churches_rcdpw){
+                if(!RcDpwList::where('id', $id_churches_rcdpw)->exists()){
+                    if(array_key_exists('churches_rcdpw', $errors)){
+                        array_push($errors['churches_rcdpw'], "Offset {$i} is not available");
+                    }else{
+                        $errors['churches_rcdpw'] = [
+                            "Offset {$i} is not available"
+                        ];
+                    }
+                }
+                $i++;
+            }
+
+            if(count($errors) != 0){
+                DB::rollback();
                 return redirect($this->crud->route . '/'. $id . '/edit')
                     ->withInput()->withErrors($errors);
             }
@@ -520,7 +681,26 @@ class ChurchCrudController extends CrudController
             $this->crud->getStrippedSaveRequest());
             $this->data['entry'] = $this->crud->entry = $item;
 
+            $id = $item->id;
+
+            if(ChurchesRcdpw::where('churches_id', $id)->exists()){
+                // hapus semua data churches rcd
+                ChurchesRcdpw::where('churches_id', $id)->delete();
+            }
+
+            foreach($churches_rcdpw as $id_rcdpw){
+                $rc = new ChurchesRcdpw;
+                $rc->churches_id = $id;
+                $rc->rc_dpwlists_id = $id_rcdpw;
+                $rc->save();
+            }
+
             DB::commit();
+            // hit api for update church
+            $send = new HitApi;
+            $id = [$item->getKey()];
+            $module = 'churchs';
+            $response = $send->action($id, 'update', $module)->json();
         } catch (Exception $e) {
             DB::rollback();
             throw $e;
@@ -570,8 +750,16 @@ class ChurchCrudController extends CrudController
             if(CoordinatorChurch::where('churches_id', $id)->exists()){
                 CoordinatorChurch::where('churches_id', $id)->delete();
             }
+            if(ChurchesRcdpw::where('churches_id', $id)->exists()){
+                ChurchesRcdpw::where('churches_id', $id)->delete();
+            }
             $response = $this->crud->delete($id);
             DB::commit();
+            // hit api for update church
+            $send = new HitApi;
+            $id = [$item->getKey()];
+            $module = 'churchs';
+            $response = $send->action($id, 'delete', $module)->json();
             return $response;
         }
         catch(Exception $e){

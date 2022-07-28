@@ -4,12 +4,32 @@ namespace App\Models;
 
 use Exception;
 use Carbon\Carbon;
+use App\Models\Personel;
 use Illuminate\Database\Eloquent\Model;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 
 class PastorAnnualDesignerView extends Model
 {
     use CrudTrait;
+
+    protected $appends = ['rdpw'];
+
+    public function getRdpwAttribute(){
+        $id = $this->id;
+        $d = Personel::where('id', $id)->first()->pivod_rcdpw;
+        if($d !== null){
+            $rdpw = '';
+            foreach($d as $index => $st){
+                if($index >= ($d->count() - 1)){
+                    $rdpw .= $st->rc_dpw_name;
+                }else{
+                    $rdpw .= $st->rc_dpw_name.'<br>';
+                }
+            }
+            return $rdpw;
+        }
+        return null;
+    }
 
     public function ExportExcelButton(){
         return '<a href="javascript:void(0)"  onclick="exportReport()" class="btn btn-xs btn-success"><i class="la la-file-excel-o"></i> Export Button</a>';
@@ -22,7 +42,16 @@ class PastorAnnualDesignerView extends Model
     public function scopeRcDpw($query, $value){
         if($value != null){
             try{
-                return $query->whereIn('rc_dpw_name', json_decode($value)); 
+                // return $query->whereIn('rc_dpw_name', json_decode($value)); 
+                $value = json_decode($value);
+                $value = array_map(function($d){
+                    return "'$d'";
+               }, $value);
+               $value = implode(',', $value);
+               $subQuery = "SELECT 1 FROM personels_rcdpw 
+               INNER JOIN rc_dpwlists ON rc_dpwlists.id = personels_rcdpw.rc_dpwlists_id
+               WHERE personels_rcdpw.personels_id = pastor_annual_designer_views.id AND rc_dpwlists.rc_dpw_name IN ({$value})";
+               return $query->whereRaw("EXISTS ({$subQuery})");
             }
             catch(Exception $e){
                 return $query->whereRaw(0);

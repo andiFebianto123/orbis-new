@@ -10,6 +10,7 @@ use App\Models\TitleList;
 use App\Models\CountryList;
 use App\Models\MinistryRole;
 use Illuminate\Http\Request;
+use App\Models\Personel;
 use App\Exports\ExportAnnualReport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Route;
@@ -49,10 +50,29 @@ class PastorReportAnnualCrudController extends CrudController
         }
         else if($this->crud->typeReport == 'detail' || $this->crud->typeReport == 'designer'){
             CRUD::addColumns([
+                // [
+                //     'label' => 'RC / DPW',
+                //     'type' => 'text',
+                //     'name' => 'rc_dpw_name'
+                // ],
                 [
                     'label' => 'RC / DPW',
-                    'type' => 'text',
-                    'name' => 'rc_dpw_name'
+                    'type' => 'closure',
+                    'name' => 'rc_dpw_name',
+                    'function' => function($entries){
+                        $personel = Personel::where('id', $entries->id)->first();
+                        if($personel != null){
+                            return $personel->pivod_rcdpw->implode('rc_dpw_name', ', ');
+                        }
+                        return '-';
+                    },
+                    'searchLogic' => function ($query, $column, $searchTerm) {
+                        $query->orWhereRaw("EXISTS (
+                                SELECT 1 FROM personels_rcdpw 
+                                INNER JOIN rc_dpwlists ON rc_dpwlists.id = personels_rcdpw.rc_dpwlists_id
+                                WHERE personels_rcdpw.personels_id = pastor_annual_designer_views.id AND rc_dpwlists.rc_dpw_name LIKE '%{$searchTerm}%'
+                        )");
+                    },
                 ],
                 [
                     'label' => 'Title',
@@ -254,7 +274,15 @@ class PastorReportAnnualCrudController extends CrudController
                 try{
                     $value = json_decode($this->crud->getRequest()->rc_dpw_id);
                     if(is_array($value)){
-                        $this->crud->addClause('whereIn', 'rc_dpw_name', $value);
+                        $value = array_map(function($d){
+                            return "'$d'";
+                       }, $value);
+                       $value = implode(',', $value);
+                       $this->crud->query->orWhereRaw("EXISTS (
+                        SELECT 1 FROM personels_rcdpw 
+                        INNER JOIN rc_dpwlists ON rc_dpwlists.id = personels_rcdpw.rc_dpwlists_id
+                        WHERE personels_rcdpw.personels_id = pastor_annual_designer_views.id AND rc_dpwlists.rc_dpw_name IN ({$value}))");
+                        // $this->crud->addClause('whereIn', 'rc_dpw_name', $value);
                     }
                     else{
                         $this->crud->addClause('whereRaw', 0);
