@@ -14,6 +14,7 @@ use App\Models\StructureChurch;
 use App\Models\ChurchesRcdpw;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Exception;
 use App\Helpers\HitApi;
 
@@ -90,14 +91,29 @@ class ChurchCrudController extends CrudController
         // ]);
 
 
+        // $this->crud->addColumn([
+        //     'label'     => 'RC / DPW', // Table column heading
+        //     'type'      => 'select',
+        //     'name'      => 'rc_dpw_name', // the column that contains the ID of that connected entity;
+        //     'entity'    => 'churches_rcdpw.rcdpwlists', // the method that defines the relationship in your Model
+        //     'attribute' => 'rc_dpw_name', // foreign key attribute that is shown to user
+        //     'model'     => App\Models\ChurchesRcdpw::class, // foreign key model
+        //     'limit' => 100,
+        //     'searchLogic' => function ($query, $column, $searchTerm) {
+        //         $query->orWhereHas('churches_rcdpw.rcdpwlists', function ($q) use ($column, $searchTerm) {
+        //             $q->where('rc_dpw_name', 'like', '%'.$searchTerm.'%');
+        //         });
+        //     }
+        // ]);
+
         $this->crud->addColumn([
-            'label'     => 'RC / DPW', // Table column heading
-            'type'      => 'select',
-            'name'      => 'rc_dpw_name', // the column that contains the ID of that connected entity;
-            'entity'    => 'churches_rcdpw.rcdpwlists', // the method that defines the relationship in your Model
-            'attribute' => 'rc_dpw_name', // foreign key attribute that is shown to user
-            'model'     => App\Models\ChurchesRcdpw::class, // foreign key model
-            'limit' => 100,
+            'name' => 'tc_dpw_name',
+            'label' => 'RC / DPW',
+            'type' => 'closure',
+            'function' => function($e){
+                $str = $e->rdpw_pivot->implode('rc_dpw_name', ', ');
+                return Str::limit($str, 40);
+            },
             'searchLogic' => function ($query, $column, $searchTerm) {
                 $query->orWhereHas('churches_rcdpw.rcdpwlists', function ($q) use ($column, $searchTerm) {
                     $q->where('rc_dpw_name', 'like', '%'.$searchTerm.'%');

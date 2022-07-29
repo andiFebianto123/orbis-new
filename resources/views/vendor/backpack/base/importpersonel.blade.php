@@ -24,7 +24,7 @@
 					@csrf
 					<div class="form-group">
 						<div class="file-upload btn btn-default">
-							<img src="https://image.flaticon.com/icons/png/512/568/568717.png" width="64px" class="img-responsive">
+							<img src="{{ asset('img/upload-icon.png') }}" width="64px" class="img-responsive">
 							<br>
 							<span class="text-upload">Drop Your File Here</span>
 							<input id="file_personel" class="upload rect-validation" type="file" name="file_personel" style="width: 100%; height:100%;">

@@ -26,6 +26,7 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Laravel\Sanctum\PersonalAccessToken;
 use App\Models\PersonelsRcdpw;
 use App\Helpers\HitApi;
+use Illuminate\Support\Str;
 
 /**
  * Class PersonelCrudController
@@ -115,21 +116,36 @@ class PersonelCrudController extends CrudController
         //     'attribute' => 'rc_dpw_name',
         // ]);
 
-        $this->crud->addColumn([
+        // $this->crud->addColumn([
             
-            // 1-n relationship
-            'label'     => 'RC / DPW', // Table column heading
-            'type'      => 'select',
-            'name'      => 'personels_id', // the column that contains the ID of that connected entity;
-            'entity'    => 'pivod_rcdpw', // the method that defines the relationship in your Model
-            'attribute' => 'rc_dpw_name', // foreign key attribute that is shown to user
-            'model'     => "App\Models\RcDpwList", // foreign key model
-            'searchLogic' => function($query, $collumn, $searchTerm){
-                $query->orWhereHas('pivod_rcdpw', function($query) use($searchTerm){
-                    $query->where('rc_dpw_name', 'LIKE', "%{$searchTerm}%");
+        //     // 1-n relationship
+        //     'label'     => 'RC / DPW', // Table column heading
+        //     'type'      => 'select',
+        //     'name'      => 'personels_id', // the column that contains the ID of that connected entity;
+        //     'entity'    => 'pivod_rcdpw', // the method that defines the relationship in your Model
+        //     'attribute' => 'rc_dpw_name', // foreign key attribute that is shown to user
+        //     'model'     => "App\Models\RcDpwList", // foreign key model
+        //     'searchLogic' => function($query, $collumn, $searchTerm){
+        //         $query->orWhereHas('pivod_rcdpw', function($query) use($searchTerm){
+        //             $query->where('rc_dpw_name', 'LIKE', "%{$searchTerm}%");
+        //         });
+        //     }
+             
+        // ]);
+
+        $this->crud->addColumn([
+            'name' => 'tc_dpw_name',
+            'label' => 'RC / DPW',
+            'type' => 'closure',
+            'function' => function($e){
+                $str = $e->pivod_rcdpw->implode('rc_dpw_name', ', ');
+                return Str::limit($str, 40);
+            },
+            'searchLogic' => function ($query, $column, $searchTerm) {
+                $query->orWhereHas('pivod_rcdpw', function ($q) use ($column, $searchTerm) {
+                    $q->where('rc_dpw_name', 'like', '%'.$searchTerm.'%');
                 });
             }
-             
         ]);
 
         // $this->crud->addColumn([
