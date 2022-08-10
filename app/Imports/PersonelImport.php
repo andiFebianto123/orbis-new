@@ -303,7 +303,7 @@ class PersonelImport implements OnEachRow/* ToCollection */, WithHeadingRow, Wit
         return [
             'first_name' => 'required',
             'title' => 'required',
-            'rc_dpw' => function($attribute, $value, $onFailure){
+            'rc_dpw' => ['required',function($attribute, $value, $onFailure){
                 if(strlen($value) > 0){
                     $rc_dpw = trim($value);
                     $rc_dpw = str_replace('\n', "\n", $rc_dpw ?? '');
@@ -318,7 +318,7 @@ class PersonelImport implements OnEachRow/* ToCollection */, WithHeadingRow, Wit
                         }
                     }else{
                         $d = RcDpwList::where('rc_dpw_name', $rc_dpw)->first();
-                        if($d == null){
+                        if(!isset($d)){
                             $is_fail[] = $rc_dpw;
                         }
                     }
@@ -329,7 +329,7 @@ class PersonelImport implements OnEachRow/* ToCollection */, WithHeadingRow, Wit
                     }
     
                 }
-            },
+            }],
             'church_name' => function($attribute, $value, $onFailure) {
                 $church_name = $this->handleChurchName($value);
                 if ($value != "" && sizeof($church_name) == 0) {
