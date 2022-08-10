@@ -107,20 +107,12 @@ class ChurchCrudController extends CrudController
         // ]);
 
         $this->crud->addColumn([
-            'name' => 'tc_dpw_name',
-            'label' => 'RC / DPW',
-            'type' => 'closure',
-            'function' => function($e){
-                $str = $e->rdpw_pivot->implode('rc_dpw_name', ', ');
-                return Str::limit($str, 40);
-            },
-            'searchLogic' => function ($query, $column, $searchTerm) {
-                $query->orWhereHas('churches_rcdpw.rcdpwlists', function ($q) use ($column, $searchTerm) {
-                    $q->where('rc_dpw_name', 'like', '%'.$searchTerm.'%');
-                });
-            }
+            'name' => 'rc_dpw', // The db column name
+            'label' => "RC / DPW", // Table column heading
+            'type' => 'relationship',
+            'attribute' => 'rc_dpw_name',
         ]);
-
+        
         $this->crud->addColumn([
             'name' => 'church_type', // The db column name
             'label' => "Type", // Table column heading
@@ -298,31 +290,30 @@ class ChurchCrudController extends CrudController
             'tab' => 'Church / Office Information',
          ]);
 
+        $this->crud->addField([
+            'label'     => 'RC/DPW', // Table column heading
+            'type'      => 'select2',
+            'name'      => 'rc_dpw_id', // the column that contains the ID of that connected entity;
+            'entity'    => 'rc_dpw', // the method that defines the relationship in your Model
+            'attribute' => 'rc_dpw_name', // foreign key attribute that is shown to user
+            'model'     => "App\Models\RcDpwList",
+            'tab'       => 'Church / Office Information',
+        ]);
+
         // $this->crud->addField([
         //     'label'     => 'RC/DPW', // Table column heading
         //     'type'      => 'select2',
-        //     'name'      => 'rc_dpw_id', // the column that contains the ID of that connected entity;
+        //     'name'      => 'churches_rcdpw', // the column that contains the ID of that connected entity;
 
-        //     'entity'    => 'rc_dpw', // the method that defines the relationship in your Model
+        //     // 'entity'    => 'churches_rcdpw', // the method that defines the relationship in your Model
         //     'attribute' => 'rc_dpw_name', // foreign key attribute that is shown to user
-        //     'model'     => "App\Models\RcDpwList",
+        //     // 'multiple'  => true,
+        //     'model'     => 'App\Models\RcDpwList',
         //     'tab'       => 'Church / Office Information',
+        //     'option_value' => function($value){
+        //         return $value->pluck('rc_dpwlists_id')->toArray();
+        //     },
         // ]);
-
-        $this->crud->addField([
-            'label'     => 'RC/DPW', // Table column heading
-            'type'      => 'select2_multiple_custom',
-            'name'      => 'churches_rcdpw', // the column that contains the ID of that connected entity;
-
-            // 'entity'    => 'churches_rcdpw', // the method that defines the relationship in your Model
-            'attribute' => 'rc_dpw_name', // foreign key attribute that is shown to user
-            'multiple'  => true,
-            'model'     => 'App\Models\RcDpwList',
-            'tab'       => 'Church / Office Information',
-            'option_value' => function($value){
-                return $value->pluck('rc_dpwlists_id')->toArray();
-            },
-        ]);
 
         $this->crud->addField([
             'name'            => 'church_name',
@@ -555,20 +546,12 @@ class ChurchCrudController extends CrudController
                  //   ->withInput()->withErrors($errors);
             }
 
-            $churches_rcdpw = $request->churches_rcdpw;
-            $i = 1;
-            foreach($churches_rcdpw as $id_churches_rcdpw){
-                if(!RcDpwList::where('id', $id_churches_rcdpw)->exists()){
-                    if(array_key_exists('churches_rcdpw', $errors)){
-                        array_push($errors['churches_rcdpw'], "Offset {$i} is not available");
-                    }else{
-                        $errors['churches_rcdpw'] = [
-                            "Offset {$i} is not available"
-                        ];
-                    }
-                }
-                $i++;
-            }
+            $id_rcdpw = $request->rc_dpw_id;
+
+            $item = $this->crud->create($this->crud->getStrippedSaveRequest());
+            $this->data['entry'] = $this->crud->entry = $item;
+
+            $id = $item->id;
 
             if(count($errors) != 0){
                 DB::rollback();
@@ -576,22 +559,15 @@ class ChurchCrudController extends CrudController
                     ->withInput()->withErrors($errors);
             }
 
-            $item = $this->crud->create($this->crud->getStrippedSaveRequest());
-            $this->data['entry'] = $this->crud->entry = $item;
-
-            $id = $item->id;
-
             if(ChurchesRcdpw::where('churches_id', $id)->exists()){
                 // hapus semua data churches rcd
                 ChurchesRcdpw::where('churches_id', $id)->delete();
             }
 
-            foreach($churches_rcdpw as $id_rcdpw){
-                $rc = new ChurchesRcdpw;
-                $rc->churches_id = $id;
-                $rc->rc_dpwlists_id = $id_rcdpw;
-                $rc->save();
-            }
+            $rc = new ChurchesRcdpw;
+            $rc->churches_id = $id;
+            $rc->rc_dpwlists_id = $id_rcdpw;
+            $rc->save();
 
             DB::commit();
             // hit api for update church
@@ -673,20 +649,8 @@ class ChurchCrudController extends CrudController
                 //     ->withInput()->withErrors($errors);
             }
 
-            $churches_rcdpw = $request->churches_rcdpw;
-            $i = 1;
-            foreach($churches_rcdpw as $id_churches_rcdpw){
-                if(!RcDpwList::where('id', $id_churches_rcdpw)->exists()){
-                    if(array_key_exists('churches_rcdpw', $errors)){
-                        array_push($errors['churches_rcdpw'], "Offset {$i} is not available");
-                    }else{
-                        $errors['churches_rcdpw'] = [
-                            "Offset {$i} is not available"
-                        ];
-                    }
-                }
-                $i++;
-            }
+            $id_rcdpw = $request->rc_dpw_id;
+            
 
             if(count($errors) != 0){
                 DB::rollback();
@@ -705,13 +669,11 @@ class ChurchCrudController extends CrudController
                 ChurchesRcdpw::where('churches_id', $id)->delete();
             }
 
-            foreach($churches_rcdpw as $id_rcdpw){
-                $rc = new ChurchesRcdpw;
-                $rc->churches_id = $id;
-                $rc->rc_dpwlists_id = $id_rcdpw;
-                $rc->save();
-            }
-
+            $rc = new ChurchesRcdpw;
+            $rc->churches_id = $id;
+            $rc->rc_dpwlists_id = $id_rcdpw;
+            $rc->save();
+    
             DB::commit();
             // hit api for update church
             $send = new HitApi;

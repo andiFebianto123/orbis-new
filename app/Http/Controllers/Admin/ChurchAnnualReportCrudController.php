@@ -54,29 +54,10 @@ class ChurchAnnualReportCrudController extends CrudController
         }
         else if($this->crud->typeReport == 'detail' || $this->crud->typeReport == 'designer'){
             CRUD::addColumns([
-                // [
-                //     'label' => 'RC / DPW',
-                //     'type' => 'text',
-                //     'name' => 'rc_dpw_name'
-                // ],
                 [
                     'label' => 'RC / DPW',
-                    'type' => 'closure',
-                    'name' => 'rc_dpw_name',
-                    'function' => function($entries){
-                        $church = Church::where('id', $entries->id)->first();
-                        if($church != null){
-                            return $church->rdpw_pivot->implode('rc_dpw_name', ', ');
-                        }
-                        return '-';
-                    },
-                    'searchLogic' => function ($query, $column, $searchTerm) {
-                        $query->orWhereRaw("EXISTS (
-                                SELECT 1 FROM churches_rcdpw 
-                                INNER JOIN rc_dpwlists ON rc_dpwlists.id = churches_rcdpw.rc_dpwlists_id
-                                WHERE churches_rcdpw.churches_id = church_annual_designer_views.id AND rc_dpwlists.rc_dpw_name LIKE '%{$searchTerm}%'
-                        )");
-                    },
+                    'type' => 'text',
+                    'name' => 'rc_dpw_name'
                 ],
                 [
                     'label' => 'Church Name',
@@ -205,6 +186,21 @@ class ChurchAnnualReportCrudController extends CrudController
                     'label' => 'Service Time Church',
                     'type' => 'text',
                     'name' => 'service_time_church'
+                ],
+                [
+                    'label' => 'Task Color',
+                    'type' => 'text',
+                    'name' => 'task_color'
+                ],
+                [
+                    'label' => 'Latitude',
+                    'type' => 'text',
+                    'name' => 'latitude'
+                ],
+                [
+                    'label' => 'Longitude',
+                    'type' => 'text',
+                    'name' => 'longitude'
                 ],
                 [
                     'label' => 'Notes',

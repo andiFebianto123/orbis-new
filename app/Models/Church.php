@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Support\Facades\Storage;
- 
+
 class Church extends Model
 {
     use CrudTrait;
@@ -25,7 +25,7 @@ class Church extends Model
         'founded_on',
         'church_type_id',
         'church_local_id',
-        // 'rc_dpw_id',
+        'rc_dpw_id',
         'church_name',
         'lead_pastor_name',
         'contact_person',
@@ -42,13 +42,13 @@ class Church extends Model
         'fax',
         'website',
         'map_url',
+        'longitude',
+        'latitude',
+        'task_color',
         'service_time_church',
         'certificate',
         'date_of_certificate',
         'notes',
-        'task_color',
-        'latitude',
-        'longitude',
     ];
     // protected $primaryKey = 'id';
     // public $timestamps = false;
@@ -56,24 +56,6 @@ class Church extends Model
     // protected $fillable = [];
     // protected $hidden = [];
     // protected $dates = [];
-
-    protected $appends = ['rdpw'];
-
-    public function getRdpwAttribute()
-    {
-        return $this->churches_rcdpw->map(function($entry){
-            return $entry->rcdpwlists;
-        });
-    }
-
-
-    public function rdpw_pivot(){
-        return $this->belongsToMany('App\Models\RcDpwList', 'App\Models\ChurchesRcdpw', 'churches_id', 'rc_dpwlists_id');
-    }
-
-    public function churches_rcdpw(){
-        return $this->hasMany('App\Models\ChurchesRcdpw', 'churches_id');
-    }
 
     public function church_type()
     {
