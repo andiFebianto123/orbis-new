@@ -195,7 +195,8 @@ class ChurchCrudController extends CrudController
             'type' => 'closure',
             'function' => function($entry){
                 return '<center><div style="width:15px; height: 15px; background-color:'.$entry->task_color.';"></div></center>';
-            }
+            },
+            'orderable' => false,
         ]);
 
         $this->crud->addColumn([
