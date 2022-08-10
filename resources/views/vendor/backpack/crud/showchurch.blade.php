@@ -166,7 +166,7 @@
 								</tr>
 								<tr>
 									<td>Task Color</td>
-									<td><div style="width:20px; height: 20px; background-color:{{ $entry->task_color }};"></div></td>
+									<td> : <span style="width:20px; height: 20px; background-color:{{ $entry->task_color }};"></span></td>
 								</tr>
 								<tr>
 									<td>Latitude</td>
