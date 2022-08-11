@@ -30,6 +30,42 @@ class AuthApiController extends Controller
                     ], 200);
         }
 
+        return $this->doLogin($request);
+    }
+
+
+    public function crossLogin(Request $request)
+    {
+        $token = $request->token;
+
+        $method = "AES-256-CBC";
+        $key = '921c83f3b90c92dca4ba9b947f99b4c9';
+        $iv = 'a671a96159e97a4f';
+        
+        if(isset($token))
+        {
+            $decryptedToken = openssl_decrypt(base64_decode($token), $method, $key, OPENSSL_RAW_DATA, $iv);        
+
+            $decryptedToken = json_decode($decryptedToken, true);
+            if (isset($decryptedToken['email']) && isset($decryptedToken['exp']))
+            {
+                if($decryptedToken['exp'] > time()){
+                    $request['email'] = $decryptedToken['email'];
+
+                    return $this->doLogin($request);
+                }
+            }
+        }
+
+        return response()->json([
+            'status' => false,
+            'message' => 'Wrong token'
+            ], 200);
+    }
+
+
+    private function doLogin($request)
+    {
         $personels = Personel::where('email', $request->email)->get();
         $active_email = false;
         $valid_personel = [];
@@ -79,7 +115,6 @@ class AuthApiController extends Controller
                 'message' => 'Email is not active',
             ];
         }
-        
 
         return response()->json($response, 200);
     }
