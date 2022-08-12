@@ -23,6 +23,7 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 use App\Models\ChurchesRcdpw;
+use App\Helpers\HitCompare;
 
 // HeadingRowFormatter::default('none');
 
@@ -71,15 +72,23 @@ class ChurchImport implements OnEachRow, /*ToCollection, */ WithValidation, With
         $row_fax = $row['fax'];
         $row_email = $row['email'];
         $row_secondary_email = $row['secondary_email']; // $row['Secondary Email'];
-        $row_church_status = $row['church_status']; // $row['Church Status'];
+        $row_church_status = $row['church_status'] ?? null; // $row['Church Status'];
         $row_founded_on = $row['founded_on']; // $row['Founded On'];
         $row_service_time_church = $row['service_time_church']; // $row['Service Time Church'];
+        $row_color = $row['task_color'];
+        $row_latitude = $row['latitude'];
+        $row_longitude = $row['longitude'];
         $row_notes = $row['notes'];
+
+        $dataset = $row;
 
         
         $country  = CountryList::where('country_name', $row_country)->first();
         $church_type  =  ChurchEntityType::where('entities_type', $row_church_type)->first();
-        // $rcdpw  =  RcDpwList::where('rc_dpw_name', $row_rc_dpw)->first();
+        $rcdpw  =  RcDpwList::where('rc_dpw_name', $row_rc_dpw)->first();
+
+        $dataset['rc_dpw'] = $rcdpw['id'] ?? null;
+
         $row_founded_on = trim($row_founded_on ?? '');
         $date =  $row_founded_on == '-' || $row_founded_on == '' ? NULL : $this->formatDateExcel($row_founded_on);
         
@@ -104,13 +113,32 @@ class ChurchImport implements OnEachRow, /*ToCollection, */ WithValidation, With
         
         $church_local = Church::where('church_name', $row_local_church)
                                 ->first();
+
+        $dataset['church_local_id'] = ($church_local)? $church_local->id : null;
+
         if ($exists_church) {
             // bila update data
             $update_church = Church::where('church_name', $row_church_name)
                         ->where('phone', $phone)
                         ->where('postal_code', $postal_code)->first();
+
+            $hitCompare = new HitCompare;
+            $hitCompare->addFieldCompare(
+                [
+                    'church_name' => 'church_name',
+                    'rc_dpw_id' => 'rc_dpw',
+                    'church_local_id' => 'church_local_id',
+                    'task_color' => 'task_color',
+                    'church_address' => 'church_address',
+                    'latitude' => 'latitude',
+                    'longitude' => 'longitude',
+                    'notes' => 'notes',
+                ], 
+            $dataset);
+            $com = $hitCompare->compareData($update_church->toArray());
+
             $update_church->founded_on = $date;
-            // $update_church->rc_dpw_id = ($rcdpw['id'] ?? null);
+            $update_church->rc_dpw_id = ($rcdpw['id'] ?? null);
             $update_church->church_type_id = ($church_type->id ?? null);
             $update_church->church_name = $row_church_name;
             $update_church->contact_person = $contact_person;
@@ -126,15 +154,21 @@ class ChurchImport implements OnEachRow, /*ToCollection, */ WithValidation, With
             $update_church->phone = $phone;
             $update_church->fax = $fax;
             $update_church->service_time_church = $service_time_church;
+            $update_church->task_color = $row_color ?? null;
+            $update_church->latitude = $row_latitude ?? null;
+            $update_church->longitude = $row_longitude ?? null;
             $update_church->notes = $row_notes;
             $update_church->save();
 
-            $this->ids_update[] = $update_church->id;
+            if($com){
+                $this->ids_update[] = $com;
+            }
+
 
             $id_church = $update_church->id;
             
 
-            $this->handleRcdpw($id_church, $row_rc_dpw, 'update');
+            // $this->handleRcdpw($id_church, $row_rc_dpw, 'update');
 
 
             StructureChurch::where('churches_id', $update_church->id)->delete();
@@ -173,10 +207,19 @@ class ChurchImport implements OnEachRow, /*ToCollection, */ WithValidation, With
                 }
             }
 
-            $status_history =  StatusHistoryChurch::where('churches_id',  $update_church->id)->first();
-            $status_history->status = $row_church_status;
-            $status_history->date_status = Carbon::now();
-            $status_history->save();
+            if($row_church_status != null){
+                $status_history =  StatusHistoryChurch::where('churches_id',  $update_church->id)->first();
+                if($status_history->status != $row_church_status){
+                    if($com === FALSE){
+                        $this->ids_update[] = $com;
+                    }
+                }
+                $status_history->status = $row_church_status;
+                $status_history->date_status = Carbon::now();
+                $status_history->save();
+            }
+
+            
 
         }else {
             $new_church = new Church();
@@ -197,12 +240,15 @@ class ChurchImport implements OnEachRow, /*ToCollection, */ WithValidation, With
             $new_church->phone = $phone;
             $new_church->fax = $fax;
             $new_church->service_time_church = $service_time_church;
+            $new_church->task_color = ($row_color ?? null);
+            $new_church->latitude = ($row_latitude ?? null);
+            $new_church->longitude = ($row_longitude ?? null);
             $new_church->notes = $row_notes;
             $new_church->save();
             
             $this->ids_create[] = $new_church->id;
 
-            $this->handleRcdpw($new_church->id, $row_rc_dpw, 'create');
+            // $this->handleRcdpw($new_church->id, $row_rc_dpw, 'create');
 
 
             foreach ($this->handlePastorName($row_lead_pastor_name) as $key => $hpn) {
@@ -241,12 +287,16 @@ class ChurchImport implements OnEachRow, /*ToCollection, */ WithValidation, With
                 }
             }
 
-            $status_history = new StatusHistoryChurch([
-                'status'  => $row_church_status,
-                'date_status' => Carbon::now(),
-                'churches_id' => $new_church->id,
-            ]);
-            $status_history->save();
+            if($row_church_status != null){
+                $status_history = new StatusHistoryChurch([
+                    'status'  => $row_church_status,
+                    'date_status' => Carbon::now(),
+                    'churches_id' => $new_church->id,
+                ]);
+                $status_history->save();
+            }
+
+            
         }
     }
 

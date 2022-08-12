@@ -26,6 +26,7 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Laravel\Sanctum\PersonalAccessToken;
 use App\Models\PersonelsRcdpw;
 use App\Helpers\HitApi;
+use App\Helpers\HitCompare;
 use Illuminate\Support\Str;
 
 /**
@@ -707,7 +708,7 @@ class PersonelCrudController extends CrudController
             // hit api for update personel
             $send = new HitApi;
             $id = [$item->getKey()];
-            $module = 'personel';
+            $module = 'user_admin';
             $response = $send->action($id, 'create', $module)->json();
 
         } catch (Exception $e) {
@@ -762,6 +763,22 @@ class PersonelCrudController extends CrudController
         DB::beginTransaction();
         try {
             $model = Personel::where('id', $id)->firstOrFail();
+
+            $item_previous = $model->toArray(); // adalah data sebelumnya
+            
+            $hitCompare = new HitCompare;
+            $hitCompare->addFieldCompare(
+                [
+                    'first_name' => 'first_name',
+                    'last_name' => 'last_name',
+                    'profile_image' => 'profile_image',
+                    'phone' => 'phone',
+                    'email' => 'email',
+                ], 
+            $request->all());
+
+           $com = $hitCompare->compareData($item_previous);
+        //    dd($com);
 
             // $result = $this->checkMultipleImage($request, $model);
             // if(count($result['errors']) != 0){
@@ -832,11 +849,20 @@ class PersonelCrudController extends CrudController
             //     return redirect($this->crud->route . '/'. $id . '/edit')
             //         ->withInput()->withErrors($errors);
             // }
+
+
+            // if($com){
+            //     $send = new HitApi;
+            //     $id = [$com];
+            //     $module = 'user_admin';
+            //     $response = $send->action($id, 'update', $module)->json();
+            // }
             
             // update the row in the db
             $item = $this->crud->update($request->get($this->crud->model->getKeyName()),
                 $this->crud->getStrippedSaveRequest());
             $this->data['entry'] = $this->crud->entry = $item;
+
 
             // $validIds = $result['valid_ids'];
             // if(count($validIds) > 0){
@@ -882,10 +908,12 @@ class PersonelCrudController extends CrudController
 
             DB::commit();
              // hit api for update user
-             $send = new HitApi;
-             $id = [$item->getKey()];
-             $module = 'personel';
-             $response = $send->action($id, 'update', $module)->json();
+             if($com){
+                $send = new HitApi;
+                $id = [$com];
+                $module = 'user_admin';
+                $response = $send->action($id, 'update', $module)->json();
+             }
         } catch (Exception $e) {
             DB::rollback();
             throw $e;
@@ -1058,7 +1086,7 @@ class PersonelCrudController extends CrudController
              // hit api for update user
              $send = new HitApi;
              $ids = [$id];
-             $module = 'personel';
+             $module = 'user_admin';
              $response = $send->action($ids, 'delete', $module)->json();
 
             return $response;

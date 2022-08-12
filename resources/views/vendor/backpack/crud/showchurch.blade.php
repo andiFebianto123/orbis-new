@@ -86,7 +86,7 @@
 								</tr>
 								<tr>
 									<td>RC / DPW</td>
-									<td> :  {{ $entry->rdpw_pivot->implode('rc_dpw_name', ', ') }}</td>
+									<td> : {{ $entry->rc_dpw->rc_dpw_name ?? '-' }} {{-- $entry->rdpw_pivot->implode('rc_dpw_name', ', ') --}}</td>
 								</tr>
 								<tr>
 									<td>Contact Person</td>

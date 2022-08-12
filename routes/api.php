@@ -32,7 +32,7 @@ Route::group(['middleware' => ['auth:sanctum', 'checkMaintenanceMode']], functio
    Route::get('profile-child-names/{id}', 'Api\DetailPersonelApiController@childNames');
    Route::get('profile-status-histories/{id}', 'Api\DetailPersonelApiController@statusHistories');
    Route::get('profile-churches/{id}', 'Api\DetailPersonelApiController@churches');
-   Route::post('profile-update', 'Api\DetailPersonelApiController@update');
+   Route::post('profile-update', 'Api\DetailPersonelApiController@update'); 
 
    Route::get('church-coordinator/{id}', 'Api\DetailChurchApiController@coordinator');
    Route::get('church-leadership/{id}', 'Api\DetailChurchApiController@leadership');

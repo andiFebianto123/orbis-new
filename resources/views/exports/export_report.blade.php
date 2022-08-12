@@ -37,7 +37,8 @@ function remove_bs($Str)
                 @foreach($columnHeader as $indexColumn => $headerColumn)
                 <?php
                     if(isset($columnHeader['rc_dpw_name']) && ($indexColumn == 'rc_dpw_name')){
-                        $realColumnData = $data['rdpw'];
+                       $realColumnData = (in_array($title, $title_pastor)) ? $data['rdpw'] : $data[$indexColumn];
+                        // $realColumnData = ($title == 'Pastor Report') ? $data['rdpw'] : $data[$indexColumn]; //$data['rdpw'];
                     }else{
                         $realColumnData = preg_match("/\r|\n/", $data[$indexColumn]) ? remove_bs($data[$indexColumn]) : $data[$indexColumn];
                     }

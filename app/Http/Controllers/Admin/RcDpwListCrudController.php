@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Imports\RcdpwListImport;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\HeadingRowImport;
+use App\Helpers\HitCompare;
 use App\Helpers\HitApi;
 use Excel;
 use Exception;
@@ -185,7 +186,7 @@ class RcDpwListCrudController extends CrudController
         // hit api for create rcdpwlist
         $send = new HitApi;
         $ids = [$item->getKey()];
-        $module = 'rec_dpwlist';
+        $module = 'region';
         $response = $send->action($ids, 'create', $module)->json();
 
         return $this->crud->performSaveAction($item->getKey());
@@ -197,21 +198,36 @@ class RcDpwListCrudController extends CrudController
 
         // execute the FormRequest authorization and validation, if one is required
         $request = $this->crud->validateRequest();
+
+        $item_previous = $this->crud->getEntry($request->get($this->crud->model->getKeyName()))->toArray();
+
+        $hitCompare = new HitCompare;
+        $hitCompare->addFieldCompare(
+            [
+               'rc_dpw_name' => 'rc_dpw_name'
+            ], 
+        $request->all());
+
+        $com = $hitCompare->compareData($item_previous);
+
         // update the row in the db
         $item = $this->crud->update($request->get($this->crud->model->getKeyName()),
                             $this->crud->getStrippedSaveRequest());
         $this->data['entry'] = $this->crud->entry = $item;
+        
+
+        if($com){
+            $send = new HitApi;
+            $ids = [$item->getKey()];
+            $module = 'region';
+            $response = $send->action($ids, 'update', $module)->json();
+        }
 
         // show a success message
         \Alert::success(trans('backpack::crud.update_success'))->flash();
 
         // save the redirect choice for next time
         $this->crud->setSaveAction();
-
-        $send = new HitApi;
-        $ids = [$item->getKey()];
-        $module = 'rec_dpwlist';
-        $response = $send->action($ids, 'update', $module)->json();
 
         return $this->crud->performSaveAction($item->getKey());
     }
@@ -227,7 +243,7 @@ class RcDpwListCrudController extends CrudController
 
         $send = new HitApi;
         $ids = [$item->getKey()];
-        $module = 'rec_dpwlist';
+        $module = 'region';
         $response = $send->action($ids, 'delete', $module)->json();
 
         return $delete;

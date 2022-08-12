@@ -214,21 +214,22 @@ class ToolsUploadController extends Controller
     
                 session()->flash('message', 'Data has been successfully import');
                 session()->flash('status', 'success');
-                DB::commit();
 
                 if(count($import->ids_update) > 0){
                     $send = new HitApi;
                     $ids = $import->ids_update;
-                    $module = 'churchs';
+                    $module = 'sub_region';
                     $response = $send->action($ids, 'update', $module)->json();
                 }
 
                 if(count($import->ids_create) > 0){
                     $send = new HitApi;
                     $ids = $import->ids_create;
-                    $module = 'churchs';
+                    $module = 'sub_region';
                     $response = $send->action($ids, 'create', $module)->json();
                 }
+
+                DB::commit();
 
                 return response()->json([
                     'status' => true,
@@ -336,14 +337,14 @@ class ToolsUploadController extends Controller
             if(count($import->ids_update) > 0){
                 $send = new HitApi;
                 $ids = $import->ids_update;
-                $module = 'personel';
+                $module = 'user_admin';
                 $response = $send->action($ids, 'update', $module)->json();
             }
 
             if(count($import->ids_create) > 0){
                 $send = new HitApi;
                 $ids = $import->ids_create;
-                $module = 'personel';
+                $module = 'user_admin';
                 $response = $send->action($ids, 'create', $module)->json();
             }
     
