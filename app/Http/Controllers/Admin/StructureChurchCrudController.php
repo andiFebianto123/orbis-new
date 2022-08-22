@@ -9,6 +9,8 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use App\Models\Personel;
 use App\Models\Church;
 use App\Models\StructureChurch;
+use App\Helpers\HitCompare;
+use App\Helpers\HitApi;
 use Prologue\Alerts\Facades\Alert;
 
 /**

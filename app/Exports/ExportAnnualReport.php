@@ -24,6 +24,12 @@ class ExportAnnualReport implements FromView,WithEvents
     protected $columnHeader;
     protected $year;
     protected $filterBy;
+    private $pastor_title = [
+        'pastor_annual',
+        'pastor_detail',
+        'Pastor Report'
+    ];
+    private $title;
 
     public function __construct(String $type, Array $columnHeader, Int $year = 0, Array $filterBy = []){
         $this->type = $type;
@@ -34,6 +40,7 @@ class ExportAnnualReport implements FromView,WithEvents
     public function view(): View
     {
         $type = $this->type;
+
         if($type == 'church_annual'){
             $title = 'Church Annual Report';
             $dataColumn = ChurchAnnualView::get()->toArray();
@@ -44,7 +51,9 @@ class ExportAnnualReport implements FromView,WithEvents
         }
         else if ($type == 'church_designer'){
             $title = 'Church Report';
-            $dataColumn = ChurchAnnualDesignerView::rcDpw($this->filterBy['rc_dpw_name'] ?? null)->type($this->filterBy['entities_type'] ?? null)->country($this->filterBy['country_name'] ?? null)->status($this->filterBy['status'] ?? null)->get()->toArray();
+            // $dataColumn = ChurchAnnualDesignerView::rcDpw($this->filterBy['rc_dpw_name'] ?? null)->type($this->filterBy['entities_type'] ?? null)->country($this->filterBy['country_name'] ?? null)->status($this->filterBy['status'] ?? null)->get()->toArray();
+            $dataColumn = ChurchAnnualDesignerView::type($this->filterBy['entities_type'] ?? null)->country($this->filterBy['country_name'] ?? null)->status($this->filterBy['status'] ?? null)->get()->toArray();
+
         }
         else if($type == 'pastor_annual'){
             $title = 'Pastor Annual Report';
@@ -83,9 +92,12 @@ class ExportAnnualReport implements FromView,WithEvents
             $title = "All Pastor";
             $dataColumn = PastorAnnualDesignerView::get()->toArray();
         }
+
+        $this->title = $title;
         
         return view('exports.export_report',[
             'title' => $title,
+            'title_pastor' => $this->pastor_title,
             'columnHeader' => $this->columnHeader,
             'dataColumn' => $dataColumn
         ]);
@@ -157,13 +169,24 @@ class ExportAnnualReport implements FromView,WithEvents
                     if($valueCell == "Email"){
                         $emailHeader = $column;
                     }
-                    if($valueCell == 'RC / DPW'){
-                        $rcdpwHeader = $column;
+
+                    if(in_array($this->title, $this->pastor_title)){
+                        // ini hanya untuk pastor
+                        if($valueCell == 'RC / DPW'){
+                            $rcdpwHeader = $column;
+                            $event->sheet->getColumnDimension($column)->setWidth(40);
+                        }
+                    }else{
+                        if($valueCell == 'RC / DPW'){
+                            $event->sheet->getColumnDimension($column)->setWidth(20);
+                        }
                     }
+                    
+
                     if($valueCell == "Year" || $valueCell == "Churches" || $valueCell == 'Pastor' || $valueCell == 'Postal Code' || $valueCell == "Anniversary" || $valueCell == 'Gender'){
                         $event->sheet->getColumnDimension($column)->setWidth(10);
                     }
-                    if($valueCell == 'RC / DPWdlsdksdls'  || $valueCell == 'Church Type' || $valueCell == 'City' || $valueCell == 'Province' || $valueCell ==  'Country'|| $valueCell == "Church Status"  || $valueCell == "Province / State" || $valueCell == "Marital Status" || $valueCell == "Date of Birth" || $valueCell == "Spouse Name" || $valueCell == "Spouse Date of Birth" || $valueCell == "Status" || $valueCell == "First Licensed On" || $valueCell == "Card" || $valueCell == "Valid Card Start" || $valueCell == "Valid Card End" ){
+                    if($valueCell == 'RC / DPWchurch'  || $valueCell == 'Church Type' || $valueCell == 'City' || $valueCell == 'Province' || $valueCell ==  'Country'|| $valueCell == "Church Status"  || $valueCell == "Province / State" || $valueCell == "Marital Status" || $valueCell == "Date of Birth" || $valueCell == "Spouse Name" || $valueCell == "Spouse Date of Birth" || $valueCell == "Status" || $valueCell == "First Licensed On" || $valueCell == "Card" || $valueCell == "Valid Card Start" || $valueCell == "Valid Card End" ){
                         $event->sheet->getColumnDimension($column)->setWidth(20);
                     }
                     if($valueCell == 'First Name' || $valueCell == 'Last Name' || $valueCell == "Current Certificate Number" || $valueCell =='Coordinator'){
@@ -172,7 +195,7 @@ class ExportAnnualReport implements FromView,WithEvents
                     if($valueCell == 'Contact Person' || $valueCell == 'Phone' || $valueCell == 'Fax' || $valueCell == 'Email'  || $valueCell == 'Founded On' || $valueCell == 'Service Time Church' || $valueCell == 'Notes'){
                         $event->sheet->getColumnDimension($column)->setWidth(35);
                     }
-                    if($valueCell == 'RC / DPW' || $valueCell == 'Leadership Structure' || $valueCell == 'Church Name' ||$valueCell == 'Local Church'|| $valueCell == 'Lead Pastor Name' || $valueCell == "Church Address" || $valueCell == 'Office Address' || $valueCell == "Address"){
+                    if($valueCell == 'RC / DPWpersonel' || $valueCell == 'Leadership Structure' || $valueCell == 'Church Name' ||$valueCell == 'Local Church'|| $valueCell == 'Lead Pastor Name' || $valueCell == "Church Address" || $valueCell == 'Office Address' || $valueCell == "Address"){
                         $event->sheet->getColumnDimension($column)->setWidth(40);
                     }
                 }

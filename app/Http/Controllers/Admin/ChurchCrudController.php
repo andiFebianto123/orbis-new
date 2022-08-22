@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Exception;
+use App\Helpers\HitCompare;
 use App\Helpers\HitApi;
 
 /**
@@ -573,7 +574,7 @@ class ChurchCrudController extends CrudController
             // hit api for update church
             $send = new HitApi;
             $id = [$item->getKey()];
-            $module = 'churchs';
+            $module = 'sub_region';
             $response = $send->action($id, 'create', $module)->json();
         } catch (Exception $e) {
             DB::rollback();
@@ -610,10 +611,27 @@ class ChurchCrudController extends CrudController
         $this->crud->setRequest($request);
         $this->crud->unsetValidation(); // Validation has already been run
 
-        $model = Church::where('id', $id)->firstOrFail();
 
         DB::beginTransaction();
         try {
+
+            $model = Church::where('id', $id)->firstOrFail();
+
+            $hitCompare = new HitCompare;
+            $hitCompare->addFieldCompare(
+                [
+                    'church_name' => 'church_name',
+                    'rc_dpw_id' => 'rc_dpw_id',
+                    'church_local_id' => 'church_local_id',
+                    'task_color' => 'task_color',
+                    'church_address' => 'church_address',
+                    'latitude' => 'latitude',
+                    'longitude' => 'longitude',
+                    'notes' => 'notes',
+                ], 
+            $request->all());
+            $com = $hitCompare->compareData($model->toArray());
+
             $isDuplicate = Church::query();
 
             if (!$request->filled('church_name')) {
@@ -676,10 +694,12 @@ class ChurchCrudController extends CrudController
     
             DB::commit();
             // hit api for update church
-            $send = new HitApi;
-            $id = [$item->getKey()];
-            $module = 'churchs';
-            $response = $send->action($id, 'update', $module)->json();
+            if($com){
+                $send = new HitApi;
+                $id = [$item->getKey()];
+                $module = 'sub_region';
+                $response = $send->action($id, 'update', $module)->json();
+            }
         } catch (Exception $e) {
             DB::rollback();
             throw $e;
@@ -737,7 +757,7 @@ class ChurchCrudController extends CrudController
             // hit api for update church
             $send = new HitApi;
             $id = [$item->getKey()];
-            $module = 'churchs';
+            $module = 'sub_region';
             $response = $send->action($id, 'delete', $module)->json();
             return $response;
         }

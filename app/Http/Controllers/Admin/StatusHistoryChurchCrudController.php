@@ -6,6 +6,8 @@ use App\Http\Requests\StatusHistoryChurchRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use App\Models\Church;
+use App\Models\StatusHistoryChurch;
+use App\Helpers\HitApi;
 
 /**
  * Class StatusHistoryChurchCrudController
@@ -144,9 +146,43 @@ class StatusHistoryChurchCrudController extends CrudController
         // execute the FormRequest authorization and validation, if one is required
         $request = $this->crud->validateRequest();
 
+
+        $current_status_now = StatusHistoryChurch::leftJoin('status_history_churches as temps', function($leftJoin){
+            $leftJoin->on('temps.churches_id', 'status_history_churches.churches_id')
+            ->where(function($innerQuery){
+                $innerQuery->whereRaw('status_history_churches.date_status < temps.date_status')
+                ->orWhere(function($deepestQuery){
+                    $deepestQuery->whereRaw('status_history_churches.date_status = temps.date_status')
+                    ->where('status_history_churches.id', '<', 'temps.id');
+                });
+            });
+        })->whereNull('temps.id')
+        ->where('status_history_churches.churches_id', $this->crud->currentId)
+        ->select('status_history_churches.churches_id', 'status_history_churches.status')->first()->status ?? '-';
+
         // insert item in the db
         $item = $this->crud->create($this->crud->getStrippedSaveRequest());
         $this->data['entry'] = $this->crud->entry = $item;
+
+        $current_status_last = StatusHistoryChurch::leftJoin('status_history_churches as temps', function($leftJoin){
+            $leftJoin->on('temps.churches_id', 'status_history_churches.churches_id')
+            ->where(function($innerQuery){
+                $innerQuery->whereRaw('status_history_churches.date_status < temps.date_status')
+                ->orWhere(function($deepestQuery){
+                    $deepestQuery->whereRaw('status_history_churches.date_status = temps.date_status')
+                    ->where('status_history_churches.id', '<', 'temps.id');
+                });
+            });
+        })->whereNull('temps.id')
+        ->where('status_history_churches.churches_id', $item->churches_id)
+        ->select('status_history_churches.churches_id', 'status_history_churches.status')->first()->status ?? '-';
+
+        if($current_status_now != $current_status_last){
+            $send = new HitApi;
+            $id = [$item->churches_id];
+            $module = 'sub_region';
+            $response = $send->action($id, 'update', $module)->json();
+        }
 
         // show a success message
         \Alert::success(trans('backpack::crud.insert_success'))->flash();
@@ -160,14 +196,96 @@ class StatusHistoryChurchCrudController extends CrudController
 
         // execute the FormRequest authorization and validation, if one is required
         $request = $this->crud->validateRequest();
+
+        $current_status_now = StatusHistoryChurch::leftJoin('status_history_churches as temps', function($leftJoin){
+            $leftJoin->on('temps.churches_id', 'status_history_churches.churches_id')
+            ->where(function($innerQuery){
+                $innerQuery->whereRaw('status_history_churches.date_status < temps.date_status')
+                ->orWhere(function($deepestQuery){
+                    $deepestQuery->whereRaw('status_history_churches.date_status = temps.date_status')
+                    ->where('status_history_churches.id', '<', 'temps.id');
+                });
+            });
+        })->whereNull('temps.id')
+        ->where('status_history_churches.churches_id', $this->crud->currentId)
+        ->select('status_history_churches.churches_id', 'status_history_churches.status')->first()->status ?? '-';
+
         // update the row in the db
         $item = $this->crud->update($request->get($this->crud->model->getKeyName()),
                             $this->crud->getStrippedSaveRequest());
         $this->data['entry'] = $this->crud->entry = $item;
+
+        $current_status_last = StatusHistoryChurch::leftJoin('status_history_churches as temps', function($leftJoin){
+            $leftJoin->on('temps.churches_id', 'status_history_churches.churches_id')
+            ->where(function($innerQuery){
+                $innerQuery->whereRaw('status_history_churches.date_status < temps.date_status')
+                ->orWhere(function($deepestQuery){
+                    $deepestQuery->whereRaw('status_history_churches.date_status = temps.date_status')
+                    ->where('status_history_churches.id', '<', 'temps.id');
+                });
+            });
+        })->whereNull('temps.id')
+        ->where('status_history_churches.churches_id', $item->churches_id)
+        ->select('status_history_churches.churches_id', 'status_history_churches.status')->first()->status ?? '-';
+
+        if($current_status_now != $current_status_last){
+            $send = new HitApi;
+            $id = [$item->churches_id];
+            $module = 'sub_region';
+            $response = $send->action($id, 'update', $module)->json();
+        }
 
         // show a success message
         \Alert::success(trans('backpack::crud.update_success'))->flash();
 
         return redirect(backpack_url('church/'.$item->churches_id.'/show'));    
     }
+
+    public function destroy($id)
+    {
+        $this->crud->hasAccessOrFail('delete');
+
+        // get entry ID from Request (makes sure its the last ID for nested resources)
+        $id = $this->crud->getCurrentEntryId() ?? $id;
+
+        $item = $this->crud->getEntry($id);
+
+        $current_status_now = StatusHistoryChurch::leftJoin('status_history_churches as temps', function($leftJoin){
+            $leftJoin->on('temps.churches_id', 'status_history_churches.churches_id')
+            ->where(function($innerQuery){
+                $innerQuery->whereRaw('status_history_churches.date_status < temps.date_status')
+                ->orWhere(function($deepestQuery){
+                    $deepestQuery->whereRaw('status_history_churches.date_status = temps.date_status')
+                    ->where('status_history_churches.id', '<', 'temps.id');
+                });
+            });
+        })->whereNull('temps.id')
+        ->where('status_history_churches.churches_id', $item->churches_id)
+        ->select('status_history_churches.churches_id', 'status_history_churches.status')->first()->status ?? '-';
+
+        $delete = $this->crud->delete($id);
+
+        $current_status_last = StatusHistoryChurch::leftJoin('status_history_churches as temps', function($leftJoin){
+            $leftJoin->on('temps.churches_id', 'status_history_churches.churches_id')
+            ->where(function($innerQuery){
+                $innerQuery->whereRaw('status_history_churches.date_status < temps.date_status')
+                ->orWhere(function($deepestQuery){
+                    $deepestQuery->whereRaw('status_history_churches.date_status = temps.date_status')
+                    ->where('status_history_churches.id', '<', 'temps.id');
+                });
+            });
+        })->whereNull('temps.id')
+        ->where('status_history_churches.churches_id', $item->churches_id)
+        ->select('status_history_churches.churches_id', 'status_history_churches.status')->first()->status ?? '-';
+
+        if($current_status_now != $current_status_last){
+            $send = new HitApi;
+            $id = [$item->churches_id];
+            $module = 'sub_region';
+            $response = $send->action($id, 'update', $module)->json();
+        }
+
+        return $delete;
+    }
+
 }

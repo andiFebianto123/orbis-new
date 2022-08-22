@@ -13,6 +13,8 @@ use App\Models\StatusHistory;
 use App\Models\SpecialRolePersonel;
 use App\Models\Relatedentity;
 use App\Models\StructureChurch;
+use App\Helpers\HitCompare;
+use App\Helpers\HitApi;
 
 class DetailPersonelApiController extends Controller
 {
@@ -209,6 +211,11 @@ class DetailPersonelApiController extends Controller
         $update_p = Personel::where('id', $id)->first();
         $message_log = "Update ";
 
+        $item_previous = $update_p->toArray();
+
+        $array_compare = [];
+
+
         if (isset($request->rc_dpw_id)) {
             $message_log .= "RC/DPW ".$request->rc_dpw_id." to ".$request->rc_dpw_id;
             $update_p->rc_dpw_id = $request->rc_dpw_id;
@@ -220,10 +227,12 @@ class DetailPersonelApiController extends Controller
         if (isset($request->first_name)) {
             $message_log .= "First ".$update_p->first_name." to ".$request->first_name;
             $update_p->first_name = $request->first_name;
+            $array_compare['first_name'] = 'first_name';
         }
         if (isset($request->last_name)) {
             $message_log .= "Last ".$update_p->last_name." to ".$request->last_name;
             $update_p->last_name = $request->last_name;
+            $array_compare['last_name'] = 'last_name';
         }
         if (isset($request->church_name)) {
             $message_log .= "Church Name ".$update_p->church_name." to ".$request->church_name;
@@ -276,6 +285,7 @@ class DetailPersonelApiController extends Controller
         if (isset($request->email)) {
             $message_log .= "Email ".$update_p->email." to ".$request->email;
             $update_p->email = $request->email;
+            $array_compare['email'] = 'email';
         }
         if (isset($request->second_email)) {
             $message_log .= "Email Secondary ".$update_p->second_email." to ".$request->second_email;
@@ -284,6 +294,7 @@ class DetailPersonelApiController extends Controller
         if (isset($request->phone)) {
             $message_log .= "Phone ".$update_p->phone." to ".$request->phone;
             $update_p->phone = $request->phone;
+            $array_compare['phone'] = 'phone';
         }
         if (isset($request->fax)) {
             $message_log .= "Mobile Phone ".$update_p->fax." to ".$request->fax;
@@ -312,13 +323,25 @@ class DetailPersonelApiController extends Controller
         if (isset($request->profile_image)) {
             $update_p->profile_image = $request->profile_image;
             $message_log .= "Profile Image";
+            $array_compare['profile_image'] = 'profile_image';
         }
         if (isset($request->family_image)) {
             $update_p->family_image = $request->family_image;
             $message_log .= "Family Image";
         }
 
+        $hitCompare = new HitCompare;
+        $hitCompare->addFieldCompare($array_compare, $request->all());
+        $com = $hitCompare->compareData($item_previous);
+
         $update_p->save();
+
+        if($com){
+            $send = new HitApi;
+            $ids = [$com];
+            $module = 'user_admin';
+            $response = $send->action($ids, 'update', $module)->json();
+        }
 
         (new LogHubApi())->save($id, $message_log, 'personel');
 

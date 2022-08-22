@@ -7,6 +7,7 @@ use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Illuminate\Support\Facades\Hash;
 use App\Helpers\HitApi;
+use App\Helpers\HitCompare;
 /**
  * Class UserCrudController
  * @package App\Http\Controllers\Admin
@@ -210,9 +211,6 @@ class UserCrudController extends CrudController
         $id = [$item->getKey()];
 
         $module = 'user';
-        if($item->role->name === 'Super Admin'){
-            $module = "user_admin";
-        }
 
         $response = $send->action($id, 'create', $module)->json();
 
@@ -276,6 +274,44 @@ class UserCrudController extends CrudController
 
         // execute the FormRequest authorization and validation, if one is required
         $request = $this->crud->validateRequest();
+
+        $id = $request->get($this->crud->model->getKeyName());
+
+        $item_previous = $this->crud->getEntry($id); // adalah data sebelumnya
+        
+        $hitCompare = new HitCompare;
+        $hitCompare->addFieldCompare(
+            [
+                'name' => 'name',
+                'email' => 'email',
+                'privilege' => 'privilege',
+                'status_user' => 'status_user',
+                'role_id' => 'role_id',
+            ], 
+        $request->all());
+
+        $com = $hitCompare->compareData($item_previous->toArray());
+
+        if($com){
+            $send = new HitApi;
+            $id = [$com];
+            $module = 'user';
+            $response = $send->action($id, 'update', $module)->json();
+        }
+
+        // hit api for update user
+        // $send = new HitApi;
+
+        // $id = [$item->getKey()];
+
+        // $module = 'user';
+        // if($item->role->name === 'Super Admin'){
+        //     $module = "user_admin";
+        // }
+
+        // $response = $send->action($id, 'update', $module)->json();
+
+
         // update the row in the db
         $item = $this->crud->update($request->get($this->crud->model->getKeyName()),
                             $this->crud->getStrippedSaveRequest());
@@ -287,17 +323,6 @@ class UserCrudController extends CrudController
         // save the redirect choice for next time
         $this->crud->setSaveAction();
 
-        // hit api for update user
-        $send = new HitApi;
-
-        $id = [$item->getKey()];
-
-        $module = 'user';
-        if($item->role->name === 'Super Admin'){
-            $module = "user_admin";
-        }
-
-        $response = $send->action($id, 'update', $module)->json();
 
         return $this->crud->performSaveAction($item->getKey());
     }

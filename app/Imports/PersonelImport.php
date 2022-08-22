@@ -24,6 +24,7 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 use Maatwebsite\Excel\Concerns\OnEachRow;
+use App\Helpers\HitCompare;
 
 // HeadingRowFormatter::default('none');
 
@@ -115,6 +116,20 @@ class PersonelImport implements OnEachRow/* ToCollection */, WithHeadingRow, Wit
                                 ->first();
             // $update_personel->acc_status_id = ($acc_status['id'] ?? null);
             // $update_personel->rc_dpw_id = ($rcdpw['id'] ?? null);
+
+            $hitCompare = new HitCompare;
+            $hitCompare->addFieldCompare(
+                [
+                    'first_name' => 'first_name',
+                    'last_name' => 'last_name',
+                    // 'profile_image' => 'profile_image',
+                    'phone' => 'phone',
+                    'email' => 'email',
+                ], 
+            $row);
+
+            $com = $hitCompare->compareData($update_personel->toArray());
+
             $update_personel->title_id = $title['id'];
             $update_personel->first_name = $row_first_name;
             $update_personel->last_name = $row_last_name;
@@ -142,14 +157,24 @@ class PersonelImport implements OnEachRow/* ToCollection */, WithHeadingRow, Wit
             $update_personel->current_certificate_number = $row_current_certificate_number;
             $update_personel->notes = $row_notes;
             $update_personel->is_lifetime = $is_lifetime;
-            $update_personel->save();
+            $update_personel->save(); 
 
-            $this->ids_update[] = $update_personel->id;
+            if($com){
+                $this->ids_update[] = $update_personel->id;
+            }
 
-            $this->handleRcdpw($update_personel->id, $row_rc_dpw, 'update');
+            // $this->handleRcdpw($update_personel->id, $row_rc_dpw, 'update');
 
             if (StatusHistory::where('personel_id', $update_personel->id)->exists()) {
-                $status_history = StatusHistory::where('personel_id', $update_personel->id)->first();
+                $status_history = StatusHistory::where('personel_id', $update_personel->id)
+                ->orderBy('date_status','desc')
+                ->orderBy('created_at','desc')
+                ->first();
+                if($status_history->status_histories_id != $acc_status['id']){
+                    if($com === FALSE){
+                        $this->ids_update[] = $update_personel->id;
+                    }
+                }
                 $status_history->status_histories_id = ($acc_status['id'] ?? null);
                 $status_history->date_status = Carbon::now();
                 $status_history->save();
@@ -303,33 +328,33 @@ class PersonelImport implements OnEachRow/* ToCollection */, WithHeadingRow, Wit
         return [
             'first_name' => 'required',
             'title' => 'required',
-            'rc_dpw' => ['required',function($attribute, $value, $onFailure){
-                if(strlen($value) > 0){
-                    $rc_dpw = trim($value);
-                    $rc_dpw = str_replace('\n', "\n", $rc_dpw ?? '');
-                    $is_fail = [];
-                    if (strpos( $rc_dpw, "\n") !== false) {
-                        $rc_dpws = explode("\n", $rc_dpw);
-                        foreach($rc_dpws as $data){
-                            $d = RcDpwList::where('rc_dpw_name', $data)->first();
-                            if($d == null){
-                                $is_fail[] = $data;
-                            }
-                        }
-                    }else{
-                        $d = RcDpwList::where('rc_dpw_name', $rc_dpw)->first();
-                        if(!isset($d)){
-                            $is_fail[] = $rc_dpw;
-                        }
-                    }
+            // 'rc_dpw' => ['required',function($attribute, $value, $onFailure){
+            //     if(strlen($value) > 0){
+            //         $rc_dpw = trim($value);
+            //         $rc_dpw = str_replace('\n', "\n", $rc_dpw ?? '');
+            //         $is_fail = [];
+            //         if (strpos( $rc_dpw, "\n") !== false) {
+            //             $rc_dpws = explode("\n", $rc_dpw);
+            //             foreach($rc_dpws as $data){
+            //                 $d = RcDpwList::where('rc_dpw_name', $data)->first();
+            //                 if($d == null){
+            //                     $is_fail[] = $data;
+            //                 }
+            //             }
+            //         }else{
+            //             $d = RcDpwList::where('rc_dpw_name', $rc_dpw)->first();
+            //             if(!isset($d)){
+            //                 $is_fail[] = $rc_dpw;
+            //             }
+            //         }
     
-                    if(count($is_fail) > 0){
-                        $str_rc_dpw = implode(", ", $is_fail);
-                        $onFailure('RC / DPW are not invalid for ' . $str_rc_dpw);
-                    }
+            //         if(count($is_fail) > 0){
+            //             $str_rc_dpw = implode(", ", $is_fail);
+            //             $onFailure('RC / DPW are not invalid for ' . $str_rc_dpw);
+            //         }
     
-                }
-            }],
+            //     }
+            // }],
             'church_name' => function($attribute, $value, $onFailure) {
                 $church_name = $this->handleChurchName($value);
                 if ($value != "" && sizeof($church_name) == 0) {

@@ -11,6 +11,8 @@ use App\Models\RelatedEntityChurch;
 use App\Models\StatusHistoryChurch;
 use App\Models\StructureChurch;
 use Illuminate\Support\Facades\DB;
+use App\Helpers\HitCompare;
+use App\Helpers\HitApi;
 
 class DetailChurchApiController extends Controller
 {
@@ -201,6 +203,9 @@ class DetailChurchApiController extends Controller
 
         $update_p = Church::where('id', $id)->first();
 
+        $item_previous = $update_p->toArray();
+        $array_compare = [];
+
         if (isset($request->founded_on)) {
             $message_log .= "Founded On from ".$update_p->founded_on." to ".$request->founded_on;
             $update_p->founded_on = $request->founded_on;
@@ -212,14 +217,17 @@ class DetailChurchApiController extends Controller
         if (isset($request->church_local_id)) {
             $message_log .= "Church Local ".$update_p->church_local_id." to ".$request->church_local_id;
             $update_p->church_local_id = $request->church_local_id;
+            $array_compare['church_local_id'] = 'church_local_id';
         }
         if (isset($request->rc_dpw_id)) {
             $message_log .= "RC/DPW ".$update_p->rc_dpw_id." to ".$request->rc_dpw_id;
             $update_p->rc_dpw_id = $request->rc_dpw_id;
+            $array_compare['rc_dpw_id'] = 'rc_dpw_id';
         }
         if (isset($request->church_name)) {
             $message_log .= "Church Name ".$update_p->church_name." to ".$request->church_name;
             $update_p->church_name = $request->church_name;
+            $array_compare['church_name'] = 'church_name';
         }
         if (isset($request->contact_person)) {
             $message_log .= "Contact Person ".$update_p->contact_person." to ".$request->contact_person;
@@ -232,6 +240,7 @@ class DetailChurchApiController extends Controller
         if (isset($request->church_address)) {
             $message_log .= "Church Address ".$update_p->church_address." to ".$request->church_address;
             $update_p->church_address = $request->church_address;
+            $array_compare['church_address'] = 'church_address';
         }
         if (isset($request->office_address)) {
             $message_log .= "Office Address ".$update_p->office_address." to ".$request->office_address;
@@ -292,9 +301,22 @@ class DetailChurchApiController extends Controller
         if (isset($request->notes)) {
             $message_log .= "Notes ".$update_p->notes." to ".$request->notes;
             $update_p->notes = $request->notes;
+            $array_compare['notes'] = 'notes';
         }
 
+        $hitCompare = new HitCompare;
+        $hitCompare->addFieldCompare($array_compare, $request->all());
+        $com = $hitCompare->compareData($item_previous);
+
         $update_p->save();
+
+        if($com){
+            $send = new HitApi;
+            $ids = [$com];
+            $module = 'sub_region';
+            $response = $send->action($ids, 'update', $module)->json();
+        }
+
 
         (new LogHubApi())->save($personel_id, $message_log, 'church');
 
