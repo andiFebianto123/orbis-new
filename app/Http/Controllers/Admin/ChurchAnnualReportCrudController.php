@@ -256,14 +256,14 @@ class ChurchAnnualReportCrudController extends CrudController
                 try{
                     $value = json_decode($this->crud->getRequest()->rc_dpw_id);
                     if(is_array($value)){
-                       // $this->crud->addClause('whereIn', 'rc_dpw_name', $value);
-                       $value = array_map(function($d){
-                            return "'$d'";
-                       }, $value);
-                       $value = implode(',', $value);
-                       $this->crud->query->whereRaw("EXISTS (SELECT 1 FROM churches_rcdpw 
-                       INNER JOIN rc_dpwlists ON rc_dpwlists.id = churches_rcdpw.rc_dpwlists_id
-                       WHERE churches_rcdpw.churches_id = church_annual_designer_views.id AND rc_dpwlists.rc_dpw_name IN ({$value}))");
+                       $this->crud->addClause('whereIn', 'rc_dpw_name', $value);
+                    //    $value = array_map(function($d){
+                    //         return "'$d'";
+                    //    }, $value);
+                    //    $value = implode(',', $value);
+                    //    $this->crud->query->whereRaw("EXISTS (SELECT 1 FROM churches_rcdpw 
+                    //    INNER JOIN rc_dpwlists ON rc_dpwlists.id = churches_rcdpw.rc_dpwlists_id
+                    //    WHERE churches_rcdpw.churches_id = church_annual_designer_views.id AND rc_dpwlists.rc_dpw_name IN ({$value}))");
                     }
                     else{
                         $this->crud->addClause('whereRaw', 0);
