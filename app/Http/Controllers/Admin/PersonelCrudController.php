@@ -135,7 +135,7 @@ class PersonelCrudController extends CrudController
         // ]);
 
         $this->crud->addColumn([
-            'name' => 'tc_dpw_name',
+            'name' => 'rc_dpw_name',
             'label' => 'RC / DPW',
             'type' => 'closure',
             'function' => function($e){
