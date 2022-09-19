@@ -13,7 +13,7 @@ class HitApi {
             'action' => $action,
             'module' => $module
         ];
-        $response = Http::post($this->api, $d);
+        $response = Http::post($this->api, $d); 
         return $response;
     }
 }

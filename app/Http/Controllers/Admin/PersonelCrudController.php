@@ -1087,7 +1087,7 @@ class PersonelCrudController extends CrudController
              $send = new HitApi;
              $ids = [$id];
              $module = 'user_admin';
-             $response = $send->action($ids, 'delete', $module)->json();
+             $response_json = $send->action($ids, 'delete', $module)->json();
 
             return $response;
         }

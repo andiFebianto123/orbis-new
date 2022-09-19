@@ -756,9 +756,9 @@ class ChurchCrudController extends CrudController
             DB::commit();
             // hit api for update church
             $send = new HitApi;
-            $id = [$item->getKey()];
+            $id = [$id];
             $module = 'sub_region';
-            $response = $send->action($id, 'delete', $module)->json();
+            $response_json = $send->action($id, 'delete', $module)->json();
             return $response;
         }
         catch(Exception $e){

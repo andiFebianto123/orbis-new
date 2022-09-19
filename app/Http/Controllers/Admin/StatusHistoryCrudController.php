@@ -151,6 +151,14 @@ class StatusHistoryCrudController extends CrudController
         // execute the FormRequest authorization and validation, if one is required
         $request = $this->crud->validateRequest();
 
+        $current_statuses = StatusHistory::where('personel_id', $request->personel_id)
+                            ->leftJoin('account_status', 'account_status.id', 'status_histories.status_histories_id')
+                            ->orderBy('date_status','desc')
+                            ->orderBy('status_histories.created_at','desc')
+                            ->get(['status_histories.id as id', 'date_status', 'status_histories.created_at', 'acc_status', 'reason']);
+        $status = (sizeof($current_statuses)>0)?$current_statuses->first()->acc_status:"-";
+        // dd($status);
+
         // insert item in the db
         $item = $this->crud->create($this->crud->getStrippedSaveRequest());
         $this->data['entry'] = $this->crud->entry = $item;
@@ -164,7 +172,7 @@ class StatusHistoryCrudController extends CrudController
         // show a success message
         \Alert::success(trans('backpack::crud.insert_success'))->flash();
 
-        return redirect(backpack_url('personel/'.$item->personel_id.'/show'));
+        return redirect(backpack_url('personel/'.$item->personel_id.'/show')); 
     }
 
     public function update()
@@ -226,6 +234,7 @@ class StatusHistoryCrudController extends CrudController
                             ->orderBy('date_status','desc')
                             ->orderBy('status_histories.created_at','desc')
                             ->get(['status_histories.id as id', 'date_status', 'status_histories.created_at', 'acc_status', 'reason']);
+
         $current_statuses_now = (sizeof($current_statuses_now)>0)?$current_statuses_now->first()->acc_status:"-";
 
         $delete_data = $this->crud->delete($id);
