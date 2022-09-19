@@ -51,8 +51,8 @@ class ExportAnnualReport implements FromView,WithEvents
         }
         else if ($type == 'church_designer'){
             $title = 'Church Report';
-            // $dataColumn = ChurchAnnualDesignerView::rcDpw($this->filterBy['rc_dpw_name'] ?? null)->type($this->filterBy['entities_type'] ?? null)->country($this->filterBy['country_name'] ?? null)->status($this->filterBy['status'] ?? null)->get()->toArray();
-            $dataColumn = ChurchAnnualDesignerView::type($this->filterBy['entities_type'] ?? null)->country($this->filterBy['country_name'] ?? null)->status($this->filterBy['status'] ?? null)->get()->toArray();
+            $dataColumn = ChurchAnnualDesignerView::rcDpw($this->filterBy['rc_dpw_name'] ?? null)->type($this->filterBy['entities_type'] ?? null)->country($this->filterBy['country_name'] ?? null)->status($this->filterBy['status'] ?? null)->get()->toArray();
+            // $dataColumn = ChurchAnnualDesignerView::type($this->filterBy['entities_type'] ?? null)->country($this->filterBy['country_name'] ?? null)->status($this->filterBy['status'] ?? null)->get()->toArray();
 
         }
         else if($type == 'pastor_annual'){

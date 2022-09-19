@@ -49,17 +49,18 @@ class AuthApiController extends Controller
             $decryptedToken = json_decode($decryptedToken, true);
             if (isset($decryptedToken['email']) && isset($decryptedToken['exp']))
             {
-                if($decryptedToken['exp'] > time()){
+                if(strtotime($decryptedToken['exp']) > time()){
                     $request['email'] = $decryptedToken['email'];
 
                     return $this->doLogin($request);
                 }
             }
+            
         }
 
         return response()->json([
             'status' => false,
-            'message' => 'Wrong token'
+            'message' => 'Wrong token '
             ], 200);
     }
 

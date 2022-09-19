@@ -41,16 +41,16 @@ class ChurchAnnualDesignerView extends Model
     public function scopeRcDpw($query, $value){
         if($value != null){
             try{
-                // return $query->whereIn('rc_dpw_name', json_decode($value)); 
-                $value = json_decode($value);
-                $value = array_map(function($d){
-                    return "'$d'";
-               }, $value);
-               $value = implode(',', $value);
-               $subQuery = "SELECT 1 FROM churches_rcdpw 
-               INNER JOIN rc_dpwlists ON rc_dpwlists.id = churches_rcdpw.rc_dpwlists_id
-               WHERE churches_rcdpw.churches_id = church_annual_designer_views.id AND rc_dpwlists.rc_dpw_name IN ({$value})";
-               return $query->whereRaw("EXISTS ({$subQuery})");
+                return $query->whereIn('rc_dpw_name', json_decode($value)); 
+            //     $value = json_decode($value);
+            //     $value = array_map(function($d){
+            //         return "'$d'";
+            //    }, $value);
+            //    $value = implode(',', $value);
+            //    $subQuery = "SELECT 1 FROM churches_rcdpw 
+            //    INNER JOIN rc_dpwlists ON rc_dpwlists.id = churches_rcdpw.rc_dpwlists_id
+            //    WHERE churches_rcdpw.churches_id = church_annual_designer_views.id AND rc_dpwlists.rc_dpw_name IN ({$value})";
+            //    return $query->whereRaw("EXISTS ({$subQuery})");
             }
             catch(Exception $e){
                 return $query->whereRaw(0);
