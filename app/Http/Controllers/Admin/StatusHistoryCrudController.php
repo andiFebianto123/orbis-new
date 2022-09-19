@@ -151,23 +151,32 @@ class StatusHistoryCrudController extends CrudController
         // execute the FormRequest authorization and validation, if one is required
         $request = $this->crud->validateRequest();
 
-        $current_statuses = StatusHistory::where('personel_id', $request->personel_id)
+        $current_statuses_now = StatusHistory::where('personel_id', $request->personel_id)
                             ->leftJoin('account_status', 'account_status.id', 'status_histories.status_histories_id')
-                            ->orderBy('date_status','desc')
+                            // ->orderBy('date_status','desc')
                             ->orderBy('status_histories.created_at','desc')
                             ->get(['status_histories.id as id', 'date_status', 'status_histories.created_at', 'acc_status', 'reason']);
-        $status = (sizeof($current_statuses)>0)?$current_statuses->first()->acc_status:"-";
+        $status_now = (sizeof($current_statuses_now)>0)?$current_statuses_now->first()->acc_status:"-";
         // dd($status);
 
         // insert item in the db
         $item = $this->crud->create($this->crud->getStrippedSaveRequest());
         $this->data['entry'] = $this->crud->entry = $item;
 
-        $send = new HitApi;
-        $id = [$item->personel_id];
-        $module = 'user_admin';
-        $response = $send->action($id, 'update', $module)->json();
+        $current_statuses = StatusHistory::where('personel_id', $request->personel_id)
+        ->leftJoin('account_status', 'account_status.id', 'status_histories.status_histories_id')
+        // ->orderBy('date_status','desc')
+        ->orderBy('status_histories.created_at','desc')
+        ->get(['status_histories.id as id', 'date_status', 'status_histories.created_at', 'acc_status', 'reason']);
 
+        $status_new = (sizeof($current_statuses)>0)?$current_statuses->first()->acc_status:"-";
+
+        if($status_now != $status_new){
+            $send = new HitApi;
+            $id = [$item->personel_id];
+            $module = 'user_admin';
+            $response = $send->action($id, 'update', $module)->json();
+        }
 
         // show a success message
         \Alert::success(trans('backpack::crud.insert_success'))->flash();
@@ -188,24 +197,38 @@ class StatusHistoryCrudController extends CrudController
 
         $item_previous['id'] = (int) $item_previous['personel_id'];
 
+        $current_statuses_now = StatusHistory::where('personel_id', $request->personel_id)
+                            ->leftJoin('account_status', 'account_status.id', 'status_histories.status_histories_id')
+                            // ->orderBy('date_status','desc')
+                            ->orderBy('status_histories.created_at','desc')
+                            ->get(['status_histories.id as id', 'date_status', 'status_histories.created_at', 'acc_status', 'reason']);
+        $status_now = (sizeof($current_statuses_now)>0)?$current_statuses_now->first()->acc_status:"-";
+        // $hitCompare = new HitCompare;
+        // $hitCompare->addFieldCompare(
+        //     [
+        //         'status_histories_id' => 'status_histories_id'
+        //     ], 
+        // $request->all());
 
-        $hitCompare = new HitCompare;
-        $hitCompare->addFieldCompare(
-            [
-                'status_histories_id' => 'status_histories_id'
-            ], 
-        $request->all());
-
-        $com = $hitCompare->compareData($item_previous);
+        // $com = $hitCompare->compareData($item_previous);
 
         // update the row in the db
         $item = $this->crud->update($request->get($this->crud->model->getKeyName()),
                             $this->crud->getStrippedSaveRequest());
         $this->data['entry'] = $this->crud->entry = $item;
 
-        if($com){
+        $current_statuses = StatusHistory::where('personel_id', $request->personel_id)
+        ->leftJoin('account_status', 'account_status.id', 'status_histories.status_histories_id')
+        // ->orderBy('date_status','desc')
+        ->orderBy('status_histories.created_at','desc')
+        ->get(['status_histories.id as id', 'date_status', 'status_histories.created_at', 'acc_status', 'reason']);
+
+        $status_new = (sizeof($current_statuses)>0)?$current_statuses->first()->acc_status:"-";
+
+
+        if($status_now != $status_new){
             $send = new HitApi;
-            $id = [$com];
+            $id = [$id];
             $module = 'user_admin';
             $response = $send->action($id, 'update', $module)->json();
         }
