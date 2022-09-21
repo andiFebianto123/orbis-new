@@ -30,6 +30,8 @@ Route::group([
     Route::crud('educationbackground', 'EducationBackgroundCrudController');
     Route::crud('statushistory', 'StatusHistoryCrudController');
     Route::crud('specialrolepersonel', 'SpecialRolePersonelCrudController');
+    Route::get('specialrolepersonel/ajax-rcdpw-list', 'SpecialRolePersonelCrudController@ajaxRcdpwList');
+
     Route::crud('church', 'ChurchCrudController');
     Route::crud('legaldocumentchurch', 'LegalDocumentChurchCrudController');
     Route::crud('servicetimechurch', 'ServiceTimeChurchCrudController');
