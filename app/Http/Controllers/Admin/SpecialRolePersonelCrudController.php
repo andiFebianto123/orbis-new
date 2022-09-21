@@ -125,6 +125,7 @@ class SpecialRolePersonelCrudController extends CrudController
 
         // execute the FormRequest authorization and validation, if one is required
         $request = $this->crud->validateRequest();
+        $request->request->set('rc_dpw', json_encode($request->input('rc_dpw')));
 
         // insert item in the db
         $item = $this->crud->create($this->crud->getStrippedSaveRequest());

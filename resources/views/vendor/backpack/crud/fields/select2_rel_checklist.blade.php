@@ -80,9 +80,14 @@
                 }
             }
             $(document).ready( function () {
+                $(".field-rc_dpw").addClass('d-none')
                 $("#{{ $field['name'] }}").on('select2:select', function (e) {
                     var data = e.params.data;
-                    console.log(data);
+                    if (data.text == 'RC Head/ Ketua DPW') {
+                        $(".field-rc_dpw").removeClass('d-none')
+                    } else {
+                        $(".field-rc_dpw").addClass('d-none')
+                    }
                 });
             })
            
