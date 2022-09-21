@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\SpecialRolePersonelRequest;
 use App\Models\Personel;
+use App\Models\RcDpwList;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Prologue\Alerts\Facades\Alert;
 
 /**
  * Class SpecialRolePersonelCrudController
@@ -96,6 +98,14 @@ class SpecialRolePersonelCrudController extends CrudController
             'name'      => 'personel_id', // the column that contains the ID of that connected entity;
             'default'   => request('personel_id')
         ]);
+
+        $this->crud->addField([
+            'name'        => 'rc_dpw',
+            'label'       => "RC / DPW List",
+            'type'        => 'checklist_table_ajax',
+            'ajax_url'    => url('specialrolepersonel/ajax-rcdpw-list'),
+            'table'       =>  ['table_header' => $this->rcdpwList()['header']]
+        ]);
     }
 
     /**
@@ -121,7 +131,7 @@ class SpecialRolePersonelCrudController extends CrudController
         $this->data['entry'] = $this->crud->entry = $item;
 
         // show a success message
-        \Alert::success(trans('backpack::crud.insert_success'))->flash();
+        Alert::success(trans('backpack::crud.insert_success'))->flash();
 
         return redirect(backpack_url('personel/'.$item->personel_id.'/show'));
     }
@@ -141,5 +151,65 @@ class SpecialRolePersonelCrudController extends CrudController
         \Alert::success(trans('backpack::crud.update_success'))->flash();
 
         return redirect(backpack_url('personel/'.$item->personel_id.'/show'));    
+    }
+
+
+    public function ajaxRcdpwList(){
+
+        ## Read value
+        $draw = request('draw');
+        $start = request("start");
+        $rowperpage = request("length");
+        $filters = [];
+
+        $order_arr = request('order');
+        $searchArr = request('search');
+
+        $searchValue = $searchArr['value']; // Search value
+
+        // Total records
+        $countDeliveryStatuses = RcDpwList::count();
+        $totalRecords = $countDeliveryStatuses;
+        $totalRecordswithFilter = RcDpwList::where($filters)
+                        ->where(function($query) use ($searchValue){
+                            $query->where('rc_dpw_name','LIKE', '%'.$searchValue.'%');
+                        })
+                        ->count();
+
+        $rcdpws = RcDpwList::where($filters)
+            ->where(function($query) use ($searchValue){
+                $query->where('rc_dpw_name','LIKE', '%'.$searchValue.'%');
+            })
+            ->skip($start)
+            ->take($rowperpage)
+            ->get();
+
+        $tableBodies = [];
+        foreach ($rcdpws as $key => $ds) {
+            $tableBody = [];
+            $tableBody[] = $ds->id;
+            $tableBody[] = $ds->rc_dpw_name;
+            array_push($tableBodies, $tableBody);
+        }
+
+
+        $response = array(
+           "draw" => intval($draw),
+           "iTotalRecords" => $totalRecords,
+           "iTotalDisplayRecords" => $totalRecordswithFilter,
+           "aaData" => $tableBodies
+        );
+
+        return $response;
+    }
+
+    private function rcdpwList(){
+        $tableHeader = [];
+        $tableHeader[] = 'Regional Council / DPW Name';
+        
+        $table['header'] = $tableHeader;
+        $table['body'] = [];
+
+        return $table;
     }
 }
