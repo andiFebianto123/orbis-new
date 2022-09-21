@@ -19,7 +19,6 @@
         <div class="section-hidden"></div>
     </div>
 </div>
-
 @if ($crud->fieldTypeNotLoaded($field))
     @php
         $crud->markFieldTypeAsLoaded($field);
@@ -38,9 +37,8 @@
     <script type="text/javascript" src="{{ asset('packages/datatables.net-fixedheader-bs4/js/fixedHeader.bootstrap4.min.js')}}"></script>
         <script>
             $(document).ready( function () {
-                
                 var filterDate = false
-                var rowsSelected = []
+                var rowsSelected = stringToArray()
                 var clName = "{{$field['name']}}"
                 var table = $("#"+clName).DataTable( {
                     processing: true,
@@ -50,8 +48,7 @@
                     ajax: {
                         url: "{{$field['ajax_url']}}",
                         dataSrc: 'data',
-                        data: function(data){
-                        }
+                        data: function(data){}
                     },
                     "order":[[1,'asc']],
                     'columnDefs': [{
@@ -116,6 +113,21 @@
                 });
 
             });
+
+            function stringToArray()
+            {
+                var arrCollected = []
+                var strContent = "{{ $crud->entry->{$field['name']} ?? '[]' }}"
+                    strContent = strContent.replace("[", "").replace("]", "").replaceAll("&quot;", "")
+                    if (strContent.includes(",")) {
+                        var items = strContent.split(',')
+                        for (var i = 0; i < items.length; i++) {
+                            arrCollected.push(parseInt(items[i]))
+                        }
+                    }
+                    
+                return arrCollected
+            }
         </script>
     @endpush
 @endif

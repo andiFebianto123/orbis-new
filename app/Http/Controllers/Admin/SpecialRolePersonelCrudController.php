@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\SpecialRolePersonelRequest;
 use App\Models\Personel;
 use App\Models\RcDpwList;
+use App\Models\SpecialRolePersonel;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Prologue\Alerts\Facades\Alert;
@@ -125,16 +126,24 @@ class SpecialRolePersonelCrudController extends CrudController
 
         // execute the FormRequest authorization and validation, if one is required
         $request = $this->crud->validateRequest();
-        $request->request->set('rc_dpw', json_encode($request->input('rc_dpw')));
+        $rcDpw = null;
+        if ($request->special_role_id == 3) {
+            $rcDpw = json_encode($request->rc_dpw);
+        }
+        $change = SpecialRolePersonel::where('special_role_id', $request->special_role_id)
+                    ->where('personel_id',  $request->personel_id)
+                    ->first();
 
-        // insert item in the db
-        $item = $this->crud->create($this->crud->getStrippedSaveRequest());
-        $this->data['entry'] = $this->crud->entry = $item;
-
-        // show a success message
+        if (!isset($change)) {
+            $insert = new SpecialRolePersonel();
+            $insert->special_role_id = $request->special_role_id;
+            $insert->rc_dpw = $rcDpw;
+            $insert->personel_id = $request->personel_id;
+            $insert->save();
+        }
         Alert::success(trans('backpack::crud.insert_success'))->flash();
 
-        return redirect(backpack_url('personel/'.$item->personel_id.'/show'));
+        return redirect(backpack_url('personel/'.$request->personel_id.'/show'));
     }
 
     public function update()
@@ -143,15 +152,25 @@ class SpecialRolePersonelCrudController extends CrudController
 
         // execute the FormRequest authorization and validation, if one is required
         $request = $this->crud->validateRequest();
-        // update the row in the db
-        $item = $this->crud->update($request->get($this->crud->model->getKeyName()),
-                            $this->crud->getStrippedSaveRequest());
-        $this->data['entry'] = $this->crud->entry = $item;
+        $rcDpw = null;
+        if ($request->special_role_id == 3) {
+            $rcDpw = json_encode($request->rc_dpw);
+        }
+        $findCombination = SpecialRolePersonel::where('special_role_id', $request->special_role_id)
+                        ->where('personel_id', $request->personel_id)
+                        ->first();
+        if (isset($findCombination)) {
+            SpecialRolePersonel::where('id', $findCombination->id)->delete();
+        }
+        $change = SpecialRolePersonel::where('id', $request->id)->first();
+        $change->special_role_id = $request->special_role_id;
+        $change->rc_dpw = $rcDpw;
+        $change->save();
 
         // show a success message
         Alert::success(trans('backpack::crud.update_success'))->flash();
 
-        return redirect(backpack_url('personel/'.$item->personel_id.'/show'));    
+        return redirect(backpack_url('personel/'.$request->personel_id.'/show'));    
     }
 
 

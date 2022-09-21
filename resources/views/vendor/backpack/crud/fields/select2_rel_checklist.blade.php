@@ -80,10 +80,17 @@
                 }
             }
             $(document).ready( function () {
-                $(".field-rc_dpw").addClass('d-none')
+                var constVisible = "RC Head/ Ketua DPW"
+                if ($("#{{ $field['name'] }}").val() == 3) {
+                    $(".field-rc_dpw").removeClass('d-none')
+                }else{
+                    $(".field-rc_dpw").addClass('d-none')
+                }
+
+                console.log($("#{{ $field['name'] }}").val());
                 $("#{{ $field['name'] }}").on('select2:select', function (e) {
                     var data = e.params.data;
-                    if (data.text == 'RC Head/ Ketua DPW') {
+                    if (data.text == constVisible) {
                         $(".field-rc_dpw").removeClass('d-none')
                     } else {
                         $(".field-rc_dpw").addClass('d-none')

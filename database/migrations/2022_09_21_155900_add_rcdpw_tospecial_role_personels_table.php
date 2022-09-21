@@ -16,7 +16,7 @@ class AddRcdpwTospecialRolePersonelsTable extends Migration
     {
         Schema::table('special_role_personels', function (Blueprint $table) {
             if(!Schema::hasColumn('special_role_personels', 'rc_dpw')){
-                $table->text('rc_dpw')->nullable();
+                $table->text('rc_dpw')->nullable()->after('personel_id');
             }
         });
     }
