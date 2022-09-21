@@ -1,7 +1,7 @@
-@include('crud::fields.inc.wrapper_start')
+<div class="form-group col-sm-12 field-{{$field['name']}}">
     <label>{!! $field['label'] !!}</label>
     <div class="">
-        <table id="{{$field['name']}}" class="table table-stripped table-responsive checklist-table">
+        <table id="{{$field['name']}}" class="table table-stripped checklist-table" style="width:100%;">
             <thead>
                 <tr>
                     <th>
@@ -18,8 +18,7 @@
         </table>
         <div class="section-hidden"></div>
     </div>
-    
-@include('crud::fields.inc.wrapper_end')
+</div>
 
 @if ($crud->fieldTypeNotLoaded($field))
     @php
@@ -39,10 +38,10 @@
     <script type="text/javascript" src="{{ asset('packages/datatables.net-fixedheader-bs4/js/fixedHeader.bootstrap4.min.js')}}"></script>
         <script>
             $(document).ready( function () {
+                
                 var filterDate = false
                 var rowsSelected = []
                 var clName = "{{$field['name']}}"
-
                 var table = $("#"+clName).DataTable( {
                     processing: true,
                     serverSide: true,
@@ -116,7 +115,6 @@
                     e.stopPropagation();
                 });
 
-                $("#"+clName+"_length").html("")
             });
         </script>
     @endpush

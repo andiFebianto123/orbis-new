@@ -37,4 +37,5 @@ use Illuminate\Support\Facades\Artisan;
 
         return $arr_datas;
     }
+
 }

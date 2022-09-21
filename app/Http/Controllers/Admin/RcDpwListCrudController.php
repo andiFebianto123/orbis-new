@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\HeadingRowImport;
 use App\Helpers\HitCompare;
 use App\Helpers\HitApi;
+use App\Models\RcDpwList;
 use Excel;
 use Exception;
 
@@ -247,6 +248,57 @@ class RcDpwListCrudController extends CrudController
         $response = $send->action($ids, 'delete', $module)->json();
 
         return $delete;
+    }
+
+    public function ajaxRcdpw()
+    {
+        $draw = request('draw');
+        $start = request("start");
+        $rowperpage = 10;
+        if (request("length")) {
+            $rowperpage = request("length");
+        }
+        $filters = [];
+
+        $order_arr = request('order');
+        $searchArr = request('search');
+
+        $searchValue = $searchArr['value']; // Search value
+
+        // Total records
+        $countDeliveryStatuses = RcDpwList::count();
+        $totalRecords = $countDeliveryStatuses;
+        $totalRecordswithFilter = RcDpwList::where($filters)
+                        ->where(function($query) use ($searchValue){
+                            $query->where('rc_dpw_name','LIKE', '%'.$searchValue.'%');
+                        })
+                        ->count();
+
+        $rcdpws = RcDpwList::where($filters)
+            ->where(function($query) use ($searchValue){
+                $query->where('rc_dpw_name','LIKE', '%'.$searchValue.'%');
+            })
+            ->skip($start)
+            ->take($rowperpage)
+            ->get();
+
+        $tableBodies = [];
+        foreach ($rcdpws as $key => $ds) {
+            $tableBody = [];
+            $tableBody[] = $ds->id;
+            $tableBody[] = $ds->rc_dpw_name;
+            array_push($tableBodies, $tableBody);
+        }
+
+
+        $response = array(
+           "draw" => intval($draw),
+           "iTotalRecords" => $totalRecords,
+           "iTotalDisplayRecords" => $totalRecordswithFilter,
+           "aaData" => $tableBodies
+        );
+
+        return $response;
     }
 
 

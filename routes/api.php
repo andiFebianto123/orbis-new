@@ -81,3 +81,4 @@ Route::group(['middleware' => ['auth:sanctum', 'checkMaintenanceMode']], functio
    Route::post('logout-all', 'Api\AuthApiController@logoutAll');
 });
 
+

@@ -91,4 +91,6 @@ Route::group([
     Route::post('pastor-report-designer/export-report', 'PastorReportAnnualCrudController@exportReport');
     Route::get('download-sql','BackupController@downloadDb');
     
+    Route::get('ajax-rcdpw','RcDpwListCrudController@ajaxRcdpw');
+    
 }); // this should be the absolute last line of this file

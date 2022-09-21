@@ -85,7 +85,7 @@ class SpecialRolePersonelCrudController extends CrudController
 
         $this->crud->addField([
             'label'     => 'Special Role Personel', // Table column heading
-            'type'      => 'select2',
+            'type'      => 'select2_rel_checklist',
             'name'      => 'special_role_id', // the column that contains the ID of that connected entity;
             'entity'    => 'special_role_personel', // the method that defines the relationship in your Model
             'attribute' => 'special_role', // foreign key attribute that is shown to user
@@ -103,7 +103,7 @@ class SpecialRolePersonelCrudController extends CrudController
             'name'        => 'rc_dpw',
             'label'       => "RC / DPW List",
             'type'        => 'checklist_table_ajax',
-            'ajax_url'    => url('ajax-rcdpw-list'),
+            'ajax_url'    => url('admin/ajax-rcdpw'),
             'table'       =>  ['table_header' => $this->rcdpwList()['header']]
         ]);
     }
@@ -148,62 +148,11 @@ class SpecialRolePersonelCrudController extends CrudController
         $this->data['entry'] = $this->crud->entry = $item;
 
         // show a success message
-        \Alert::success(trans('backpack::crud.update_success'))->flash();
+        Alert::success(trans('backpack::crud.update_success'))->flash();
 
         return redirect(backpack_url('personel/'.$item->personel_id.'/show'));    
     }
 
-
-    public function ajaxRcdpwList(){
-        ## Read value
-        $draw = request('draw');
-        $start = request("start");
-        $rowperpage = 10;
-        if (request("length")) {
-            $rowperpage = request("length");
-        }
-        $filters = [];
-
-        $order_arr = request('order');
-        $searchArr = request('search');
-
-        $searchValue = $searchArr['value']; // Search value
-
-        // Total records
-        $countDeliveryStatuses = RcDpwList::count();
-        $totalRecords = $countDeliveryStatuses;
-        $totalRecordswithFilter = RcDpwList::where($filters)
-                        ->where(function($query) use ($searchValue){
-                            $query->where('rc_dpw_name','LIKE', '%'.$searchValue.'%');
-                        })
-                        ->count();
-
-        $rcdpws = RcDpwList::where($filters)
-            ->where(function($query) use ($searchValue){
-                $query->where('rc_dpw_name','LIKE', '%'.$searchValue.'%');
-            })
-            ->skip($start)
-            ->take($rowperpage)
-            ->get();
-
-        $tableBodies = [];
-        foreach ($rcdpws as $key => $ds) {
-            $tableBody = [];
-            $tableBody[] = $ds->id;
-            $tableBody[] = $ds->rc_dpw_name;
-            array_push($tableBodies, $tableBody);
-        }
-
-
-        $response = array(
-           "draw" => intval($draw),
-           "iTotalRecords" => $totalRecords,
-           "iTotalDisplayRecords" => $totalRecordswithFilter,
-           "aaData" => $tableBodies
-        );
-
-        return $response;
-    }
 
     private function rcdpwList(){
         $tableHeader = [];
