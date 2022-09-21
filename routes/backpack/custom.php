@@ -4,6 +4,7 @@
 // --------------------------
 // This route file is loaded automatically by Backpack\Base.
 // Routes you generate using Backpack\Generators will be placed here.
+use Illuminate\Support\Facades\Route;
 
 
 Route::group([
@@ -30,7 +31,6 @@ Route::group([
     Route::crud('educationbackground', 'EducationBackgroundCrudController');
     Route::crud('statushistory', 'StatusHistoryCrudController');
     Route::crud('specialrolepersonel', 'SpecialRolePersonelCrudController');
-    Route::get('specialrolepersonel/ajax-rcdpw-list', 'SpecialRolePersonelCrudController@ajaxRcdpwList');
 
     Route::crud('church', 'ChurchCrudController');
     Route::crud('legaldocumentchurch', 'LegalDocumentChurchCrudController');
@@ -90,5 +90,5 @@ Route::group([
     Route::crud('pastor-report-designer', 'PastorReportAnnualCrudController');
     Route::post('pastor-report-designer/export-report', 'PastorReportAnnualCrudController@exportReport');
     Route::get('download-sql','BackupController@downloadDb');
-
+    
 }); // this should be the absolute last line of this file

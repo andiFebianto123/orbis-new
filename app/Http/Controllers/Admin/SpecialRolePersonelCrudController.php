@@ -103,7 +103,7 @@ class SpecialRolePersonelCrudController extends CrudController
             'name'        => 'rc_dpw',
             'label'       => "RC / DPW List",
             'type'        => 'checklist_table_ajax',
-            'ajax_url'    => url('specialrolepersonel/ajax-rcdpw-list'),
+            'ajax_url'    => url('ajax-rcdpw-list'),
             'table'       =>  ['table_header' => $this->rcdpwList()['header']]
         ]);
     }
@@ -155,11 +155,13 @@ class SpecialRolePersonelCrudController extends CrudController
 
 
     public function ajaxRcdpwList(){
-
         ## Read value
         $draw = request('draw');
         $start = request("start");
-        $rowperpage = request("length");
+        $rowperpage = 10;
+        if (request("length")) {
+            $rowperpage = request("length");
+        }
         $filters = [];
 
         $order_arr = request('order');
