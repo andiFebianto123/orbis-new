@@ -9,6 +9,8 @@ use App\Models\SpecialRolePersonel;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Prologue\Alerts\Facades\Alert;
+use App\Helpers\HitApi;
+
 
 /**
  * Class SpecialRolePersonelCrudController
@@ -127,12 +129,55 @@ class SpecialRolePersonelCrudController extends CrudController
         // execute the FormRequest authorization and validation, if one is required
         $request = $this->crud->validateRequest();
         $rcDpw = null;
+        $trigger_matches_church = 0;
         if ($request->special_role_id == 3) {
             $rcDpw = json_encode($request->rc_dpw);
         }
         $change = SpecialRolePersonel::where('special_role_id', $request->special_role_id)
                     ->where('personel_id',  $request->personel_id)
                     ->first();
+        $errors = [];
+
+        if($change){
+            $errors['special_role_id'] = ['The pastor with same Special role has already exists.'];
+        }
+
+        $rcdpw_list = false;
+        $input_rcdpw_list = false;
+
+        if($change){
+            if(($change->special_role_id == 3) && ($request->special_role_id == 3)){
+
+                if(preg_match_all('/(\"[\"0-9]+\")/', $change->rc_dpw, $matches)) {
+                    $rcdpw_list = $matches[1];
+                }
+
+                if(preg_match_all('/(\"[\"0-9]+\")/', $rcDpw, $matches)) {
+                    $input_rcdpw_list = $matches[1];
+                }
+
+                foreach($input_rcdpw_list as $list){
+                    if(!in_array($list, $rcdpw_list)){
+                        $trigger_matches_church = 1;
+                    }
+                }
+
+            }
+        }else{
+            $trigger_matches_church = 1;
+        }
+
+        if(count($errors)){
+            return redirect($this->crud->route . '/create?personel_id=' .$request->personel_id)
+                ->withInput()->withErrors($errors);
+        }
+
+        if($trigger_matches_church == 1){
+            $send = new HitApi;
+            $id = [$request->personel_id];
+            $module = 'user_admin';
+            $response = $send->action($id, 'update', $module)->json();
+        }
 
         if (!isset($change)) {
             $insert = new SpecialRolePersonel();
@@ -156,21 +201,94 @@ class SpecialRolePersonelCrudController extends CrudController
         if ($request->special_role_id == 3) {
             $rcDpw = json_encode($request->rc_dpw);
         }
-        $findCombination = SpecialRolePersonel::where('special_role_id', $request->special_role_id)
+
+        // this data
+        $findCombination = SpecialRolePersonel::where('id', $request->id)
                         ->where('personel_id', $request->personel_id)
                         ->first();
-        if (isset($findCombination)) {
-            SpecialRolePersonel::where('id', $findCombination->id)->delete();
+
+        $errors = [];
+
+        if($findCombination->special_role_id != $request->special_role_id){
+            $findDouble = SpecialRolePersonel::where('special_role_id', $request->special_role_id)
+            ->where('personel_id', $request->personel_id)
+            ->first();
+            if($findDouble){
+                 $errors['special_role_id'] = ['The pastor with same Special role has already exists.'];
+            }
         }
+
+        if(count($errors)){
+            return redirect($this->crud->route .'/'. $request->id . '/edit?personel_id='.$request->personel_id)
+                ->withInput()->withErrors($errors);
+        }
+
+        $rcdpw_list = [];
+        $input_rcdpw_list = [];
+        $trigger_matches_church = 0;
+
+
+        if( ($request->special_role_id == 3) && ($findCombination->special_role_id == 3) && ($rcDpw != 'null')){
+
+            if(preg_match_all('/(\"[\"0-9]+\")/', $findCombination->rc_dpw, $matches)) {
+                $rcdpw_list = $matches[1];
+            }else{
+                $trigger_matches_church = 1;
+            }
+
+            if(preg_match_all('/(\"[\"0-9]+\")/', $rcDpw, $matches)) {
+                $input_rcdpw_list = $matches[1];
+            }
+
+            foreach($input_rcdpw_list as $list){
+                if(!in_array($list, $rcdpw_list)){
+                    $trigger_matches_church = 1;
+                }
+            }
+        }else if($request->special_role_id != $findCombination->special_role_id){
+            $trigger_matches_church = 1;
+        }
+
+        if($trigger_matches_church == 1){
+            $send = new HitApi;
+            $id = [$request->personel_id];
+            $module = 'user_admin';
+            $response = $send->action($id, 'update', $module)->json();
+        }
+
+        // if (isset($findCombination)) {
+        //     // SpecialRolePersonel::where('id', $findCombination->id)->delete();
+        // }
+
         $change = SpecialRolePersonel::where('id', $request->id)->first();
         $change->special_role_id = $request->special_role_id;
-        $change->rc_dpw = $rcDpw;
+        if($rcDpw != 'null'){
+            $change->rc_dpw = $rcDpw;
+        }
+        $change->personel_id = $request->personel_id;
         $change->save();
 
         // show a success message
         Alert::success(trans('backpack::crud.update_success'))->flash();
 
         return redirect(backpack_url('personel/'.$request->personel_id.'/show'));    
+    }
+
+    public function destroy($id)
+    {
+        $this->crud->hasAccessOrFail('delete');
+
+        // get entry ID from Request (makes sure its the last ID for nested resources)
+        $personel = request()->personel_id;
+
+        $send = new HitApi;
+        $id = [$personel];
+        $module = 'user_admin';
+        $response = $send->action($id, 'update', $module)->json();
+
+        $id = $this->crud->getCurrentEntryId() ?? $id;
+
+        return $this->crud->delete($id);
     }
 
 
