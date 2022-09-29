@@ -35,6 +35,7 @@ class UserCrudController extends CrudController
         {
             $this->crud->denyAccess('list');
         }
+        dd(trans('validation.custom.model_has_relation'));
     }
 
     /**
