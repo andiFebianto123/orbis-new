@@ -708,7 +708,7 @@ class PersonelCrudController extends CrudController
             // hit api for update personel
             $send = new HitApi;
             $id = [$item->getKey()];
-            $module = 'user_admin';
+            $module = 'user';
             $response = $send->action($id, 'create', $module)->json();
 
         } catch (Exception $e) {
@@ -896,7 +896,7 @@ class PersonelCrudController extends CrudController
             if($com || ($trigger_matches_church == 1)){
                 $send = new HitApi;
                 $id = [$com];
-                $module = 'user_admin';
+                $module = 'user';
                 $response = $send->action($id, 'update', $module)->json();
             }
             
@@ -958,7 +958,7 @@ class PersonelCrudController extends CrudController
         \Alert::success(trans('backpack::crud.update_success'))->flash();
 
         // save the redirect choice for next time
-        $this->crud->setSaveAction();
+        $this->crud->setSaveAction(); 
 
         return $this->crud->performSaveAction($item->getKey());
     }
@@ -1121,7 +1121,7 @@ class PersonelCrudController extends CrudController
              // hit api for update user
              $send = new HitApi;
              $ids = [$id];
-             $module = 'user_admin';
+             $module = 'user';
              $response_json = $send->action($ids, 'delete', $module)->json();
 
             return $response;

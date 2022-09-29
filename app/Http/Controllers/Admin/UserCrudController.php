@@ -210,7 +210,7 @@ class UserCrudController extends CrudController
 
         $id = [$item->getKey()];
 
-        $module = 'user';
+        $module = 'user_admin';
 
         $response = $send->action($id, 'create', $module)->json();
 
@@ -295,7 +295,7 @@ class UserCrudController extends CrudController
         if($com){
             $send = new HitApi;
             $id = [$com];
-            $module = 'user';
+            $module = 'user_admin';
             $response = $send->action($id, 'update', $module)->json();
         }
 
@@ -339,7 +339,7 @@ class UserCrudController extends CrudController
         // hit api for update user
         $send = new HitApi;
         $ids = [$id];
-        $module = 'user';
+        $module = 'user_admin';
         $response = $send->action($ids, 'delete', $module)->json();
 
         return $delete;

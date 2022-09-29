@@ -174,7 +174,7 @@ class StatusHistoryCrudController extends CrudController
         if($status_now != $status_new){
             $send = new HitApi;
             $id = [$item->personel_id];
-            $module = 'user_admin';
+            $module = 'user';
             $response = $send->action($id, 'update', $module)->json();
         }
 
@@ -229,7 +229,7 @@ class StatusHistoryCrudController extends CrudController
         if($status_now != $status_new){
             $send = new HitApi;
             $id = [$id];
-            $module = 'user_admin';
+            $module = 'user';
             $response = $send->action($id, 'update', $module)->json();
         }
 
@@ -273,7 +273,7 @@ class StatusHistoryCrudController extends CrudController
         if($current_statuses_now != $current_statuses){
             $send = new HitApi;
             $id = [$item->personel_id];
-            $module = 'user_admin';
+            $module = 'user';
             $response = $send->action($id, 'update', $module)->json();
         }
 

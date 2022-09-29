@@ -175,9 +175,9 @@ class SpecialRolePersonelCrudController extends CrudController
         if($trigger_matches_church == 1){
             $send = new HitApi;
             $id = [$request->personel_id];
-            $module = 'user_admin';
+            $module = 'user';
             $response = $send->action($id, 'update', $module)->json();
-        }
+        } 
 
         if (!isset($change)) {
             $insert = new SpecialRolePersonel();
@@ -252,7 +252,7 @@ class SpecialRolePersonelCrudController extends CrudController
         if($trigger_matches_church == 1){
             $send = new HitApi;
             $id = [$request->personel_id];
-            $module = 'user_admin';
+            $module = 'user';
             $response = $send->action($id, 'update', $module)->json();
         }
 
@@ -283,7 +283,7 @@ class SpecialRolePersonelCrudController extends CrudController
 
         $send = new HitApi;
         $id = [$personel];
-        $module = 'user_admin';
+        $module = 'user';
         $response = $send->action($id, 'update', $module)->json();
 
         $id = $this->crud->getCurrentEntryId() ?? $id;

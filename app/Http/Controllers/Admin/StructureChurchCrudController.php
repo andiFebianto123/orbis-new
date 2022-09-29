@@ -212,7 +212,7 @@ class StructureChurchCrudController extends CrudController
         if($trigger_matches_church == 1){
             $send = new HitApi;
             $id = [$id];
-            $module = 'user_admin';
+            $module = 'user';
             $response = $send->action($id, 'update', $module)->json();
         }
 
@@ -266,7 +266,7 @@ class StructureChurchCrudController extends CrudController
         if($trigger_matches_church == 1){
             $send = new HitApi;
             $id = [$id];
-            $module = 'user_admin';
+            $module = 'user';
             $response = $send->action($id, 'update', $module)->json();
         }
 
@@ -316,7 +316,7 @@ class StructureChurchCrudController extends CrudController
 
         $send = new HitApi;
         $id = [$personel];
-        $module = 'user_admin';
+        $module = 'user';
         $response = $send->action($id, 'update', $module)->json();
 
         $id = $this->crud->getCurrentEntryId() ?? $id;
