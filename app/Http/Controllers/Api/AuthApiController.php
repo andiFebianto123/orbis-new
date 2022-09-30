@@ -72,13 +72,23 @@ class AuthApiController extends Controller
         $valid_personel = [];
         $can_crud = false;
         foreach ($personels as $key => $personel) {
+            // $current_status_history = StatusHistory::where('personel_id', $personel->id)
+            //                 ->leftJoin('account_status', 'account_status.id', 'status_histories.status_histories_id')
+            //                 ->orderBy('date_status','desc')
+            //                 ->orderBy('status_histories.created_at','desc')
+            //                 ->first();
             $current_status_history = StatusHistory::where('personel_id', $personel->id)
-                            ->leftJoin('account_status', 'account_status.id', 'status_histories.status_histories_id')
+                            // ->leftJoin('account_status', 'account_status.id', 'status_histories.status_histories_id')
                             ->orderBy('date_status','desc')
-                            ->orderBy('status_histories.created_at','desc')
+                            ->orderBy('created_at','desc')
                             ->first();
            
-            if(isset($current_status_history->acc_status) && strtolower($current_status_history->acc_status) == 'active'){
+            // if(isset($current_status_history->acc_status) && strtolower($current_status_history->acc_status) == 'active'){
+            //     $active_email = true;
+            //     $valid_personel = $personel;
+            // }
+
+            if(isset($current_status_history->status) && strtolower($current_status_history->status) == 'active'){
                 $active_email = true;
                 $valid_personel = $personel;
             }

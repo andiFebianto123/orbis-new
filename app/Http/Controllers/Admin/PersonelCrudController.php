@@ -94,19 +94,35 @@ class PersonelCrudController extends CrudController
             'type' => 'text',
         ]);
 
+        // $this->crud->addColumn([
+        //     'name' => 'acc_status', // The db column name
+        //     'label' => "Status", // Table column heading
+        //     'type' => 'closure',
+        //     'function' => function ($entry) {
+        //         return $entry->acc_status;
+        //     },
+        //     'searchLogic' => function ($query, $column, $searchTerm) {
+        //         $query->orWhere(DB::raw('IFNULL(status_histories.acc_status, "-")'), 'LIKE', '%' . $searchTerm . '%');
+        //     },
+        //     'orderable' => true,
+        //     'orderLogic' => function ($query, $column, $columnDirection) {
+        //         return $query->orderBy(DB::raw('IFNULL(status_histories.acc_status, "-")'), $columnDirection);
+        //     },
+        // ]);
+
         $this->crud->addColumn([
-            'name' => 'acc_status', // The db column name
+            'name' => 'status', // The db column name
             'label' => "Status", // Table column heading
             'type' => 'closure',
             'function' => function ($entry) {
-                return $entry->acc_status;
+                return $entry->status;
             },
             'searchLogic' => function ($query, $column, $searchTerm) {
-                $query->orWhere(DB::raw('IFNULL(status_histories.acc_status, "-")'), 'LIKE', '%' . $searchTerm . '%');
+                $query->orWhere(DB::raw('IFNULL(status_histories.status, "-")'), 'LIKE', '%' . $searchTerm . '%');
             },
             'orderable' => true,
             'orderLogic' => function ($query, $column, $columnDirection) {
-                return $query->orderBy(DB::raw('IFNULL(status_histories.acc_status, "-")'), $columnDirection);
+                return $query->orderBy(DB::raw('IFNULL(status_histories.status, "-")'), $columnDirection);
             },
         ]);
 
@@ -236,11 +252,14 @@ class PersonelCrudController extends CrudController
                         });
                 });
         })->whereNull('temps.id')
-            ->join('account_status', 'account_status.id', 'status_histories.status_histories_id')
-            ->select('status_histories.personel_id', 'account_status.acc_status');
+            // ->join('account_status', 'account_status.id', 'status_histories.status_histories_id')
+            // ->select('status_histories.personel_id', 'account_status.acc_status');
+        ->select('status_histories.personel_id', 'status_histories.status');
         $this->crud->query->leftJoinSub($subQuery, 'status_histories', function ($leftJoinSub) {
             $leftJoinSub->on('personels.id', 'status_histories.personel_id');
-        })->select('personels.*', DB::raw('IFNULL(status_histories.acc_status, "-") as acc_status'));
+        })
+        // ->select('personels.*', DB::raw('IFNULL(status_histories.acc_status, "-") as acc_status'));
+        ->select('personels.*', DB::raw('IFNULL(status_histories.status, "-") as status'));
         return $this->traitSearch();
     }
 
@@ -968,14 +987,19 @@ class PersonelCrudController extends CrudController
                     ->get(['structure_churches.id as id', 'ministry_roles.ministry_role as ministry_role', 
                     'title_lists.short_desc','churches.church_name', 'churches.id as church_id', 'churches.church_address','title_lists.long_desc','personels.first_name', 'personels.last_name']);
 
+        // $current_statuses = StatusHistory::where('personel_id', $this->crud->getCurrentEntry()->id)
+        //                     ->leftJoin('account_status', 'account_status.id', 'status_histories.status_histories_id')
+        //                     ->orderBy('date_status','desc')
+        //                     ->orderBy('status_histories.created_at','desc')
+        //                     ->get(['status_histories.id as id', 'date_status', 'status_histories.created_at', 'acc_status', 'reason']);
+        
         $current_statuses = StatusHistory::where('personel_id', $this->crud->getCurrentEntry()->id)
-                            ->leftJoin('account_status', 'account_status.id', 'status_histories.status_histories_id')
-                            ->orderBy('date_status','desc')
-                            ->orderBy('status_histories.created_at','desc')
-                            ->get(['status_histories.id as id', 'date_status', 'status_histories.created_at', 'acc_status', 'reason']);
+        ->orderBy('date_status','desc')
+        ->orderBy('created_at','desc')
+        ->get(['id', 'date_status', 'created_at', 'status', 'reason']);
 
         $data['crud'] = $this->crud;
-        $data['current_status'] = (sizeof($current_statuses)>0)?$current_statuses->first()->acc_status:"-";
+        $data['current_status'] = (sizeof($current_statuses)>0)?$current_statuses->first()->status:"-";
         $data['current_statuses'] = $current_statuses;
         $data['churches'] = $churches;
 
