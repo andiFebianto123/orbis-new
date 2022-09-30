@@ -35,7 +35,6 @@ class UserCrudController extends CrudController
         {
             $this->crud->denyAccess('list');
         }
-        dd(trans('validation.custom.model_has_relation'));
     }
 
     /**
@@ -293,13 +292,6 @@ class UserCrudController extends CrudController
 
         $com = $hitCompare->compareData($item_previous->toArray());
 
-        if($com){
-            $send = new HitApi;
-            $id = [$com];
-            $module = 'user_admin';
-            $response = $send->action($id, 'update', $module)->json();
-        }
-
         // hit api for update user
         // $send = new HitApi;
 
@@ -324,6 +316,12 @@ class UserCrudController extends CrudController
         // save the redirect choice for next time
         $this->crud->setSaveAction();
 
+        if($com){
+            $send = new HitApi;
+            $id = [$com];
+            $module = 'user_admin';
+            $response = $send->action($id, 'update', $module)->json();
+        }
 
         return $this->crud->performSaveAction($item->getKey());
     }

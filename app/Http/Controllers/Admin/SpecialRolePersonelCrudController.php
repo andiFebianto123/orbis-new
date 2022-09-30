@@ -172,13 +172,6 @@ class SpecialRolePersonelCrudController extends CrudController
                 ->withInput()->withErrors($errors);
         }
 
-        if($trigger_matches_church == 1){
-            $send = new HitApi;
-            $id = [$request->personel_id];
-            $module = 'user';
-            $response = $send->action($id, 'update', $module)->json();
-        } 
-
         if (!isset($change)) {
             $insert = new SpecialRolePersonel();
             $insert->special_role_id = $request->special_role_id;
@@ -186,6 +179,14 @@ class SpecialRolePersonelCrudController extends CrudController
             $insert->personel_id = $request->personel_id;
             $insert->save();
         }
+
+        if($trigger_matches_church == 1){
+            $send = new HitApi;
+            $id = [$request->personel_id];
+            $module = 'user';
+            $response = $send->action($id, 'update', $module)->json();
+        }
+
         Alert::success(trans('backpack::crud.insert_success'))->flash();
 
         return redirect(backpack_url('personel/'.$request->personel_id.'/show'));
@@ -249,12 +250,6 @@ class SpecialRolePersonelCrudController extends CrudController
             $trigger_matches_church = 1;
         }
 
-        if($trigger_matches_church == 1){
-            $send = new HitApi;
-            $id = [$request->personel_id];
-            $module = 'user';
-            $response = $send->action($id, 'update', $module)->json();
-        }
 
         // if (isset($findCombination)) {
         //     // SpecialRolePersonel::where('id', $findCombination->id)->delete();
@@ -267,6 +262,13 @@ class SpecialRolePersonelCrudController extends CrudController
         }
         $change->personel_id = $request->personel_id;
         $change->save();
+
+        if($trigger_matches_church == 1){
+            $send = new HitApi;
+            $id = [$request->personel_id];
+            $module = 'user';
+            $response = $send->action($id, 'update', $module)->json();
+        }
 
         // show a success message
         Alert::success(trans('backpack::crud.update_success'))->flash();
@@ -281,14 +283,18 @@ class SpecialRolePersonelCrudController extends CrudController
         // get entry ID from Request (makes sure its the last ID for nested resources)
         $personel = request()->personel_id;
 
-        $send = new HitApi;
-        $id = [$personel];
-        $module = 'user';
-        $response = $send->action($id, 'update', $module)->json();
-
         $id = $this->crud->getCurrentEntryId() ?? $id;
 
-        return $this->crud->delete($id);
+        $delete = $this->crud->delete($id);
+
+        if($delete){
+            $send = new HitApi;
+            $id = [$personel];
+            $module = 'user';
+            $response = $send->action($id, 'update', $module)->json();
+        }
+
+        return $delete;
     }
 
 

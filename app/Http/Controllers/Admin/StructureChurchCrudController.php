@@ -209,12 +209,6 @@ class StructureChurchCrudController extends CrudController
                 ->withInput()->withErrors($errors);
         }
 
-        if($trigger_matches_church == 1){
-            $send = new HitApi;
-            $id = [$id];
-            $module = 'user';
-            $response = $send->action($id, 'update', $module)->json();
-        }
 
         // insert item in the db
         $item = $this->crud->create($this->crud->getStrippedSaveRequest());
@@ -235,6 +229,14 @@ class StructureChurchCrudController extends CrudController
 
             $url_redirect = 'personel/'.request()->personel_id.'/show';
         }
+
+        if($trigger_matches_church == 1){
+            $send = new HitApi;
+            $id = [$id];
+            $module = 'user';
+            $response = $send->action($id, 'update', $module)->json();
+        }
+
         return redirect(backpack_url($url_redirect ));
     }
 
@@ -263,13 +265,6 @@ class StructureChurchCrudController extends CrudController
         }
 
 
-        if($trigger_matches_church == 1){
-            $send = new HitApi;
-            $id = [$id];
-            $module = 'user';
-            $response = $send->action($id, 'update', $module)->json();
-        }
-
         // update the row in the db
         $item = $this->crud->update($request->get($this->crud->model->getKeyName()),
                             $this->crud->getStrippedSaveRequest());
@@ -290,6 +285,14 @@ class StructureChurchCrudController extends CrudController
 
             $url_redirect = 'personel/'.request()->personel_id.'/show';
         }
+
+        if($trigger_matches_church == 1){
+            $send = new HitApi;
+            $id = [$id];
+            $module = 'user';
+            $response = $send->action($id, 'update', $module)->json();
+        }
+        
         return redirect(backpack_url($url_redirect));   
     }
 
@@ -314,14 +317,19 @@ class StructureChurchCrudController extends CrudController
         // get entry ID from Request (makes sure its the last ID for nested resources)
         $personel = request()->personel_id;
 
-        $send = new HitApi;
-        $id = [$personel];
-        $module = 'user';
-        $response = $send->action($id, 'update', $module)->json();
-
         $id = $this->crud->getCurrentEntryId() ?? $id;
 
-        return $this->crud->delete($id);
+        $delete = $this->crud->delete($id);
+
+        if($delete){
+            $send = new HitApi;
+            $id = [$personel];
+            $module = 'user';
+            $response = $send->action($id, 'update', $module)->json();
+        }
+
+        return $delete;
+
     }
 
 

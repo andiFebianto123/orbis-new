@@ -692,16 +692,6 @@ class PersonelCrudController extends CrudController
                     }
                 }
             }
-            // foreach($result['valid_images'] as $index => $validImage){
-            //     $personelImage = new PersonelImage;
-            //     $path = $personelImage->setImagePersonel('public/images_personel', $validImage['image'], 'image', '_' . $index);
-            //     $personelImage->fill([
-            //         'personel_id' => $item->id,
-            //         'image' => $path,
-            //         'label' => $validImage['label']
-            //     ]);
-            //     $personelImage->save();
-            // }
             
             DB::commit();
 
@@ -891,6 +881,13 @@ class PersonelCrudController extends CrudController
                 }
             }
 
+            
+            // update the row in the db
+            $item = $this->crud->update($request->get($this->crud->model->getKeyName()),
+                $this->crud->getStrippedSaveRequest());
+            $this->data['entry'] = $this->crud->entry = $item;
+
+            DB::commit();
 
             // hit api for update user
             if($com || ($trigger_matches_church == 1)){
@@ -899,56 +896,7 @@ class PersonelCrudController extends CrudController
                 $module = 'user';
                 $response = $send->action($id, 'update', $module)->json();
             }
-            
-            // update the row in the db
-            $item = $this->crud->update($request->get($this->crud->model->getKeyName()),
-                $this->crud->getStrippedSaveRequest());
-            $this->data['entry'] = $this->crud->entry = $item;
 
-
-            // $validIds = $result['valid_ids'];
-            // if(count($validIds) > 0){
-            //     $personelImages = PersonelImage::where('personel_id', $item->id)->whereNotIn('id', $validIds)->get();  
-            //     foreach($personelImages as $personelImage){
-            //         $personelImage->delete();
-            //     }
-            // }
-            // else{
-            //     $personelImages = PersonelImage::where('personel_id', $item->id)->get();
-            //     foreach($personelImages as $personelImage){
-            //         $personelImage->delete();
-            //     }          
-            // }
-
-            // foreach($result['valid_images'] as $index => $validImage){
-            //     $imageChange = $validImage['image_change'];
-            //     if($validImage['id'] == null){
-            //         $personelImage = new PersonelImage;
-            //     }
-            //     else{
-            //         $personelImage = PersonelImage::where('id', $validImage['id'])->where('personel_id', $item->id)->first();
-            //         if($personelImage == null){
-            //             $personelImage = new PersonelImage;
-            //         }
-            //     }
-            //     if($imageChange){
-            //         $path = $personelImage->setImagePersonel('public/images_personel', $validImage['image'], 'image', '_' . $index);
-            //         $personelImage->fill([
-            //             'personel_id' => $item->id,
-            //             'image' => $path,
-            //             'label' => $validImage['label']
-            //         ]);
-            //         $personelImage->save();
-            //     }
-            //     else if($personelImage->id != null){
-            //         $personelImage->fill([
-            //             'label' => $validImage['label']
-            //         ]);
-            //         $personelImage->save();
-            //     }
-            // }
-
-            DB::commit();
         } catch (Exception $e) { 
             DB::rollback();
             throw $e;

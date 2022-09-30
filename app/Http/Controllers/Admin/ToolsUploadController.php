@@ -215,6 +215,8 @@ class ToolsUploadController extends Controller
                 session()->flash('message', 'Data has been successfully import');
                 session()->flash('status', 'success');
 
+                DB::commit();
+
                 if(count($import->ids_update) > 0){
                     $send = new HitApi;
                     $ids = $import->ids_update;
@@ -229,7 +231,6 @@ class ToolsUploadController extends Controller
                     $response = $send->action($ids, 'create', $module)->json();
                 }
 
-                DB::commit();
 
                 return response()->json([
                     'status' => true,
