@@ -143,7 +143,7 @@ class RevisionPastorAnnualDesignerView2 extends Migration
                 (
                     SELECT 
                         status_histories.personel_id AS personel_id,
-                        account_status.status AS status,
+                        status_histories.status AS status,
                         temps.id as temps_id
                     FROM 
                         status_histories 
@@ -151,7 +151,7 @@ class RevisionPastorAnnualDesignerView2 extends Migration
                     (
                         SELECT 
                         status_histories.personel_id AS personel_id,
-                        status_histories.status_histories_id AS status,
+                        status_histories.status AS status,
                         temp2.id
                         FROM 
                             status_histories
@@ -160,7 +160,7 @@ class RevisionPastorAnnualDesignerView2 extends Migration
                             SELECT 
                             status_histories.id,
                             status_histories.personel_id AS personel_id,
-                            status_histories.status_histories_id AS status
+                            status_histories.status AS status
                             FROM 
                                 status_histories
                             LEFT JOIN
