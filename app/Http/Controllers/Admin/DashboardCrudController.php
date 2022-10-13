@@ -65,7 +65,8 @@ class DashboardCrudController extends CrudController
                                 });
                             });
                         })->whereNull('temps.id')
-                        ->where('status_histories.status_histories_id', '1');
+                        ->where('status_histories.status', 'Active');
+                        // ->where('status_histories.status_histories_id', '1');
 
         $today_birthday = Personel::whereDay('date_of_birth', Carbon::now()->day)
                     ->whereMonth('date_of_birth', Carbon::now()->month)
@@ -128,11 +129,19 @@ class DashboardCrudController extends CrudController
                     ->leftJoin('churches','status_history_churches.churches_id','churches.id')
                     ->select('church_name', 'date_status')
                     ->get();
-        $inactive_pastor_tables = StatusHistory::whereNotIn('status_histories_id', [1,4])
+
+        // $inactive_pastor_tables = StatusHistory::whereNotIn('status_histories_id', [1,4])
+        //             ->whereYear('date_status', Carbon::now()->year)
+        //             ->leftJoin('personels','status_histories.personel_id','personels.id')
+        //             ->select('first_name','last_name','date_status')
+        //             ->get();
+
+        $inactive_pastor_tables = StatusHistory::whereNotIn('status', ['Active','pending'])
                     ->whereYear('date_status', Carbon::now()->year)
                     ->leftJoin('personels','status_histories.personel_id','personels.id')
                     ->select('first_name','last_name','date_status')
                     ->get();
+
         $new_pastor_tables = Personel::whereMonth('valid_card_start', Carbon::now()->month)
                     ->whereYear('valid_card_start', Carbon::now()->year)
                     ->join('title_lists','personels.title_id','title_lists.id')

@@ -170,17 +170,33 @@ class PersonelImport implements OnEachRow/* ToCollection */, WithHeadingRow, Wit
                 ->orderBy('date_status','desc')
                 ->orderBy('created_at','desc')
                 ->first();
-                if($status_history->status_histories_id != $acc_status['id']){
+
+                if($status_history->status != $acc_status['acc_status']){
                     if($com === FALSE){
                         $this->ids_update[] = $update_personel->id;
                     }
                 }
-                $status_history->status_histories_id = ($acc_status['id'] ?? null);
+
+                // if($status_history->status_histories_id != $acc_status['id']){
+                //     if($com === FALSE){
+                //         $this->ids_update[] = $update_personel->id;
+                //     }
+                // }
+
+                // $status_history->status_histories_id = ($acc_status['id'] ?? null);
+                $status_history->status = ($acc_status['acc_status'] ?? null);
                 $status_history->date_status = Carbon::now();
                 $status_history->save();
             }else{
+                // $status_history = new StatusHistory([
+                //     'status_histories_id'  => ($acc_status['id'] ?? null),
+                //     'date_status' => Carbon::now(),
+                //     'personel_id' => $update_personel->id,
+                // ]);
+                // $status_history->save();
                 $status_history = new StatusHistory([
-                    'status_histories_id'  => ($acc_status['id'] ?? null),
+                    // 'status_histories_id'  => ($acc_status['id'] ?? null),
+                    'status' => ($acc_status['acc_status'] ?? null),
                     'date_status' => Carbon::now(),
                     'personel_id' => $update_personel->id,
                 ]);
@@ -236,12 +252,19 @@ class PersonelImport implements OnEachRow/* ToCollection */, WithHeadingRow, Wit
 
             $this->handleRcdpw($new_personel->id, $row_rc_dpw, 'create');
 
+            // $status_history = new StatusHistory([
+            //     'status_histories_id'  => ($acc_status['id'] ?? null),
+            //     'date_status' => Carbon::now(),
+            //     'personel_id' => $new_personel->id,
+            // ]);
+            // $status_history->save();
+
             $status_history = new StatusHistory([
-                'status_histories_id'  => ($acc_status['id'] ?? null),
+                // 'status_histories_id'  => ($acc_status['id'] ?? null),
+                'status' => ($acc_status['acc_status'] ?? null),
                 'date_status' => Carbon::now(),
                 'personel_id' => $new_personel->id,
             ]);
-
             $status_history->save();
 
             if (sizeof($this->handleChurchName($church_name)) > 0) {

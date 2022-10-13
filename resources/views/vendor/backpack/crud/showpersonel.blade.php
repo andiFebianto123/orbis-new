@@ -598,7 +598,7 @@
 			  		Status History
   				</div>
 				<div class="card-body">
-					<div class = "row">
+					<div class = "row"> 
 						<div class="col-md-12">
 						@if(backpack_user()->hasRole(['Super Admin','Editor']))
 							<a href ="{{url('admin/statushistory/create?personel_id='.$entry->id)}}" class = 'btn btn-primary btn-sm'>Add Status</a>
@@ -617,7 +617,7 @@
 								<tbody>
 									@foreach($current_statuses as $key => $sh)
 										<tr>
-											<td>{{$sh->acc_status ?? '-'}}</td>
+											<td>{{$sh->status ?? '-'}}</td>
 											<td>{{$sh->reason}}</td>
 											<td>{{$sh->date_status}}</td>
 											@if(backpack_user()->hasRole(['Super Admin','Editor']))

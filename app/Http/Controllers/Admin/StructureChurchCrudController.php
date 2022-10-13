@@ -174,6 +174,42 @@ class StructureChurchCrudController extends CrudController
         // execute the FormRequest authorization and validation, if one is required
         $request = $this->crud->validateRequest();
 
+
+        $id = $request->personel_id;
+        $entry = Personel::where('id', $id)->first();
+
+        $church_name = false;
+        $input_church_name = false;
+        $trigger_matches_church = 0;
+        $errors = [];
+
+
+        if(preg_match_all('/(\{[\:\"\_\,a-z0-9]+\})/', $entry->church_name, $matches)) {
+            $church_name = $matches[1];
+        }
+
+
+        $input_church_name = '{"title_structure_id":"'.$request->title_structure_id.'","church_id":"'.$request->church_id.'"}';
+        // if(preg_match_all('/(\{[\:\"\_\,a-z0-9]+\})/', $request->input("church_name"), $matches)) {
+        //     $input_church_name = $matches[1];
+        // }
+
+        // check validation double data church_name
+
+        if(in_array($input_church_name, $church_name)){
+            $errors['title_structure_id'] = ['The pastor with same church Name has already exists.'];
+            $errors['church_id'] = ['The pastor with same church Name has already exists.'];
+        }else{
+            $trigger_matches_church = 1;
+        }
+
+
+        if(count($errors) > 0){
+            return redirect($this->crud->route . '/create?personel_id='. $id)
+                ->withInput()->withErrors($errors);
+        }
+
+
         // insert item in the db
         $item = $this->crud->create($this->crud->getStrippedSaveRequest());
         $this->data['entry'] = $this->crud->entry = $item;
@@ -193,6 +229,14 @@ class StructureChurchCrudController extends CrudController
 
             $url_redirect = 'personel/'.request()->personel_id.'/show';
         }
+
+        if($trigger_matches_church == 1){
+            $send = new HitApi;
+            $id = [$id];
+            $module = 'user';
+            $response = $send->action($id, 'update', $module)->json();
+        }
+
         return redirect(backpack_url($url_redirect ));
     }
 
@@ -202,6 +246,25 @@ class StructureChurchCrudController extends CrudController
 
         // execute the FormRequest authorization and validation, if one is required
         $request = $this->crud->validateRequest();
+
+        $id = $request->personel_id;
+        $entry = Personel::where('id', $id)->first();
+        $church_name = false;
+        $input_church_name = false;
+        $trigger_matches_church = 0;
+        $errors = [];
+
+        if(preg_match_all('/(\{[\:\"\_\,a-z0-9]+\})/', $entry->church_name, $matches)) {
+            $church_name = $matches[1];
+        }
+
+        $input_church_name = '{"title_structure_id":"'.$request->title_structure_id.'","church_id":"'.$request->church_id.'"}';
+
+        if(!in_array($input_church_name, $church_name)){
+            $trigger_matches_church = 1;
+        }
+
+
         // update the row in the db
         $item = $this->crud->update($request->get($this->crud->model->getKeyName()),
                             $this->crud->getStrippedSaveRequest());
@@ -222,6 +285,14 @@ class StructureChurchCrudController extends CrudController
 
             $url_redirect = 'personel/'.request()->personel_id.'/show';
         }
+
+        if($trigger_matches_church == 1){
+            $send = new HitApi;
+            $id = [$id];
+            $module = 'user';
+            $response = $send->action($id, 'update', $module)->json();
+        }
+        
         return redirect(backpack_url($url_redirect));   
     }
 
@@ -237,6 +308,31 @@ class StructureChurchCrudController extends CrudController
 
         return $arr_personels;
     }
+
+
+    public function destroy($id)
+    {
+        $this->crud->hasAccessOrFail('delete');
+
+        // get entry ID from Request (makes sure its the last ID for nested resources)
+        $personel = request()->personel_id;
+
+        $id = $this->crud->getCurrentEntryId() ?? $id;
+
+        $delete = $this->crud->delete($id);
+
+        if($delete){
+            $send = new HitApi;
+            $id = [$personel];
+            $module = 'user';
+            $response = $send->action($id, 'update', $module)->json();
+        }
+
+        return $delete;
+
+    }
+
+
 
     private function getChurch(){
         $churches = Church::get();

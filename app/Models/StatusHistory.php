@@ -18,6 +18,7 @@ class StatusHistory extends Model
     protected $table = 'status_histories';
     protected $fillable = [
         'status_histories_id',
+        'status',
         'reason',
         'date_status',
         'personel_id',

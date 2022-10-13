@@ -94,19 +94,35 @@ class PersonelCrudController extends CrudController
             'type' => 'text',
         ]);
 
+        // $this->crud->addColumn([
+        //     'name' => 'acc_status', // The db column name
+        //     'label' => "Status", // Table column heading
+        //     'type' => 'closure',
+        //     'function' => function ($entry) {
+        //         return $entry->acc_status;
+        //     },
+        //     'searchLogic' => function ($query, $column, $searchTerm) {
+        //         $query->orWhere(DB::raw('IFNULL(status_histories.acc_status, "-")'), 'LIKE', '%' . $searchTerm . '%');
+        //     },
+        //     'orderable' => true,
+        //     'orderLogic' => function ($query, $column, $columnDirection) {
+        //         return $query->orderBy(DB::raw('IFNULL(status_histories.acc_status, "-")'), $columnDirection);
+        //     },
+        // ]);
+
         $this->crud->addColumn([
-            'name' => 'acc_status', // The db column name
+            'name' => 'status', // The db column name
             'label' => "Status", // Table column heading
             'type' => 'closure',
             'function' => function ($entry) {
-                return $entry->acc_status;
+                return $entry->status;
             },
             'searchLogic' => function ($query, $column, $searchTerm) {
-                $query->orWhere(DB::raw('IFNULL(status_histories.acc_status, "-")'), 'LIKE', '%' . $searchTerm . '%');
+                $query->orWhere(DB::raw('IFNULL(status_histories.status, "-")'), 'LIKE', '%' . $searchTerm . '%');
             },
             'orderable' => true,
             'orderLogic' => function ($query, $column, $columnDirection) {
-                return $query->orderBy(DB::raw('IFNULL(status_histories.acc_status, "-")'), $columnDirection);
+                return $query->orderBy(DB::raw('IFNULL(status_histories.status, "-")'), $columnDirection);
             },
         ]);
 
@@ -236,11 +252,14 @@ class PersonelCrudController extends CrudController
                         });
                 });
         })->whereNull('temps.id')
-            ->join('account_status', 'account_status.id', 'status_histories.status_histories_id')
-            ->select('status_histories.personel_id', 'account_status.acc_status');
+            // ->join('account_status', 'account_status.id', 'status_histories.status_histories_id')
+            // ->select('status_histories.personel_id', 'account_status.acc_status');
+        ->select('status_histories.personel_id', 'status_histories.status');
         $this->crud->query->leftJoinSub($subQuery, 'status_histories', function ($leftJoinSub) {
             $leftJoinSub->on('personels.id', 'status_histories.personel_id');
-        })->select('personels.*', DB::raw('IFNULL(status_histories.acc_status, "-") as acc_status'));
+        })
+        // ->select('personels.*', DB::raw('IFNULL(status_histories.acc_status, "-") as acc_status'));
+        ->select('personels.*', DB::raw('IFNULL(status_histories.status, "-") as status'));
         return $this->traitSearch();
     }
 
@@ -692,23 +711,13 @@ class PersonelCrudController extends CrudController
                     }
                 }
             }
-            // foreach($result['valid_images'] as $index => $validImage){
-            //     $personelImage = new PersonelImage;
-            //     $path = $personelImage->setImagePersonel('public/images_personel', $validImage['image'], 'image', '_' . $index);
-            //     $personelImage->fill([
-            //         'personel_id' => $item->id,
-            //         'image' => $path,
-            //         'label' => $validImage['label']
-            //     ]);
-            //     $personelImage->save();
-            // }
             
             DB::commit();
 
             // hit api for update personel
             $send = new HitApi;
             $id = [$item->getKey()];
-            $module = 'user_admin';
+            $module = 'user';
             $response = $send->action($id, 'create', $module)->json();
 
         } catch (Exception $e) {
@@ -756,6 +765,8 @@ class PersonelCrudController extends CrudController
         if ($request->input('is_lifetime') == 1) {
             $request->request->set('valid_card_end',null);
         }
+
+        $errors = [];
 
         $this->crud->setRequest($request);
         $this->crud->unsetValidation(); // Validation has already been run
@@ -813,6 +824,68 @@ class PersonelCrudController extends CrudController
                 $isDuplicate->where('date_of_birth', $request->date_of_birth);
             }
 
+            $church_name = false;
+            $input_church_name = false;
+
+
+            if(preg_match_all('/(\{[\:\"\_\,a-z0-9]+\})/', $model->church_name, $matches)) {
+                $church_name = $matches[1];
+            }
+
+            if(preg_match_all('/(\{[\:\"\_\,a-z0-9]+\})/', $request->input("church_name"), $matches)) {
+                $input_church_name = $matches[1];
+            }
+
+            $trigger_matches_church = 0;
+            if(is_array($input_church_name)){
+                foreach($input_church_name as $church){
+                    if(!in_array($church, $church_name)){
+                        $trigger_matches_church = 1;
+                    }
+                }
+            }
+
+            $count_church_name_data = array_count_values($input_church_name);
+
+
+            // check validation double data church_name
+
+            
+            if($count_church_name_data){
+                foreach($count_church_name_data as $key => $number){
+                    if($number > 1){
+                        $errors['church_name'] = ['The pastor with same church Name has already exists.'];
+                    }
+                }
+            }
+
+
+            
+
+            $isDuplicate = $isDuplicate->select('id')->first();
+
+            if ($isDuplicate != null && $isDuplicate->id != $id) {
+                // DB::rollback();
+                // $errors = [
+                //     'first_name' => ['The pastor with same First Name, Last Name, Church Name and Date of Birth has already exists.'],
+                //     'last_name' => ['The pastor with same First Name, Last Name, Church Name and Date of Birth has already exists.'],
+                //     // 'church_name' => ['The pastor with same First Name, Last Name, Church Name and Date of Birth has already exists.'],
+                //     'date_of_birth' => ['The pastor with same First Name, Last Name, Church Name and Date of Birth has already exists.'],
+                // ];
+                $errors['first_name'] = ['The pastor with same First Name, Last Name, Church Name and Date of Birth has already exists.'];
+                $errors['last_name'] = ['The pastor with same First Name, Last Name, Church Name and Date of Birth has already exists.'];
+                $errors['date_of_birth'] = ['The pastor with same First Name, Last Name, Church Name and Date of Birth has already exists.'];
+
+                // return redirect($this->crud->route . '/'. $id . '/edit')
+                //     ->withInput()->withErrors($errors);
+            }
+
+            if(count($errors) > 0){
+                DB::rollback();
+                return redirect($this->crud->route . '/'. $id . '/edit')
+                ->withInput()->withErrors($errors);
+            }
+
             if ($model->church_name != $request->input("church_name")) {
                 StructureChurch::where('personel_id', $model->id)->delete();
                 $leaderships = json_decode($request->input("church_name"));
@@ -826,95 +899,24 @@ class PersonelCrudController extends CrudController
                     }
                 }
             }
-            
 
-            $isDuplicate = $isDuplicate->select('id')->first();
-
-            if ($isDuplicate != null && $isDuplicate->id != $id) {
-                DB::rollback();
-                $errors = [
-                    'first_name' => ['The pastor with same First Name, Last Name, Church Name and Date of Birth has already exists.'],
-                    'last_name' => ['The pastor with same First Name, Last Name, Church Name and Date of Birth has already exists.'],
-                    // 'church_name' => ['The pastor with same First Name, Last Name, Church Name and Date of Birth has already exists.'],
-                    'date_of_birth' => ['The pastor with same First Name, Last Name, Church Name and Date of Birth has already exists.'],
-                ];
-                return redirect($this->crud->route . '/'. $id . '/edit')
-                    ->withInput()->withErrors($errors);
-            }
-            // if ($request->input('is_lifetime') == 0 && $request->input('valid_card_end') == null) {
-            //     DB::rollback();
-            //     $errors = [
-            //         'valid_card_end' => ['Valid Card End is required while lifetime is unchecked']
-            //     ];
-            //     return redirect($this->crud->route . '/'. $id . '/edit')
-            //         ->withInput()->withErrors($errors);
-            // }
-
-
-            // if($com){
-            //     $send = new HitApi;
-            //     $id = [$com];
-            //     $module = 'user_admin';
-            //     $response = $send->action($id, 'update', $module)->json();
-            // }
             
             // update the row in the db
             $item = $this->crud->update($request->get($this->crud->model->getKeyName()),
                 $this->crud->getStrippedSaveRequest());
             $this->data['entry'] = $this->crud->entry = $item;
 
-
-            // $validIds = $result['valid_ids'];
-            // if(count($validIds) > 0){
-            //     $personelImages = PersonelImage::where('personel_id', $item->id)->whereNotIn('id', $validIds)->get();  
-            //     foreach($personelImages as $personelImage){
-            //         $personelImage->delete();
-            //     }
-            // }
-            // else{
-            //     $personelImages = PersonelImage::where('personel_id', $item->id)->get();
-            //     foreach($personelImages as $personelImage){
-            //         $personelImage->delete();
-            //     }          
-            // }
-
-            // foreach($result['valid_images'] as $index => $validImage){
-            //     $imageChange = $validImage['image_change'];
-            //     if($validImage['id'] == null){
-            //         $personelImage = new PersonelImage;
-            //     }
-            //     else{
-            //         $personelImage = PersonelImage::where('id', $validImage['id'])->where('personel_id', $item->id)->first();
-            //         if($personelImage == null){
-            //             $personelImage = new PersonelImage;
-            //         }
-            //     }
-            //     if($imageChange){
-            //         $path = $personelImage->setImagePersonel('public/images_personel', $validImage['image'], 'image', '_' . $index);
-            //         $personelImage->fill([
-            //             'personel_id' => $item->id,
-            //             'image' => $path,
-            //             'label' => $validImage['label']
-            //         ]);
-            //         $personelImage->save();
-            //     }
-            //     else if($personelImage->id != null){
-            //         $personelImage->fill([
-            //             'label' => $validImage['label']
-            //         ]);
-            //         $personelImage->save();
-            //     }
-            // }
-
             DB::commit();
-             // hit api for update user
-             if($com){
+
+            // hit api for update user
+            if($com || ($trigger_matches_church == 1)){
                 $send = new HitApi;
                 $id = [$com];
-                $module = 'user_admin';
+                $module = 'user';
                 $response = $send->action($id, 'update', $module)->json();
-             }
-        } catch (Exception $e) {
+            }
+
+        } catch (Exception $e) { 
             DB::rollback();
             throw $e;
         }
@@ -923,7 +925,7 @@ class PersonelCrudController extends CrudController
         \Alert::success(trans('backpack::crud.update_success'))->flash();
 
         // save the redirect choice for next time
-        $this->crud->setSaveAction();
+        $this->crud->setSaveAction(); 
 
         return $this->crud->performSaveAction($item->getKey());
     }
@@ -985,14 +987,19 @@ class PersonelCrudController extends CrudController
                     ->get(['structure_churches.id as id', 'ministry_roles.ministry_role as ministry_role', 
                     'title_lists.short_desc','churches.church_name', 'churches.id as church_id', 'churches.church_address','title_lists.long_desc','personels.first_name', 'personels.last_name']);
 
+        // $current_statuses = StatusHistory::where('personel_id', $this->crud->getCurrentEntry()->id)
+        //                     ->leftJoin('account_status', 'account_status.id', 'status_histories.status_histories_id')
+        //                     ->orderBy('date_status','desc')
+        //                     ->orderBy('status_histories.created_at','desc')
+        //                     ->get(['status_histories.id as id', 'date_status', 'status_histories.created_at', 'acc_status', 'reason']);
+        
         $current_statuses = StatusHistory::where('personel_id', $this->crud->getCurrentEntry()->id)
-                            ->leftJoin('account_status', 'account_status.id', 'status_histories.status_histories_id')
-                            ->orderBy('date_status','desc')
-                            ->orderBy('status_histories.created_at','desc')
-                            ->get(['status_histories.id as id', 'date_status', 'status_histories.created_at', 'acc_status', 'reason']);
+        ->orderBy('date_status','desc')
+        ->orderBy('created_at','desc')
+        ->get(['id', 'date_status', 'created_at', 'status', 'reason']);
 
         $data['crud'] = $this->crud;
-        $data['current_status'] = (sizeof($current_statuses)>0)?$current_statuses->first()->acc_status:"-";
+        $data['current_status'] = (sizeof($current_statuses)>0)?$current_statuses->first()->status:"-";
         $data['current_statuses'] = $current_statuses;
         $data['churches'] = $churches;
 
@@ -1086,7 +1093,7 @@ class PersonelCrudController extends CrudController
              // hit api for update user
              $send = new HitApi;
              $ids = [$id];
-             $module = 'user_admin';
+             $module = 'user';
              $response_json = $send->action($ids, 'delete', $module)->json();
 
             return $response;

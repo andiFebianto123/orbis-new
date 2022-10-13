@@ -138,6 +138,7 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'model_has_relation' => 'The selected data has already had relation with other data.',
     ],
 
     /*

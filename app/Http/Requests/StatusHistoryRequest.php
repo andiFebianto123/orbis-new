@@ -26,7 +26,8 @@ class StatusHistoryRequest extends FormRequest
     public function rules()
     {
         return [
-            'status_histories_id' => 'required',
+            'status' => 'required',
+            // 'status_histories_id' => 'required',
             'reason'=> 'required',
             'date_status' => 'required',
         ];

@@ -10,6 +10,7 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use App\Helpers\HitApi;
 use App\Helpers\HitCompare;
 use App\Models\StatusHistory;
+use App\Models\Accountstatus;
 
 /**
  * Class StatusHistoryCrudController
@@ -97,13 +98,23 @@ class StatusHistoryCrudController extends CrudController
     {
         CRUD::setValidation(StatusHistoryRequest::class);
 
+        // $this->crud->addField([
+        //     'label'     => 'Status', // Table column heading
+        //     'type'      => 'select2',
+        //     'name'      => 'status_histories_id', // the column that contains the ID of that connected entity;
+        //     'entity'    => 'accountstatushistories', // the method that defines the relationship in your Model
+        //     'attribute' => 'acc_status', // foreign key attribute that is shown to user
+        //     'model'     => "App\Models\Accountstatus",
+        // ]);
+
+        // 'options' => Product::get()->pluck('title','id')->toArray(),
+
         $this->crud->addField([
-            'label'     => 'Status', // Table column heading
-            'type'      => 'select2',
-            'name'      => 'status_histories_id', // the column that contains the ID of that connected entity;
-            'entity'    => 'accountstatushistories', // the method that defines the relationship in your Model
-            'attribute' => 'acc_status', // foreign key attribute that is shown to user
-            'model'     => "App\Models\Accountstatus",
+            'label' => 'Status',
+            'type' => 'select_from_array',
+            'name' => 'status',
+            'options' => Accountstatus::get()->pluck('acc_status', 'acc_status')->toArray(),
+            'allows_null' => true,
         ]);
 
         $this->crud->addField([
@@ -151,30 +162,42 @@ class StatusHistoryCrudController extends CrudController
         // execute the FormRequest authorization and validation, if one is required
         $request = $this->crud->validateRequest();
 
+        // $current_statuses_now = StatusHistory::where('personel_id', $request->personel_id)
+        //                     ->leftJoin('account_status', 'account_status.id', 'status_histories.status_histories_id')
+        //                     // ->orderBy('date_status','desc')
+        //                     ->orderBy('status_histories.created_at','desc')
+        //                     ->get(['status_histories.id as id', 'date_status', 'status_histories.created_at', 'acc_status', 'reason']);
+                            
         $current_statuses_now = StatusHistory::where('personel_id', $request->personel_id)
-                            ->leftJoin('account_status', 'account_status.id', 'status_histories.status_histories_id')
-                            // ->orderBy('date_status','desc')
-                            ->orderBy('status_histories.created_at','desc')
-                            ->get(['status_histories.id as id', 'date_status', 'status_histories.created_at', 'acc_status', 'reason']);
+        // ->leftJoin('account_status', 'account_status.id', 'status_histories.status_histories_id')
+        // ->orderBy('date_status','desc')
+        ->orderBy('created_at','desc')
+        ->get(['id', 'date_status', 'created_at', 'status as acc_status', 'reason']);
+
         $status_now = (sizeof($current_statuses_now)>0)?$current_statuses_now->first()->acc_status:"-";
-        // dd($status);
 
         // insert item in the db
         $item = $this->crud->create($this->crud->getStrippedSaveRequest());
         $this->data['entry'] = $this->crud->entry = $item;
 
+        // $current_statuses = StatusHistory::where('personel_id', $request->personel_id)
+        // ->leftJoin('account_status', 'account_status.id', 'status_histories.status_histories_id')
+        // // ->orderBy('date_status','desc')
+        // ->orderBy('status_histories.created_at','desc')
+        // ->get(['status_histories.id as id', 'date_status', 'status_histories.created_at', 'acc_status', 'reason']);
+
         $current_statuses = StatusHistory::where('personel_id', $request->personel_id)
-        ->leftJoin('account_status', 'account_status.id', 'status_histories.status_histories_id')
+        // ->leftJoin('account_status', 'account_status.id', 'status_histories.status_histories_id')
         // ->orderBy('date_status','desc')
-        ->orderBy('status_histories.created_at','desc')
-        ->get(['status_histories.id as id', 'date_status', 'status_histories.created_at', 'acc_status', 'reason']);
+        ->orderBy('created_at','desc')
+        ->get(['id', 'date_status', 'created_at', 'status as acc_status', 'reason']);
 
         $status_new = (sizeof($current_statuses)>0)?$current_statuses->first()->acc_status:"-";
 
         if($status_now != $status_new){
             $send = new HitApi;
             $id = [$item->personel_id];
-            $module = 'user_admin';
+            $module = 'user';
             $response = $send->action($id, 'update', $module)->json();
         }
 
@@ -197,11 +220,17 @@ class StatusHistoryCrudController extends CrudController
 
         $item_previous['id'] = (int) $item_previous['personel_id'];
 
+        // $current_statuses_now = StatusHistory::where('personel_id', $request->personel_id)
+        //                     ->leftJoin('account_status', 'account_status.id', 'status_histories.status_histories_id')
+        //                     // ->orderBy('date_status','desc')
+        //                     ->orderBy('status_histories.created_at','desc')
+        //                     ->get(['status_histories.id as id', 'date_status', 'status_histories.created_at', 'acc_status', 'reason']);
+
         $current_statuses_now = StatusHistory::where('personel_id', $request->personel_id)
-                            ->leftJoin('account_status', 'account_status.id', 'status_histories.status_histories_id')
-                            // ->orderBy('date_status','desc')
-                            ->orderBy('status_histories.created_at','desc')
-                            ->get(['status_histories.id as id', 'date_status', 'status_histories.created_at', 'acc_status', 'reason']);
+        // ->leftJoin('account_status', 'account_status.id', 'status_histories.status_histories_id')
+        // ->orderBy('date_status','desc')
+        ->orderBy('created_at','desc')
+        ->get(['id', 'date_status', 'created_at', 'status as acc_status', 'reason']);
         $status_now = (sizeof($current_statuses_now)>0)?$current_statuses_now->first()->acc_status:"-";
         // $hitCompare = new HitCompare;
         // $hitCompare->addFieldCompare(
@@ -217,11 +246,17 @@ class StatusHistoryCrudController extends CrudController
                             $this->crud->getStrippedSaveRequest());
         $this->data['entry'] = $this->crud->entry = $item;
 
+        // $current_statuses = StatusHistory::where('personel_id', $request->personel_id)
+        // ->leftJoin('account_status', 'account_status.id', 'status_histories.status_histories_id')
+        // // ->orderBy('date_status','desc')
+        // ->orderBy('status_histories.created_at','desc')
+        // ->get(['status_histories.id as id', 'date_status', 'status_histories.created_at', 'acc_status', 'reason']);
+
         $current_statuses = StatusHistory::where('personel_id', $request->personel_id)
-        ->leftJoin('account_status', 'account_status.id', 'status_histories.status_histories_id')
+        // ->leftJoin('account_status', 'account_status.id', 'status_histories.status_histories_id')
         // ->orderBy('date_status','desc')
-        ->orderBy('status_histories.created_at','desc')
-        ->get(['status_histories.id as id', 'date_status', 'status_histories.created_at', 'acc_status', 'reason']);
+        ->orderBy('created_at','desc')
+        ->get(['id', 'date_status', 'created_at', 'status as acc_status', 'reason']);
 
         $status_new = (sizeof($current_statuses)>0)?$current_statuses->first()->acc_status:"-";
 
@@ -229,7 +264,7 @@ class StatusHistoryCrudController extends CrudController
         if($status_now != $status_new){
             $send = new HitApi;
             $id = [$id];
-            $module = 'user_admin';
+            $module = 'user';
             $response = $send->action($id, 'update', $module)->json();
         }
 
@@ -252,28 +287,40 @@ class StatusHistoryCrudController extends CrudController
 
         $item = $this->crud->getEntry($id);
 
+        // $current_statuses_now = StatusHistory::where('personel_id', $item->personel_id)
+        //                     ->leftJoin('account_status', 'account_status.id', 'status_histories.status_histories_id')
+        //                     ->orderBy('date_status','desc')
+        //                     ->orderBy('status_histories.created_at','desc')
+        //                     ->get(['status_histories.id as id', 'date_status', 'status_histories.created_at', 'acc_status', 'reason']);
+
         $current_statuses_now = StatusHistory::where('personel_id', $item->personel_id)
-                            ->leftJoin('account_status', 'account_status.id', 'status_histories.status_histories_id')
-                            ->orderBy('date_status','desc')
-                            ->orderBy('status_histories.created_at','desc')
-                            ->get(['status_histories.id as id', 'date_status', 'status_histories.created_at', 'acc_status', 'reason']);
+        // ->leftJoin('account_status', 'account_status.id', 'status_histories.status_histories_id')
+        // ->orderBy('date_status','desc')
+        ->orderBy('created_at','desc')
+        ->get(['id', 'date_status', 'created_at', 'status as acc_status', 'reason']);
 
         $current_statuses_now = (sizeof($current_statuses_now)>0)?$current_statuses_now->first()->acc_status:"-";
 
         $delete_data = $this->crud->delete($id);
 
+        // $current_statuses = StatusHistory::where('personel_id', $item->personel_id)
+        // ->leftJoin('account_status', 'account_status.id', 'status_histories.status_histories_id')
+        // ->orderBy('date_status','desc')
+        // ->orderBy('status_histories.created_at','desc')
+        // ->get(['status_histories.id as id', 'date_status', 'status_histories.created_at', 'acc_status', 'reason']);
+
         $current_statuses = StatusHistory::where('personel_id', $item->personel_id)
-        ->leftJoin('account_status', 'account_status.id', 'status_histories.status_histories_id')
-        ->orderBy('date_status','desc')
-        ->orderBy('status_histories.created_at','desc')
-        ->get(['status_histories.id as id', 'date_status', 'status_histories.created_at', 'acc_status', 'reason']);
+        // ->leftJoin('account_status', 'account_status.id', 'status_histories.status_histories_id')
+        // ->orderBy('date_status','desc')
+        ->orderBy('created_at','desc')
+        ->get(['id', 'date_status', 'created_at', 'status as acc_status', 'reason']);
 
         $current_statuses = (sizeof($current_statuses)>0)?$current_statuses->first()->acc_status:"-";
 
         if($current_statuses_now != $current_statuses){
             $send = new HitApi;
             $id = [$item->personel_id];
-            $module = 'user_admin';
+            $module = 'user';
             $response = $send->action($id, 'update', $module)->json();
         }
 

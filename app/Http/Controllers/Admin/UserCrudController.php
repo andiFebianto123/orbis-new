@@ -210,7 +210,7 @@ class UserCrudController extends CrudController
 
         $id = [$item->getKey()];
 
-        $module = 'user';
+        $module = 'user_admin';
 
         $response = $send->action($id, 'create', $module)->json();
 
@@ -292,13 +292,6 @@ class UserCrudController extends CrudController
 
         $com = $hitCompare->compareData($item_previous->toArray());
 
-        if($com){
-            $send = new HitApi;
-            $id = [$com];
-            $module = 'user';
-            $response = $send->action($id, 'update', $module)->json();
-        }
-
         // hit api for update user
         // $send = new HitApi;
 
@@ -323,6 +316,12 @@ class UserCrudController extends CrudController
         // save the redirect choice for next time
         $this->crud->setSaveAction();
 
+        if($com){
+            $send = new HitApi;
+            $id = [$com];
+            $module = 'user_admin';
+            $response = $send->action($id, 'update', $module)->json();
+        }
 
         return $this->crud->performSaveAction($item->getKey());
     }
@@ -339,7 +338,7 @@ class UserCrudController extends CrudController
         // hit api for update user
         $send = new HitApi;
         $ids = [$id];
-        $module = 'user';
+        $module = 'user_admin';
         $response = $send->action($ids, 'delete', $module)->json();
 
         return $delete;
