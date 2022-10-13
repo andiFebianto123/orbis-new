@@ -775,6 +775,13 @@ class PersonelCrudController extends CrudController
         try {
             $model = Personel::where('id', $id)->firstOrFail();
 
+            $churches = StructureChurch::where('personel_id', $id)->get();
+            $arr_unit = [];
+
+            foreach ($churches as $key => $churche) {
+                $arr_unit[] = ['title_structure_id' => $churche->title_structure_id, 'church_id' =>$churche->churches_id];
+            }
+
             $item_previous = $model->toArray(); // adalah data sebelumnya
             
             $hitCompare = new HitCompare;
@@ -828,7 +835,7 @@ class PersonelCrudController extends CrudController
             $input_church_name = false;
 
 
-            if(preg_match_all('/(\{[\:\"\_\,a-z0-9]+\})/', $model->church_name, $matches)) {
+            if(preg_match_all('/(\{[\:\"\_\,a-z0-9]+\})/', json_encode($arr_unit), $matches)) {
                 $church_name = $matches[1];
             }
 
@@ -886,7 +893,7 @@ class PersonelCrudController extends CrudController
                 ->withInput()->withErrors($errors);
             }
 
-            if ($model->church_name != $request->input("church_name")) {
+            if (json_encode($arr_unit) != $request->input("church_name")) {
                 StructureChurch::where('personel_id', $model->id)->delete();
                 $leaderships = json_decode($request->input("church_name"));
                 foreach ($leaderships as $key => $leadership) {

@@ -182,9 +182,14 @@ class StructureChurchCrudController extends CrudController
         $input_church_name = false;
         $trigger_matches_church = 0;
         $errors = [];
+        $churches = StructureChurch::where('personel_id', $id)->get();
+        $arr_unit = [];
 
+        foreach ($churches as $key => $churche) {
+            $arr_unit[] = ['title_structure_id' => $churche->title_structure_id, 'church_id' =>$churche->churches_id];
+        }
 
-        if(preg_match_all('/(\{[\:\"\_\,a-z0-9]+\})/', $entry->church_name, $matches)) {
+        if(preg_match_all('/(\{[\:\"\_\,a-z0-9]+\})/', json_encode($arr_unit), $matches)) {
             $church_name = $matches[1];
         }
 
@@ -254,7 +259,14 @@ class StructureChurchCrudController extends CrudController
         $trigger_matches_church = 0;
         $errors = [];
 
-        if(preg_match_all('/(\{[\:\"\_\,a-z0-9]+\})/', $entry->church_name, $matches)) {
+        $churches = StructureChurch::where('personel_id', $id)->get();
+        $arr_unit = [];
+
+        foreach ($churches as $key => $churche) {
+            $arr_unit[] = ['title_structure_id' => $churche->title_structure_id, 'church_id' =>$churche->churches_id];
+        }
+
+        if(preg_match_all('/(\{[\:\"\_\,a-z0-9]+\})/', json_encode($arr_unit), $matches)) {
             $church_name = $matches[1];
         }
 
