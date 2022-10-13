@@ -134,7 +134,7 @@ class PersonelImport implements OnEachRow/* ToCollection */, WithHeadingRow, Wit
             $update_personel->first_name = $row_first_name;
             $update_personel->last_name = $row_last_name;
             $update_personel->gender = $row_gender;
-            $update_personel->church_name = $str_json_church;
+            // $update_personel->church_name = $str_json_church;
             $update_personel->street_address = $address;
             $update_personel->city = $row_city;
             $update_personel->province = $row_province;
@@ -223,7 +223,7 @@ class PersonelImport implements OnEachRow/* ToCollection */, WithHeadingRow, Wit
             $new_personel->first_name = $row_first_name;
             $new_personel->last_name = $row_last_name;
             $new_personel->gender = $row_gender;
-            $new_personel->church_name = $str_json_church;
+            // $new_personel->church_name = $str_json_church;
             $new_personel->street_address = $address;
             $new_personel->city = $row_city;
             $new_personel->province = $row_province;
