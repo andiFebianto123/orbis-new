@@ -51,7 +51,7 @@ class PersonelRequest extends FormRequest
         'postal_code' => 'nullable',
         'country_id' => 'nullable',
         'language' => ['nullable', Rule::in(Personel::$arrayLanguage)],
-        'email' => 'nullable|email',
+        'email' => 'required|string|unique:personels,email,'.$this->id.',id',
         'first_licensed_on' => 'required',
         'card' => 'required',
         'valid_card_start' => 'required',
