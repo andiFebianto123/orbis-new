@@ -137,33 +137,10 @@ class PastorAnnualDesignerView extends Model
         }
     }
 
-    public function getChurchNameAttribute($value)
-    {
-        $str_role_church = "";
-        $churhes  = json_decode($value);
-            if (json_last_error() === JSON_ERROR_NONE) {
-                $total = sizeof($churhes) - 1;
-                foreach ($churhes as $key => $church) {
-                    $church_name = Church::where('id', $church->church_id)->first();
-                    $ministry_role = MinistryRole::where('id', $church->title_structure_id)->first();
-                    if ( isset($church_name) && isset($ministry_role) ) {
-                        $str_role_church .= $church_name->church_name." - ".$ministry_role->ministry_role;
-                        if ($key < $total) {
-                            $str_role_church .= "<br>";
-                        }
-                    }
-                }
-            }
-                
-        return $str_role_church;
-    }
-
-    // public function getChurchNameLAttribute()
+    // public function getChurchNameAttribute($value)
     // {
-    //     $value = $this->attributes['church_name'];
-
-    //     $churhes  = json_decode($value);
     //     $str_role_church = "";
+    //     $churhes  = json_decode($value);
     //         if (json_last_error() === JSON_ERROR_NONE) {
     //             $total = sizeof($churhes) - 1;
     //             foreach ($churhes as $key => $church) {
@@ -178,7 +155,26 @@ class PastorAnnualDesignerView extends Model
     //             }
     //         }
                 
-    //     return $value;
+    //     return $str_role_church;
     // }
+
+    public function getChurchNameAttribute($value)
+    {
+        $str_role_church = "";
+        $structureChurches = StructureChurch::join('ministry_roles', 'ministry_roles.id', 'structure_churches.title_structure_id')
+                            ->join('churches', 'churches.id', 'structure_churches.churches_id')
+                            ->where('personel_id', $this->id)
+                            ->get(['churches.church_name', 'ministry_roles.ministry_role']);
+
+        $total = sizeof($structureChurches);
+        foreach ($structureChurches as $key => $sc) {
+            $str_role_church .= $sc->church_name." - ".$sc->ministry_role;
+            if ($key < $total) {
+                $str_role_church .= "<br>";
+            }
+        }
+
+        return $str_role_church;
+    }
 
 }
