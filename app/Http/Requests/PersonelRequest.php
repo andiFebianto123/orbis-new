@@ -6,6 +6,7 @@ use App\Models\Personel;
 use App\Rules\Base64Rule;
 use App\Models\PersonelImage;
 use App\Http\Requests\Request;
+use App\Rules\UniquePersonelOnUser;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -51,7 +52,12 @@ class PersonelRequest extends FormRequest
         'postal_code' => 'nullable',
         'country_id' => 'nullable',
         'language' => ['nullable', Rule::in(Personel::$arrayLanguage)],
-        'email' => 'nullable|email',
+        'email' => [
+            'required',
+            'email',
+            'unique:personels,email,'.$this->id.',id',
+            new UniquePersonelOnUser()
+        ],
         'first_licensed_on' => 'required',
         'card' => 'required',
         'valid_card_start' => 'required',

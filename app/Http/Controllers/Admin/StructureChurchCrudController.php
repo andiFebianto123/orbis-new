@@ -182,6 +182,8 @@ class StructureChurchCrudController extends CrudController
         $input_church_name = false;
         $trigger_matches_church = 0;
         $errors = [];
+        $churches = StructureChurch::where('personel_id', $id)->get();
+        $arr_unit = [];
 
         if($entry->church_name != '[]' || $entry->church_name !== '[]'){
 
@@ -281,8 +283,6 @@ class StructureChurchCrudController extends CrudController
             return redirect($this->crud->route . '/create?personel_id='. $id)
                 ->withInput()->withErrors($errors);
         }
-
-        dd($trigger_matches_church);
 
         // update the row in the db
         $item = $this->crud->update($request->get($this->crud->model->getKeyName()),

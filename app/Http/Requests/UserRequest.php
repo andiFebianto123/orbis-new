@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
+use App\Rules\UniqueUserOnPersonel;
 use Illuminate\Foundation\Http\FormRequest;
 // use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -30,7 +31,12 @@ class UserRequest extends FormRequest
         return [
             // 'name' => 'required|min:5|max:255'
             'name' => 'required',
-            'email' => 'required|email|unique:users,email,'.$this->id.',id',
+            'email' => [
+                'required',
+                'email',
+                'unique:users,email,'.$this->id.',id',
+                new UniqueUserOnPersonel()
+            ],
             'privilege' => 'required',
             'password' => Rule::requiredIf($this->method() == 'POST'),
             'status_user' => 'required',
