@@ -824,41 +824,45 @@ class PersonelCrudController extends CrudController
                 $isDuplicate->where('date_of_birth', $request->date_of_birth);
             }
 
+            $trigger_matches_church = 0;
             $church_name = false;
             $input_church_name = false;
 
-
-            if(preg_match_all('/(\{[\:\"\_\,a-z0-9]+\})/', $model->church_name, $matches)) {
-                $church_name = $matches[1];
-            }
-
-            if(preg_match_all('/(\{[\:\"\_\,a-z0-9]+\})/', $request->input("church_name"), $matches)) {
-                $input_church_name = $matches[1];
-            }
-
-            $trigger_matches_church = 0;
-            if(is_array($input_church_name)){
-                foreach($input_church_name as $church){
-                    if(!in_array($church, $church_name)){
-                        $trigger_matches_church = 1;
+            if($request->church_name != '[]' || $request->church_name !== '[]'){
+                
+    
+                if(preg_match_all('/(\{[\:\"\_\,a-z0-9]+\})/', $model->church_name, $matches)) {
+                    $church_name = $matches[1];
+                }
+    
+                if(preg_match_all('/(\{[\:\"\_\,a-z0-9]+\})/', $request->input("church_name"), $matches)) {
+                    $input_church_name = $matches[1];
+                }
+    
+                if(is_array($input_church_name) && is_array($church_name)){
+                    foreach($input_church_name as $church){
+                        if(!in_array($church, $church_name)){
+                            $trigger_matches_church = 1;
+                        }
+                    }
+                }else{
+                    $trigger_matches_church = 1;
+                }
+    
+                $count_church_name_data = array_count_values($input_church_name);
+    
+    
+                // check validation double data church_name
+    
+                
+                if($count_church_name_data){
+                    foreach($count_church_name_data as $key => $number){
+                        if($number > 1){
+                            $errors['church_name'] = ['The pastor with same church Name has already exists.'];
+                        }
                     }
                 }
             }
-
-            $count_church_name_data = array_count_values($input_church_name);
-
-
-            // check validation double data church_name
-
-            
-            if($count_church_name_data){
-                foreach($count_church_name_data as $key => $number){
-                    if($number > 1){
-                        $errors['church_name'] = ['The pastor with same church Name has already exists.'];
-                    }
-                }
-            }
-
 
             
 

@@ -183,26 +183,23 @@ class StructureChurchCrudController extends CrudController
         $trigger_matches_church = 0;
         $errors = [];
 
+        if($entry->church_name != '[]' || $entry->church_name !== '[]'){
 
-        if(preg_match_all('/(\{[\:\"\_\,a-z0-9]+\})/', $entry->church_name, $matches)) {
-            $church_name = $matches[1];
-        }
+            if(preg_match_all('/(\{[\:\"\_\,a-z0-9]+\})/', $entry->church_name, $matches)) {
+                $church_name = $matches[1];
+            }
 
-
-        $input_church_name = '{"title_structure_id":"'.$request->title_structure_id.'","church_id":"'.$request->church_id.'"}';
-        // if(preg_match_all('/(\{[\:\"\_\,a-z0-9]+\})/', $request->input("church_name"), $matches)) {
-        //     $input_church_name = $matches[1];
-        // }
-
-        // check validation double data church_name
-
-        if(in_array($input_church_name, $church_name)){
-            $errors['title_structure_id'] = ['The pastor with same church Name has already exists.'];
-            $errors['church_id'] = ['The pastor with same church Name has already exists.'];
+            $input_church_name = '{"church_id":"'.$request->church_id.'","title_structure_id":"'.$request->title_structure_id.'"}';
+        
+            if(in_array($input_church_name, $church_name)){
+                $errors['title_structure_id'] = ['The pastor with same church Name has already exists.'];
+                $errors['church_id'] = ['The pastor with same church Name has already exists.'];
+            }else{
+                $trigger_matches_church = 1;
+            }
         }else{
             $trigger_matches_church = 1;
         }
-
 
         if(count($errors) > 0){
             return redirect($this->crud->route . '/create?personel_id='. $id)
@@ -254,16 +251,38 @@ class StructureChurchCrudController extends CrudController
         $trigger_matches_church = 0;
         $errors = [];
 
-        if(preg_match_all('/(\{[\:\"\_\,a-z0-9]+\})/', $entry->church_name, $matches)) {
-            $church_name = $matches[1];
+        $check_kembar_data = StructureChurch::where('id', $request->id)->first();
+
+        if($check_kembar_data != null){
+            if(($check_kembar_data->title_structure_id == $request->title_structure_id) && 
+            ($check_kembar_data->churches_id == $request->church_id)) {
+                // welcome
+                // nggak ada perubahan alias sama aja
+                $trigger_matches_church = 0;
+            }else{
+                $check_ = StructureChurch::where('id', '<>', $request->id)
+                ->where(function($query)use($request){
+                    return $query->where('churches_id', $request->church_id)
+                    ->where('title_structure_id', $request->title_structure_id);
+                })->first();
+                if($check_ != null){
+                    $errors['title_structure_id'] = ['The pastor with same church Name has already exists.'];
+                    $errors['church_id'] = ['The pastor with same church Name has already exists.'];
+                }else{
+                    $trigger_matches_church = 1;
+                }
+            }
+        }else{
+            $trigger_matches_church = 0;
+        }
+        
+
+        if(count($errors) > 0){
+            return redirect($this->crud->route . '/create?personel_id='. $id)
+                ->withInput()->withErrors($errors);
         }
 
-        $input_church_name = '{"title_structure_id":"'.$request->title_structure_id.'","church_id":"'.$request->church_id.'"}';
-
-        if(!in_array($input_church_name, $church_name)){
-            $trigger_matches_church = 1;
-        }
-
+        dd($trigger_matches_church);
 
         // update the row in the db
         $item = $this->crud->update($request->get($this->crud->model->getKeyName()),
