@@ -54,22 +54,8 @@ class QuickReportCrudController extends CrudController
                 // ],
                 [
                     'label' => 'RC / DPW',
-                    'type' => 'closure',
+                    'type' => 'text',
                     'name' => 'rc_dpw_name',
-                    'function' => function($entries){
-                        $church = Church::where('id', $entries->id)->first();
-                        if($church != null){
-                            return $church->rdpw_pivot->implode('rc_dpw_name', ', ');
-                        }
-                        return '-';
-                    },
-                    'searchLogic' => function ($query, $column, $searchTerm) {
-                        $query->orWhereRaw("EXISTS (
-                                SELECT 1 FROM churches_rcdpw 
-                                INNER JOIN rc_dpwlists ON rc_dpwlists.id = churches_rcdpw.rc_dpwlists_id
-                                WHERE churches_rcdpw.churches_id = church_annual_designer_views.id AND rc_dpwlists.rc_dpw_name LIKE '%{$searchTerm}%'
-                        )");
-                    },
                 ],
                 [
                     'label' => 'Church Name',
