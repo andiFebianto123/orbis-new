@@ -12,7 +12,7 @@ class PastorAnnualDesignerView extends Model
 {
     use CrudTrait;
 
-    protected $appends = ['rdpw'];
+    protected $appends = ['rdpw', 'church_name'];
 
     public function getRdpwAttribute(){
         $id = $this->id;
