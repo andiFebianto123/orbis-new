@@ -77,14 +77,14 @@ class SyncUserToMailchimp extends Command
                             });
                     });
             })->whereNull('temps.id')
-                ->join('account_status', 'account_status.id', 'status_histories.status_histories_id')
-                ->select('status_histories.personel_id', 'account_status.acc_status');
+                // ->join('account_status', 'account_status.id', 'status_histories.status_histories_id')
+                ->select('status_histories.personel_id', 'status_histories.status as acc_status');
                 
             $chunkPersonels = Personel::leftJoinSub($subQuery, 'status_histories', function ($leftJoinSub) {
                 $leftJoinSub->on('personels.id', 'status_histories.personel_id');
             })
             ->join('title_lists as title', 'title.id', 'personels.title_id')
-            ->select('first_name', 'last_name', 'email', 'short_desc', 'date_of_birth', 'language', DB::raw('IFNULL(status_histories.acc_status, "-") as acc_status'))
+            ->select('first_name', 'last_name', 'email', 'short_desc', 'date_of_birth', 'language', DB::raw('IFNULL(status_histories.status, "-") as acc_status'))
             ->cursor()->chunk(200);
 
             $emails = [];
