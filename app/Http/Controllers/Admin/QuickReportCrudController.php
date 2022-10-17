@@ -61,6 +61,7 @@ class QuickReportCrudController extends CrudController
                     'label' => 'Church Name',
                     'type' => 'text',
                     'name' => 'church_name',
+                    'escaped' => false
                 ],
                 [
                     'label' => 'Church Type',
@@ -196,7 +197,8 @@ class QuickReportCrudController extends CrudController
                 [
                     'label' => 'Church Name',
                     'type' => 'text',
-                    'name' => 'church_name'
+                    'name' => 'church_name',
+                    'escaped' => false
                 ],
                 [
                     'label' => 'Address',
