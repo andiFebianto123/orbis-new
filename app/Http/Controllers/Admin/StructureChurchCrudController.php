@@ -124,6 +124,13 @@ class StructureChurchCrudController extends CrudController
                 'name'      => 'church_id', // the column that contains the ID of that connected entity;
                 'default'   => request('churches_id')
             ]);
+
+            $this->crud->addField([
+                'label'     => 'Mode', // Table column heading
+                'type'      => 'hidden',
+                'name'      => 'mode', // the column that contains the ID of that connected entity;
+                'default'   => 'church'
+            ]);
         }
 
         if(request()->personel_id){
@@ -141,6 +148,13 @@ class StructureChurchCrudController extends CrudController
                 'type'      => 'hidden',
                 'name'      => 'personel_id', // the column that contains the ID of that connected entity;
                 'default'   => request('personel_id')
+            ]);
+
+            $this->crud->addField([
+                'label'     => 'Mode', // Table column heading
+                'type'      => 'hidden',
+                'name'      => 'mode', // the column that contains the ID of that connected entity;
+                'default'   => 'personel'
             ]);
         }
 
@@ -201,16 +215,17 @@ class StructureChurchCrudController extends CrudController
         Alert::success(trans('backpack::crud.insert_success'))->flash();
 
         $url_redirect = "";
-        if (request()->churches_id) {
+        $mode = $request->mode;
+        if ($mode == 'church') {
             $sc_by_church = StructureChurch::where('churches_id', request()->churches_id)->get();
             foreach ($sc_by_church as $key => $sc) {
                 (new LeadershipSyncHelper())->sync($sc->personel_id);
             }
-            $url_redirect = 'church/'.request()->churches_id.'/show';
-        }else if (request()->personel_id) {
+            $url_redirect = 'church/'.$request->church_id.'/show';
+        }else if ($mode == 'personel') {
             (new LeadershipSyncHelper())->sync(request()->personel_id);
 
-            $url_redirect = 'personel/'.request()->personel_id.'/show';
+            $url_redirect = 'personel/'.$request->personel_id.'/show';
         }
 
         if($trigger_matches_church == 1){
@@ -273,16 +288,17 @@ class StructureChurchCrudController extends CrudController
         Alert::success(trans('backpack::crud.update_success'))->flash();
 
         $url_redirect = "";
-        if (request()->churches_id) {
+        $mode = $request->mode;
+        if ($mode == 'church') {
             $sc_by_church = StructureChurch::where('churches_id', request()->churches_id)->get();
             foreach ($sc_by_church as $key => $sc) {
                 (new LeadershipSyncHelper())->sync($sc->personel_id);
             }
-            $url_redirect = 'church/'.request()->churches_id.'/show';
-        }else if (request()->personel_id) {
+            $url_redirect = 'church/'.$request->church_id.'/show';
+        }else if ($mode == 'personel') {
             (new LeadershipSyncHelper())->sync(request()->personel_id);
 
-            $url_redirect = 'personel/'.request()->personel_id.'/show';
+            $url_redirect = 'personel/'.$request->personel_id.'/show';
         }
 
         if($trigger_matches_church == 1){
