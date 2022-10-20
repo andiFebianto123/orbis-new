@@ -121,7 +121,7 @@ class StructureChurchCrudController extends CrudController
             $this->crud->addField([
                 'label'     => 'Church', // Table column heading
                 'type'      => 'hidden',
-                'name'      => 'churches_id', // the column that contains the ID of that connected entity;
+                'name'      => 'church_id', // the column that contains the ID of that connected entity;
                 'default'   => request('churches_id')
             ]);
         }
@@ -176,36 +176,20 @@ class StructureChurchCrudController extends CrudController
 
 
         $id = $request->personel_id;
-        $entry = Personel::where('id', $id)->first();
-
-        $church_name = false;
-        $input_church_name = false;
-        $trigger_matches_church = 0;
+        $trigger_matches_church = 1;
         $errors = [];
-        $churches = StructureChurch::where('personel_id', $id)->get();
-        $arr_unit = [];
+        $existData = StructureChurch::where('personel_id', $id)->where('churches_id', $request->church_id)->exists();
 
-        if($entry->church_name != '[]' || $entry->church_name !== '[]'){
-
-            if(preg_match_all('/(\{[\:\"\_\,a-z0-9]+\})/', $entry->church_name, $matches)) {
-                $church_name = $matches[1];
-            }
-
-            $input_church_name = '{"church_id":"'.$request->church_id.'","title_structure_id":"'.$request->title_structure_id.'"}';
-        
-            if(in_array($input_church_name, $church_name)){
-                $errors['title_structure_id'] = ['The pastor with same church Name has already exists.'];
-                $errors['church_id'] = ['The pastor with same church Name has already exists.'];
-            }else{
-                $trigger_matches_church = 1;
-            }
-        }else{
-            $trigger_matches_church = 1;
+        if ($existData) {
+            $errors['err'] = ['The pastor with same church Name has already exists.'];
+            // $errors['church_id'] = ['The pastor with same church Name has already exists.'];
+            $trigger_matches_church = 0;
         }
 
         if(count($errors) > 0){
-            return redirect($this->crud->route . '/create?personel_id='. $id)
-                ->withInput()->withErrors($errors);
+            return redirect()->back()->withInput()->withErrors($errors);
+            // return redirect($this->crud->route . '/create?personel_id='. $id)
+            //     ->withInput()->withErrors($errors);
         }
 
 
@@ -247,9 +231,6 @@ class StructureChurchCrudController extends CrudController
         $request = $this->crud->validateRequest();
 
         $id = $request->personel_id;
-        $entry = Personel::where('id', $id)->first();
-        $church_name = false;
-        $input_church_name = false;
         $trigger_matches_church = 0;
         $errors = [];
 
@@ -280,8 +261,7 @@ class StructureChurchCrudController extends CrudController
         
 
         if(count($errors) > 0){
-            return redirect($this->crud->route . '/create?personel_id='. $id)
-                ->withInput()->withErrors($errors);
+            return redirect()->back() ->withInput()->withErrors($errors);
         }
 
         // update the row in the db
