@@ -818,13 +818,7 @@ class PersonelCrudController extends CrudController
             } else {
                 $isDuplicate->where('last_name', $request->last_name);
             }
-
-            // if (!$request->filled('church_name')) {
-            //     $isDuplicate->whereNull('church_name');
-            // } else {
-            //     $isDuplicate->where('church_name', $request->church_name);
-            // }
-
+            
             if (!$request->filled('date_of_birth')) {
                 $isDuplicate->whereNull('date_of_birth');
             } else {
@@ -832,9 +826,19 @@ class PersonelCrudController extends CrudController
             }
 
             $trigger_matches_church = 0;
-            $church_name = false;
-            $input_church_name = false;
 
+            $churchIds = $request->church_id;
+            if ($churchIds) {
+                foreach ($churchIds as $key => $cid) {
+                    $existData = StructureChurch::where('personel_id', $id)->where('churches_id', $cid)->exists();
+                    if ($existData) {
+                        $errors['church_name'] = ['The pastor with same church Name has already exists.'];
+                    }
+                }
+            }
+
+            /*
+            
             if($request->church_name != '[]' || $request->church_name !== '[]'){
                 
                 if(preg_match_all('/(\{[\:\"\_\,a-z0-9]+\})/', $model->church_name, $matches)) {
@@ -870,8 +874,7 @@ class PersonelCrudController extends CrudController
                     }
                 }
             }
-
-            
+            */
 
             $isDuplicate = $isDuplicate->select('id')->first();
 
@@ -914,7 +917,7 @@ class PersonelCrudController extends CrudController
             
             // update the row in the db
             $item = $this->crud->update($request->get($this->crud->model->getKeyName()),
-                $this->crud->getStrippedSaveRequest());
+            $this->crud->getStrippedSaveRequest());
             $this->data['entry'] = $this->crud->entry = $item;
 
             DB::commit();

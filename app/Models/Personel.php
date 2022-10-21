@@ -28,7 +28,6 @@ class Personel extends Authenticatable
         'title_id',
         'first_name',
         'last_name',
-        'church_name',
         'gender',
         'date_of_birth',
         'marital_status',
