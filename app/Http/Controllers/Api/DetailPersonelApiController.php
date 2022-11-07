@@ -22,7 +22,6 @@ class DetailPersonelApiController extends Controller
     public function biodata($id)
     {
         $personel = Personel::where('personels.id', $id)
-                    ->leftJoin('rc_dpwlists', 'rc_dpwlists.id', 'personels.rc_dpw_id')
                     ->leftJoin('title_lists', 'title_lists.id', 'personels.title_id')
                     ->get(['personels.id as id', 'rc_dpwlists.rc_dpw_name', 'title_lists.short_desc as short_title', 'first_name', 'last_name', 'gender', 'profile_image', 'misc_image', 'date_of_birth', 'marital_status', 'spouse_name', 'spouse_date_of_birth', 'anniversary', 'notes', 'family_image'])
                     ->first();

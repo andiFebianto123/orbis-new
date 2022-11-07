@@ -53,7 +53,7 @@
 								<tbody>
 									@foreach($pastor_report_designs as $key => $pastor_report_design)
 										<tr>
-											<td>{{$pastor_report_design->rc_dpw_name}}</td>
+											<td>{!! $pastor_report_design->rc_dpw_name !!}</td>
 											<td>{{$pastor_report_design->short_desc}}</td>
 											<td>{{$pastor_report_design->first_name}}</td>
 											<td>{{$pastor_report_design->last_name}}</td>

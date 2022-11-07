@@ -12,9 +12,26 @@ class PastorAnnualDesignerView extends Model
 {
     use CrudTrait;
 
-    protected $appends = ['rdpw', 'church_name'];
+    protected $appends = ['rdpw', 'church_name', 'rc_dpw_name'];
 
     public function getRdpwAttribute(){
+        $id = $this->id;
+        $d = Personel::where('id', $id)->first()->pivod_rcdpw;
+        if($d !== null){
+            $rdpw = '';
+            foreach($d as $index => $st){
+                if($index >= ($d->count() - 1)){
+                    $rdpw .= $st->rc_dpw_name;
+                }else{
+                    $rdpw .= $st->rc_dpw_name.'<br>';
+                }
+            }
+            return $rdpw;
+        }
+        return null;
+    }
+
+    public function getRcDpwNameAttribute(){
         $id = $this->id;
         $d = Personel::where('id', $id)->first()->pivod_rcdpw;
         if($d !== null){

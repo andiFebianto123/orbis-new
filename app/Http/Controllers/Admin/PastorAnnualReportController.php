@@ -44,7 +44,6 @@ class PastorAnnualReportController extends Controller
     public function detail($year)
     {
         $pastor_report_detail_tables = Personel::whereYear('first_licensed_on', $year)
-                        ->leftJoin('rc_dpwlists','personels.rc_dpw_id','rc_dpwlists.id')
                         ->leftJoin('country_lists','personels.country_id','country_lists.id')
                         ->leftJoin('title_lists','personels.title_id','title_lists.id')
                         ->select('personels.id','rc_dpw_name', 'short_desc', 'first_name','last_name', 'gender', 'church_name', 'street_address',
@@ -61,8 +60,7 @@ class PastorAnnualReportController extends Controller
 
     public function reportdesigner()
     {
-        $pastor_report_designs = Personel::leftJoin('rc_dpwlists','personels.rc_dpw_id','rc_dpwlists.id')
-                        ->leftJoin('country_lists','personels.country_id','country_lists.id')
+        $pastor_report_designs = Personel::leftJoin('country_lists','personels.country_id','country_lists.id')
                         ->leftJoin('title_lists','personels.title_id','title_lists.id')
                         ->select('personels.id','rc_dpw_name', 'short_desc', 'first_name','last_name', 'gender', 'church_name', 'street_address',
                         'city','province','postal_code','country_name','phone','fax','email','marital_status', 'date_of_birth',

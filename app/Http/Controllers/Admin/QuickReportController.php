@@ -34,7 +34,6 @@ class QuickReportController extends Controller
     public function newpastor()
     {
         $new_pastor_tables = Personel::whereYear('first_licensed_on', Carbon::now()->year)
-                        ->leftJoin('rc_dpwlists','personels.rc_dpw_id','rc_dpwlists.id')
                         ->leftJoin('country_lists','personels.country_id','country_lists.id')
                         ->leftJoin('account_status','personels.acc_status_id','account_status.id')
                         ->leftJoin('title_lists','personels.title_id','title_lists.id')
@@ -85,7 +84,6 @@ class QuickReportController extends Controller
         $inactive_pastor_reports = StatusHistory::whereNotIn('status', ['Active'])
                         ->whereYear('date_status', Carbon::now()->year)
                         ->leftJoin('personels','status_histories.personel_id','personels.id')
-                        ->leftJoin('rc_dpwlists','personels.rc_dpw_id','rc_dpwlists.id')
                         ->leftJoin('country_lists','personels.country_id','country_lists.id')
                         ->leftJoin('account_status','status_histories.status_histories_id','account_status.id')
                         ->leftJoin('title_lists','personels.title_id','title_lists.id')
@@ -117,8 +115,7 @@ class QuickReportController extends Controller
 
     public function allpastor()
     {
-        $all_pastor_tables = Personel::leftJoin('rc_dpwlists','personels.rc_dpw_id','rc_dpwlists.id')
-                        ->leftJoin('country_lists','personels.country_id','country_lists.id')
+        $all_pastor_tables = Personel::leftJoin('country_lists','personels.country_id','country_lists.id')
                         ->leftJoin('title_lists','personels.title_id','title_lists.id')
                         ->select('personels.id','rc_dpw_name', 'short_desc', 'first_name','last_name', 'gender', 'church_name', 'street_address',
                         'city','province','postal_code','country_name','phone','fax','email','marital_status', 'date_of_birth',

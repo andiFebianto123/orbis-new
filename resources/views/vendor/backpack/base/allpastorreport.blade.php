@@ -46,7 +46,7 @@
 									@foreach($all_pastor_tables as $key => $all_pastor_table)
 										<tr>
 											<td></td>
-											<td>{{$all_pastor_table->rc_dpw_name}}</td>
+											<td>{!! $all_pastor_table->rc_dpw_name !!}</td>
 											<td>{{$all_pastor_table->short_desc}}</td>
 											<td>{{$all_pastor_table->first_name}}</td>
 											<td>{{$all_pastor_table->last_name}}</td>
