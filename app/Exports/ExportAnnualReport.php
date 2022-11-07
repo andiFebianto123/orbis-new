@@ -178,6 +178,7 @@ class ExportAnnualReport implements FromView,WithEvents
                         }
                     }else{
                         if($valueCell == 'RC / DPW'){
+                            $rcdpwHeader = $column;
                             $event->sheet->getColumnDimension($column)->setWidth(20);
                         }
                     }
