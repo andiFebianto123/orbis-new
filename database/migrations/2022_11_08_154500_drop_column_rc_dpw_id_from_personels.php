@@ -16,6 +16,7 @@ class DropColumnRcdpwIdFromPersonels extends Migration
         Schema::table('personels', function (Blueprint $table) {
             if (Schema::hasColumn('personels', 'rc_dpw_id')) //check the column
             {
+                $table->dropForeign(['rc_dpw_id']);
                 $table->dropColumn('rc_dpw_id');
             }
         });
