@@ -67,7 +67,6 @@ class PersonelCrudController extends CrudController
      */
     function setupListOperation()
     {
-
         $this->crud->addColumn([
             'name' => 'row_number',
             'type' => 'row_number',
@@ -269,7 +268,7 @@ class PersonelCrudController extends CrudController
      * @see https://backpackforlaravel.com/docs/crud-operation-create
      * @return void
      */
-    function setupCreateOperation()
+    function setupCreateOperation($type = null)
     {
         CRUD::setValidation(PersonelRequest::class);
 
@@ -599,32 +598,65 @@ class PersonelCrudController extends CrudController
             'tab' => 'Licensing Information',
         ]);
 
-        $this->crud->addField([   // repeatable
-            'name'  => 'church_name',
-            'label' => 'Leadership',
-            'type'  => 'repeatable',
-            'tab' => 'Leadership Structure',
-            'fields' => [
-                [
-                    'label'     => "Church Name",
-                    'type'      => 'select2_from_array',
-                    'name'      => 'church_id', // the column that contains the ID of that connected entity;
-                    'options'   => $this->getChurch(),
-                    'allows_null' => true,
+
+        if($type == 'edit'){
+            $this->crud->addField([   // repeatable
+                'name'  => 'church_name',
+                'label' => 'Leadership',
+                'type'  => 'repeatable',
+                'tab' => 'Leadership Structure',
+                'fields' => [
+                    [
+                        'label'     => "Church Name",
+                        'type'      => 'select2_from_array',
+                        'name'      => 'church_id', // the column that contains the ID of that connected entity;
+                        'options'   => $this->getChurch(),
+                        'allows_null' => true,
+                    ],
+                    [
+                        'label'     => "Role",
+                        'type'      => 'select2_from_array',
+                        'name'      => 'title_structure_id', // the column that contains the ID of that connected entity;
+                        'options'   => $this->getMinistryRole(),
+                        'allows_null' => true,
+                    ],
                 ],
-                [
-                    'label'     => "Role",
-                    'type'      => 'select2_from_array',
-                    'name'      => 'title_structure_id', // the column that contains the ID of that connected entity;
-                    'options'   => $this->getMinistryRole(),
-                    'allows_null' => true,
+            
+                // optional
+                'new_item_label'  => 'Add Leadership', // customize the text of the button
+                'init_rows' => 1, // number of empty rows to be initialized, by default 1
+            ]);
+
+        }else{
+            $this->crud->addField([   // repeatable
+                'name'  => 'church_name',
+                'label' => 'Leadership',
+                'type'  => 'repeatable',
+                'tab' => 'Leadership Structure',
+                'fields' => [
+                    [
+                        'label'     => "Church Name",
+                        'type'      => 'select2_from_array',
+                        'name'      => 'church_id', // the column that contains the ID of that connected entity;
+                        'options'   => $this->getChurch(),
+                        'allows_null' => true,
+                    ],
+                    [
+                        'label'     => "Role",
+                        'type'      => 'select2_from_array',
+                        'name'      => 'title_structure_id', // the column that contains the ID of that connected entity;
+                        'options'   => $this->getMinistryRole(),
+                        'allows_null' => true,
+                    ],
                 ],
-            ],
+            
+                // optional
+                'new_item_label'  => 'Add Leadership', // customize the text of the button
+                'init_rows' => 1, // number of empty rows to be initialized, by default 1
+            ]);
+        }
+
         
-            // optional
-            'new_item_label'  => 'Add Leadership', // customize the text of the button
-            'init_rows' => 1, // number of empty rows to be initialized, by default 1
-        ]);
     }
 
     public function store(Request $request)
@@ -742,7 +774,7 @@ class PersonelCrudController extends CrudController
      */
     function setupUpdateOperation()
     {
-        $this->setupCreateOperation();
+        $this->setupCreateOperation($type = 'edit');
         CRUD::setValidation(PersonelUpdateRequest::class);
     }
 
@@ -836,6 +868,51 @@ class PersonelCrudController extends CrudController
                     }
                 }
             }
+
+            // dd($request->church_name, json_decode($request->church_name)[0]->church_id);
+
+            if(isset($request->church_name) && ($request->church_name != '[]')){
+                $d = json_decode($request->church_name);
+                for($i = count($d) - 1; $i > 0; $i--){
+                    $now = $d[$i];
+                    for($u = $i - 1; $u >= 0; $u--){
+                        $before = $d[$u];
+                        if(($now->church_id == $before->church_id) && ($now->title_structure_id == $before->title_structure_id)){
+                            $errors['church_name'] = ["The pastor with same church Name has already exists."];
+                        }
+                    }
+                }
+
+                if(!isset($errors['church_name'])){
+                    $count_structure_church = $churches->count();
+                    $index_same_churces = 0;
+                    foreach($d as $d_){
+                        $request_structure_church = $d_;
+                        foreach($churches as $church){
+                            if(($request_structure_church->church_id == $church->churches_id) && ($request_structure_church->title_structure_id == $church->title_structure_id)){
+                                $index_same_churces++;
+                                break;
+                            }
+                        }
+                    }
+
+                    if(($index_same_churces != $count_structure_church) || (count($d) != $count_structure_church)){
+                        $trigger_matches_church = 1;
+                    }
+
+                }
+
+            }else{
+                // jika request kosongan
+                $count_structure_church = $churches->count();
+                if($count_structure_church > 0){
+                    // dan ternyata sebelumnya ada
+                    $trigger_matches_church = 1;
+                }
+            }
+
+
+            
 
             /*
             
@@ -1035,10 +1112,20 @@ class PersonelCrudController extends CrudController
         $fields = $this->crud->getUpdateFields();
         // $personelImages = PersonelImage::where('personel_id', $id)->select('id', 'label', 'image')->get();
         // $fields['image']['value'] = $personelImages->toArray();
+        $churches = StructureChurch::where('personel_id', $id)->get();
+        $churches = $churches->map(function($item, $key){
+            return [
+                'title_structure_id' => $item['title_structure_id'],
+                'church_id' => $item['churches_id']
+            ];
+        });
+        $fields['church_name']['value'] = $churches->all();
+
         $this->crud->setOperationSetting('fields', $fields);
         // get the info for that entry
         $this->data['entry'] = $this->crud->getEntry($id);
         $this->data['crud'] = $this->crud;
+
         $this->data['saveAction'] = $this->crud->getSaveAction();
         $this->data['title'] = $this->crud->getTitle() ?? trans('backpack::crud.edit') . ' ' . $this->crud->entity_name;
 

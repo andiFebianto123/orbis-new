@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Support\Str;
+use App\Models\StructureChurch;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -64,6 +65,9 @@ class Personel extends Authenticatable
     ];
     public static $arrayLanguage = ['EN', 'ID'];
 
+
+
+
     public function setPasswordAttribute($value) {
         $this->attributes['password'] = Hash::make($value);
     }
@@ -74,9 +78,25 @@ class Personel extends Authenticatable
     // protected $fillable = [];
     // protected $dates = [];
 
+
+    protected $appends = ['church_name'];
+
+
     protected $hidden = [
         'password',
     ];
+
+    public function getChurchNameAttribute()
+    {
+        $churches = StructureChurch::where('personel_id', $this->id)->get();
+        $churches = $churches->mapWithKeys(function ($item, $key) {
+            return [
+                'title_structure_id' => $item['title_structure_id'],
+                'church_id' => $item['churches_id']
+            ];
+        });
+        $this->attributes['church_name'] = $churches->toArray();
+    }
 
     // public function accountstatus()
     // {

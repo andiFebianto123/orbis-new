@@ -243,7 +243,7 @@ class RcDpwListCrudController extends CrudController
         $delete = $this->crud->delete($id);
 
         $send = new HitApi;
-        $ids = [$item->getKey()];
+        $ids = [$id];
         $module = 'region';
         $response = $send->action($ids, 'delete', $module)->json();
 
