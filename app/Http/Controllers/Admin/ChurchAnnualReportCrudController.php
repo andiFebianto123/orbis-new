@@ -101,7 +101,7 @@ class ChurchAnnualReportCrudController extends CrudController
                         $str_leadership = "";  
                         $total = sizeof($leaderships) - 1;
                         foreach ($leaderships as $key => $leadership) {
-                            $str_leadership .= $leadership->first_name." ".$leadership->last_name. " - ".$leadership->ministry_role;
+                            $str_leadership .= $leadership->first_name." ".$leadership->last_name. " (".$leadership->ministry_role.")";
                             if ($key < $total) {
                                 $str_leadership .= "<br>";
                             }

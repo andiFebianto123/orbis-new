@@ -24,6 +24,8 @@ use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 use App\Models\ChurchesRcdpw;
 use App\Helpers\HitCompare;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 // HeadingRowFormatter::default('none');
 
@@ -417,27 +419,29 @@ class ChurchImport implements OnEachRow, /*ToCollection, */ WithValidation, With
         if (strpos( $lead_pastore, '(') !== false) {
             $col_pastor = explode("(",$lead_pastore);
             
-            $first_name = "";
-            $last_name = "";
-            $filter_personel = [];
-            if (strpos( $col_pastor[0], ' ') !== false) {
-                foreach (explode(" ",$col_pastor[0]) as $key => $fln) {
-                    if ($key == 0) {
-                        $first_name = $fln;
-                    }else{
-                        $last_name .= $fln." ";
-                    }
+            $fullname = rtrim($col_pastor[0]);
+
+            $personel = Personel::where(DB::raw("CONCAT(`first_name`, ' ', `last_name`)"), 'like',  "%".$fullname."%")->first();
+            if (!isset($personel)) {
+                $personel = Personel::where('first_name', 'like',  "%".$fullname."%")->first();
+            }
+            
+            $validPersonel = false;
+
+            if (isset($personel)) {
+                $foundName = $personel->first_name;
+                if(isset($personel->last_name)){
+                    $foundName .= " ".$personel->last_name;
                 }
-                $filter_personel[] = ['first_name', $first_name];
-                if($last_name != ""){
-                    $filter_personel[] = ['last_name', rtrim($last_name, " ")];
+                
+                if ($fullname == $foundName) {
+                    $validPersonel = true;
                 }
             }
 
-            $personel = Personel::where($filter_personel)->first();
             $ministry_role = MinistryRole::where('ministry_role', str_replace(")", "", $col_pastor[1]))->first();
 
-            if (isset($personel) && isset($ministry_role)) {
+            if ($validPersonel && isset($ministry_role)) {
                 $arr_pastor_name = [
                     'pastor_id' =>  $personel->id,
                     'ministry_id' =>  $ministry_role->id,
@@ -500,71 +504,44 @@ class ChurchImport implements OnEachRow, /*ToCollection, */ WithValidation, With
         $total_data = 0;
         foreach(explode("\n",$value) as $sc) {
             $total_data++;
-            if (strpos( $sc, "-") !== false) {
-                $expl_dash = explode("-",$sc);
-                $last_dash = substr_count($sc, "-");
+            if (strpos( $sc, "(") !== false) {
+                $explSeparator = explode("(",$sc);
     
-                $per_name = rtrim($expl_dash[0]);
-                $first_name = $per_name;
-                $last_name = "";
-                if (strpos( $per_name, " ") !== false) {
-                    $expl_space = explode(" ",$per_name);
-                    $first_name = $expl_space[0];
-                    $last_space = substr_count($per_name, " ");
-                    $last_name = trim($expl_space[$last_space]);
+                $fullname = rtrim($explSeparator[0]);
+
+                $personel = Personel::where(DB::raw("CONCAT(`first_name`, ' ', `last_name`)"), 'like',  "%".$fullname."%")->first();
+                if (!isset($personel)) {
+                    $personel = Personel::where('first_name', 'like',  "%".$fullname."%")->first();
                 }
-    
-                $personel_name = Personel::where('first_name','like', '%'.$first_name.'%')
-                                 ->where("last_name",'like', '%'.$last_name.'%')->first();
-    
-                $ministry_role = MinistryRole::where('ministry_role','like', '%'.trim($expl_dash[$last_dash]).'%')->first();
-    
-                if (isset($personel_name) && isset($ministry_role)) {
+                
+                $validPersonel = false;
+
+                if (isset($personel)) {
+                    $foundName = $personel->first_name;
+                    if(isset($personel->last_name)){
+                        $foundName .= " ".$personel->last_name;
+                    }
+                    
+                    if ($fullname == $foundName) {
+                        $validPersonel = true;
+                    }
+                }
+                
+                $ministry_role = MinistryRole::where('ministry_role', str_replace(")", "", $explSeparator[1]))->first();
+
+                Log::info("all: ". $sc);
+                if ($validPersonel  && isset($ministry_role)) {
                     $count_valid_data++;
-                    $arr_datas[] = ['personel_id' => $personel_name->id, 'title_structure_id' => $ministry_role->id];
+                    $arr_datas[] = [
+                        'personel_id' => $personel->id, 
+                        'title_structure_id' => $ministry_role->id
+                    ];
+                    Log::info("valid: ". $sc);
+
                 }
             }  
         }
 
         return ($count_valid_data == $total_data) ? $arr_datas :[];
     }
-
-    // public function withValidator($validator)
-    // {
-    //     $validator->after(function ($validator) {
-    //         // if ($this->somethingElseIsInvalid()) {
-    //         //     // $validator->errors()->add('field', 'Something is wrong with this field!');
-    //         // }
-    //         $dataRb = collect($validator->getData())->first();
-
-    //         if(strlen($dataRb['RC / DPW']) > 0){
-    //             $rc_dpw = trim($dataRb['RC / DPW']);
-    //             $rc_dpw = str_replace('\n', "\n", $rc_dpw ?? '');
-    //             $is_fail = [];
-    //             if (strpos( $rc_dpw, "\n") !== false) {
-    //                 $rc_dpws = explode("\n", $rc_dpw);
-    //                 foreach($rc_dpws as $data){
-    //                     $d = RcDpwList::where('rc_dpw_name', $data)->first();
-    //                     if($d == null){
-    //                         $is_fail[] = $data;
-    //                     }
-    //                 }
-    //             }else{
-    //                 $d = RcDpwList::where('rc_dpw_name', $rc_dpw)->first();
-    //                 if($d == null){
-    //                     $is_fail[] = $rc_dpw;
-    //                 }
-    //             }
-
-    //             if(count($is_fail) > 0){
-    //                 $str_rc_dpw = implode(", ", $is_fail);
-    //                 // $onFailure('RC / DPW are not invalid for ' . $str_rc_dpw);
-    //                 $validator->errors()->add('RC / DPW', 'are not invalid for ' . $str_rc_dpw);
-    //             }
-
-    //         }
-            
-    //     });
-
-    // }
 }
