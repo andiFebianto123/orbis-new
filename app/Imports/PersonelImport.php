@@ -202,7 +202,7 @@ class PersonelImport implements OnEachRow/* ToCollection */, WithHeadingRow, Wit
             
         }else{
             $new_personel = new Personel();
-            $new_personel->rc_dpw_id = ($rcdpw['id'] ?? null);
+            // $new_personel->rc_dpw_id = ($rcdpw['id'] ?? null);
             $new_personel->title_id = $title['id'];
             $new_personel->first_name = $row_first_name;
             $new_personel->last_name = $row_last_name;

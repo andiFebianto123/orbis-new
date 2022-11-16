@@ -52,7 +52,7 @@ class RevisionChurchAnnualDesignerView10 extends Migration
                 SELECT 
                     status_history_churches.churches_id AS churches_id, 
                     status_history_churches.status AS status, 
-                    status_history_churches.status AS date_status, 
+                    status_history_churches.date_status AS date_status, 
                     temps.id as temps_id 
                 FROM 
                     status_history_churches 
