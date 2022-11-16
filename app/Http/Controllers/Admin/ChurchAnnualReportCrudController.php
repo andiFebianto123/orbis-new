@@ -170,11 +170,19 @@ class ChurchAnnualReportCrudController extends CrudController
                     'name' => 'second_email'
                 ],
                 [
-                    'label' => 'Church Status',
+                    'label' => 'Last Church Status',
                     'type' => 'closure',
                     'name' => 'status',
                     'function' => function($entries){
                         return $entries->status != null ? $entries->status : '-';
+                    }
+                ],
+                [
+                    'label' => 'Last Status Date',
+                    'type' => 'closure',
+                    'name' => 'date_status',
+                    'function' => function($entries){
+                        return $entries->date_status != null ? $entries->date_status : '-';
                     }
                 ],
                 [

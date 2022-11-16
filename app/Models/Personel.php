@@ -95,7 +95,7 @@ class Personel extends Authenticatable
                 'church_id' => $item['churches_id']
             ];
         });
-        $this->attributes['church_name'] = $churches->toArray();
+        return $churches->toArray();
     }
 
     // public function accountstatus()

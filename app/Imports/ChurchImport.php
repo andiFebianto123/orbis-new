@@ -26,10 +26,11 @@ use App\Models\ChurchesRcdpw;
 use App\Helpers\HitCompare;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 
 // HeadingRowFormatter::default('none');
 
-class ChurchImport implements OnEachRow, /*ToCollection, */ WithValidation, WithHeadingRow
+class ChurchImport implements OnEachRow, SkipsEmptyRows, WithValidation, WithHeadingRow
 {
     use Importable;
 
@@ -41,17 +42,13 @@ class ChurchImport implements OnEachRow, /*ToCollection, */ WithValidation, With
       $this->filename = $attrs['filename'];
     }
 
-    // public function collection(Collection $rows)
-    // {
-    //     foreach ($rows as $key => $row) {
-    //        $this->singleRow($row);
-    //     }
-    // }
 
     public function onRow(Row $row){
         // $rowIndex = $row->getIndex();
         $row      = $row->toArray();
-        $this->singleRow($row);
+        if (array_key_exists('rc_dpw', $row)) {
+            $this->singleRow($row);
+        }
     }
 
     private function singleRow($row)
@@ -62,7 +59,7 @@ class ChurchImport implements OnEachRow, /*ToCollection, */ WithValidation, With
         $row_lead_pastor_name = $row['lead_pastor_name']; // $row['Lead Pastor Name'];
         $row_local_church = $row['local_church']; // $row['Local Church'];
         $row_leadership_structure = $row['leadership_structure']; //$row['Leadership Structure'];
-       $row_coordinator = $row['coordinator'];
+        $row_coordinator = $row['coordinator'];
         $row_contact_person = $row['contact_person'];// $row['Contact Person'];
         $row_church_address = $row['church_address']; //$row['Church Address'];
         $row_office_address = $row['office_address']; // $row['Office Address'];
@@ -74,7 +71,8 @@ class ChurchImport implements OnEachRow, /*ToCollection, */ WithValidation, With
         $row_fax = $row['fax'];
         $row_email = $row['email'];
         $row_secondary_email = $row['secondary_email']; // $row['Secondary Email'];
-        $row_church_status = $row['church_status'] ?? null; // $row['Church Status'];
+        $row_church_status = $row['last_church_status'] ?? null; // $row['Church Status'];
+        $row_status_date = $row['last_status_date'] ?? null; // $row['Church Status'];
         $row_founded_on = $row['founded_on']; // $row['Founded On'];
         $row_service_time_church = $row['service_time_church']; // $row['Service Time Church'];
         $row_color = $row['task_color'];
@@ -105,7 +103,6 @@ class ChurchImport implements OnEachRow, /*ToCollection, */ WithValidation, With
         $first_email = trim(str_replace('_x000D_', "\n", $row_email ?? ''));
         $service_time_church = $row_service_time_church == ',' ? NULL : $row_service_time_church;
         $leadership_structure = trim(str_replace('_x000D_', "\n", $row_leadership_structure ?? ""));
-        $str_json_leadership = json_encode($this->handleLeadershipName($leadership_structure));
         $secondary_email = (!isset($row_secondary_email) || strlen($row_secondary_email) == 0) ? null : $row_secondary_email;
 
         $exists_church = Church::where('church_name', $row_church_name)
@@ -210,17 +207,30 @@ class ChurchImport implements OnEachRow, /*ToCollection, */ WithValidation, With
             }
 
             if($row_church_status != null){
-                $status_history =  StatusHistoryChurch::where('churches_id',  $update_church->id)->first();
+                $status_history =  StatusHistoryChurch::where('churches_id',  $update_church->id)
+                                    ->orderBy('id', 'desc')
+                                    ->first();
+
+
+                                    Log::info($status_history);
                 if($status_history->status != $row_church_status){
                     if($com === FALSE){
                         $this->ids_update[] = $com;
                     }
                 }
-                $status_history->status = $row_church_status;
-                $status_history->date_status = Carbon::now();
-                $status_history->save();
+                if (isset($status_history)) {
+                    $changeHistory = StatusHistoryChurch::where('id',  $status_history->id)->first();
+                    $changeHistory->status = $row_church_status;
+                    $changeHistory->date_status = $row_status_date;
+                    $changeHistory->save();
+                }else{
+                    $insertShc = new StatusHistoryChurch();
+                    $insertShc->status = $row_church_status;
+                    $insertShc->date_status = $row_status_date;
+                    $insertShc->churches_id = $update_church->id;
+                    $insertShc->save();
+                }
             }
-
             
 
         }else {
@@ -290,15 +300,23 @@ class ChurchImport implements OnEachRow, /*ToCollection, */ WithValidation, With
             }
 
             if($row_church_status != null){
-                $status_history = new StatusHistoryChurch([
-                    'status'  => $row_church_status,
-                    'date_status' => Carbon::now(),
-                    'churches_id' => $new_church->id,
-                ]);
-                $status_history->save();
-            }
+                $status_history =  StatusHistoryChurch::where('churches_id',  $new_church->id)
+                                    ->orderBy('id', 'desc')
+                                    ->first();
 
-            
+                if (isset($status_history)) {
+                    $changeHistory = StatusHistoryChurch::where('id',  $status_history->id)->first();
+                    $changeHistory->status = $row_church_status;
+                    $changeHistory->date_status = $row_status_date;
+                    $changeHistory->save();
+                }else{
+                    $insertShc = new StatusHistoryChurch();
+                    $insertShc->status = $row_church_status;
+                    $insertShc->date_status = $row_status_date;
+                    $insertShc->churches_id = $new_church->id;
+                    $insertShc->save();
+                }
+            }
         }
     }
 
@@ -310,6 +328,8 @@ class ChurchImport implements OnEachRow, /*ToCollection, */ WithValidation, With
     public function rules(): array
     {
         return [
+            'last_church_status' => ['required'],
+            'last_status_date' => ['required'],
             'rc_dpw' => function($attribute, $value, $onFailure){
                 if(strlen($value) > 0){
                     $rc_dpw = trim($value);
@@ -340,13 +360,13 @@ class ChurchImport implements OnEachRow, /*ToCollection, */ WithValidation, With
             'lead_pastor_name' => function($attribute, $value, $onFailure) {
                 $lead_pastor_name = $this->handlePastorName($value);
                 if (sizeof($lead_pastor_name) == 0) {
-                    $onFailure('Not Exist Pastor or Invalid Lead Pastor Format :: Firstname Lastname (Title)');
+                    $onFailure('(Lead Pastor)) Not Exist Pastor or Invalid Format :: Firstname Lastname (Title)');
                 }
             },
             'leadership_structure' => function($attribute, $value, $onFailure) {
                 $leadership_name = $this->handleLeadershipName($value);
                 if ($value != "" && sizeof($leadership_name) == 0) {
-                    $onFailure('Not Exist Name - Role or Invalid Format :: Pastor Name - Role');
+                    $onFailure('(Leadership Structure) Not Exist Name - Role or Invalid Format :: Pastor Name - Role');
                 }
             },
         ];
@@ -354,7 +374,10 @@ class ChurchImport implements OnEachRow, /*ToCollection, */ WithValidation, With
 
     public function customValidationMessages()
     {
-        return [];
+        return [
+            'last_church_status.required' => 'Row Last Church Status is required',
+            'last_status_date.required' => 'Row Last Status Date is required',
+        ];
     }
 
     function formatDateExcel($dateExcel){
@@ -529,15 +552,12 @@ class ChurchImport implements OnEachRow, /*ToCollection, */ WithValidation, With
                 
                 $ministry_role = MinistryRole::where('ministry_role', str_replace(")", "", $explSeparator[1]))->first();
 
-                Log::info("all: ". $sc);
                 if ($validPersonel  && isset($ministry_role)) {
                     $count_valid_data++;
                     $arr_datas[] = [
                         'personel_id' => $personel->id, 
                         'title_structure_id' => $ministry_role->id
                     ];
-                    Log::info("valid: ". $sc);
-
                 }
             }  
         }

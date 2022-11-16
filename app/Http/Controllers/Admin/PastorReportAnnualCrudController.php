@@ -98,19 +98,6 @@ class PastorReportAnnualCrudController extends CrudController
                     'label' => 'Church Name',
                     'type' => 'textarea',
                     'name' => 'church_name',
-                    // 'function' => function($entries){
-                    //     $churhes  = json_decode($entries->church_name);
-                    //     $str_role_church = "";
-                    //     if (json_last_error() === JSON_ERROR_NONE) {
-                    //         foreach ($churhes as $key => $church) {
-                    //             $church_name = Church::where('id', $church->church_id)->first()->church_name;
-                    //             $ministry_role = MinistryRole::where('id', $church->title_structure_id)->first()->ministry_role;
-                    //             $str_role_church .= $church_name." - ".$ministry_role."<br>";
-                    //         }
-                    //     }
-                        
-                    //     return $str_role_church;
-                    // }
                 ],
                 [
                     'label' => 'Address',
@@ -188,11 +175,19 @@ class PastorReportAnnualCrudController extends CrudController
                     'name' => 'anniversary'
                 ],
                 [
-                    'label' => 'Status',
+                    'label' => 'Last Status',
                     'type' => 'closure',
                     'name' => 'status',
                     'function' => function($entries){
                         return $entries->status != null ? $entries->status : '-';
+                    }
+                ],
+                [
+                    'label' => 'Last Status Date',
+                    'type' => 'closure',
+                    'name' => 'date_status',
+                    'function' => function($entries){
+                        return $entries->date_status != null ? $entries->date_status : '-';
                     }
                 ],
                 [
