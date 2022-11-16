@@ -98,7 +98,8 @@ class PersonelImport implements OnEachRow/* ToCollection */, WithHeadingRow, Wit
         $first_licensed_on = $row_first_licensed_on == '-' || $row_first_licensed_on == '' ? NULL : $this->formatDateExcel($row_first_licensed_on);
         $valid_card_start = $row_valid_card_start == '-' || $row_valid_card_start == '' ? NULL : $this->formatDateExcel($row_valid_card_start);
         $valid_card_end = $row_valid_card_end == '-' || $row_valid_card_end == '' || $row_valid_card_end == '(expired)' || strtolower($row_valid_card_end) == 'lifetime' ? NULL : $this->formatDateExcel($row_valid_card_end);
-        $is_lifetime = strtolower($row_valid_card_end ?? '') == 'lifetime' ? "1" : "0";
+        // $is_lifetime = strtolower($row_valid_card_end ?? '') == 'lifetime' ? "1" : "0";
+        $is_lifetime = $row_valid_card_end == '' || $row_valid_card_end == '-' || $row_valid_card_end == NULL ? "1" : "0";
         $address = trim(str_replace('_x000D_', "\n", $row_address ?? ''));
         $phone = trim(str_replace('_x000D_', "\n", $row_phone ?? ''));
         $church_name = trim(str_replace('_x000D_', "\n", $row_church_name ?? ""));
@@ -196,7 +197,7 @@ class PersonelImport implements OnEachRow/* ToCollection */, WithHeadingRow, Wit
                     $insert_p->personel_id = $update_personel->id;
                     $insert_p->save();
                 }
-               // (new LeadershipSyncHelper())->sync($update_personel->id);
+                (new LeadershipSyncHelper())->sync($update_personel->id);
             }
             
         }else{
@@ -259,7 +260,7 @@ class PersonelImport implements OnEachRow/* ToCollection */, WithHeadingRow, Wit
                     $insert_p->personel_id = $new_personel->id;
                     $insert_p->save();
                 }
-               // (new LeadershipSyncHelper())->sync($new_personel->id);
+                (new LeadershipSyncHelper())->sync($new_personel->id);
             }
         }
 
