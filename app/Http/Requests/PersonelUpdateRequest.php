@@ -6,6 +6,7 @@ use App\Models\Personel;
 use App\Rules\Base64Rule;
 use App\Models\PersonelImage;
 use App\Http\Requests\Request;
+use App\Rules\BlockedCharacter;
 use App\Rules\UniquePersonelOnUser;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -31,12 +32,9 @@ class PersonelUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'name' => 'required|min:5|max:255'
-            // 'acc_status_id' => 'required',
-            // 'rc_dpw_id' => 'required',
-            'title_id' => 'required',
-            'first_name'=> 'required',
-            'last_name' => 'required',
+            'title_id'=> ['required', new BlockedCharacter()],
+            'first_name'=> ['required', new BlockedCharacter()],
+            'last_name'=> ['required', new BlockedCharacter()],
             'gender'=> 'nullable',
             'date_of_birth' => 'nullable',
             'marital_status' => 'nullable',

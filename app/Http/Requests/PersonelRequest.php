@@ -6,6 +6,7 @@ use App\Models\Personel;
 use App\Rules\Base64Rule;
 use App\Models\PersonelImage;
 use App\Http\Requests\Request;
+use App\Rules\BlockedCharacter;
 use App\Rules\UniquePersonelOnUser;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -31,12 +32,9 @@ class PersonelRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'name' => 'required|min:5|max:255'
-        // 'acc_status_id' => 'required',
-        // 'rc_dpw_id' => 'required',
-        'title_id' => 'required',
-        'first_name'=> 'required',
-        'last_name' => 'required',
+        'title_id'=> ['required', new BlockedCharacter()],
+        'first_name'=> ['required', new BlockedCharacter()],
+        'last_name'=> ['required', new BlockedCharacter()],
         'gender'=> 'nullable',
         'date_of_birth' => 'nullable',
         'marital_status' => 'nullable',
@@ -65,13 +63,6 @@ class PersonelRequest extends FormRequest
         'current_certificate_number'=> 'required',
         'certificate' => ['nullable', new Base64Rule(3, ['png', 'jpg', 'jpeg'])],
         'id_card' => ['nullable', new Base64Rule(3, ['png', 'jpg', 'jpeg'])],
-        // 'image' => ['nullable', new Base64Rule(3, ['png', 'jpg', 'jpeg'])],
-        // 'image_ids' => ['nullable', 'array'],
-        // 'image_ids.*' => 'nullable|regex:/^[0-9]+$/',
-        // 'image' => ['nullable', 'array'],
-        // 'image.*' => ['required', new Base64Rule(3, ['png', 'jpg', 'jpeg'], false)],
-        // 'image_label' => ['nullable', 'array'],
-        // 'image_label.*' => ['required', Rule::in(PersonelImage::$imageLabels)],
         ];
     }
 
