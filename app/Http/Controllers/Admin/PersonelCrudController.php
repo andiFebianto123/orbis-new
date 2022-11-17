@@ -708,17 +708,41 @@ class PersonelCrudController extends CrudController
 
             $isDuplicate = $isDuplicate->select('id')->first();
 
+            if(isset($request->church_name) && ($request->church_name != '[]'))
+            {
+                $d = json_decode($request->church_name);
+                for($i = count($d) - 1; $i > 0; $i--){
+                    $now = $d[$i];
+                    for($u = $i - 1; $u >= 0; $u--){
+                        $before = $d[$u];
+                        if(($now->church_id == $before->church_id) && ($now->title_structure_id == $before->title_structure_id)){
+                            $errors['church_name'] = ["The pastor with same church Name has already exists."];
+                        }
+                    }
+                }
+            }
+
             if ($isDuplicate != null) {
-                DB::rollback();
-                $errors = [
+                // DB::rollback();
+                $errors_ = [
                     'first_name' => ['The pastor with same First Name, Last Name, Church Name and Date of Birth has already exists.'],
                     'last_name' => ['The pastor with same First Name, Last Name, Church Name and Date of Birth has already exists.'],
                     // 'church_name' => ['The pastor with same First Name, Last Name, Church Name and Date of Birth has already exists.'],
                     'date_of_birth' => ['The pastor with same First Name, Last Name, Church Name and Date of Birth has already exists.'],
                 ];
-                return redirect($this->crud->route . '/create')
+                $errors = array_merge($errors, $errors_);
+                // return redirect($this->crud->route . '/create')
+                //                 ->withInput()->withErrors($errors);
+            }
+
+            if(count($errors) > 0){
+                 DB::rollback();
+                 return redirect($this->crud->route . '/create')
                                 ->withInput()->withErrors($errors);
             }
+
+
+
 
             // $result = $this->checkMultipleImage($request, null);
             // if(count($result['errors']) != 0){
