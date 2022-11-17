@@ -19,11 +19,17 @@
     body.loading .overlay{
         display: block;
     }
+    .progress-loading{
+        position: fixed;
+        width: 100%;
+        top: 50%;
+    }
 </style>
 @endpush
 
 @push('after_scripts')
 <script>
+    var htmlLoading = "<div class='progress-loading text-center'>Processing...<br><img src='{{asset('img/loading-bar.gif')}}' class='img-responsive img-fluid'></div>"
     function exportReport(){
         var arrayColumnVisibility = [];
         var actualMenuType = "";
@@ -70,10 +76,12 @@
                 report_type: actualMenuType != '' && actualMenuType == 'quick' ? $('#report-type-select').val() : null
             },
             beforeSend: function(){
-                $("body").addClass("loading"); 
+                $("body").addClass("loading");
+                $("body").append(htmlLoading) 
             },
             complete: function(){
                 $("body").removeClass("loading"); 
+                $(".progress-loading").remove() 
             },
             success: function(result, status, xhr) {
 

@@ -80,7 +80,7 @@ class ChurchAnnualDesignerView extends Model
                             'title_lists.short_desc', 'title_lists.long_desc','personels.first_name', 'personels.last_name']);
         $total = sizeof($leaderships) - 1;                    
         foreach ($leaderships as $key => $leadership) {
-            $str_leadership .= $leadership->first_name." ".$leadership->last_name. " - ".$leadership->ministry_role;
+            $str_leadership .= $leadership->first_name." ".$leadership->last_name. " (".$leadership->ministry_role.")";
             if ($key < $total) {
                 $str_leadership .= "<br>";
             }

@@ -25,6 +25,7 @@ use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use App\Helpers\HitCompare;
+use Illuminate\Support\Facades\Log;
 
 // HeadingRowFormatter::default('none');
 
@@ -76,7 +77,8 @@ class PersonelImport implements OnEachRow/* ToCollection */, WithHeadingRow, Wit
         $row_spouse_name = $row['spouse_name'];// $row['Spouse Name'];
         $row_spouse_date_of_birth = $row['spouse_date_of_birth']; //$row['Spouse Date of Birth'];
         $row_anniversary = $row['anniversary'];
-        $row_acc_status = $row['status'];
+        $row_acc_status = $row['last_status'];
+        $row_date_status = $row['last_status_date'];
         $row_first_licensed_on = $row['first_licensed_on']; // $row['First Licensed On'];
         $row_card = $row['card'];
         $row_valid_card_start = $row['valid_card_start']; // $row['Valid Card Start'];
@@ -96,11 +98,11 @@ class PersonelImport implements OnEachRow/* ToCollection */, WithHeadingRow, Wit
         $first_licensed_on = $row_first_licensed_on == '-' || $row_first_licensed_on == '' ? NULL : $this->formatDateExcel($row_first_licensed_on);
         $valid_card_start = $row_valid_card_start == '-' || $row_valid_card_start == '' ? NULL : $this->formatDateExcel($row_valid_card_start);
         $valid_card_end = $row_valid_card_end == '-' || $row_valid_card_end == '' || $row_valid_card_end == '(expired)' || strtolower($row_valid_card_end) == 'lifetime' ? NULL : $this->formatDateExcel($row_valid_card_end);
-        $is_lifetime = strtolower($row_valid_card_end ?? '') == 'lifetime' ? "1" : "0";
+        // $is_lifetime = strtolower($row_valid_card_end ?? '') == 'lifetime' ? "1" : "0";
+        $is_lifetime = $row_valid_card_end == '' || $row_valid_card_end == '-' || $row_valid_card_end == NULL ? "1" : "0";
         $address = trim(str_replace('_x000D_', "\n", $row_address ?? ''));
         $phone = trim(str_replace('_x000D_', "\n", $row_phone ?? ''));
         $church_name = trim(str_replace('_x000D_', "\n", $row_church_name ?? ""));
-        $str_json_church = json_encode($this->handleChurchName($church_name));
         $email = (!isset($row_email) || strlen($row_email) == 0) ? null : $row_email;
         $secondary_email = (!isset($row_secondary_email) || strlen($row_secondary_email) == 0) ? null : $row_secondary_email;
     
@@ -134,7 +136,6 @@ class PersonelImport implements OnEachRow/* ToCollection */, WithHeadingRow, Wit
             $update_personel->first_name = $row_first_name;
             $update_personel->last_name = $row_last_name;
             $update_personel->gender = $row_gender;
-            // $update_personel->church_name = $str_json_church;
             $update_personel->street_address = $address;
             $update_personel->city = $row_city;
             $update_personel->province = $row_province;
@@ -165,42 +166,26 @@ class PersonelImport implements OnEachRow/* ToCollection */, WithHeadingRow, Wit
 
             // $this->handleRcdpw($update_personel->id, $row_rc_dpw, 'update');
 
-            if (StatusHistory::where('personel_id', $update_personel->id)->exists()) {
-                $status_history = StatusHistory::where('personel_id', $update_personel->id)
-                ->orderBy('date_status','desc')
-                ->orderBy('created_at','desc')
-                ->first();
+            $status_history =  StatusHistory::where('personel_id',  $update_personel->id)
+                                    ->orderBy('id', 'desc')
+                                    ->first();
 
+            if (isset($status_history)) {
                 if($status_history->status != $acc_status['acc_status']){
                     if($com === FALSE){
                         $this->ids_update[] = $update_personel->id;
                     }
                 }
-
-                // if($status_history->status_histories_id != $acc_status['id']){
-                //     if($com === FALSE){
-                //         $this->ids_update[] = $update_personel->id;
-                //     }
-                // }
-
-                // $status_history->status_histories_id = ($acc_status['id'] ?? null);
-                $status_history->status = ($acc_status['acc_status'] ?? null);
-                $status_history->date_status = Carbon::now();
-                $status_history->save();
+                $changeHistory = StatusHistory::where('id',  $status_history->id)->first();
+                $changeHistory->status = $row_acc_status;
+                $changeHistory->date_status = $row_date_status;
+                $changeHistory->save();
             }else{
-                // $status_history = new StatusHistory([
-                //     'status_histories_id'  => ($acc_status['id'] ?? null),
-                //     'date_status' => Carbon::now(),
-                //     'personel_id' => $update_personel->id,
-                // ]);
-                // $status_history->save();
-                $status_history = new StatusHistory([
-                    // 'status_histories_id'  => ($acc_status['id'] ?? null),
-                    'status' => ($acc_status['acc_status'] ?? null),
-                    'date_status' => Carbon::now(),
-                    'personel_id' => $update_personel->id,
-                ]);
-                $status_history->save();
+                $insertShc = new StatusHistory();
+                $insertShc->status = $row_acc_status;
+                $insertShc->date_status = $row_date_status;
+                $insertShc->personel_id = $update_personel->id;
+                $insertShc->save();
             }
 
             if (sizeof($this->handleChurchName($church_name)) > 0) {
@@ -217,13 +202,11 @@ class PersonelImport implements OnEachRow/* ToCollection */, WithHeadingRow, Wit
             
         }else{
             $new_personel = new Personel();
-            // $new_personel->acc_status_id = ($acc_status['id'] ?? null);
-            $new_personel->rc_dpw_id = ($rcdpw['id'] ?? null);
+            // $new_personel->rc_dpw_id = ($rcdpw['id'] ?? null);
             $new_personel->title_id = $title['id'];
             $new_personel->first_name = $row_first_name;
             $new_personel->last_name = $row_last_name;
             $new_personel->gender = $row_gender;
-            // $new_personel->church_name = $str_json_church;
             $new_personel->street_address = $address;
             $new_personel->city = $row_city;
             $new_personel->province = $row_province;
@@ -252,20 +235,22 @@ class PersonelImport implements OnEachRow/* ToCollection */, WithHeadingRow, Wit
 
             $this->handleRcdpw($new_personel->id, $row_rc_dpw, 'create');
 
-            // $status_history = new StatusHistory([
-            //     'status_histories_id'  => ($acc_status['id'] ?? null),
-            //     'date_status' => Carbon::now(),
-            //     'personel_id' => $new_personel->id,
-            // ]);
-            // $status_history->save();
+            $status_history =  StatusHistory::where('personel_id',  $new_personel->id)
+                            ->orderBy('id', 'desc')
+                            ->first();
 
-            $status_history = new StatusHistory([
-                // 'status_histories_id'  => ($acc_status['id'] ?? null),
-                'status' => ($acc_status['acc_status'] ?? null),
-                'date_status' => Carbon::now(),
-                'personel_id' => $new_personel->id,
-            ]);
-            $status_history->save();
+            if (isset($status_history)) {
+                $changeHistory = StatusHistory::where('id',  $status_history->id)->first();
+                $changeHistory->status = $row_acc_status;
+                $changeHistory->date_status = $row_date_status;
+                $changeHistory->save();
+            }else{
+                $insertShc = new StatusHistory();
+                $insertShc->status = $row_acc_status;
+                $insertShc->date_status = $row_date_status;
+                $insertShc->personel_id = $new_personel->id;
+                $insertShc->save();
+            }
 
             if (sizeof($this->handleChurchName($church_name)) > 0) {
                 foreach ($this->handleChurchName($church_name) as $key => $cn) {
@@ -320,21 +305,22 @@ class PersonelImport implements OnEachRow/* ToCollection */, WithHeadingRow, Wit
         $count_valid_data = 0;
         $total_data = 0;
         foreach(explode("\n",$value) as $sc) {
-            $total_data++;
             if (strpos( $sc, "-") !== false) {
                 $expl_dash = explode("-",$sc);
-                $last_dash = substr_count($sc, "-");
-                $last_dash = substr_count($sc, "-");
 
                 $church_name = Church::where('church_name','like', '%'.rtrim($expl_dash[0]).'%')->first();
-                $ministry_role = MinistryRole::where('ministry_role','like', '%'.trim($expl_dash[$last_dash]).'%')->first();
+                $ministry_role = MinistryRole::where('ministry_role','like', '%'.ltrim($expl_dash[1]).'%')->first();
 
                 if (isset($church_name) && isset($ministry_role)) {
                     $count_valid_data++;
                     $arr_datas[] = ['church_id' => $church_name->id, 'title_structure_id' => $ministry_role->id];
                 }
-            }  
+                $total_data++; 
+            } 
         }
+
+        Log::info($arr_datas);
+        Log::info($total_data."_".$count_valid_data);
 
         return ($count_valid_data == $total_data) ? $arr_datas :[];
     }
@@ -349,35 +335,10 @@ class PersonelImport implements OnEachRow/* ToCollection */, WithHeadingRow, Wit
     public function rules(): array
     {
         return [
+            'last_status' => ['required'],
+            'last_status_date' => ['required'],
             'first_name' => 'required',
             'title' => 'required',
-            // 'rc_dpw' => ['required',function($attribute, $value, $onFailure){
-            //     if(strlen($value) > 0){
-            //         $rc_dpw = trim($value);
-            //         $rc_dpw = str_replace('\n', "\n", $rc_dpw ?? '');
-            //         $is_fail = [];
-            //         if (strpos( $rc_dpw, "\n") !== false) {
-            //             $rc_dpws = explode("\n", $rc_dpw);
-            //             foreach($rc_dpws as $data){
-            //                 $d = RcDpwList::where('rc_dpw_name', $data)->first();
-            //                 if($d == null){
-            //                     $is_fail[] = $data;
-            //                 }
-            //             }
-            //         }else{
-            //             $d = RcDpwList::where('rc_dpw_name', $rc_dpw)->first();
-            //             if(!isset($d)){
-            //                 $is_fail[] = $rc_dpw;
-            //             }
-            //         }
-    
-            //         if(count($is_fail) > 0){
-            //             $str_rc_dpw = implode(", ", $is_fail);
-            //             $onFailure('RC / DPW are not invalid for ' . $str_rc_dpw);
-            //         }
-    
-            //     }
-            // }],
             'church_name' => function($attribute, $value, $onFailure) {
                 $church_name = $this->handleChurchName($value);
                 if ($value != "" && sizeof($church_name) == 0) {

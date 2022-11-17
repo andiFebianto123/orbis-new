@@ -101,7 +101,7 @@ class ChurchAnnualReportCrudController extends CrudController
                         $str_leadership = "";  
                         $total = sizeof($leaderships) - 1;
                         foreach ($leaderships as $key => $leadership) {
-                            $str_leadership .= $leadership->first_name." ".$leadership->last_name. " - ".$leadership->ministry_role;
+                            $str_leadership .= $leadership->first_name." ".$leadership->last_name. " (".$leadership->ministry_role.")";
                             if ($key < $total) {
                                 $str_leadership .= "<br>";
                             }
@@ -170,11 +170,19 @@ class ChurchAnnualReportCrudController extends CrudController
                     'name' => 'second_email'
                 ],
                 [
-                    'label' => 'Church Status',
+                    'label' => 'Last Church Status',
                     'type' => 'closure',
                     'name' => 'status',
                     'function' => function($entries){
                         return $entries->status != null ? $entries->status : '-';
+                    }
+                ],
+                [
+                    'label' => 'Last Status Date',
+                    'type' => 'closure',
+                    'name' => 'date_status',
+                    'function' => function($entries){
+                        return $entries->date_status != null ? $entries->date_status : '-';
                     }
                 ],
                 [

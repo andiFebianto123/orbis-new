@@ -18,6 +18,7 @@ use Maatwebsite\Excel\HeadingRowImport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
 use App\Helpers\HitApi;
+use App\Models\Personel;
 use Exception;
 
 class ToolsUploadController extends Controller
@@ -29,6 +30,21 @@ class ToolsUploadController extends Controller
 
     public function importchurch()
     {
+        /*$fullname = "Sutanto";
+        $fullname = rtrim($fullname);
+        $queryFl = "CONCAT(`first_name`, ' ', `last_name`)";
+        // if (strpos($fullname, " ") !== false) {
+        //     $queryFl = "CONCAT(`first_name`, ' ', `last_name`)";
+        // }
+
+        $personel = Personel::where(DB::raw($queryFl), 'like',  "%".$fullname."%")->get();
+        if (sizeof($personel) == 0) {
+            $personel = Personel::where(DB::raw('first_name'), 'like',  "%".$fullname."%")->get();
+        }
+
+        return $personel;
+        */
+
         return view('vendor.backpack.base.importchurch');
     }
 

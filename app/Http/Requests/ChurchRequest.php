@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Http\Requests\Request;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\Base64Rule;
+use App\Rules\BlockedCharacter;
 
 class ChurchRequest extends FormRequest
 {
@@ -34,7 +35,7 @@ class ChurchRequest extends FormRequest
         // 'church_type_id'=> 'required',
         'rc_dpw_id' => 'required',
         // 'churches_rcdpw' => 'required',
-        'church_name'=> 'required',
+        'church_name'=> ['required', new BlockedCharacter()],
         'contact_person' => 'required',
         // 'building_name' => 'required',
         'church_address' => 'required',

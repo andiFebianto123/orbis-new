@@ -24,7 +24,7 @@ function submitAfterValid(formId, massError = false) {
                 percentComplete = evt.loaded / evt.total;
                 percentComplete = parseInt(percentComplete * 100);
                 // var htmlProgress = "<span>Processing...</span><br><img src='https://asy-syifaa.com/images/ajax-loader.gif' style='height: 12px;width: 100%;'>"
-                var htmlProgress = "<span>Processing... ("+percentComplete+"%)</span><div class='rect-progressbar' style='width:"+percentComplete+"%;'></div>"
+                var htmlProgress = "<span>Processing... </span><img src='../img/loading-bar.gif' class='img-fluid img-responsive'></div>"
                 $('.progress-loading').html(htmlProgress)
                 
                 if (percentComplete === 100) {
