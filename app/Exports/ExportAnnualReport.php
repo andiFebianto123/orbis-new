@@ -93,7 +93,10 @@ class ExportAnnualReport implements FromView,WithEvents
             $dataColumn = PastorAnnualDesignerView::get()->toArray();
         }
 
-        $this->title = $title;
+        $this->title = $title; 
+
+        // "Undefined index:
+        // date_status (View: C:\\MAMP\\htdocs\\orbis\\orbis\\resources\\views\\exports\\export_report.blade.php)"
         
         return view('exports.export_report',[
             'title' => $title,

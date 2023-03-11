@@ -56,8 +56,8 @@ class ChurchImport implements OnEachRow, SkipsEmptyRows, WithValidation, WithHea
         $row_rc_dpw = $row['rc_dpw']; // $row['RC / DPW'];
         $row_church_name = $row['church_name']; // $row['Church Name'];
         $row_church_type = $row['church_type']; // $row['Church Type'];
-        $row_lead_pastor_name = $row['lead_pastor_name']; // $row['Lead Pastor Name'];
-        $row_local_church = $row['local_church']; // $row['Local Church'];
+        // $row_lead_pastor_name = $row['lead_pastor_name']; // $row['Lead Pastor Name'];
+        $row_local_church = $row['church_name']; // $row['Local Church'];
         $row_leadership_structure = $row['leadership_structure']; //$row['Leadership Structure'];
         $row_coordinator = $row['coordinator'];
         $row_contact_person = $row['contact_person'];// $row['Contact Person'];
@@ -70,14 +70,14 @@ class ChurchImport implements OnEachRow, SkipsEmptyRows, WithValidation, WithHea
         $row_phone = $row['phone'];
         $row_fax = $row['fax'];
         $row_email = $row['email'];
-        $row_secondary_email = $row['secondary_email']; // $row['Secondary Email'];
-        $row_church_status = $row['last_church_status'] ?? null; // $row['Church Status'];
-        $row_status_date = $row['last_status_date'] ?? null; // $row['Church Status'];
+        $row_secondary_email = $row['secondary_email'] ?? null; // $row['Secondary Email'];
+        $row_church_status = $row['church_status'] ?? null; // $row['Church Status'];
+        $row_status_date = $row['status_date'] ?? null; // $row['Church Status'];
         $row_founded_on = $row['founded_on']; // $row['Founded On'];
         $row_service_time_church = $row['service_time_church']; // $row['Service Time Church'];
-        $row_color = $row['task_color'];
-        $row_latitude = $row['latitude'];
-        $row_longitude = $row['longitude'];
+        $row_color = $row['task_color'] ?? null;
+        $row_latitude = $row['latitude'] ?? null;
+        $row_longitude = $row['longitude'] ?? null;
         $row_notes = $row['notes'];
 
         $dataset = $row;
@@ -170,17 +170,17 @@ class ChurchImport implements OnEachRow, SkipsEmptyRows, WithValidation, WithHea
             // $this->handleRcdpw($id_church, $row_rc_dpw, 'update');
 
 
-            StructureChurch::where('churches_id', $update_church->id)->delete();
+            // StructureChurch::where('churches_id', $update_church->id)->delete();
 
-            foreach ($this->handlePastorName($row_lead_pastor_name) as $key => $hpn) {
-                if ($hpn != []) {
-                    $structure_church = new StructureChurch();
-                    $structure_church->churches_id = $update_church->id;
-                    $structure_church->personel_id = $hpn['pastor_id'];
-                    $structure_church->title_structure_id = $hpn['ministry_id'];
-                    $structure_church->save();
-                }
-            }
+            // foreach ($this->handlePastorName($row_lead_pastor_name) as $key => $hpn) {
+            //     if ($hpn != []) {
+            //         $structure_church = new StructureChurch();
+            //         $structure_church->churches_id = $update_church->id;
+            //         $structure_church->personel_id = $hpn['pastor_id'];
+            //         $structure_church->title_structure_id = $hpn['ministry_id'];
+            //         $structure_church->save();
+            //     }
+            // }
 
             foreach ($this->handleCoordinator($row_coordinator) as $key => $hc) {
                 if ($hc != []) {
@@ -263,17 +263,17 @@ class ChurchImport implements OnEachRow, SkipsEmptyRows, WithValidation, WithHea
             // $this->handleRcdpw($new_church->id, $row_rc_dpw, 'create');
 
 
-            foreach ($this->handlePastorName($row_lead_pastor_name) as $key => $hpn) {
-                if ($hpn != []) {
-                    $structure_church = new StructureChurch([
-                        'personel_id'  => $hpn['pastor_id'],
-                        'title_structure_id' => $hpn['ministry_id'],
-                        'churches_id' => $new_church->id,
-                    ]);
-                    $structure_church->save();
-                }
+            // foreach ($this->handlePastorName($row_lead_pastor_name) as $key => $hpn) {
+            //     if ($hpn != []) {
+            //         $structure_church = new StructureChurch([
+            //             'personel_id'  => $hpn['pastor_id'],
+            //             'title_structure_id' => $hpn['ministry_id'],
+            //             'churches_id' => $new_church->id,
+            //         ]);
+            //         $structure_church->save();
+            //     }
                
-            }
+            // }
 
             foreach ($this->handleCoordinator($row_coordinator) as $key => $hc) {
                 if ($hc != []) {
@@ -328,8 +328,8 @@ class ChurchImport implements OnEachRow, SkipsEmptyRows, WithValidation, WithHea
     public function rules(): array
     {
         return [
-            'last_church_status' => ['required'],
-            'last_status_date' => ['required'],
+            'church_status' => ['required'],
+            'status_date' => ['required'],
             'rc_dpw' => function($attribute, $value, $onFailure){
                 if(strlen($value) > 0){
                     $rc_dpw = trim($value);
@@ -357,12 +357,12 @@ class ChurchImport implements OnEachRow, SkipsEmptyRows, WithValidation, WithHea
     
                 }
             },
-            'lead_pastor_name' => function($attribute, $value, $onFailure) {
-                $lead_pastor_name = $this->handlePastorName($value);
-                if (sizeof($lead_pastor_name) == 0) {
-                    $onFailure('(Lead Pastor)) Not Exist Pastor or Invalid Format :: Firstname Lastname (Title)');
-                }
-            },
+            // 'lead_pastor_name' => function($attribute, $value, $onFailure) {
+            //     $lead_pastor_name = $this->handlePastorName($value);
+            //     if (sizeof($lead_pastor_name) == 0) {
+            //         $onFailure('(Lead Pastor)) Not Exist Pastor or Invalid Format :: Firstname Lastname (Title)');
+            //     }
+            // },
             'leadership_structure' => function($attribute, $value, $onFailure) {
                 $leadership_name = $this->handleLeadershipName($value);
                 if ($value != "" && sizeof($leadership_name) == 0) {
